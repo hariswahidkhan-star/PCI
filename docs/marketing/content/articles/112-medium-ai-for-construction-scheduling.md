@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> /ai-for-construction-scheduling (own site #058)
 schema:        Article + FAQPage
-word_count:    1,801
+word_count:    1,852
 hashtags:      #Scheduling #ProjectControls #Primavera #RiskManagement #AIGovernance
 ab_id:         AB-00040
 ---
@@ -91,7 +91,7 @@ The 100-day answer assumes seven durations are exactly right. Replace each with 
 | F Steel erection | 26 | 30 | 42 |
 | G Cladding | 17 | 20 | 28 |
 
-Sampled as triangular distributions, uncorrelated, the simulated completion distribution has a mean of **110.9 days**, with P10 at **104**, P50 at **111**, P80 at **116** and P90 at **118**.
+Sampled as uncorrelated triangular distributions, the simulated completion distribution has a mean of **110.9 days**, with P10 at **104**, P50 at **111**, P80 at **116** and P90 at **118**.
 
 The deterministic 100-day programme sits below the tenth percentile. On these ranges it is not a plan carrying a little risk; it is a target with under a one-in-ten chance of being met.
 
@@ -99,7 +99,7 @@ The simulation also records which chain governed each run. The concrete route A�
 
 Read as a criticality index, that says two things. Neither long chain can be treated as secondary, so mitigation aimed at one of them addresses about half the exposure and leaves the other alone.
 
-And the chain the deterministic pass handed 5 days of float to still governs about one run in twenty. It is the same A–D–C–F–G that surfaced at 95 days once both named routes were compressed, which is the deterministic answer and the probabilistic one pointing at the same overlooked chain by different routes.
+And the chain the deterministic pass handed 5 days of float to still governs about one run in twenty. It is the same A–D–C–F–G that surfaced at 95 days once both named routes were compressed, so the hand calculation and the simulation arrive at the same overlooked chain by different routes.
 
 This is the strongest case for the technology in scheduling. Nobody runs 20,000 passes of a network by hand, so getting them in seconds changes which questions are worth asking.
 

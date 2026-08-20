@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /earned-value-worked-example (own site #021)
 schema:        Article + FAQPage
-word_count:    1,795
+word_count:    1,797
 hashtags:      #ProjectControls #EarnedValue #CostEngineering #Scheduling #ProjectManagement
 ab_id:         AB-00080
 ---
@@ -99,7 +99,9 @@ Put that in front of the sponsor. Five months at 0.900, and finishing on budget 
 | Remaining work at CPI and SPI | AC + (BAC − EV) ÷ (CPI × SPI) | 1,729 + 2,044.7 ÷ 0.8037 = **4,273.1** | Schedule pressure keeps costing money |
 | Bottom-up re-estimate | AC + a fresh ETC of £2,310k | 1,729 + 2,310 = **4,039.0** | The team can re-estimate honestly |
 
-All four use the indices exactly as printed above, rounded to three decimals. Carried unrounded, CPI is 0.899537 and the second method returns £4,002.1k instead of £4,000.0k, which is a rounding difference rather than a different forecast — but say which convention you are using, because a reviewer redoing your arithmetic will land on the other one.
+All four use the indices exactly as printed above, rounded to three decimals. Carried unrounded, CPI is 0.899537 and the second method returns £4,002.1k rather than £4,000.0k.
+
+That is a rounding difference and not a different forecast, but state which convention the report uses. A reviewer redoing the arithmetic will otherwise land on the other figure and ask why.
 
 A spread of £3.77m to £4.27m, half a million pounds wide, from one set of inputs. That range is the method asking which assumption you are prepared to sign, and the answer comes from [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas) rather than from the arithmetic.
 

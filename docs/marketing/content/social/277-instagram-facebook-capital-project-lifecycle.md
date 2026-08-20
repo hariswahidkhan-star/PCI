@@ -3,7 +3,7 @@ platform:      Instagram / Facebook
 type:          carousel
 title:         The capital project lifecycle, concept to operation
 meta:          A £240m build with £450m of operating cost behind it. Nine slides on the capital project lifecycle and the stage where the real number gets decided.
-primary_kw:    what are capital projects *
+primary_kw:    capital project lifecycle *
 secondary_kw:  final investment decision, stage gate, whole life cost, capitalisation
 pillar:        Project controls fundamentals
 credential:    PML-AI
@@ -35,7 +35,18 @@ Full guide in the link in bio.
 A capital project creates or materially improves a long-lived asset: a plant, a line, a terminal, a network. The spend is committed up front and recovered over decades of use, which is why the decision to build is a financing decision before it is an engineering one.
 
 **Slide 2 — The lifecycle, one line each**
-Identify the need. Select an option. Define it well enough to commit. Sanction. Execute. Commission and hand over. Operate, maintain, and eventually decommission. Each stage buys better information than the one before it, and [what each gate has to approve](https://projectcontrolsinstitute.org/capital-project-management-process) is written down stage by stage.
+
+| Stage | What it decides | What it costs to change afterwards |
+|---|---|---|
+| Identify the need | Whether there is a problem worth spending on | Nothing yet — the cheapest place to stop |
+| Select an option | Which concept goes forward | Repeating the studies, and the programme with them |
+| Define | Scope, estimate class, contingency | Redesign, plus every commitment made on the old scope |
+| Sanction | The number, the date, the risk accepted | A second trip to the board, rarely granted twice |
+| Execute | How the work is sequenced and controlled | Change at contract rates, plus time |
+| Commission and hand over | When the asset is ready for use | Delay to first production, at the operating rate |
+| Operate to decommissioning | How the asset is run and retired | Thirty years of cost fixed back at design |
+
+Each stage buys better information than the one before it. What each gate has to approve is written down stage by stage on the hub page in the bio.
 
 **Slide 3 — The arithmetic**
 Worked case. Capital cost **£240m**. Operating cost **£15m a year for 30 years = £450m**.
@@ -60,15 +71,14 @@ Now the job is measurement. Progress against a written rule of credit, cost book
 **Slide 7 — Commissioning is where programmes slip**
 Construction completion is not readiness. Testing, snagging, regulatory sign-off, operator training and spares all sit between the last weld and first production. They are routinely planned as a single bar on the programme, and they are routinely where the last three months go.
 
-**Slide 8 — Where it lands in the accounts** Capital spend does not hit the profit and loss when it is paid. It sits as an asset under construction and starts depreciating when the asset is ready for its intended use.
-
-Which cost qualifies to be capitalised, and the date the clock starts, are decisions taken from delivery evidence. That is the overlap where finance and delivery either agree or discover they disagree at year end.
+**Slide 8 — Where it lands in the accounts**
+Capital spend does not hit the profit and loss when it is paid. It sits as an asset under construction and starts depreciating when the asset is ready for its intended use. Which cost qualifies to be capitalised, and the date the clock starts, are decisions taken from delivery evidence — the overlap where finance and delivery either agree or find out at year end that they never did.
 
 **Slide 9 — Why the credential covers both sides**
-A planner is rarely examined on capitalisation. An accountant is rarely examined on stage gates. The PCI Project Management Leader – AI (PML-AI) sits across 16 domains and 63 knowledge areas for exactly that reason.
+The year-end argument is always the same one: whether the pre-commissioning spend was part of getting the asset ready, and whether the ready-for-use date was the day testing finished or the day production started. Both answers come from the project team and both land in the accounts. The PCI Project Management Leader – AI (PML-AI) sits across 16 domains and 63 knowledge areas for exactly that reason.
 
 ---
 
 *Figures are a worked example. PCI publishes certification requirements; nothing here is accounting, tax or investment advice.*
 
-*Linking note. One link, in slide 2, because that is the slide that lists the stages and immediately raises the question of what each gate actually approves; the hub page answers it stage by stage and is also the bio link this carousel points at. The earlier draft of this note asked for three hub links from one asset, which is the density _LINK_ARCHITECTURE.md §2 rules out, so the definition page and the budgeting guide were dropped rather than retargeted at something the slides do not ask about. Anchor is on what a gate approves, not on the primary keyword, so it differs from the anchors other pieces use for the same page. No reciprocal is due: an article does not link back to a carousel.*
+*Linking note. No slide carries a live link, because a URL typeset into a 1080 × 1350 image is not a link. One destination ships with this asset: https://projectcontrolsinstitute.org/capital-project-management-process, named in words on slide 2 and placed in the bio. Slide 2 is the right slide for it — the stage table raises the question of what each gate actually approves, and that page answers it stage by stage. The earlier draft of this note asked for three hub links from one asset, which is the density _LINK_ARCHITECTURE.md §2 rules out, so the definition page and the budgeting guide were dropped rather than retargeted at something the slides do not ask about. Anchor is on what a gate approves, not on the primary keyword, so it differs from the anchors other pieces use for the same page. No reciprocal is due: an article does not link back to a carousel.*

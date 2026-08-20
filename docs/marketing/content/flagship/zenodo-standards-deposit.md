@@ -3,7 +3,7 @@ platform:      Zenodo (CERN / OpenAIRE open repository) — record description f
 type:          repository-record
 title:         "The PCI Standards: 113 mandatory Standards and 532 process requirements for project controls, project finance and governed AI"
 when_to_post:  "Not on a posting clock. A published Zenodo record registers its DOI with DataCite at the moment you press publish, the files become permanent, and there is no unpublishing — so the deposit waits until the requirement text is final, not until launch week wants a link. Sequence: reserve the DOI in the deposit form first (Zenodo issues it before publication), give the reserved DOI to the PM World Journal manuscript and the own-site Body of Knowledge page so both carry a real identifier on the day they appear, publish the record once the hub page is live and indexed, then check the DOI actually resolves before any asset announces it. Registration and OpenAIRE harvesting are not instantaneous; a launch tweet pointing at a DOI that 404s for an hour is worse than no DOI. Publish at least a week ahead of the journal submission deadline you are aiming at, because a reference list with a resolving DOI is checked once and a reference list without one is queried."
-word_count:    303 words / 1,989 characters (the description field only, from "The PCI Standards are" to "forms no part of this deposit"; the deposit-form sheet and the notes are working material and are not deposited)
+word_count:    305 words / 2,001 characters (the description field only, from "The PCI Standards are" to "forms no part of this deposit"; the deposit-form sheet and the notes are working material and are not deposited)
 hashtags:      None, and none may be added. Zenodo has no hashtags; it has a Keywords field that feeds DataCite, OpenAIRE and every downstream index, and a hashtag pasted into it is a dead term nobody searches. Enter these, one per line, exactly — project controls; earned value management; cost engineering; project finance; accrual accounting; revenue cut-off; forecasting; AI governance; professional certification; body of knowledge.
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    suite — PCL-AI, PFL-AI and PML-AI all named, because the deposit is the framework all three rest on
@@ -79,7 +79,12 @@ notes: |
   related identifier pointing at a page nobody has published is a false statement in structured
   metadata that anyone can check by following it. When a PCI page does cite the DOI, add
   `IsReferencedBy` to the hub's own verification page at /verify.html, and add it the week that
-  citation goes live, not before.
+  citation goes live, not before. That leaves two hub URLs asserted in the metadata and one in the
+  description, which is deliberate and is stated here so it stays a decision. §2 caps the links a
+  piece places; a DataCite relation is a structured assertion that a named page cites this DOI, it
+  is created by the citing page rather than by this record, and it is false if it is dropped for
+  tidiness. So nothing is dropped at that point: `IsDocumentedBy` still points at the page the
+  description names, and the description itself still carries exactly one URL.
   No pciai.org, pciworld.org or pciglobal.ai link. This record raises no AI-tooling, career or
   regional question, and a repository deposit is the last place an estate should look like an
   estate.
@@ -124,7 +129,7 @@ Revisions are deposited as new versions under the same concept DOI: cite the ver
 
 ---
 
-# Deposit form — the remaining fields
+## Deposit form — the remaining fields
 
 Working material. None of this is the description.
 
@@ -155,4 +160,4 @@ Zenodo requires a licence and applies it per version. Version 1.0 keeps whatever
 | CC0 1.0 | Everything waived | A Standard that may be altered and reissued with no attribution stops being checkable, which defeats the reason for depositing it |
 | Restricted | Metadata public, files on request | An uncitable record earns nothing; the DOI exists and no one can use it |
 
-**Linking note.** One external link, to one domain, because only one sentence in this record raises a question another page answers. The hub Body of Knowledge page sits in the description's closing paragraph, in the sentence asking where the full requirement text is published, named as the readable copy rather than by the primary keyword. It appears once: the Related identifiers field reuses that same address as `IsDocumentedBy`, which is a form field rather than a second placement, so the deposit sheet names the page instead of repeating the URL. No credentialfinder.org link is used anywhere: the verification guide it would have pointed at was never authored, and a related identifier aimed at a page that does not exist is a false assertion in machine-readable metadata. The reciprocal that is worth making runs the other way — whichever PCI page first cites this deposit should cite the DOI itself, and once the hub's verification page does, `IsReferencedBy` can be pointed back at it.
+**Linking note.** One external link, to one domain, because only one sentence in this record raises a question another page answers. The hub Body of Knowledge page sits in the description's closing paragraph, in the sentence asking where the full requirement text is published, named as the readable copy rather than by the primary keyword. It appears once: the Related identifiers field reuses that same address as `IsDocumentedBy`, which is a form field rather than a second placement, so the deposit sheet names the page instead of repeating the URL. No credentialfinder.org link is used anywhere: the verification guide it would have pointed at was never authored, and a related identifier aimed at a page that does not exist is a false assertion in machine-readable metadata. No reciprocal link is asked for. If the hub's verification page later cites the DOI, `IsReferencedBy` records that fact and nothing is dropped to make room for it: a DataCite relation states that a named page cites this deposit, it is created by the citing page rather than placed by this record, and removing a true relation to hold a link count would put a false picture in structured metadata. The description keeps its single URL either way.

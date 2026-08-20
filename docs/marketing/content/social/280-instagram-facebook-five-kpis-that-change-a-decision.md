@@ -2,7 +2,7 @@
 platform:      Instagram / Facebook
 type:          carousel
 title:         The five project KPIs that actually change a decision
-meta:          CPI 0.854 and a required 1.088 to recover: a 27% improvement nobody has ever produced by asking for effort. Eight slides on KPIs that force a call.
+meta:          CPI 0.854 and a required 1.088 to recover: a 27% step change that does not arrive because someone asked for more effort. Eight slides on KPIs that force a call.
 primary_kw:    project dashboard KPIs *
 secondary_kw:  TCPI, contingency drawdown, float erosion, cash conversion cycle
 pillar:        Project controls fundamentals
@@ -32,15 +32,16 @@ Full breakdown in the link in bio.
 ---
 
 **Slide 1 — The test a metric has to pass**
-A number earns a place on the front page when it has an owner, a formula, a threshold, and an agreed action that fires when the threshold is crossed. Miss the last one and you are reporting rather than controlling, and the pack gets longer every quarter.
+A number earns a place on a project dashboard when it has an owner, a formula, a threshold, and an agreed action that fires when the threshold is crossed. Miss the last one and you are reporting rather than controlling, and the pack gets longer every quarter.
 
 **Slide 2 — The package, all to one cut-off**
 Substation package. Budget at completion **£26.4m**, month 9 of 22.
 Planned value **£9.60m**. Earned value **£8.45m**. Actual cost **£9.90m**.
 Contingency at sanction **£2.60m**, drawn to date **£1.55m**.
+Remaining risk exposure, P80 less P50 **£1.90m**.
 Unbilled work in progress **£3.10m**.
 
-**Slide 3 — The arithmetic**
+**Slide 3 — The position, in five calculations**
 
 | Metric | Formula | Value |
 |---|---|---:|
@@ -52,6 +53,8 @@ Unbilled work in progress **£3.10m**.
 
 Required improvement = 1.088 ÷ 0.854 = **27%**.
 
+The five that follow, and the call each one forces: CPI, TCPI, contingency drawdown against remaining exposure, float erosion on the driving path, and unbilled work in progress.
+
 **Slide 4 — KPI 1: CPI, and the call it forces**
 0.854 means 85p of budgeted work delivered for every £1 spent, sustained over nine months. Threshold: below 0.95 for two consecutive months. Action: rebaseline, remove scope, or fund the £4.53m. That gap comes from a single forecast method, and [the four ways of calculating an estimate at completion](https://projectcontrolsinstitute.org/four-eac-formulas) do not agree with each other, so the pack should name the one it used. Doing none of the three is also a decision, taken quietly.
 
@@ -61,12 +64,11 @@ TCPI says the remaining £17.95m of work must be delivered at 1.088 to still lan
 **Slide 6 — KPI 3: contingency drawdown against remaining exposure**
 £1.55m drawn in 9 months is £172k a month. Thirteen months remain, so trend demands £2.24m. Only £1.05m is left. The quantitative risk analysis puts remaining exposure at P80 minus P50 of £1.9m. Threshold breached. Action: top up now or accept a P50 position in writing.
 
-**Slide 7 — KPI 4: float erosion on the driving path** Total float on the driving path was +6 days at month 5 and −9 days at month 9. That is 15 days lost in four months, 3.75 a month.
-
-Left alone for the remaining thirteen months it is another 49 days. Action: crash the binding path, or price the damages and tell the board which you chose.
+**Slide 7 — KPI 4: float erosion on the driving path**
+Total float on the driving path was +6 days at month 5 and −9 days at month 9. That is 15 days lost in four months, 3.75 a month. Left alone for the remaining thirteen months it is another 49 days. Action: crash the driving path, or price the damages and tell the board which you chose.
 
 **Slide 8 — KPI 5: unbilled work in progress, in days**
-£3.10m unbilled against £1.10m certified a month is 85 days of work done and not yet invoiced. That is the receivables side of the cash conversion cycle, and it is funded by somebody. Action: fix the certification bottleneck or arrange the working capital. Five metrics, five decisions, and the other seventeen go in the appendix.
+£3.10m unbilled against £1.10m certified a month is 85 days of work done and not yet invoiced. That is the receivables side of the cash conversion cycle, and it is funded by somebody. Action: fix the certification bottleneck or arrange the working capital. Five metrics, five decisions, and everything else goes in the appendix.
 
 ---
 

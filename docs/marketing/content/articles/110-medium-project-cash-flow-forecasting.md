@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /project-cash-flow-forecasting (own site #030)
 schema:        Article + FAQPage
-word_count:    1,973
+word_count:    1,976
 hashtags:      #ProjectControls #ProjectFinance #CostEngineering #ConstructionFinance #PMO
 ab_id:         AB-00096
 ---
@@ -101,7 +101,9 @@ At portfolio level the same question is asked with three ratios. Take revenue fo
 
 **Cash conversion cycle** = 54.0 + 54.5 − 89.6 = **18.9 days**. Converting those days back into money uses cost of sales, not revenue: 18.9 ÷ 365 × 77.0 = **£3.99m** of working capital tied up.
 
-Ten days off DSO releases 10 ÷ 365 × 96.0 = **£2.63m** of cash, permanently, with no change to revenue or cost. That one runs off revenue, because receivables are billed at the contract price, so it will not tie back to the £3.99m at the same daily rate. That is larger than most cost-reduction programmes deliver, and it comes from billing on time and settling certification disputes faster.
+Ten days off DSO releases 10 ÷ 365 × 96.0 = **£2.63m** of cash, permanently, with no change to revenue or cost. That is larger than most cost-reduction programmes deliver, and it comes from billing on time and settling certification disputes faster.
+
+Watch the denominator. DSO runs off revenue, because receivables are billed at the contract price, so the £2.63m will not tie back to the £3.99m at the same daily rate.
 
 The warning attached to a short cycle: a contractor with a negative cash conversion cycle is being financed by its supply chain, and the position reverses violently when volumes fall.
 
