@@ -9,8 +9,8 @@ pillar:        Certification and careers
 credential:    suite
 target_domain: pciworld.org
 canonical:     original
-schema:        Article
-word_count:    1623
+schema:        Article + FAQPage
+word_count:    1,779
 hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00087
 ---

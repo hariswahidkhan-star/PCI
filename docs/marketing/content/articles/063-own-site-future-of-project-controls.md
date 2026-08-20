@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    suite
 target_domain: pciai.org
 canonical:     original
-schema:        Article
-word_count:    1666
+schema:        Article + FAQPage
+word_count:    1,738
 hashtags:      n/a (own site)
 ab_id:         AB-00045
 ---

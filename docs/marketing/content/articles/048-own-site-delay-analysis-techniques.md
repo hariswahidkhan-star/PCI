@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1779
+schema:        Article + FAQPage
+word_count:    1,864
 hashtags:      n/a (own site)
 ab_id:         AB-00200
 ---

@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: credentialfinder.org
 canonical:     original
 schema:        FAQPage
-word_count:    1522
+word_count:    1,733
 hashtags:      n/a (own site)
 ab_id:         —
 ---

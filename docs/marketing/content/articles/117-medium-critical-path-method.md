@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /critical-path-method (own site #039)
-schema:        Article
-word_count:    1582
+schema:        Article + FAQPage
+word_count:    1,795
 hashtags:      #ProjectControls #Scheduling #Primavera #PMO #ProjectManagement
 ab_id:         AB-00591
 ---

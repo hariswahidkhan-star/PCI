@@ -9,8 +9,8 @@ pillar:        Cost control and estimating
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/cost-control-in-construction
-schema:        Article
-word_count:    1769
+schema:        Article + FAQPage
+word_count:    1,675
 hashtags:      #datascience #finance #tutorial #productivity
 ab_id:         AB-00079
 ---

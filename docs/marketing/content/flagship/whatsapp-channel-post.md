@@ -4,7 +4,7 @@ type:          whatsapp-channel-post
 title:         Which number reaches the board — 1.19 or 1.05?
 when_to_post:  Launch week, Wednesday, 06:30 UK. That is 09:30 in the Gulf, 11:00 in India and 07:30 in Lagos, which is where the discipline's WhatsApp groups actually are. A Channel update lands in the Updates tab rather than the chat list, so it waits rather than interrupts, and the first read is usually standing up. Post it after the Telegram post and before the Instagram carousel. One update. No follow-up, no "part 2", no repost if reactions are slow.
 char_count:    490 as composed (488 as rendered, excluding the two asterisks)
-word_count:    73
+word_count:    114
 hashtags:      none — WhatsApp Channels have no hashtag index and a hashtag here reads as content pasted in from another platform
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    PCL-AI

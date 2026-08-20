@@ -10,7 +10,7 @@ credential:    suite
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    635
+word_count:    709
 hashtags:      #ProjectControls #CostEngineering #EarnedValue #ProjectManagement #Scheduling #PMO #Construction #CivilEngineering
 ab_id:         AB-00027
 ---

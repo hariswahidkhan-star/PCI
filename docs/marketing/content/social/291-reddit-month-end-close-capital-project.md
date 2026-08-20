@@ -9,7 +9,7 @@ pillar:        Project controls fundamentals
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1311
 hashtags:      n/a (Reddit)
 ab_id:         AB-00141

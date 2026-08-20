@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PML-AI
 target_domain: pciai.org
 canonical:     original
-schema:        Article
-word_count:    1673
+schema:        Article + FAQPage
+word_count:    1,734
 hashtags:      n/a (own site)
 ab_id:         AB-00044
 ---

@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    250
+word_count:    301
 hashtags:      #ProjectFinance #ProjectControls #CostEngineering #PMO
 ab_id:         AB-01118
 ---

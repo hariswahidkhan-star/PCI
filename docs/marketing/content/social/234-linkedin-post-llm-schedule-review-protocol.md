@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciai.org
 canonical:     original
 schema:        Article
-word_count:    331
+word_count:    398
 hashtags:      #ProjectControls #Scheduling #AIGovernance #Primavera
 ab_id:         AB-00151
 ---

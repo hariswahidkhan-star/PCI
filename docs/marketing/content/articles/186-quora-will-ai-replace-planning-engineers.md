@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciai.org
 canonical:     original
 schema:        FAQPage
-word_count:    1706
+word_count:    1,626
 hashtags:      n/a (Quora)
 ab_id:         AB-00042
 ---

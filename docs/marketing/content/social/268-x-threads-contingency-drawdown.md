@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    367
+word_count:    326
 hashtags:      #RiskManagement #ProjectControls
 ab_id:         AB-05526
 ---

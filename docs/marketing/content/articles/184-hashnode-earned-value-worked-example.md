@@ -9,8 +9,8 @@ pillar:        Earned value management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/earned-value-worked-example
-schema:        Article
-word_count:    1800
+schema:        Article + FAQPage
+word_count:    1,713
 hashtags:      #python #datascience #finance #tutorial
 ab_id:         AB-00080
 ---

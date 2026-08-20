@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1591
+schema:        Article + FAQPage
+word_count:    1,662
 hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00105
 ---

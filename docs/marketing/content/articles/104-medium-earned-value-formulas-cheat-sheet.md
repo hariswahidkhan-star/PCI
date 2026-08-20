@@ -9,8 +9,8 @@ pillar:        Earned value management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /earned-value-formulas-cheat-sheet (own site #022)
-schema:        Article
-word_count:    1507
+schema:        Article + FAQPage
+word_count:    1,713
 hashtags:      #ProjectControls #EarnedValue #CostEngineering #PMO #ProjectManagement
 ab_id:         AB-00032
 ---

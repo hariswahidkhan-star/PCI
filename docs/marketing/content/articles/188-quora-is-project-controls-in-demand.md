@@ -10,7 +10,7 @@ credential:    suite
 target_domain: pciworld.org
 canonical:     original
 schema:        FAQPage
-word_count:    1648
+word_count:    1,572
 hashtags:      n/a (Quora)
 ab_id:         AB-03684
 ---

@@ -9,7 +9,7 @@ pillar:        Certification and careers
 credential:    suite
 target_domain: pciworld.org
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1219
 hashtags:      n/a (Reddit)
 ab_id:         AB-00259

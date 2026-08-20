@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        HowTo
-word_count:    327
+word_count:    386
 hashtags:      #ProjectControls #Scheduling
 ab_id:         AB-05476
 ---

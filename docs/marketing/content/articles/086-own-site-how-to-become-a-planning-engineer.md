@@ -9,7 +9,7 @@ pillar:        Certification and careers
 credential:    PCL-AI
 target_domain: pciworld.org
 canonical:     original
-schema:        HowTo
+schema:        HowTo + FAQPage
 word_count:    1806
 hashtags:      n/a (own site)
 ab_id:         AB-02559

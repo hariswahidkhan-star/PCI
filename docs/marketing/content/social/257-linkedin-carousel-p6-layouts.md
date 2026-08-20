@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        HowTo
-word_count:    1075
+word_count:    1,030
 hashtags:      #Primavera #Scheduling #ProjectControls #PMO
 ab_id:         AB-00194
 ---

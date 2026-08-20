@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: credentialfinder.org
 canonical:     original
-schema:        HowTo
-word_count:    1518
+schema:        HowTo + FAQPage
+word_count:    1,785
 hashtags:      n/a (own site)
 ab_id:         —
 ---

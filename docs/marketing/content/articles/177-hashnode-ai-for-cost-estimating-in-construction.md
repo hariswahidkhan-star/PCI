@@ -9,7 +9,7 @@ pillar:        AI in project controls
 credential:    PFL-AI
 target_domain: pciai.org
 canonical:     canonical -> pciai.org/ai-for-cost-estimating-in-construction
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1603
 hashtags:      #python #datascience #machinelearning #tutorial
 ab_id:         AB-00046

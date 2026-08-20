@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    PFL-AI
 target_domain: pciglobal.ai
 canonical:     original
-schema:        Article
-word_count:    1832
+schema:        Article + FAQPage
+word_count:    1,784
 hashtags:      #ProjectControls #CostEngineering #ProjectFinance #RiskManagement
 ab_id:         AB-03325
 ---

@@ -10,7 +10,7 @@ credential:    suite
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    256
+word_count:    306
 hashtags:      #ProjectControls #ProjectFinance #ProjectManagement #CostEngineering
 ab_id:         AB-00088
 ---

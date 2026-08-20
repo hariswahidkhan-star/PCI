@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> /best-ai-construction-scheduling-software (own site #065)
-schema:        Article
-word_count:    1764
+schema:        Article + FAQPage
+word_count:    1,826
 hashtags:      #ai #testing #python #architecture
 ab_id:         AB-00047
 ---

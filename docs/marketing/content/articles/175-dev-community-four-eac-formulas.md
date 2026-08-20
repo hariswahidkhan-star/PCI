@@ -9,7 +9,7 @@ pillar:        Earned value management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/four-eac-formulas
-schema:        HowTo
+schema:        HowTo + FAQPage
 word_count:    1766
 hashtags:      #python #datascience #finance #tutorial
 ab_id:         AB-00215

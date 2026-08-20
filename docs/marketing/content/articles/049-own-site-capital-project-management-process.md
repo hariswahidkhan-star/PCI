@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        HowTo
-word_count:    1800
+schema:        HowTo + FAQPage
+word_count:    1,877
 hashtags:      n/a (own site)
 ab_id:         AB-00208
 ---

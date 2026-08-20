@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    suite
 target_domain: pciai.org
 canonical:     original
-schema:        Article
-word_count:    1587
+schema:        Article + FAQPage
+word_count:    1,661
 hashtags:      #ProjectControls #AIGovernance #CostEngineering #Scheduling #ProjectManagement
 ab_id:         AB-00100
 ---

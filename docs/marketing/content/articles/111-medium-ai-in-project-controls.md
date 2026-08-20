@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> /ai-in-project-controls (own site #056)
-schema:        Article
-word_count:    2393
+schema:        Article + FAQPage
+word_count:    2,453
 hashtags:      #ProjectControls #AIGovernance #EarnedValue #CostEngineering #ProjectManagement
 ab_id:         AB-00038
 ---

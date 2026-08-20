@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> /llm-schedule-review (own site #068)
-schema:        HowTo
-word_count:    1714
+schema:        HowTo + FAQPage
+word_count:    1,776
 hashtags:      #ai #python #productivity #careerdev
 ab_id:         AB-00151
 ---

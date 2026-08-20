@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> /will-ai-replace-planning-engineers (own site #060)
 schema:        FAQPage
-word_count:    1571
+word_count:    1,646
 hashtags:      #Scheduling #ProjectControls #ProjectManagement #AIGovernance #Primavera
 ab_id:         AB-00042
 ---

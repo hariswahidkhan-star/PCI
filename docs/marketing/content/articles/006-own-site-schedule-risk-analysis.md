@@ -9,8 +9,8 @@ pillar:        Risk management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    2284
+schema:        Article + FAQPage
+word_count:    2,335
 hashtags:      []
 ab_id:         AB-00035
 ---

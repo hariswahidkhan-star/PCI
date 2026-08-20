@@ -9,8 +9,8 @@ pillar:        Cost control and estimating
 credential:    PFL-AI
 target_domain: credentialfinder.org
 canonical:     original
-schema:        Article
-word_count:    1709
+schema:        Article + FAQPage
+word_count:    2,016
 hashtags:      n/a (own site)
 ab_id:         —
 ---

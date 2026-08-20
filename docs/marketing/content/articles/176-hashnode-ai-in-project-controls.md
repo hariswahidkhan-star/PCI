@@ -9,7 +9,7 @@ pillar:        AI in project controls
 credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> pciai.org/ai-in-project-controls
-schema:        Article
+schema:        Article + FAQPage
 word_count:    2406
 hashtags:      #machinelearning #python #datascience #tutorial
 ab_id:         AB-00038

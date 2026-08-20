@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article
-word_count:    317
+word_count:    365
 hashtags:      #ProjectControls #ProjectManagement #PMO
 ab_id:         AB-00114
 ---

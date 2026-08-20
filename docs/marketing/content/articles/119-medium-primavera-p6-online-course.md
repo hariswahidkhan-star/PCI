@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /primavera-p6-online-course (own site #036)
-schema:        Article
-word_count:    1462
+schema:        Article + FAQPage
+word_count:    1,697
 hashtags:      #ProjectControls #Primavera #Scheduling #ProjectManagement #PMO
 ab_id:         AB-03488
 ---

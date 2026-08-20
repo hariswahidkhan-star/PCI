@@ -9,7 +9,7 @@ pillar:        Project controls fundamentals
 credential:    suite
 target_domain: pciworld.org
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1163
 hashtags:      n/a (Reddit)
 ab_id:         AB-03683

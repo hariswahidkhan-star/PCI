@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1500
+schema:        Article + FAQPage
+word_count:    1,622
 hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00187
 ---

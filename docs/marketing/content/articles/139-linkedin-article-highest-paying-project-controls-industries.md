@@ -10,7 +10,7 @@ credential:    suite
 target_domain: pciworld.org
 canonical:     original
 schema:        FAQPage
-word_count:    1733
+word_count:    1,688
 hashtags:      #ProjectControls #CostEngineering #ProjectFinance #ProjectManagement
 ab_id:         AB-00258
 ---

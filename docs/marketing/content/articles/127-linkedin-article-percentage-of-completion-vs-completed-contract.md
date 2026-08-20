@@ -9,8 +9,8 @@ pillar:        Cost control and estimating
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1523
+schema:        Article + FAQPage
+word_count:    1,611
 hashtags:      #ProjectControls #ProjectFinance #ConstructionAccounting #CostEngineering #QuantitySurveying
 ab_id:         AB-00254
 ---

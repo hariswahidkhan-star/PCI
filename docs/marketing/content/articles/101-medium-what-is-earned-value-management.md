@@ -9,8 +9,8 @@ pillar:        Earned value management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /earned-value-management (own site #003)
-schema:        Article
-word_count:    2119
+schema:        Article + FAQPage
+word_count:    2,285
 hashtags:      #ProjectControls #EarnedValue #CostEngineering #ProjectManagement #ProjectFinance
 ab_id:         AB-00091
 ---

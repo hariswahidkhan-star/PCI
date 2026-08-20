@@ -9,7 +9,7 @@ pillar:        Cost control and estimating
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/project-cash-flow-forecasting
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1793
 hashtags:      #python #datascience #finance #tutorial
 ab_id:         AB-00096

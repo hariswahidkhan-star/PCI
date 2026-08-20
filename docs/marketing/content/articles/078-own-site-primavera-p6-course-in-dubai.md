@@ -9,7 +9,7 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: pciglobal.ai
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1653
 hashtags:      n/a (own site)
 ab_id:         —

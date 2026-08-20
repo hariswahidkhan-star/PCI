@@ -9,7 +9,7 @@ pillar:        AI in project controls
 credential:    PML-AI
 target_domain: pciai.org
 canonical:     canonical -> pciai.org/ai-in-construction-project-management
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1782
 hashtags:      #ai #machinelearning #datascience #tutorial
 ab_id:         AB-00041

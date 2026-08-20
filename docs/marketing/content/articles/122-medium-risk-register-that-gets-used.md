@@ -9,8 +9,8 @@ pillar:        Risk management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /risk-register-that-gets-used (own site #046)
-schema:        HowTo
-word_count:    1805
+schema:        HowTo + FAQPage
+word_count:    1,964
 hashtags:      #ProjectControls #RiskManagement #PMO #CostEngineering #ProjectManagement
 ab_id:         AB-01037
 ---

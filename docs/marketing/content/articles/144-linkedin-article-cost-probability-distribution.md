@@ -9,8 +9,8 @@ pillar:        Risk management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1619
+schema:        Article + FAQPage
+word_count:    1,691
 hashtags:      #RiskManagement #CostEngineering #ProjectFinance #ProjectControls
 ab_id:         AB-00225
 ---

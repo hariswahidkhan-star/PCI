@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        FAQPage
-word_count:    1702
+word_count:    1,636
 hashtags:      n/a (Quora)
 ab_id:         AB-00264
 ---

@@ -9,7 +9,7 @@ pillar:        Certification and careers
 credential:    suite
 target_domain: pciglobal.ai
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1798
 hashtags:      n/a (own site)
 ab_id:         —

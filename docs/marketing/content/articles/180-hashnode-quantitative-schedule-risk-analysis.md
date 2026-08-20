@@ -9,7 +9,7 @@ pillar:        Risk management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/quantitative-schedule-risk-analysis
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1798
 hashtags:      #python #datascience #statistics #tutorial
 ab_id:         AB-00081

@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: pciworld.org
 canonical:     original
 schema:        Article
-word_count:    300
+word_count:    378
 hashtags:      #CostEngineering #ProjectControls #ProjectManagement #ProjectFinance
 ab_id:         AB-00293
 ---

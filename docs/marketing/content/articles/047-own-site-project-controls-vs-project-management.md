@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    suite
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1603
+schema:        Article + FAQPage
+word_count:    1,661
 hashtags:      n/a (own site)
 ab_id:         AB-00028
 ---

@@ -9,7 +9,7 @@ pillar:        Certification and careers
 credential:    suite
 target_domain: pciworld.org
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1714
 hashtags:      #ProjectControls #CostEngineering #ProjectManagement #PMO
 ab_id:         AB-00127

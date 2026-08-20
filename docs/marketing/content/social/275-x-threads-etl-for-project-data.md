@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciai.org
 canonical:     original
 schema:        Article
-word_count:    261
+word_count:    312
 hashtags:      #ProjectControls #PMO
 ab_id:         AB-01381
 ---

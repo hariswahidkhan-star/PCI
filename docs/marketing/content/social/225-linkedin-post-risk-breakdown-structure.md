@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    333
+word_count:    389
 hashtags:      #RiskManagement #ProjectControls #ProjectManagement #PMO
 ab_id:         AB-01039
 ---

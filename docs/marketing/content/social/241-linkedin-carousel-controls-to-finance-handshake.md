@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        HowTo
-word_count:    600
+word_count:    670
 hashtags:      #ProjectControls #EarnedValue #ProjectFinance #CostEngineering
 ab_id:         AB-00141
 ---

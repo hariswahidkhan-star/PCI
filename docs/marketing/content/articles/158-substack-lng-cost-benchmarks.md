@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    PFL-AI
 target_domain: pciglobal.ai
 canonical:     original
-schema:        Article
-word_count:    1637
+schema:        Article + FAQPage
+word_count:    1,793
 hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-03335
 ---

@@ -10,7 +10,7 @@ credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        HowTo
-word_count:    745
+word_count:    808
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #PMO
 ab_id:         AB-00208
 ---

@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    339
+word_count:    401
 hashtags:      #ProjectControls #EarnedValue #Primavera #Scheduling
 ab_id:         AB-00186
 ---

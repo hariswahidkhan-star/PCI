@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciai.org
 canonical:     original
 schema:        Article
-word_count:    966
+word_count:    908
 hashtags:      #ProjectControls #PMO #AIGovernance #CostEngineering #ProjectManagement #Scheduling
 ab_id:         AB-01378
 ---

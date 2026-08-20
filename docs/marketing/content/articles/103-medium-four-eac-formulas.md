@@ -9,8 +9,8 @@ pillar:        Earned value management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /four-eac-formulas (own site #023)
-schema:        HowTo
-word_count:    1692
+schema:        HowTo + FAQPage
+word_count:    1,776
 hashtags:      #ProjectControls #EarnedValue #ProjectFinance #CostEngineering #RiskManagement
 ab_id:         AB-00215
 ---

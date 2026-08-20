@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciai.org
 canonical:     original
 schema:        Article
-word_count:    309
+word_count:    370
 hashtags:      #ProjectControls #AIGovernance
 ab_id:         AB-00283
 ---

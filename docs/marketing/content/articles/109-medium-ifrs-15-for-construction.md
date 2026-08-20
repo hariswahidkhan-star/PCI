@@ -9,8 +9,8 @@ pillar:        Cost control and estimating
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /ifrs-15-for-construction (own site #029)
-schema:        Article
-word_count:    1790
+schema:        Article + FAQPage
+word_count:    1,846
 hashtags:      #ProjectControls #ProjectFinance #ConstructionAccounting #CostEngineering #QuantitySurveying
 ab_id:         AB-00130
 ---

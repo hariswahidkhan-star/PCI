@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1521
+schema:        Article + FAQPage
+word_count:    1,593
 hashtags:      #Primavera #Scheduling #ProjectControls #ProjectManagement
 ab_id:         AB-00184
 ---

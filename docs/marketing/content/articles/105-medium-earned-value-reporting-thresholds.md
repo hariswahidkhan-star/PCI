@@ -9,8 +9,8 @@ pillar:        Earned value management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /earned-value-reporting-thresholds (own site #025)
-schema:        Article
-word_count:    1734
+schema:        Article + FAQPage
+word_count:    1,820
 hashtags:      #ProjectControls #EarnedValue #ProjectFinance #PMO #RiskManagement
 ab_id:         AB-00214
 ---

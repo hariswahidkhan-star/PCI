@@ -10,7 +10,7 @@ cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        PresentationDigitalDocument (the SlideShare page carries its own; the deck is original to this platform and is not a republished article)
+schema:        PresentationDigitalDocument (the SlideShare page carries its own; the deck is original to this platform and is not a republished article) + FAQPage
 notes: |
   The governing law of this deck: every slide must survive being screenshotted alone. SlideShare
   decks are read in a scroll player with no speaker, embedded on sites the author never sees, and

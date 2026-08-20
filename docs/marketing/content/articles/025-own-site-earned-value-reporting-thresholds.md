@@ -9,8 +9,8 @@ pillar:        Earned value management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1663
+schema:        Article + FAQPage
+word_count:    1,844
 hashtags:      n/a (own site)
 ab_id:         AB-00214
 ---

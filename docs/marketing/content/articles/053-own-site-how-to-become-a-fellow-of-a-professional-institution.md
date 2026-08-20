@@ -9,8 +9,8 @@ pillar:        Certification and careers
 credential:    suite
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        HowTo
-word_count:    1703
+schema:        HowTo + FAQPage
+word_count:    1,652
 hashtags:      n/a (own site)
 ab_id:         —
 ---

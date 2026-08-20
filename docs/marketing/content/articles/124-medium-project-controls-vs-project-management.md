@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    suite
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /project-controls-vs-project-management (own site #047)
-schema:        Article
-word_count:    1807
+schema:        Article + FAQPage
+word_count:    1,924
 hashtags:      #ProjectControls #ProjectManagement #EarnedValue #PMO #CostEngineering
 ab_id:         AB-00028
 ---

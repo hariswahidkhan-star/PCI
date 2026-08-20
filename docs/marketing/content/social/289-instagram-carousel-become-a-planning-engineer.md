@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: pciworld.org
 canonical:     original
 schema:        HowTo
-word_count:    1118
+word_count:    1,018
 hashtags:      #ProjectControls #Scheduling #ProjectManagement #Primavera #PMO #CostEngineering
 ab_id:         AB-02559
 ---

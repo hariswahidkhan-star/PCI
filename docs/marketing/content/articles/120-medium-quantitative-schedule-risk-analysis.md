@@ -9,8 +9,8 @@ pillar:        Risk management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /quantitative-schedule-risk-analysis (own site #044)
-schema:        Article
-word_count:    1415
+schema:        Article + FAQPage
+word_count:    1,979
 hashtags:      #RiskManagement #ProjectControls #Scheduling #PMO #ProjectManagement
 ab_id:         AB-00081
 ---

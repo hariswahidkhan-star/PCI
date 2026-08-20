@@ -9,8 +9,8 @@ pillar:        Cost control and estimating
 credential:    PFL-AI
 target_domain: pciglobal.ai
 canonical:     original
-schema:        Article
-word_count:    1531
+schema:        Article + FAQPage
+word_count:    1,623
 hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00305
 ---

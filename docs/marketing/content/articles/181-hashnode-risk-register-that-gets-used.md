@@ -9,8 +9,8 @@ pillar:        Risk management
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/risk-register-that-gets-used
-schema:        HowTo
-word_count:    1798
+schema:        HowTo + FAQPage
+word_count:    1,741
 hashtags:      #productivity #datascience #python #tutorial
 ab_id:         AB-01037
 ---

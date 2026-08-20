@@ -10,7 +10,7 @@ credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    341
+word_count:    402
 hashtags:      #ProjectControls #EarnedValue #PMO #ProjectManagement
 ab_id:         AB-00622
 ---

@@ -9,8 +9,8 @@ pillar:        Cost control and estimating
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /month-end-close-for-projects (own site #028)
-schema:        HowTo
-word_count:    1724
+schema:        HowTo + FAQPage
+word_count:    1,769
 hashtags:      #ProjectControls #CostEngineering #ProjectFinance #EarnedValue #PMO
 ab_id:         AB-00141
 ---

@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    462
+word_count:    421
 hashtags:      #RiskManagement #CostEngineering
 ab_id:         AB-01047
 ---

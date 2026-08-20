@@ -9,8 +9,8 @@ pillar:        Cost control and estimating
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /eac-accounting (own site #027)
-schema:        Article
-word_count:    1704
+schema:        Article + FAQPage
+word_count:    1,771
 hashtags:      #ProjectControls #ProjectFinance #CostEngineering #EarnedValue #ConstructionAccounting
 ab_id:         AB-00094
 ---

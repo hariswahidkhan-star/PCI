@@ -10,7 +10,7 @@ credential:    suite
 target_domain: pciworld.org
 canonical:     original
 schema:        Article
-word_count:    979
+word_count:    935
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #Scheduling #PMO #ProjectFinance
 ab_id:         AB-00119
 ---

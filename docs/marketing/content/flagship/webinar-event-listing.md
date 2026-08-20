@@ -24,7 +24,7 @@ cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original (the listing is a registration page, not an article; it carries no canonical and needs none, and it must not be republished as a blog post on any of the five domains)
-schema:        Event
+schema:        Event + FAQPage
 primary_kw:    earned value management training
 secondary_kw:  cost performance index, project accounting cut-off, accrual for work not yet invoiced, EAC methods
 notes: |

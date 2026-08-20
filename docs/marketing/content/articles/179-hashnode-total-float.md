@@ -9,7 +9,7 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/total-float
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1800
 hashtags:      #algorithms #python #tutorial #computerscience
 ab_id:         AB-00601

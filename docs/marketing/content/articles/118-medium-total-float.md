@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /total-float (own site #040)
-schema:        Article
-word_count:    1531
+schema:        Article + FAQPage
+word_count:    1,872
 hashtags:      #ProjectControls #Scheduling #Primavera #PMO #RiskManagement
 ab_id:         AB-00601
 ---

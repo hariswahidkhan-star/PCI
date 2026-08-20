@@ -4,7 +4,7 @@ type:          thread
 title:         Fourteen CPI points, moved by an invoice that has not arrived
 when_to_post:  Launch week, Tuesday or Wednesday, 13:00–14:30 UK (catches the UK afternoon and the US East Coast morning). Post all nine at once as a single self-reply chain, do not drip them. Pin post 1 to the profile for the week. Hold at least 24 hours clear of the LinkedIn company post so the same practitioners are not served the same arithmetic twice in one morning.
 char_count:    2,040 across 9 posts (longest 269, all under 280)
-word_count:    329
+word_count:    383
 hashtags:      #ProjectControls #EarnedValue (2 across the whole thread, in the final post only)
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge (final post only)
 credential:    PCL-AI

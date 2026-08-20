@@ -14,7 +14,7 @@ pillar:        Project controls fundamentals
 credential:    PCL-AI (suite named once)
 target_domain: projectcontrolsinstitute.org
 canonical:     original — LinkedIn supports no canonical tag, so this must never be a copy of a site article, and no site article may reuse it
-schema:        Article
+schema:        Article + FAQPage
 hashtags:      #ProjectControls #ProjectFinance #EarnedValue #PMO #AIGovernance
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 notes: |

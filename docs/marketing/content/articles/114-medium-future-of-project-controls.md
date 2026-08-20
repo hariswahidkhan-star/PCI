@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    suite
 target_domain: pciai.org
 canonical:     canonical -> /future-of-project-controls (own site #063)
-schema:        Article
-word_count:    1657
+schema:        Article + FAQPage
+word_count:    1,720
 hashtags:      #ProjectControls #ProjectFinance #PMO #CostEngineering #AIGovernance
 ab_id:         AB-00045
 ---

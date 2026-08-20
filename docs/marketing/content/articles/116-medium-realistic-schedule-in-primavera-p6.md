@@ -9,8 +9,8 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /realistic-schedule-in-primavera-p6 (own site #038)
-schema:        HowTo
-word_count:    1795
+schema:        HowTo + FAQPage
+word_count:    1,868
 hashtags:      #ProjectControls #Scheduling #Primavera #PMO #ProjectManagement
 ab_id:         AB-00078
 ---

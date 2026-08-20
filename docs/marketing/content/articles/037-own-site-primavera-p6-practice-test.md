@@ -9,8 +9,8 @@ pillar:        Certification and careers
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
-word_count:    1798
+schema:        Article + FAQPage
+word_count:    1,952
 hashtags:      n/a (own site)
 ab_id:         AB-00069
 ---

@@ -9,7 +9,7 @@ pillar:        Risk management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/monte-carlo-cost-simulation
-schema:        HowTo
+schema:        HowTo + FAQPage
 word_count:    1747
 hashtags:      #python #datascience #statistics #tutorial
 ab_id:         AB-01051

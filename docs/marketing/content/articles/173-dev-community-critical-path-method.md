@@ -9,7 +9,7 @@ pillar:        Planning and scheduling
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/critical-path-method
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1748
 hashtags:      #algorithms #python #computerscience #tutorial
 ab_id:         AB-00591

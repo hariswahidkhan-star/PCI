@@ -9,7 +9,7 @@ pillar:        Certification and careers
 credential:    suite
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    2227
 hashtags:      []
 ab_id:         AB-00084

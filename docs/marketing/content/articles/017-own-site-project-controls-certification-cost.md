@@ -10,7 +10,7 @@ credential:    suite
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        FAQPage
-word_count:    1559
+word_count:    1,509
 hashtags:      n/a (own site)
 ab_id:         AB-00010
 ---

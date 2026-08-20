@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        FAQPage
-word_count:    1684
+word_count:    1,822
 hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00266
 ---

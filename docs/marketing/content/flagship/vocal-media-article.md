@@ -13,7 +13,7 @@ pillar:        Project controls fundamentals
 credential:    PCL-AI (suite named once)
 target_domain: projectcontrolsinstitute.org
 canonical:     original — Vocal offers no canonical control, so this is a full rewrite and no PCI page may reuse it
-schema:        Article
+schema:        Article + FAQPage
 hashtags:      none — Vocal has no hashtag field. Stories are filed to a community instead. First choice Trader (business and finance), second choice Journal. Confirm the current community list in the editor at submission rather than trusting this note.
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 notes: |

@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PFL-AI
 target_domain: pciai.org
 canonical:     canonical -> /generative-ai-project-reporting (own site #070)
-schema:        HowTo
-word_count:    1785
+schema:        HowTo + FAQPage
+word_count:    1,860
 hashtags:      #ai #python #architecture #productivity
 ab_id:         AB-00157
 ---

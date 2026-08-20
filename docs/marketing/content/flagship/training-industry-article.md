@@ -10,7 +10,7 @@ pillar:        Certification and capability
 credential:    suite (PCL-AI lead)
 target_domain: projectcontrolsinstitute.org
 canonical:     original — written for this publication, never a copy of the own-site pillar
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1,605 (headline through the end of the author biography, including the standfirst and table cells, excluding front matter and the linking note). If the publication's house length is tighter, the four buyer's questions are the block to cut, and the piece stands without them.
 hashtags:      None. Training Industry is an edited publication with a byline and an author block, not a feed. Hashtags in a submitted manuscript mark it as repurposed social copy to the first editor who opens it. Tag the piece only in the LinkedIn post that points at it once it is live.
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge

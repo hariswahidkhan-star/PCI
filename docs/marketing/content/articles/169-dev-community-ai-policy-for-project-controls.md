@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> /ai-policy-for-project-controls (own site #069)
-schema:        HowTo
-word_count:    1790
+schema:        HowTo + FAQPage
+word_count:    1,860
 hashtags:      #ai #devops #security #testing
 ab_id:         AB-00154
 ---

@@ -14,7 +14,7 @@ cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original — write once, publish here, never a copy of the own-site pillar
-schema:        Article
+schema:        Article + FAQPage
 ab_id:         n/a — flagship launch asset, not an Article Bank brief
 notes: |
   ORIGINAL AND NOT REPUBLISHED. A contributed trade article gets no canonical tag pointing home, so a

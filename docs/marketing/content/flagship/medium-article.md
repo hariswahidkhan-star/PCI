@@ -14,7 +14,7 @@ cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> https://projectcontrolsinstitute.org/finance-and-project-management-certification
-schema:        Article
+schema:        Article + FAQPage
 canonical_instruction: |
   SET THE CANONICAL BEFORE PUBLISHING, NOT AFTER. In the Medium editor: the three dots in the top
   bar → More settings → Advanced settings → "Canonical link" → paste

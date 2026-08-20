@@ -12,7 +12,7 @@ target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
 char_count:    1750 including hashtags
-word_count:    309
+word_count:    361
 hashtags:      #ProjectControls #ProjectFinance #CostEngineering #PMO
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 notes: |

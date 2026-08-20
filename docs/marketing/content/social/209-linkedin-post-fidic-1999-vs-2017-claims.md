@@ -10,7 +10,7 @@ credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    276
+word_count:    328
 hashtags:      #ProjectControls #ProjectManagement #ProjectFinance
 ab_id:         AB-00250
 ---

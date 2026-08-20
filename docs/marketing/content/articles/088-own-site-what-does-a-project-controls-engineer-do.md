@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    suite
 target_domain: pciworld.org
 canonical:     original
-schema:        Article
-word_count:    1798
+schema:        Article + FAQPage
+word_count:    1,917
 hashtags:      n/a (own site)
 ab_id:         —
 ---

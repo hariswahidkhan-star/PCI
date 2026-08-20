@@ -9,8 +9,8 @@ pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
-schema:        Article
-word_count:    1787
+schema:        Article + FAQPage
+word_count:    1,847
 hashtags:      n/a (own site)
 ab_id:         AB-00059
 ---

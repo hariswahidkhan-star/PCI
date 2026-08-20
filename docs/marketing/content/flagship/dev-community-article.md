@@ -11,7 +11,7 @@ pillar:        AI in project controls
 credential:    PCL-AI (suite named once)
 target_domain: pciai.org
 canonical:     canonical -> https://pciai.org/ai-in-project-controls
-schema:        Article
+schema:        Article + FAQPage
 hashtags:      DEV tags, four (the maximum), lowercase, no hash — ai, datascience, machinelearning, python
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 canonical_instruction: |

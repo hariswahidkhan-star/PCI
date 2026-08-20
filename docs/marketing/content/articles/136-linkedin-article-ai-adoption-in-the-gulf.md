@@ -9,7 +9,7 @@ pillar:        AI in project controls
 credential:    suite
 target_domain: pciglobal.ai
 canonical:     original
-schema:        Article
+schema:        Article + FAQPage
 word_count:    1632
 hashtags:      #ProjectControls #AIGovernance #CostEngineering #ProjectManagement
 ab_id:         AB-00302

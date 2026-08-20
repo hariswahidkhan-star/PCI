@@ -10,7 +10,7 @@ credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        HowTo
-word_count:    541
+word_count:    609
 hashtags:      #ProjectControls #Scheduling #ProjectManagement #Primavera #Construction #CivilEngineering
 ab_id:         AB-01126
 ---

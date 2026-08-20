@@ -9,7 +9,7 @@ pillar:        Risk management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
-schema:        HowTo
+schema:        HowTo + FAQPage
 word_count:    1801
 hashtags:      n/a (own site)
 ab_id:         AB-01051

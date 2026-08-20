@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> projectcontrolsinstitute.org/capital-project-management-process
-schema:        HowTo
-word_count:    1800
+schema:        HowTo + FAQPage
+word_count:    1,727
 hashtags:      #productivity #finance #tutorial #datascience
 ab_id:         AB-00208
 ---

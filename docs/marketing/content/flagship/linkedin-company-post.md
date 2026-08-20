@@ -4,7 +4,7 @@ type:          linkedin-post
 title:         Fourteen CPI points, lost in an accrual not a schedule
 when_to_post:  Launch week, Tuesday or Wednesday, 07:30–08:30 UK. This is the first post on the company page and it stays pinned. Hold the carousel version at least 48 hours behind it so the two do not compete in the same feed cycle.
 char_count:    1703 (including hashtags, excluding the first comment)
-word_count:    278
+word_count:    359
 hashtags:      #ProjectControls #ProjectFinance #EarnedValue #CostEngineering
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge (first comment only)
 credential:    PCL-AI

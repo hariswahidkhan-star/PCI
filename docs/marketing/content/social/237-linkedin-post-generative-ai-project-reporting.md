@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: pciai.org
 canonical:     original
 schema:        Article
-word_count:    323
+word_count:    388
 hashtags:      #ProjectControls #AIGovernance #ProjectFinance #CostEngineering
 ab_id:         AB-00157
 ---

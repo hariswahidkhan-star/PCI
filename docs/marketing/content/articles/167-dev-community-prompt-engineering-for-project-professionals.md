@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    suite
 target_domain: pciai.org
 canonical:     canonical -> /prompt-engineering-for-project-professionals (own site #067)
-schema:        HowTo
-word_count:    1629
+schema:        HowTo + FAQPage
+word_count:    1,677
 hashtags:      #ai #python #testing #productivity
 ab_id:         AB-00150
 ---

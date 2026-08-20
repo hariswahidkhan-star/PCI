@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PFL-AI
 target_domain: pciai.org
 canonical:     canonical -> /ai-for-cost-estimating-in-construction (own site #064)
-schema:        Article
-word_count:    1764
+schema:        Article + FAQPage
+word_count:    1,816
 hashtags:      #CostEngineering #ProjectControls #ProjectFinance #AIGovernance #ProjectManagement
 ab_id:         AB-00046
 ---

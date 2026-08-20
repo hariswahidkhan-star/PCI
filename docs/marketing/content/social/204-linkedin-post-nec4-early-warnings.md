@@ -10,7 +10,7 @@ credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    253
+word_count:    310
 hashtags:      #ProjectControls #RiskManagement #ProjectManagement #CostEngineering
 ab_id:         AB-01115
 ---

@@ -10,7 +10,7 @@ credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article
-word_count:    596
+word_count:    670
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #Scheduling
 ab_id:         AB-00288
 ---

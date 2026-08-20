@@ -9,8 +9,8 @@ pillar:        AI in project controls
 credential:    PCL-AI
 target_domain: pciai.org
 canonical:     canonical -> /ai-for-construction-scheduling (own site #058)
-schema:        Article
-word_count:    1729
+schema:        Article + FAQPage
+word_count:    1,801
 hashtags:      #Scheduling #ProjectControls #Primavera #RiskManagement #AIGovernance
 ab_id:         AB-00040
 ---

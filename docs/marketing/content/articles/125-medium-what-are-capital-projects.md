@@ -9,8 +9,8 @@ pillar:        Project controls fundamentals
 credential:    PML-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /what-are-capital-projects (own site #009)
-schema:        Article
-word_count:    2341
+schema:        Article + FAQPage
+word_count:    2,469
 hashtags:      #ProjectControls #ProjectFinance #ProjectManagement #CostEngineering #PMO
 ab_id:         AB-00207
 ---

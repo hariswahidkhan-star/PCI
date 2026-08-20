@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: pciai.org
 canonical:     original
 schema:        FAQPage
-word_count:    1565
+word_count:    1,689
 hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00284
 ---
