@@ -77,8 +77,6 @@ The spread is £16.80m to £18.90m — **£2.10m** on one dataset, produced enti
 
 To-complete performance index: TCPI = (BAC − EV) ÷ (BAC − AC) = 9.4 ÷ 8.6 = **1.093**. The remaining work has to run 9% better than plan against the 0.892 achieved so far, which is the honest test of any recovery narrative.
 
-Where each method breaks down is covered in [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).
-
 ## Where the role touches finance
 
 This is the half of the job that adverts rarely describe and interviews always test.
@@ -97,8 +95,6 @@ At an annual turnover of £24m, a day of turnover is 24,000,000 ÷ 365 = **£65,
 
 Getting certification ten days earlier — usually a document and evidence problem rather than a commercial one — releases 10 × 65,753 = **£658,000** of cash without changing the profit by a penny. That is a project controls output, and it is the one finance directors remember.
 
-The full treatment is in [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting).
-
 ## Project controls engineer, planner, cost engineer, project manager
 
 | Role | Owns | Judged on | First question they ask in a meeting |
@@ -108,7 +104,7 @@ The full treatment is in [project cash flow forecasting](https://projectcontrols
 | Cost engineer | Budgets, commitments, actuals, accruals | Whether the ledger reconciles | "Is that committed or accrued?" |
 | Project manager | Delivery, scope, people, the client | Whether the project delivered | "What do you need me to decide?" |
 
-On a small project one person does all four. On major capital work they are separate seats, and the controls engineer is the one who has to make the other three agree on a single set of numbers.
+On a small project one person does all four. On major capital work they are separate seats, and the controls engineer is the one who has to make the other three agree on a single set of numbers. The route into the second of those seats is set out in [how people arrive at a first planning job](https://pciworld.org/how-to-become-a-planning-engineer).
 
 ## What the role is not
 
@@ -124,7 +120,7 @@ A chartered accountant is examined on when revenue may be recognised, almost nev
 
 PCI examines both sides across three credentials: PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
 
-The Bodies of Knowledge are weighted **40 / 40 / 20** across finance and reporting, project management and governed AI, and rest on **113 mandatory PCI Standards carrying 532 process requirements**. The calculation material behind PFL-AI and PML-AI has been verified by **15,613 machine calculation checks, all passing** — a suite covering PFL-AI and PML-AI only, with no equivalent for PCL-AI. For the discipline's full scope, see [what project controls covers](https://projectcontrolsinstitute.org/what-is-project-controls).
+The Bodies of Knowledge are weighted **40 / 40 / 20** across finance and reporting, project management and governed AI, and rest on **113 mandatory PCI Standards carrying 532 process requirements**. The calculation material behind PFL-AI and PML-AI has been verified by **15,613 machine calculation checks, all passing** — a suite covering PFL-AI and PML-AI only, with no equivalent for PCL-AI.
 
 ## Frequently asked questions
 

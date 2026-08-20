@@ -119,7 +119,7 @@ It fixes your availability and worsens everyone else's, briefly. In a regional s
 Contemporaneously, or not at all. Daily allocation sheets tying hours to areas, quantity records signed at the same frequency, and a measured baseline period before the disruption began. A retrospective global claim built from the final cost against the tender is the weakest form of the argument and the one most often rejected.
 
 **Can AI forecast labour demand usefully?**
-It is genuinely good at the tedious part: aggregating crew demand across a portfolio, spotting where two projects need the same scarce trade in the same month, and testing whether a levelled programme is achievable against the recruitment you have actually made. That is roughly [what a model can and cannot do with a resourced programme](https://pciai.org/ai-for-construction-scheduling), and the boundary matters: it cannot tell you whether the local market has those people. That answer comes from your supply chain, and it should be written down with a date.
+It is genuinely good at the tedious part: aggregating crew demand across a portfolio, spotting where two projects need the same scarce trade in the same month, and testing whether a levelled programme is achievable against the recruitment you have actually made. That is the useful edge of [what a model can and cannot do with a resourced programme](https://pciai.org/ai-for-construction-scheduling). It cannot tell you whether the local market has those people. That answer comes from your supply chain, and it should be written down with a date.
 
 ---
 

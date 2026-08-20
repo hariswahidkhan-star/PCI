@@ -1,7 +1,7 @@
 ---
 platform:      WordPress.com blog post (branded educational blog, dofollow links)
 type:          guide
-title:         Estimate at completion: whose assumptions are you signing?
+title:         Estimate at completion assumptions: whose are you signing?
 meta:          Four EAC methods, four sets of estimate at completion assumptions. What each assumes about the work left, and what one missing accrual does to it.
 slug:          estimate-at-completion-assumptions
 excerpt:       Four EAC methods, four sets of estimate at completion assumptions. What each assumes about the work left, and what one missing accrual does to it.
@@ -26,9 +26,11 @@ notes: |
   "EAC accounting" to 027 and "when to use each EAC formula" to Substack 154. A WordPress.com post
   aimed at any of those would take traffic from a page we own. "Estimate at completion assumptions"
   is a phrase no piece in the run targets, and it is what this post is actually about.
-  The exact-match phrase sits in the H2 and the meta description. The H1 and the opening paragraph
-  carry it in natural word order, because an H1 that reads like a keyword string is the fastest way
-  to look like content marketing to the senior reader this is written for.
+  The exact-match phrase sits in the H1, the opening sentence, one H2 and the meta description, and
+  nowhere else on purpose. It survives in the H1 only because the question mark carries the sentence:
+  "Estimate at completion assumptions: whose are you signing?" is a question a practitioner asks,
+  whereas the same phrase bolted onto a statement would read as a keyword string, which is the fastest
+  way to look like content marketing to the senior reader this is written for.
   CHECK THE TIER BEFORE PUBLISHING. The free tier gives no SEO plugin, so the meta description above
   must be entered as the post excerpt, which is what WordPress.com then serves as the description.
   The free tier also serves adverts you neither control nor earn from, and an advert for a training
@@ -56,16 +58,17 @@ notes: |
   Three links, three domains, one each, all in the body where the sentence raises the question the
   target answers. Anchor text differs from every other asset pointing at these domains, and both the
   pciai.org and credentialfinder.org destinations are pages no other flagship links to.
-  AEO: title question answered in 55 words, and every H2 but one is a question a person would type.
+  AEO: the title question is answered in the first two words and settled inside 61, and every H2 but
+  one is a question a person would type.
   The exception is the closing section: a sign-off phrased as a search query reads like a form. Four questions
   at the end answered in 40 to 80 words each. There is no EAC-versus-ETC question in that block, on
   purpose: the hub's own EAC pages target that query and the definition section already answers it.
   Mark the closing block up as FAQPage.
 ---
 
-# Estimate at completion: whose assumptions are you signing?
+# Estimate at completion assumptions: whose are you signing?
 
-Someone else's. Every estimate at completion carries assumptions you did not make: the earning rules that produced earned value, and the accounting cut-off that produced actual cost. Two of the four standard methods divide by cost performance index, so both sets of assumptions arrive inside your forecast whether or not you were ever examined on either.
+Someone else's. The estimate at completion assumptions that decide the number were made before it reached you: the earning rules that produced earned value, and the accounting cut-off that produced actual cost. Two of the four standard methods divide by cost performance index, so both sets arrive inside your forecast whether or not you were ever examined on either.
 
 Accountancy exams rarely test float. Engineering exams rarely test cut-off. Projects need both.
 

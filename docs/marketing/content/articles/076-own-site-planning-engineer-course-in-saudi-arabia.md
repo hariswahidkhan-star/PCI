@@ -33,7 +33,7 @@ Choose by what the certificate is evidence of. Five route types, and they are no
 | University or college short course | Method and theory, occasionally a project | Coursework, sometimes an exam | Academic exposure to planning | Current practice on live contracts |
 | Independent certifying body | A published Body of Knowledge, examined | Proctored examination against a syllabus | You were examined and passed | Site experience, which no exam replaces |
 
-Two routes can be worth combining. Tool training plus an examined credential covers operation and judgement; either one alone leaves a visible gap.
+Two routes can be worth combining. Tool training plus an examined credential covers operation and judgement; either one alone leaves a visible gap. [The certification routes for planners, compared](https://projectcontrolsinstitute.org/planning-engineer-certification) sets out what each of them examines before you pay for either.
 
 ## What does the Saudi market actually ask a planner to do?
 
@@ -100,10 +100,10 @@ The examination is delivered online under proctoring, so a candidate in Riyadh, 
 ## Frequently asked questions
 
 **Do I need a Saudi-based provider, or will an online course do?**
-Location matters for site exposure and for meeting the people who hire, not for the syllabus. An examined credential sat online carries the same evidence anywhere. If your gap is local contract practice and client reporting habits, choose a provider with people who have delivered work in the Kingdom.
+Location matters for site exposure and for meeting the people who hire, not for the syllabus. An examined credential sat online carries the same evidence anywhere, which is why [the same routes across the UAE](https://pciglobal.ai/project-controls-training-uae) come out in much the same order. If your gap is local contract practice and client reporting habits, choose a provider with people who have delivered work in the Kingdom.
 
 **Is Primavera P6 training enough on its own?**
-No, and it is not meant to be. P6 training proves you can operate the tool, which employers do require. It does not test whether your logic is sound, your calendars are right or your float report is honest, and those are the judgements that get tested when a programme slips.
+No, and it is not meant to be. P6 training proves you can operate the tool, which employers do require, and [what a P6 course covers and what it leaves out](https://pciglobal.ai/primavera-p6-course-in-dubai) is worth reading before you book one anywhere in the Gulf. It does not test whether your logic is sound, your calendars are right or your float report is honest, and those are the judgements that get tested when a programme slips.
 
 **How long does it take to become employable as a planner here?**
 That depends on your starting discipline and site exposure, not on any course length a provider quotes. Engineers moving across from execution usually move fastest because they already know how the work is built. Treat any promise of a job or a salary as a reason to walk away.
@@ -116,4 +116,4 @@ Critical path method by hand, total and free float, calendars and constraints, p
 
 ---
 
-*Internal links: this guide should link to [planning engineer certification](https://projectcontrolsinstitute.org/planning-engineer-certification) with the anchor "the five certification routes compared in detail", to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "how total float and free float differ", and to [project controls training in the UAE](https://pciglobal.ai/project-controls-training-uae) with the anchor "the equivalent routes across the UAE".*
+*Internal links: placed in the body. Two on pciglobal.ai — project controls training UAE, in the FAQ about local versus online providers, where a reader asks how the neighbouring market ranks the same routes; and the Primavera P6 course in Dubai, in the FAQ on whether tool training is enough. One cross-estate link, to the hub's planning engineer certification page, after the route table, since the sentence about combining tool training with an examined credential raises exactly what each route examines. The total float link in the original note was dropped: one cross-estate link per domain is the cap, and this piece works total and free float out in full, so it raises no question the hub page answers. Reciprocal: the Qatar course guide links here as the neighbouring planner market.*

@@ -87,7 +87,7 @@ Compare spend to date against the sanction curve, then let earned value tell you
 
 At month 30 of a 60-month programme, the sanction curve says 46% of installed cost should be spent. Actual spend is 51%. On its own that says the project is ahead, or it says money has gone out without work coming in, and the curve cannot distinguish them.
 
-Add earned value at 45%, measured the way [earned value is measured on a capital project](https://projectcontrolsinstitute.org/earned-value-management) rather than claimed. On a BAC of US$16.8bn: PV = 0.46 × 16.8 = **US$7.73bn**, AC = 0.51 × 16.8 = **US$8.57bn**, EV = 0.45 × 16.8 = **US$7.56bn**.
+Add earned value at 45%, which has to be measured rather than claimed. [How earned value is measured on a capital project](https://projectcontrolsinstitute.org/earned-value-management) decides whether the three indices below mean anything. On a BAC of US$16.8bn: PV = 0.46 × 16.8 = **US$7.73bn**, AC = 0.51 × 16.8 = **US$8.57bn**, EV = 0.45 × 16.8 = **US$7.56bn**.
 
 CPI = EV ÷ AC = 7.56 ÷ 8.57 = **0.882**. SPI = EV ÷ PV = 7.56 ÷ 7.73 = **0.978**. Cost variance = 7.56 − 8.57 = −**US$1.01bn**.
 
