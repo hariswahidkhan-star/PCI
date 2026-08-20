@@ -84,7 +84,7 @@ It does not prove you can produce a defensible programme under pressure, because
 
 It also does not touch what your programme does to the money, and that gap is larger than the one between the two scheduling credentials.
 
-The join is the earning rule: the convention that decides how much of a package's budget a given piece of physical work has earned this month. It is usually written before anyone turns up on site, rarely reviewed afterwards, and capable of moving a package's earned value by six figures without a single day of programme changing.
+The join is the earning rule: the convention that decides how much of a package's budget a given piece of physical work has earned this month. It is usually written before anyone turns up on site, rarely reviewed afterwards, and able to move a package's earned value materially without a single day of programme changing.
 
 That rule sits past the end of a scheduling syllabus and before the start of an accounting one, so almost nobody is examined on it. Which is why it keeps producing forecasts that have to be restated, and why the float arithmetic at the top of this page is only half of what a controls role gets asked to defend.
 

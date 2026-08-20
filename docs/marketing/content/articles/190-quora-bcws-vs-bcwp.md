@@ -78,7 +78,7 @@ The to-complete performance index asks what efficiency is now required to land o
 
 The team has delivered 0.871 and must now deliver 1.095, a 26 per cent improvement in productivity, for the budget to hold. If nothing structural has changed, that forecast is a hope with a formula attached.
 
-That single-method forecast is one of four available, and each one carries a different assumption about cause. Choosing between them is a judgement, not a calculation.
+That single-method forecast is one of four available, and each carries a different assumption about cause: that the overrun is closed, that performance to date continues, that recovering time keeps costing money, or that the remaining scope is worth re-pricing from the bottom up. [Which of those four assumptions you are signing](https://projectcontrolsinstitute.org/four-eac-formulas) is a judgement about what went wrong, not a calculation.
 
 ## Why BCWP stops telling the truth about time
 
@@ -113,7 +113,7 @@ Practically, treat them as synonyms and say so in your report glossary. Argument
 
 **Comparing BCWP and ACWP across different cut-offs.** If progress is measured to the 25th and costs are booked to the 30th, the index is a comparison of two different months. Most disputed cost performance indices are a cut-off problem, not a productivity problem.
 
-For the full set of formulas with a worked dataset, [the earned value management guide](https://projectcontrolsinstitute.org/earned-value-management) sets out each measure and where it stops working.
+All three are definition and cut-off problems rather than productivity problems, which is why they survive so long. The arithmetic is right; the inputs are describing different things.
 
 ## Frequently asked questions
 

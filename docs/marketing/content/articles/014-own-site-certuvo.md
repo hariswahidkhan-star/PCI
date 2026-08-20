@@ -79,7 +79,7 @@ It is not for someone hoping the platform will substitute for experience. The ex
 
 Allocate by gap multiplied by proportion, not by gap alone. A weak area that is a fifth of the syllabus does not deserve more than half your hours, and a gap-only split hands it exactly that.
 
-Say a baseline mock returns 82% on project accounting and finance, 76% on project management principles and 48% on the AI material, and you have 80 hours to spend. Splitting those hours in proportion to the gap to 100% alone gives 15, 20 and 45.
+Say a baseline mock returns 82% on project accounting and finance, 76% on project management principles and 48% on the AI material, and you have 80 hours to spend. Splitting those hours in proportion to the gap to 100% alone gives roughly 15, 20 and 45 — over half the plan spent on a fifth of the syllabus.
 
 Multiplying each gap by that area's share of the Body of Knowledge — 40%, 40% and 20% — gives **21, 28 and 31 hours** instead. The weakest area still takes the largest single share; the difference is that two-fifths of the syllabus is no longer abandoned to fix one-fifth of it.
 
