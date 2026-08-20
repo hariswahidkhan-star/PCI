@@ -135,7 +135,7 @@ The Body of Knowledge behind it is 40 per cent finance and reporting, 40 per cen
 
 That is the shape of the syllabus and not an examination weighting. The syllabus is settled; the exam blueprint is still an open decision. Anyone quoting you an exam weighting, for this credential or any other, is reading from a marketing document.
 
-Read what any credential examines rather than what it promises, ours included. [A like-for-like reading of what the main controls credentials actually test](https://credentialfinder.org/best-project-controls-certification) is more use at that moment than any provider's own page, and a syllabus that will not show you its domains is telling you something.
+Read what any credential examines rather than what it promises, ours included. [A like-for-like reading of what the main controls credentials actually test](https://credentialfinder.org/best-project-controls-certification) collects that in one place — PCI publishes it, so treat it as a starting point and verify each entry against the awarding body itself. A syllabus that will not show you its domains is telling you something.
 
 ## The part that is yours
 

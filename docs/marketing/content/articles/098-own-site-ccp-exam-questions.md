@@ -19,6 +19,12 @@ ab_id:         —
 
 CCP exam questions test whether you can reach a defensible number under a realistic scenario, not whether you can recall a definition. Expect estimating, cost control and earned value, economic analysis, and the commercial judgement around them — with a written component where you have to produce the answer rather than recognise it.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 Everything below is original PCI material. It contains no AACE questions, because reproducing examination items breaches the certification agreement you sign and would be worthless preparation anyway.
 
 ## What CCP exam questions are built around

@@ -124,7 +124,7 @@ Check those rows against your own catalogue before you accept them; the shape is
 
 2. **Teach it against a live report, not a case study.** Bring last month's real cost report into the session and ask for two dates: when the ledger closed, and when progress was measured. If they differ and no accrual bridges them, the session has paid for itself before the content starts.
 
-3. **When you fund a credential, read what it examines rather than what it promises.** A syllabus that will not show you its domains is telling you something, and half an hour on [how to check what a credential actually examines](https://credentialfinder.org/best-project-controls-certification) is worth more than any provider's own page, this Institute's included.
+3. **When you fund a credential, read what it examines rather than what it promises.** A syllabus that will not show you its domains is telling you something, and half an hour spent reading domains beats an afternoon reading brochures. [A like-for-like comparison of what the main controls credentials examine](https://credentialfinder.org/best-project-controls-certification) is one way in; PCI publishes it and PCI is in it, so use it to find the questions and take the answers from each awarding body direct.
 
 ## The training that machine output depreciates first
 

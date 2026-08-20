@@ -19,6 +19,12 @@ ab_id:         —
 
 Two conditions make CCP certification worth it: you already own a cost report, and you work in a market that names AACE credentials in job advertisements. It is not worth it if you are hoping a certificate will substitute for the experience the examination assumes, or if your employers have never asked for one.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 That is the whole test. The rest of this page is how to apply it to your own situation before spending the fee and the eighty hours.
 
 ## What does the CCP actually certify?

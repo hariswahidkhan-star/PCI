@@ -19,6 +19,12 @@ ab_id:         AB-00062
 
 PMI-SP is worth it if you schedule for a living in an organisation built on PMI's framework and need evidence from someone other than your manager. It is not worth it if you need proof of production skill, if your market names AACE credentials, or if your real gap is cost.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 Everything below is the version people ask in private, answered with the arithmetic where there is any.
 
 ## What does PMI-SP actually examine?

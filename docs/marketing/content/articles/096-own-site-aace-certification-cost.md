@@ -19,6 +19,12 @@ ab_id:         AB-00063
 
 AACE certification cost is never one number. Every AACE credential charges across five lines: membership, application, the examination sitting, any retake, and recertification each cycle. Member and non-member pricing differ on most of them. Take the current figures from AACE's own fee page, then add the line that dwarfs them all — your own hours.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 This page will not quote AACE's dollar figures. Fee schedules change, and a number copied from a comparison blog is usually a year stale by the time you read it.
 
 ## The five lines that make up any AACE certification cost

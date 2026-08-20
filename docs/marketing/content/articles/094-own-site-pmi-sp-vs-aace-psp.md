@@ -19,6 +19,12 @@ ab_id:         AB-00061
 
 PMI-SP vs AACE PSP is a choice between two scheduling credentials with different assessment philosophies. PMI-SP examines scheduling inside PMI's project management framework through objective questions. PSP examines planning and scheduling as a production and forensic discipline, with practical exercises as well as objective ones.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 Pick by two things: which acronym your market names, and whether you want an assessment that makes you produce work rather than recognise answers. If PMP and the tool certificates are still on your list, [the wider shortlist for planners](https://credentialfinder.org/best-certification-for-planning-engineers) sets all five against each other first.
 
 ## PMI-SP vs AACE PSP on the axes that matter

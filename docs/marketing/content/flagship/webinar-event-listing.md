@@ -211,7 +211,7 @@ It is not for anyone hoping to watch a tool demonstrated: no product appears in 
 
 ### What the session does not do
 
-The 40/40/20 proportions describe the Body of Knowledge, and no examination weighting is published or discussed in the hour, because the exam blueprint is an open decision. Nor is any comparison drawn that places another body's credential below PCI's. PCI holds no accreditation, recognition or endorsement from any body and claims none; if that matters to you, and it should, read [what each certifying body actually puts on its examination, ours included](https://credentialfinder.org/best-project-controls-certification) before you spend an hour with us.
+The 40/40/20 proportions describe the Body of Knowledge, and no examination weighting is published or discussed in the hour, because the exam blueprint is an open decision. Nor is any comparison drawn that places another body's credential below PCI's. PCI holds no accreditation, recognition or endorsement from any body and claims none; if that matters to you, and it should, check it before you spend an hour with us. PCI publishes [a comparison of what each certifying body puts on its examination, ours included](https://credentialfinder.org/best-project-controls-certification), which is a starting point and not an independent audit — for that, read each body's own scheme documents and ask an accreditation body directly.
 
 ### Before you come
 

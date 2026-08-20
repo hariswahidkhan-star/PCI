@@ -160,7 +160,7 @@ That crossing is what the PCI AI Project Controls Leader (PCL-AI) examines: 13 d
 
 Its Body of Knowledge is 40 per cent finance and reporting, 40 per cent project management, 20 per cent governed use of machine output. That is the syllabus's shape, not an examination weighting — the exam blueprint is still an open decision.
 
-Read what a credential examines rather than what it promises, this one included. [Comparing the main controls credentials by what is on their syllabuses](https://credentialfinder.org/best-project-controls-certification) beats any provider's own page.
+Read what a credential examines rather than what it promises, this one included. [Comparing the main controls credentials by what is on their syllabuses](https://credentialfinder.org/best-project-controls-certification) is a faster way in than reading four prospectuses, and PCI publishes that comparison, so read it knowing who wrote it and check the figures against each body's own pages.
 
 ## The part that's yours
 

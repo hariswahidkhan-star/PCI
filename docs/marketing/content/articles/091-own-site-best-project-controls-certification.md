@@ -19,6 +19,12 @@ ab_id:         AB-00059
 
 There is no single best project controls certification. The best one for you is the credential whose examination covers the decisions you are actually paid to sign, assessed by someone other than the people who taught you. Everything below sorts the main options on those two axes.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 Most comparison pages rank credentials by prestige. Prestige is not the variable. Scope and independence are.
 
 ## What "best project controls certification" means once you strip the marketing

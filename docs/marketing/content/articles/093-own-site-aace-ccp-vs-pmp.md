@@ -19,6 +19,12 @@ ab_id:         AB-00060
 
 AACE CCP vs PMP is not a choice between levels. CCP is AACE International's cost engineering credential, examining estimating, cost control, planning, economics and the total cost picture. PMP is PMI's general credential for managing projects. Take CCP if you own the numbers, PMP if you own the project.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 Both are respected. Neither substitutes for the other, and holding one does not make the other redundant.
 
 ## AACE CCP vs PMP: what each one actually examines

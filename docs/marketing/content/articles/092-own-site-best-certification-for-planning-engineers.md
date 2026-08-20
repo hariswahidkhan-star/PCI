@@ -19,6 +19,12 @@ ab_id:         —
 
 The best certification for planning engineers is the one that examines network logic, progress measurement and delay under an independent assessor. On that test, AACE's PSP and PMI's PMI-SP are the scheduling credentials, PMP is a general management credential, tool certificates prove software operation, and PCL-AI adds the money side.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 Those five are not ranked against each other. They answer different questions, and the useful comparison is which question you need answered.
 
 ## What a planning engineer is actually examined on at work

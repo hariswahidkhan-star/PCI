@@ -19,6 +19,12 @@ ab_id:         —
 
 PMI-SP exam prep works best as eighty to a hundred hours across twelve weeks, built around PMI's published exam content outline rather than a textbook. Spend the first third on hand calculations, the middle third on PMI's process vocabulary, and the last third on timed scenario practice. Candidates who reverse that order usually fail on the scenarios.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 PMI publishes the item count, the time limit, the domain weightings and the eligibility hours in its own exam content outline and handbook. Download both, free, and take those numbers from there rather than from a study forum.
 
 ## What the PMI-SP examines

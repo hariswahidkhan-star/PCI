@@ -19,6 +19,12 @@ ab_id:         —
 
 The PSP is AACE International's Planning and Scheduling Professional credential, and this AACE PSP certification guide sets out what it examines: schedule development, maintenance and control across the project life cycle, including the forensic use of a programme, assessed by written examination with practical exercises rather than recall alone. It suits planners with real site experience and a market that names AACE.
 
+> **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
+> Global, which awards the PCI credentials discussed below. It is not an independent comparison
+> service. Figures for AACE, PMI and other bodies are taken from their own published pages and
+> should be checked there before you decide anything, because they change and because we are not
+> a neutral party about one of the entries.
+
 It is not an entry-level certificate, and it is not a software qualification.
 
 ## What an AACE PSP certification guide should tell you first
