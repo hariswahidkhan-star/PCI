@@ -91,11 +91,15 @@ The 100-day answer assumes seven durations are exactly right. Replace each with 
 | F Steel erection | 26 | 30 | 42 |
 | G Cladding | 17 | 20 | 28 |
 
-The simulated completion distribution on those inputs has a mean of **110.9 days**, with P10 at **104**, P50 at **111**, P80 at **116** and P90 at **118**.
+Sampled as triangular distributions, uncorrelated, the simulated completion distribution has a mean of **110.9 days**, with P10 at **104**, P50 at **111**, P80 at **116** and P90 at **118**.
 
 The deterministic 100-day programme sits below the tenth percentile. On these ranges it is not a plan carrying a little risk; it is a target with under a one-in-ten chance of being met.
 
-The simulation also records which chain governed each run. The concrete route governed **57%** of iterations and the steel route **43%**, a criticality index saying neither can be treated as secondary and that mitigation aimed at one of them addresses roughly half the exposure.
+The simulation also records which chain governed each run. The concrete route A–B–C–F–G governed about **52%** of iterations, the steel route A–E–F–G about **42%**, and the temporary works chain A–D–C–F–G about **5%**. The three are rounded, which is why they do not quite sum to 100.
+
+Read as a criticality index, that says two things. Neither long chain can be treated as secondary, so mitigation aimed at one of them addresses about half the exposure and leaves the other alone.
+
+And the chain the deterministic pass handed 5 days of float to still governs about one run in twenty. It is the same A–D–C–F–G that surfaced at 95 days once both named routes were compressed, which is the deterministic answer and the probabilistic one pointing at the same overlooked chain by different routes.
 
 This is the strongest case for the technology in scheduling. Nobody runs 20,000 passes of a network by hand, so getting them in seconds changes which questions are worth asking.
 
@@ -119,7 +123,7 @@ Price the review. Structural checks generate volume, and volume without an owner
 
 Name the owner. Somebody signs the programme, and under the principle PCI certifies against — AI proposes, the professional disposes — that person must be able to explain the logic changes as well as the arithmetic. The same rule governs cost, forecasting and risk, which is set out in [how governed AI applies across the controls lifecycle](https://pciai.org/ai-in-project-controls).
 
-The three PCI credentials each carry their own Body of Knowledge and examination, proportioned 40/40/20 across finance and reporting, project management, and governed AI: the PCI AI Project Controls Leader (PCL-AI) with 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) with 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) with 16 domains and 63 knowledge areas. PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
+The credential closest to this work is the PCI AI Project Controls Leader (PCL-AI), which carries its own Body of Knowledge and examination across 13 domains and 61 knowledge areas. PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
 ## Frequently asked questions
 

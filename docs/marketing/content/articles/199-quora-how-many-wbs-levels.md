@@ -89,7 +89,7 @@ Check this before the structure is signed off, not at the first month-end. The q
 
 The same alignment drives the accounts. Where progress towards a performance obligation is measured by a cost-based input method, total expected costs is the sum of the control account forecasts, so the level at which forecasts are built is the level at which reported revenue is built.
 
-That overlap between structure and reporting is what the PCI Project Management Leader – AI (PML-AI) credential examines across 16 domains and 63 knowledge areas, with a Body of Knowledge weighted 40% finance and reporting, 40% project management and 20% governed AI. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is accounting advice.
+That overlap between structure and reporting is what the PCI Project Management Leader – AI (PML-AI) credential examines across 16 domains and 63 knowledge areas. Its Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI; those are the syllabus's proportions, not an examination weighting, and no exam blueprint is published. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is accounting advice.
 
 ## Frequently asked questions
 

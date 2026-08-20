@@ -60,7 +60,7 @@ Tighten the confidence threshold and the trade moves. Suppose the model now rais
 | Loose threshold | 400 | 120 | 0.30 | 0.67 | 0.41 | 40 |
 | Tight threshold | 150 | 90 | 0.60 | 0.50 | 0.55 | 15 |
 
-The second setting is better on F1, costs a quarter of the review time, and lets twice as many errors through. Which one you want depends on what a missed miscoding costs you, and that is a business decision rather than a modelling one.
+The second setting is better on F1 and costs a little over a third of the review time, at 15 hours against 40. It also lets more through: 90 real errors missed against 60, half as many again. Which one you want depends on what a missed miscoding costs you, and that is a business decision rather than a modelling one.
 
 A vendor who will not run this test on your data has told you something useful. Ask for precision and recall on a golden set you control, with the review time priced in.
 
@@ -103,9 +103,9 @@ On a job where the expensive work is front-loaded, those two percentages are now
 
 A report that says "the project is 40% complete" without saying which 40% has produced a figure that is right for the site meeting and wrong for the ledger. That is a scoping defect rather than a modelling one, and it is the most common defect in the market.
 
-The financial reporting side of that handover follows a five-step model, described here in our own words rather than reproduced: identify the contract; identify the distinct performance obligations inside it; determine the transaction price, including variable amounts such as variations and claims, constrained so revenue is not taken where a significant reversal is expected; allocate that price across the obligations; and recognise revenue as each obligation is satisfied, measured by a chosen method of progress.
+The financial reporting side of that handover runs on a five-step revenue model, described in the Institute's own words rather than reproduced. Only one of the five steps is a controls problem: step three, which determines the transaction price, including variable amounts such as variations and claims, constrained so revenue is not taken where a significant reversal is expected.
 
-Controls teams matter most at step three, because the unapproved variations sitting in a change log are exactly the variable consideration that step is asking about. Nothing PCI publishes is legal, tax or accounting advice.
+That step is the change log in accounting language. The unapproved variations sitting in it are exactly the variable consideration step three is asking about, and nobody outside the controls team knows what they are worth. The other four steps belong to the accountant. Nothing PCI publishes is legal, tax or accounting advice.
 
 ## What governed AI means in practice
 
@@ -135,7 +135,7 @@ Assurance moves upstream. When outputs are produced in minutes, the control has 
 
 ## How PCI examines this
 
-PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination, and [what an AI-era controls credential has to examine](https://pciai.org/ai-project-controls-certification) is a fair question to put to any of them.
+PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination, and each built against [what an AI-era controls credential has to examine](https://pciai.org/ai-project-controls-certification) rather than against a syllabus written before the tools arrived.
 
 | Credential | Full name | Shape | Centre of gravity |
 |---|---|---|---|
@@ -173,4 +173,4 @@ With the checks that are deterministic and cheap to verify: schedule structural 
 
 *First published on pciai.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links, as placed in the body. The forecast section links to [how to choose and defend an EAC method](https://projectcontrolsinstitute.org/four-eac-formulas), because the £28.1m spread on identical inputs asks how anyone picks one; the certification section links to [what an AI-era controls credential has to examine](https://pciai.org/ai-project-controls-certification), because naming three credentials raises what an examination of this subject should contain. Two links, two domains, one each. The AI for construction scheduling target was dropped: it would have been a second link to the same domain. The proposed `/eac-formulas` slug does not exist and was corrected to `/four-eac-formulas`. Reciprocal: the scheduling guide on this domain should point back here for the pillar treatment of governed AI.*
+*Internal links, as placed in the body. The forecast section links to [how to choose and defend an EAC method](https://projectcontrolsinstitute.org/four-eac-formulas), because the £28.1m spread on identical inputs asks how anyone picks one; the certification section links to [what an AI-era controls credential has to examine](https://pciai.org/ai-project-controls-certification), because naming three credentials raises what an examination of this subject should contain. Two links, two domains, one each. The AI for construction scheduling target was dropped: it would have been a second link to the same domain. The proposed `/eac-formulas` slug does not exist and was corrected to `/four-eac-formulas`. The FAQ on whether AI replaces project controls professionals is the whole subject of the planning-engineer piece on this same domain, and that piece already links up to this pillar; the relationship runs one way on purpose, because a second link to this domain from here would break the one-per-domain cap. Reciprocal: the scheduling guide on this domain should point back here for the pillar treatment of governed AI.*

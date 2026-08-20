@@ -95,15 +95,17 @@ Put that in front of the sponsor. Five months at 0.900, and finishing on budget 
 | Method | Formula | Result (£k) | What it assumes |
 |---|---|---:|---|
 | Remaining work at budget | AC + (BAC − EV) | 1,729 + 2,044.7 = **3,773.7** | The loss is behind you and the rest runs at plan |
-| Remaining work at current CPI | BAC ÷ CPI | 3,600 ÷ 0.900 = **4,001.9** | Today's efficiency continues to the end |
+| Remaining work at current CPI | BAC ÷ CPI | 3,600 ÷ 0.900 = **4,000.0** | Today's efficiency continues to the end |
 | Remaining work at CPI and SPI | AC + (BAC − EV) ÷ (CPI × SPI) | 1,729 + 2,044.7 ÷ 0.8037 = **4,273.1** | Schedule pressure keeps costing money |
 | Bottom-up re-estimate | AC + a fresh ETC of £2,310k | 1,729 + 2,310 = **4,039.0** | The team can re-estimate honestly |
+
+All four use the indices exactly as printed above, rounded to three decimals. Carried unrounded, CPI is 0.899537 and the second method returns £4,002.1k instead of £4,000.0k, which is a rounding difference rather than a different forecast — but say which convention you are using, because a reviewer redoing your arithmetic will land on the other one.
 
 A spread of £3.77m to £4.27m, half a million pounds wide, from one set of inputs. That range is the method asking which assumption you are prepared to sign, and the answer comes from [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas) rather than from the arithmetic.
 
 Here the cause settles it. Circuit terminations are running slower than the rate embedded in the estimate, which is a productivity error and therefore systemic, so the CPI method is the defensible default.
 
-**Variance at completion.** VAC = BAC − EAC = 3,600 − 4,001.9 = **−£401.9k**. That is what the contingency conversation is actually about, and it should happen in month five rather than month nine.
+**Variance at completion.** VAC = BAC − EAC = 3,600 − 4,000.0 = **−£400.0k**. That is what the contingency conversation is actually about, and it should happen in month five rather than month nine.
 
 ## Step five: convert the money into time
 
@@ -129,8 +131,8 @@ Actual time is 5.00 months, so SV(t) = 4.32 − 5.00 = **−0.68 months**, rough
 | CPI / SPI | 0.900 / 0.893 |
 | Per cent complete | 43.2% |
 | TCPI to BAC | 1.093 |
-| EAC (CPI method) | £4,001.9k |
-| VAC | −£401.9k |
+| EAC (CPI method) | £4,000.0k |
+| VAC | −£400.0k |
 | SPI(t) / SV(t) | 0.864 / −0.68 months |
 
 ## What this example still hides
@@ -143,7 +145,7 @@ The earning rules themselves. Move CA-05 off level of effort onto a milestone ru
 
 And one that reaches the accounts. The 43.2% above is a control number built in baseline money.
 
-It is not a revenue percentage, and it should not travel into the ledger without someone who understands both sides signing it. That crossing point is where a project reports one position on the delivery side and a different one in the accounts, and [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification) is a fair question to ask of any credential you already hold.
+It is not a revenue percentage, and it should not travel into the ledger without someone who understands both sides signing it. That crossing point is where a project reports one position on the delivery side and a different one in the accounts, so it is worth checking [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification) before deciding whose signature settles it.
 
 ## Frequently asked questions
 
@@ -166,4 +168,4 @@ Rarely by working harder. The TCPI of 1.093 says the remaining work must run 21%
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this version exists for readers, not for link equity.*
 
-*Internal links, as placed in the body. Step four links to [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas), because the £500k spread in that table asks which of the four answers a forecaster is prepared to sign. The closing section links to [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification), because a control number crossing into the ledger raises who has been examined on both halves. One link per domain and no more: the earned value pillar and the formulas cheat sheet proposed earlier were dropped rather than stacked three-deep on the hub, and the old `/eac-formulas` target does not exist — the real slug is `/four-eac-formulas`. Reciprocal: the hub's own EAC guide has honest reason to point back here, for the worked month-end that produces its inputs.*
+*Estate links, as placed in the body. This is a Medium republish, so both links leave the platform for the estate and neither is a same-domain internal link. Step four links to [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas), because the £500k spread in that table asks which of the four answers a forecaster is prepared to sign. The closing section links to [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification), because a control number crossing into the ledger raises who has been examined on both halves. One estate link per domain and no more: the earned value pillar and the formulas cheat sheet proposed earlier were dropped rather than stacked three-deep on the hub, and the old `/eac-formulas` target does not exist — the real slug is `/four-eac-formulas`. Reciprocal: the hub's own EAC guide has honest reason to point back here, for the worked month-end that produces its inputs.*

@@ -86,7 +86,7 @@ Against that, nineteen weeks late at liquidated damages of £60,000 per week is 
 
 There is a reporting consequence too. Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs — so a £1.50m increase in expected costs reduces the reported percentage complete even though the physical work is unchanged, and revenue recognised to date can go backwards.
 
-That is why PCI examines the schedule and the ledger together rather than separately. The PCI AI Project Controls Leader (PCL-AI) credential covers 13 domains and 61 knowledge areas, with a Body of Knowledge weighted 40% finance and reporting, 40% project management and 20% governed AI. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is accounting or legal advice.
+That is why PCI examines the schedule and the ledger together rather than separately. The PCI AI Project Controls Leader (PCL-AI) credential covers 13 domains and 61 knowledge areas. Its Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI; those are the syllabus's proportions, not an examination weighting, and no exam blueprint is published. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is accounting or legal advice.
 
 ## Frequently asked questions
 

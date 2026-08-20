@@ -90,7 +90,7 @@ One event, two numbers, two clauses, and either can be granted without the other
 
 There is a reporting consequence as well. Prolongation cost that is incurred but not yet certain of recovery increases expected costs, and where progress towards a performance obligation is measured by a cost-based input method, higher expected costs reduce the reported percentage complete. The forecast moves before the claim settles.
 
-That gap between the delay analysis and the ledger is exactly what the PCI Project Management Leader – AI (PML-AI) credential examines, across 16 domains and 63 knowledge areas, with a Body of Knowledge weighted 40% finance and reporting, 40% project management and 20% governed AI. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is legal, tax or accounting advice.
+That gap between the delay analysis and the ledger is exactly what the PCI Project Management Leader – AI (PML-AI) credential examines, across 16 domains and 63 knowledge areas. Its Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI; those are the syllabus's proportions, not an examination weighting, and no exam blueprint is published. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is legal, tax or accounting advice.
 
 ## Frequently asked questions
 

@@ -133,7 +133,7 @@ Behind them sit 113 mandatory PCI Standards carrying 532 process requirements: t
 
 The PCL-AI Body of Knowledge is 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed use of machine output. That is the shape of the syllabus, not of the paper. Any provider quoting an examination weighting for a blueprint nobody has fixed is quoting a marketing document.
 
-And the answer nobody volunteers: the Institute holds no accreditation and claims none. Treat that claim, from any body including this one, as something to verify. A comparison of [what each controls credential actually examines](https://credentialfinder.org/best-project-controls-certification) is duller than any brochure and more use.
+And the answer nobody volunteers: the Institute holds no accreditation and claims none. Treat that claim, from any body including this one, as something to verify — and verify it with an accreditation body, not with the party making it. A comparison of [what each controls credential actually examines](https://credentialfinder.org/best-project-controls-certification), which PCI publishes and appears in, is duller than any brochure and more use as a way of framing the question.
 
 ## What It Costs To Get This Wrong
 

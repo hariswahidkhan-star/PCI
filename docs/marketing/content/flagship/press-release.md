@@ -108,7 +108,7 @@ The Institute is publishing a syllabus, not opening an examination. The PCL-AI B
 
 The Institute holds no accreditation, recognition or endorsement from any other body and claims none. It publishes no pass rate and no salary or outcome claim.
 
-Practitioners and employers are invited to read the domains and knowledge areas against their own last month-end, and to apply to every issuer including this one the test that works on a certifying body nobody has heard of: read what it examines, not what it promises. Setting that beside [what the established controls credentials examine](https://credentialfinder.org/best-project-controls-certification) is a check that costs nothing.
+Practitioners and employers are invited to read the domains and knowledge areas against their own last month-end, and to apply to every issuer including this one the test that works on a certifying body nobody has heard of: read what it examines, not what it promises. Setting that beside [what the established controls credentials examine](https://credentialfinder.org/best-project-controls-certification) is a starting point that costs nothing — PCI publishes that comparison and is one of the entries in it, so the checking that matters is done against each awarding body's own scheme documents.
 
 **About the Project Controls Institute**
 

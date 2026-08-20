@@ -2,8 +2,8 @@
 platform:      Quora
 type:          qa-list
 title:         What is the 100% rule in a work breakdown structure?
-meta:          The 100% rule WBS decomposition must satisfy: children sum to their parent, no gaps, no overlaps. Worked arithmetic on missing and double-counted scope.
-primary_kw:    100% rule WBS
+meta:          The 100% rule: a WBS holds all of the scope and nothing more. Worked arithmetic on what a missing branch and a double-counted one each do to CPI.
+primary_kw:    100% rule
 secondary_kw:  work breakdown structure, scope baseline, work package, control account
 pillar:        Planning and scheduling
 credential:    PML-AI
@@ -17,11 +17,11 @@ ab_id:         AB-00269
 
 # What is the 100% rule in a work breakdown structure?
 
-A work breakdown structure must contain 100% of the project's scope and nothing beyond it — that is the 100% rule WBS decomposition must satisfy. At every level, the child elements must add up to exactly their parent. Work that is not in the WBS is not in the project: it has no budget, no owner and no way to earn value.
+The 100% rule says a work breakdown structure must contain 100% of the project's scope and nothing beyond it. At every level, the child elements must add up to exactly their parent. Work that is not in the WBS is not in the project: it has no budget, no owner and no way to earn value.
 
 The rule runs in two directions at once. Vertically, the split must be complete and non-overlapping. Horizontally, the top of the structure must equal the scope the project committed to deliver.
 
-## What is the 100% rule WBS decomposition must satisfy?
+## What are the three tests a WBS branch has to pass?
 
 It requires three things of every branch. The children must cover all of the parent's scope, none of them may duplicate another, and nothing may appear that the parent does not include.
 
@@ -79,7 +79,9 @@ Run the substation numbers on a £14.00m contract price. With £4.00m of cost in
 
 With the true £12.00m, progress is 4.00 ÷ 12.00 = 33.33% and revenue is £4.667m. The gap in the WBS has pulled £0.161m of revenue into the wrong period, and every month it reverses later.
 
-That is a scope-decomposition error arriving in the profit and loss account. It is the reason PCI examines finance and delivery in one credential: the PCI Project Management Leader – AI (PML-AI) covers 16 domains and 63 knowledge areas, with a Body of Knowledge weighted 40% finance and reporting, 40% project management and 20% governed AI. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is accounting advice.
+That is a scope-decomposition error arriving in the profit and loss account. It is the reason PCI examines finance and delivery in one credential: the PCI Project Management Leader – AI (PML-AI) covers 16 domains and 63 knowledge areas.
+
+The Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI. Those are the syllabus's proportions, not an examination weighting; no exam blueprint is published. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is accounting advice.
 
 ## Frequently asked questions
 
@@ -103,4 +105,4 @@ Sum every level and compare it to its parent, then read the contract's deliverab
 
 ---
 
-*Internal links: one, in the body. [A full month of earned value worked end to end](https://projectcontrolsinstitute.org/earned-value-worked-example) sits with the stray-cost arithmetic, where a CPI of 0.840 on a branch that is performing raises the question of what the same calculation looks like when every cost has a budget line. The critical path page in the original note was dropped rather than placed: it would have been a second link to the same domain, and this answer is about scope coverage, not about logic and float — the schedule question is properly the subject of the WBS versus schedule answer, which is where that link belongs. No reciprocal link is proposed: Quora links are nofollow, so this earns qualified readers rather than equity.*
+*Internal links: one, in the body. [A full month of earned value worked end to end](https://projectcontrolsinstitute.org/earned-value-worked-example) sits with the stray-cost arithmetic, where a CPI of 0.840 on a branch that is performing raises the question of what the same calculation looks like when every cost has a budget line. The critical path page in the original note was dropped rather than placed: it would have been a second link to the same domain, and this answer is about scope coverage, not about logic and float — the schedule question is properly the subject of the WBS versus schedule answer, which is where that link belongs. One link rather than two is deliberate here, and it is a departure from the two-to-four range the architecture sets for own-site pieces: a Quora answer must answer completely before it links at all, nothing else in this answer raises a question another domain settles better, and the sibling answers in this set are placed the same way. No reciprocal link is proposed: Quora links are nofollow, so this earns qualified readers rather than equity.*

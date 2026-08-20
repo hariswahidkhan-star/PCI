@@ -54,9 +54,9 @@ Payment terms: applications certified and paid 60 days after period end, so cash
 
 The closing cumulative is £4.80m, which equals the margin, so the model ties. Cash in for period two is 0.95 × the £2.00m of period-one revenue, and the post-completion row includes the £1.20m retention release.
 
-**The peak funding requirement is £1.30m, reached at the end of period two and held through period three.** Months three to six are when this contract needs a facility, and a profitable contract is exactly where most contractors run out of money.
+**The peak funding requirement is £1.30m, reached at the end of period two and held through period three.** The contract is cash-negative from period one and does not clear until period five, so the facility has to be in place for the first eight months, not just around the peak. A profitable contract is exactly where most contractors run out of money.
 
-## One lever, worth £1.30m
+## One lever that removes the £1.30m funding peak
 
 Move supplier terms from 45 days to 60, so a period's cost is paid entirely in the following period. Nothing else changes: same scope, same price, same cost, same margin.
 
@@ -72,7 +72,9 @@ Move supplier terms from 45 days to 60, so a period's cost is paid entirely in t
 
 Peak funding falls from £1.30m to nil and the contract self-finances from period two. The closing position is identical at £4.80m, because payment terms move timing and never profit.
 
-Fifteen days of supplier terms was worth more to this contract than a 5% cost saving would have been, and it was available at signature rather than earned on site.
+Fifteen days of supplier terms was worth more to the funding requirement than a 5% cost saving would have been, and it was available at signature rather than earned on site.
+
+On margin the ranking reverses. Five per cent off the £19.2m cost is £0.96m the business keeps for good, while the terms change moves £1.30m of timing and leaves the margin at £4.80m exactly where it was. The two levers answer different questions, so be clear which one you are being asked to improve before claiming either.
 
 ## Which levers actually move the peak
 
@@ -97,9 +99,9 @@ At portfolio level the same question is asked with three ratios. Take revenue fo
 
 **Days payable outstanding.** Payables £18.9m: 18.9 ÷ 77.0 × 365 = **89.6 days**.
 
-**Cash conversion cycle** = 54.0 + 54.5 − 89.6 = **18.9 days**. Working capital tied up = 18.9 ÷ 365 × 77.0 = **£3.99m**.
+**Cash conversion cycle** = 54.0 + 54.5 − 89.6 = **18.9 days**. Converting those days back into money uses cost of sales, not revenue: 18.9 ÷ 365 × 77.0 = **£3.99m** of working capital tied up.
 
-Ten days off DSO releases 10 ÷ 365 × 96.0 = **£2.63m** of cash, permanently, with no change to revenue or cost. That is larger than most cost-reduction programmes deliver, and it comes from billing on time and settling certification disputes faster.
+Ten days off DSO releases 10 ÷ 365 × 96.0 = **£2.63m** of cash, permanently, with no change to revenue or cost. That one runs off revenue, because receivables are billed at the contract price, so it will not tie to the £3.99m figure above at the same daily rate. Mixing the two denominators in one sentence is how these ratios get argued about. That is larger than most cost-reduction programmes deliver, and it comes from billing on time and settling certification disputes faster.
 
 The warning attached to a short cycle: a contractor with a negative cash conversion cycle is being financed by its supply chain, and the position reverses violently when volumes fall.
 
