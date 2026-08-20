@@ -17,7 +17,7 @@ ab_id:         AB-03684
 
 # Is project controls in demand? How to check it yourself
 
-Yes, wherever capital is actually being executed rather than announced. Demand tracks sanctioned capital, contract form and lender or audit scrutiny, not fashion. Nobody can quote you a credible global headcount, so *is project controls in demand* is best answered with a method you can run on your own market this week.
+Is project controls in demand? Yes, wherever capital is actually being executed rather than announced. Demand tracks sanctioned capital, contract form and lender or audit scrutiny, not fashion. Nobody can quote you a credible global headcount, so the rest of this answer is a method you can run on your own market this week.
 
 The confident nonsense online comes from answering it with a number nobody sourced. Below is where the numbers break down, and what to measure instead.
 
@@ -91,9 +91,9 @@ Alliance and integrated forms need the most, because a shared pain-gain mechanis
 
 The scarce profile is not a planner or a cost engineer. It is somebody who can hold both sides of the same number.
 
-A project's percentage complete is a delivery measure and a revenue measure at the same time. An engineer is examined on progress measurement and almost never on cut-off or a contract asset; an accountant is examined on the reverse. The projects that lose money quietly lose it in that gap.
+A project's percentage complete is a delivery measure and a revenue measure at the same time, and the two professions that own it were trained in different rooms. The person employers cannot find is the one who can say what a change to a rules-of-credit table does to this month's reported revenue, and then defend that answer to a cost engineer and an auditor in the same meeting.
 
-That is the profile organisations struggle to hire, and it is why PCI's credentials are built across the seam: the PCI AI Project Controls Leader (PCL-AI) covers 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) 16 domains and 63 knowledge areas, each Body of Knowledge running 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI.
+That is the profile organisations struggle to hire, and it is why PCI's credentials are built across the seam: the PCI AI Project Controls Leader (PCL-AI) covers 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) 16 domains and 63 knowledge areas. The Body of Knowledge is proportioned 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI; those are the syllabus's proportions, not an examination weighting.
 
 Sector spread is deliberate too: the three volumes carry 92 sector case studies between them, 26 in the first and 33 in each of the other two.
 
@@ -132,4 +132,4 @@ They matter most where an employer cannot easily verify what you have done, whic
 
 ---
 
-*Internal links: this answer should link to [what a project controls engineer does](https://pciworld.org/what-does-a-project-controls-engineer-do) with that anchor, to [project controls salary expectations](https://pciworld.org/project-controls-salary) with the anchor "what the roles pay and what moves the number", and to [the project controls certification guide](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "which project controls certification is examined on judgement". Quora rule: the single in-body link sits near the end, after the question has been answered in full.*
+*Internal links: the body now carries one link, to https://pciworld.org/what-does-a-project-controls-engineer-do, anchored "what a project controls engineer actually does". It sits after the five demand indicators, on the sentence about adverts asking for measurement, forecasting and finance literacy together — the question that raises is what the role now contains day to day, which is that page's subject, and it comes after the answer is complete rather than in the opening. Two further links were proposed and are not placed: the salary page would be a second link to the same domain in one answer, and the hub's certification guide answers a choice this answer does not ask the reader to make. Quora links are nofollow, so treat this as qualified traffic rather than link equity. Reciprocal: none — no PCI page should link out to a Quora answer.*

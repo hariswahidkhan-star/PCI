@@ -66,7 +66,7 @@ The gap between a course quiz and a professional examination is easiest to see i
 
 Start with the damages. The cap is 5% × 30,000,000 = **£1,500,000**, which at £25,000 a day is 60 days of delay. A 40-day slip therefore sits inside the cap and costs 40 × 25,000 = **£1,000,000**. Recovering 30 days removes 30 × 25,000 = **£750,000** of that.
 
-On damages alone the package loses money: £1,100,000 spent to avoid £750,000. Add site overheads running at £18,000 a day and 30 days of prolongation avoided is a further £540,000, so the package now saves £1,290,000 for £1,100,000 and is worth authorising by £190,000.
+On damages alone the package loses money: £1,100,000 spent to avoid £750,000. Now add your own prolongation. With site overheads at £18,000 a day, the 30 days recovered also save 30 × 18,000 = **£540,000**, so the package avoids £1,290,000 of cost for £1,100,000 of spend and comes out £190,000 ahead.
 
 Both sums are correct and they point opposite ways, which is the point of the item. What decides it is not arithmetic: whether the 40 days are excusable, whether the employer has any entitlement to levy damages at all, and whether the slipped path is the one that governs completion.
 

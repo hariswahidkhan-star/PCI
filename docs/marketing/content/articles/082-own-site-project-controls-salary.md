@@ -58,7 +58,7 @@ Score one point for each statement that is true of your current role. Not what y
 9. I brief the schedule and the cost position in the same meeting, on the same data.
 10. Somebody outside my company has relied on reporting I signed.
 
-Scoring: 0–2 is band 1, 3–4 is band 2, 5–6 is band 3, 7–8 is band 4, 9–10 is band 5.
+Scoring: 0–2 is band 1, 3–4 is band 2, 5–6 is band 3, 7–8 is band 4, 9–10 is band 5. That mapping is a rule of thumb for reading the ladder, not a calibrated instrument, and it is not validated against any dataset. Use it to find the rung, then read the rung description and trust that instead.
 
 If you score 6 and are paid at band 2, you have a documented case rather than a grievance. Take the six statements you scored and put a project name against each.
 
@@ -96,17 +96,19 @@ A planner who moves a certification date by a week has moved cash by about four 
 
 Knowing the other side's arithmetic changes how you negotiate.
 
-On a gross salary of 60,000, add employer pension at 6% (3,600), employer social contributions at roughly 12% (7,200), and 3,000 for insurance, equipment and workspace. Employment cost is **73,800**, a multiplier of **1.23** on your gross.
+The figures below are placeholders, and the on-cost percentages in particular are jurisdiction-specific. Replace each one with the rate that actually applies where you are employed.
+
+On a gross salary of 60,000, add employer pension at 6% (3,600), employer social contributions at 12% (7,200), and 3,000 for insurance, equipment and workspace. Employment cost is **73,800**, a multiplier of **1.23** on your gross.
 
 If you sit in a consultancy charged to a client at 95 an hour for 1,600 chargeable hours, you generate **152,000**. Against employment cost of 73,800, that is a recovery of **2.06 times**.
 
-Consultancies target a multiplier in that region to cover non-chargeable time, overhead and margin, which is why utilisation dominates every pay conversation there. A contractor-side role has no such multiplier and prices you against the cost of the alternative, which is why the two markets pay differently for identical work.
+That number is the shape of the conversation rather than a rule about the market. A firm recovering 2.06 times on this cost base is funding non-chargeable time, overhead and margin out of the gap, which is why utilisation dominates every pay discussion inside a consultancy. A contractor-side role has no such multiplier and prices you against the cost of the alternative, which is why the two sides pay differently for identical work.
 
 Use the right arithmetic for the employer you are talking to. Asking a contractor to pay you a consultancy multiple gets you nowhere.
 
 ## What we do not publish
 
-No salary table, and no figure for what a credential does to pay. There is no honest way to isolate that effect without a control group, and any percentage you are shown was produced by a provider with something to sell.
+No salary table, and no figure for what a credential does to pay, because that effect cannot be separated from everything else moving at the same time in a career.
 
 What is publishable is what a credential evidences. PCI examines the finance and delivery overlap deliberately across three credentials: PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
 
@@ -131,4 +133,4 @@ The ladder is stable across markets because it is built on accountability rather
 
 ---
 
-*Linking note: the links are now in the body. Three same-domain links — "the planning engineer salary worksheet" answers the reader who has one offer to normalise before using the ladder; "the gates on each rung of a planning career" follows the sentence naming the 3-to-4 boundary without saying what clears it; "what a project controls engineer does" follows the band 3 against band 4 comparison. One cross-estate link only: "the route into a project controls manager's job" sits in the answer that tells you to ask for the scope first, because that is where the accountabilities are named. Reciprocal: the project controls vs project management piece should link back here with the anchor "how project controls pay follows scope".*
+*Linking note: the links are now in the body. Three same-domain links — "the planning engineer salary worksheet" answers the reader who has one offer to normalise before using the ladder; "the gates on each rung of a planning career" follows the sentence naming the 3-to-4 boundary without saying what clears it; "what a project controls engineer does" follows the band 3 against band 4 comparison. One cross-estate link only: "the route into a project controls manager's job" sits in the answer that tells you to ask for the scope first, because that is where the accountabilities are named. The argument about why no credential-uplift figure can be isolated is made in full on the planning engineer salary worksheet; this page states the position in one sentence rather than restating the case, so the two pages do not carry the same paragraph twice on one domain.*

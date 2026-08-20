@@ -176,11 +176,13 @@ Nothing yet. Those are the Body of Knowledge's proportions — 40 per cent finan
 
 ## Two things to do before issue two
 
-Two things, and the first one is free.
+The first one is free.
 
 Take your last month-end and find the work that was done and not yet invoiced. Then check whether the number in your cost report knew about it. If it did, you have a good process and I would like to hear how you run it.
 
-Then read [the 13 domains and 61 knowledge areas](https://projectcontrolsinstitute.org/body-of-knowledge) of the PCI AI Project Controls Leader against what you actually needed to know that month. Not against a job description. Against the month. If you already hold a letter or two and want to know what this adds, the comparison worth making is on what each one examines rather than on the reputation attached to it. PCI publishes one, [set side by side on what each credential examines, ours included](https://credentialfinder.org/best-project-controls-certification) — we wrote it, so read it as a starting list of questions and take the answers from each awarding body direct.
+Then read [the 13 domains and 61 knowledge areas](https://projectcontrolsinstitute.org/body-of-knowledge) of the PCI AI Project Controls Leader against what you actually needed to know that month. Not against a job description. Against the month.
+
+If you already hold a letter or two and want to know what this adds, the comparison worth making is on what each one examines rather than on the reputation attached to it. PCI publishes one, [set side by side on what each credential examines, ours included](https://credentialfinder.org/best-project-controls-certification) — we wrote it, so read it as a starting list of questions and take the answers from each awarding body direct.
 
 That is issue one. If you want issue two, subscribe below and it will find you in about a month.
 

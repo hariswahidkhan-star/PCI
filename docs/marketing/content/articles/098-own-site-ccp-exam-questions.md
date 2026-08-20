@@ -29,7 +29,7 @@ Everything below is original PCI material. It contains no AACE questions, becaus
 
 ## What CCP exam questions are built around
 
-AACE publishes the scope and structure for the Certified Cost Professional in its own certification handbook. Take the current domain list and item counts from there, not from a study blog. The fees sit on the same pages, and [what the credential costs from application to renewal](https://credentialfinder.org/aace-certification-cost) totals them line by line.
+AACE publishes the scope and structure for the Certified Cost Professional in its own certification handbook. Take the current domain list and item counts from there, not from a study blog. The fees sit on the same pages, and [the five lines to price before you commit](https://credentialfinder.org/aace-certification-cost) sets out what each of them buys.
 
 The shape is stable enough to prepare against. Four kinds of item recur, and each fails candidates differently.
 
@@ -143,9 +143,9 @@ None of the problems above asks what your forecast does to the accounts, and nei
 
 Move the estimate at completion in problem one from £8.40m to £9.56m and you move reported progress, reported revenue and reported margin on that contract, because where progress is measured by costs incurred against total expected costs, your forecast is the denominator. If forecast cost passes the contract price, the expected loss is recognised in full as soon as it is known.
 
-A chartered accountant is examined on recognition and provisions, almost never on an earning rule. An engineer is examined on progress and float, almost never on cut-off.
+Problem one is a cost engineer's paper. What happens to its £1.16m spread once the number reaches the ledger is an accountant's, and the two examinations do not meet at the point where the figure crosses between them.
 
-PCI examines both sides in one syllabus: PCI AI Project Finance Leader (PFL-AI) holds 16 domains and 61 knowledge areas, and every PCI Body of Knowledge holds the same proportions of 40% finance and reporting, 40% project management and 20% governed AI. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
+PCI sets both in one paper. The PCI AI Project Finance Leader (PFL-AI) holds 16 domains and 61 knowledge areas across a Body of Knowledge proportioned 40% finance and reporting, 40% project management and 20% governed AI, so the forecast in problem one and its accounting consequence are marked together rather than assumed. The calculation content of the PFL-AI and PCI Project Management Leader – AI (PML-AI) volumes is verified by 15,613 machine calculation checks, all passing; the PCI AI Project Controls Leader (PCL-AI) has no equivalent suite.
 
 ## Frequently asked questions
 
@@ -153,13 +153,13 @@ PCI examines both sides in one syllabus: PCI AI Project Finance Leader (PFL-AI) 
 AACE publishes preparation material and recommended practices through its own store, and that is the source to use. Treat any site offering the actual examination items as a risk to your certification rather than a shortcut, because reproducing or using leaked items breaches the agreement you sign as a candidate.
 
 **How many practice problems are enough?**
-Fewer than most candidates think, worked properly. Thirty problems re-derived from a blank page beats three hundred read through once. The measure is whether you can produce the answer and the assumption without looking, not how many you have seen.
+Thirty problems re-derived from a blank page beats three hundred read through once. Work each one cold, then again a fortnight later, and count only the ones you could reproduce without the solution beside you. The measure is whether you can produce the answer and the assumption unaided, not how many you have seen.
 
 **What arithmetic should I be fluent in before booking?**
 Earned value status and the four forecasting methods, to-complete performance index, present value and annuity factors, escalation, capacity-factor scaling, learning curves, and float. If any of those needs a lookup mid-problem, you are not ready for a timed paper.
 
 **Is the written part harder than the multiple choice?**
-It is different, and it is the part working professionals under-prepare. Practise writing to a page limit for a named audience, because a technically perfect answer that never states a recommendation loses marks that the arithmetic already earned.
+It is different rather than harder, and it is the part that cannot be practised by reading. Write to a page limit for a named audience against a clock, because a technically perfect answer that never states a recommendation loses marks that the arithmetic already earned.
 
 **Should I memorise formulas?**
 Memorise the small set above and understand what each one assumes. A formula recalled without its assumption produces confident wrong answers, which is exactly the failure mode a scenario examination is designed to catch.

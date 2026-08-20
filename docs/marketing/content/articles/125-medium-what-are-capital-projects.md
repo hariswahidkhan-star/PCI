@@ -100,7 +100,7 @@ A twelve-month delay has removed **£4.47m of value — 43% of the entire busine
 
 That is the number to put in front of anyone treating an eight-week float loss as a scheduling matter. Time on a capital project is the business case, and float is being spent whether or not anybody is tracking it.
 
-It also explains why acceleration can be rational even when it looks expensive, though the margin is usually thinner than the headline suggests. Recover six months of that delay and the present value of the inflows goes from £55.92m to 60.39 ÷ 1.08⁰·⁵ = **£58.11m**, a gain of **£2.19m**.
+It also explains why acceleration can be rational even when it looks expensive, though the margin is usually thinner than the headline suggests. Recover six months of that delay and the present value of the inflows goes from £55.92m to 60.39 ÷ √1.08 = **£58.11m**, a gain of **£2.19m**.
 
 Spend £2m to buy those six months and the project is **£0.19m** better off. Worth doing, and worth showing the working, because a case that close is decided by the accuracy of the acceleration estimate rather than by the principle.
 
@@ -126,9 +126,9 @@ Two of the international accounting standards do most of that governing. They ar
 
 **IAS 23** covers borrowing costs. Where an asset takes a long time to get ready — the standard has its own defined term for assets of that kind — the interest on money borrowed to build it can be treated as part of the asset's cost while construction is under way, and that treatment ends once the asset is substantially complete. Interest running during a long suspension is not treated that way.
 
-Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the entity's accounting policies.
-
 Depreciation begins when the asset is available for use, not when the ribbon is cut. A three-month commissioning delay therefore moves a depreciation charge into a different financial year, which is why the finance team asks about commissioning dates far earlier than the delivery team expects.
+
+Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the entity's accounting policies.
 
 The practical implication is that the cost report must be codeable to that boundary from day one. Splitting three years of accumulated cost into capital and revenue at handover is a painful exercise with a predictable outcome.
 

@@ -89,13 +89,11 @@ Now let payment applications slip by fifteen days because the measure was late. 
 
 Nothing on site changed. A cost engineer who submitted an application fifteen days late cost the business more than the entire certification programme for the department, and no cost examination asks about it.
 
-That is the finance and delivery overlap. A chartered accountant is examined on recognition, provisions and working capital, almost never on an earning rule. An engineer is examined on progress and float, almost never on cut-off or a contract asset. Projects live in the gap.
+That is the finance and delivery overlap in one number. The person who caused the £2.14m was examined on progress and float; the person who has to fund it was examined on working capital and provisions; and nobody examined either of them on the fifteen days in between.
 
-PCI's credentials were built for that gap: PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, alongside PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas. Every Body of Knowledge holds the same proportions: 40% finance and reporting, 40% project management, 20% governed AI.
+PCI wrote a syllabus for those fifteen days rather than for either side of them. The PCI AI Project Finance Leader (PFL-AI) carries 16 domains and 61 knowledge areas, proportioned 40% finance and reporting, 40% project management and 20% governed AI, so the cash conversion cycle above, the discount rate that flipped the earlier decision, and the cost report they both feed are examined in one paper.
 
-Behind them sit 113 mandatory PCI Standards carrying 532 process requirements and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
-
-PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be, and it claims no recognition, endorsement, affiliation or partnership with AACE. Read the published syllabus and judge it on that.
+Apply this page's own test to that claim before you accept it. Read the published syllabus, ask how the pass mark is set, and check whether your market has heard of the body — PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body, does not claim to be, and claims no recognition, endorsement, affiliation or partnership with AACE.
 
 ## When the answer is no
 
@@ -110,7 +108,7 @@ You want a salary figure attached to the decision. No body worth holding a crede
 ## Frequently asked questions
 
 **How long does CCP preparation take?**
-Plan for eighty to a hundred hours across four to six months if you are working full time. Split it: hand calculations first, then economic analysis, then the written component, which most candidates underestimate because writing to a brief under time pressure is a separate skill from knowing the material.
+Plan for eighty to a hundred hours across four to six months if you are working full time. Split it: hand calculations first, then economic analysis, then the written component, because writing to a brief under time pressure is a separate skill from knowing the material and needs its own practice against a clock.
 
 **Is CCP better than PMP?**
 They are not competing, and [how the two credentials divide the work](https://credentialfinder.org/aace-ccp-vs-pmp) is the useful comparison. CCP examines the money side of an asset for a cost specialist; PMP examines managing projects broadly. Cost engineers who hold both usually took CCP for the technical depth and PMP because an employer or client named it. Check which acronym appears in the roles you want.

@@ -141,7 +141,11 @@ The £5.87m above has to be financed. The delay days inside it arrive as time-re
 
 A chartered accountant is examined on provisions and cut-off, almost never on a P80. An engineer is examined on ranges and float, almost never on what a contingency release does to a reported result. This number sits in both places, which is why it is where projects lose money quietly.
 
-The PCI AI Project Finance Leader (PFL-AI) covers **16 domains and 61 knowledge areas**, with a Body of Knowledge weighted **40 / 40 / 20** across finance and reporting, project management and governed AI. The calculation content behind PFL-AI and PML-AI is verified by **15,613 machine calculation checks, all passing**; the PCI AI Project Controls Leader (PCL-AI) has no equivalent suite.
+Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the contract.
+
+The PCI AI Project Finance Leader (PFL-AI) covers **16 domains and 61 knowledge areas**, with a Body of Knowledge that runs in a **40 / 40 / 20** proportion across finance and reporting, project management, and governed AI. The calculation content behind PFL-AI and PML-AI is verified by **15,613 machine calculation checks, all passing**; the PCI AI Project Controls Leader (PCL-AI) has no equivalent suite.
+
+PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
 ## Frequently asked questions
 

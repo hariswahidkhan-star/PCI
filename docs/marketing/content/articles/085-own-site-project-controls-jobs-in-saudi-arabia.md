@@ -66,7 +66,9 @@ Programme cost performance index is 91 ÷ 104 = **0.875**, and schedule performa
 
 Now read what the roll-up hides. The programme reports 0.875, while package C is running at 0.727 and package B is subsidising the average at 1.069.
 
-If you report only the consolidated line, the decision gets made about a programme that is 12.5% over on cost, when the actual decision needed is about one package that is 27% over. That is the single most common reporting failure at this scale, and it is why programme roles ask for the package detail behind every consolidated figure.
+If you report only the consolidated line, the decision gets made about a programme that is 12.5% over on what it has spent, when the actual decision needed is about one package that is 27% over on what it has spent. Expressed the conventional way, as cost variance against earned value, the same two overruns are 14.3% and 37.5%.
+
+Either basis is defensible. Quoting a percentage without saying which denominator produced it is not, and at programme scale the two bases are far enough apart to change what a steering group decides. That roll-up blindness is the most common reporting failure at this scale, and it is why programme roles ask for the package detail behind every consolidated figure.
 
 ## The four EAC methods and what each assumes
 
@@ -101,7 +103,7 @@ Working here brings requirements that have nothing to do with planning technique
 
 **Professional registration.** Engineers working in Saudi Arabia are generally required to register with the Saudi Council of Engineers, with qualifications verified as part of the process. Requirements and processing times change, so confirm the current position with the employer and the Council before you resign anything.
 
-**Saudization.** The Nitaqat framework sets nationalisation targets by sector and firm size, and it shapes which roles are open to expatriate hire and which are not. It also means genuine demand for developing Saudi controls professionals, which is a growing part of senior job descriptions, and the routes that feed it are covered regionally in [the planning routes available inside the Kingdom](https://pciglobal.ai/planning-engineer-course-in-saudi-arabia).
+**Saudization.** The Nitaqat framework sets nationalisation targets by sector and firm size, and it shapes which roles are open to expatriate hire and which are not. It also means genuine demand for developing Saudi controls professionals, which is a growing part of senior job descriptions, and [what a planning engineer course inside the Kingdom actually teaches](https://pciglobal.ai/planning-engineer-course-in-saudi-arabia) is the regional answer to what those people are being put through.
 
 **Attestation and mobilisation.** Degree attestation, medicals, visa processing and client approval of your CV run in series more often than in parallel. Three to four months from offer to start is normal, and it is longer if a client approval sits in the chain.
 
@@ -125,7 +127,7 @@ We also publish no salary figures for this market and no claim about what a cred
 
 What can be stated is the syllabus. PCI examines the finance and delivery overlap deliberately across three credentials: PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
 
-The Bodies of Knowledge are weighted **40 / 40 / 20** across finance and reporting, project management and governed AI, carry **92 sector case studies** across the three volumes, and rest on **113 mandatory PCI Standards carrying 532 process requirements**.
+The Bodies of Knowledge are weighted **40 / 40 / 20** across finance and reporting, project management and governed AI, carry **92 sector case studies** across the three volumes (26 + 33 + 33), and rest on **113 mandatory PCI Standards carrying 532 process requirements**.
 
 The calculation content behind PFL-AI and PML-AI has been verified by **15,613 machine calculation checks, all passing**, a suite covering PFL-AI and PML-AI only, with no equivalent for PCL-AI. That is a statement about the arithmetic being sound, not about the market.
 
@@ -148,4 +150,4 @@ The one that closes your evidenced gap. Planners moving into programme roles usu
 
 ---
 
-*Linking note: the links are now in the body. Two cross-estate links, one per domain — "where each of the four methods breaks down" follows the EAC spread, which is the question the roll-up section leaves open; "the planning routes available inside the Kingdom" follows the Saudization paragraph, and is the rare satellite-to-satellite link, justified because local training routes are regional territory rather than the hub's. Three same-domain links: "the project controls questions interviewers really ask", "how project controls pay is banded by scope" beside the statement that no salary figure is published, and "where the UAE demand sits by employer type" in the in-region experience answer. Reciprocal: the project controls salary tool should link back here with the anchor "what programme-scale controls work asks for".*
+*Linking note: five links, all inside sentences in the body. Two cross-estate links, one per domain — "where each of the four methods breaks down" follows the EAC spread, which is the question the roll-up section leaves open, and points at the hub because forecasting method is hub territory; "what a planning engineer course inside the Kingdom actually teaches" follows the Saudization paragraph, and is the rare satellite-to-satellite link, taken because local training provision is regional territory rather than the hub's. Three same-domain links: "the project controls questions interviewers really ask"; "how project controls pay is banded by scope", beside the statement that no salary figure is published; "where the UAE demand sits by employer type" in the in-region experience answer. The four estimate at completion methods are tabled here at programme scale in SAR, against when each is the right choice, which is a different table from the project-level one on the project controls engineer page and points at the hub rather than competing with it.*

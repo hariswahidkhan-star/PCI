@@ -45,6 +45,8 @@ Notice that the mean is higher than the median. With ten values you can see why 
 
 Contingency is the difference between the confidence level your policy sets and the base estimate. It is a subtraction, and every argument about "how much contingency" is really an argument about which row of this table your organisation lives on.
 
+The table below comes from a fuller model on a £48.0m base, not from the ten hand-ranked iterations above, so its P80 is a different number. Two models, two answers, and neither is wrong.
+
 | Read at | Simulated total cost | Contingency over a £48.0m base | As a percentage of base |
 |---|---:|---:|---:|
 | P10 | £49.2m | £1.2m | 2.5% |

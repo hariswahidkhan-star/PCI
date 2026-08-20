@@ -17,7 +17,7 @@ ab_id:         —
 
 # Best certification for planning engineers, compared
 
-The best certification for planning engineers is the one that examines network logic, progress measurement and delay under an independent assessor. On that test, AACE's PSP and PMI's PMI-SP are the scheduling credentials, PMP is a general management credential, tool certificates prove software operation, and PCL-AI adds the money side.
+The best certification for planning engineers is the one that examines network logic, progress measurement and delay under an independent assessor. On that test, AACE's PSP and PMI's PMI-SP are the scheduling credentials, PMP is a general management credential, tool certificates prove software operation, and the PCI AI Project Controls Leader (PCL-AI) adds the money side.
 
 > **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
 > Global, which awards the PCI credentials discussed below. It is not an independent comparison
@@ -95,7 +95,7 @@ Two flags in five are noise and a quarter of the real defects were never raised.
 
 ## Where PCL-AI fits
 
-The PCI AI Project Controls Leader (PCL-AI) covers 13 domains and 61 knowledge areas, with a Body of Knowledge proportioned 40% finance and reporting, 40% project management and 20% governed AI. Behind it sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33).
+PCL-AI covers 13 domains and 61 knowledge areas, with a Body of Knowledge proportioned 40% finance and reporting, 40% project management and 20% governed AI. The earning rule worked above sits inside that syllabus rather than between two of them, which is the only reason it appears on a page about scheduling credentials.
 
 Entry is around three years of professional experience in any field, counted full-time-equivalent, with no degree requirement. The examination is scenario-based multiple choice with a single best answer, sat under remote proctoring, and the fee opens a 12-month scheduling window from payment. Preparation runs through Certuvo, which does not influence the certification decision.
 
@@ -121,7 +121,7 @@ Not to plan. PMP helps when you intend to move into managing the project rather 
 It counts as proof you can operate the software, which matters and is often the entry ticket for a first role. It is not an independent assessment of planning judgement, because the tool vendor or trainer decides the outcome. Hold it alongside a credential, never instead of one.
 
 **How many hours should I plan for?**
-Around eighty hours spread over five or six months suits most working planners, which is roughly three hours a week. Front-load the hand calculations: forward pass, backward pass, total and free float, and one delay scenario. Candidates who skip that and study definitions instead tend to fail on the scenario items.
+Around eighty hours spread over five or six months suits most working planners, which is roughly three hours a week. Front-load the hand calculations: forward pass, backward pass, total and free float, and one delay scenario. The scenario items are where hand practice pays, because a definition does not produce an answer under a clock.
 
 **Will AI make planning credentials pointless?**
 The opposite so far. Tools generate and review schedules quickly, and someone has to decide whether the output is defensible, which requires the judgement an examination tests. The measurable skill is stating a tool's precision and recall before trusting it, then owning the date yourself.

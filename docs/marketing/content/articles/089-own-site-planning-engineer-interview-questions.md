@@ -17,7 +17,7 @@ ab_id:         —
 
 # Planning engineer interview questions: 20 that come up
 
-Planning engineer interview questions fall into four groups: network logic and float, statusing and progress measurement, delay and risk, and how the programme reaches the cost report. Twenty of the ones that genuinely come up are below, each with the answer an interviewer is listening for and the arithmetic where it matters.
+Planning engineer interview questions fall into four groups: network logic and float, statusing and progress measurement, delay and risk, and how the programme reaches the cost report. Twenty of the ones that genuinely come up are below, each with the answer an interviewer is listening for, and worked arithmetic on the five where the answer is a number.
 
 Nobody is testing whether you can recite a definition. They are testing whether you have ever had to defend a date. Where the seat is a broader controls one rather than a pure planning role, [the interview questions a controls seat opens with](https://pciworld.org/project-controls-interview-questions) cover the cost and reporting half on the same basis.
 
@@ -59,7 +59,7 @@ Enter the actuals, review out-of-sequence work, then let the network recalculate
 With a rule published before the work starts. On a 20 km pipeline budgeted at £2.00m with 8 km laid and 5 km tested, a units-installed rule gives 8/20 × 2.00 = **£0.80m** of earned value. A 60/30/10 rule across lay, test and commission gives (0.40 × 0.60) + (0.25 × 0.30) = 0.315, so 0.315 × 2.00 = **£0.63m**. The £170,000 difference is a policy choice, not progress.
 
 **9. What is the difference between percent complete and percent spent?**
-Percent complete is earned value over budget at completion — how much work is done. Percent spent is actual cost over budget — how much money is gone. With a £16.0m budget, £6.6m earned and £7.4m spent, that is 41.25% complete against 46.25% spent. The five-point gap is £0.8m of budget that bought no work, and reporting percent spent as progress is the classic error.
+Percent complete is earned value over budget at completion — how much work is done. Percent spent is actual cost over budget — how much money is gone. On a £9.0m budget with £4.86m earned and £5.40m spent, that is 54% complete against 60% spent. Those six points are £0.54m of budget consumed without earning anything, and reporting percent spent as progress is the classic error.
 
 **10. How do you handle out-of-sequence progress?**
 Find it, then fix the cause rather than the symptom. Work done out of sequence usually means the logic was wrong, not that the site was. Decide whether the relationship should change permanently or the activity should be split, and record the decision. Quietly switching to progress override so the dates improve is the wrong answer, and this question exists to hear it.
@@ -105,7 +105,7 @@ Sign anything. As a reviewer it is genuinely useful for flagging open ends, odd 
 
 **20. Tell me about a programme you got wrong.** Answer it properly. Name the call, why it was wrong, what it cost and what you changed in your method afterwards.
 
-Interviewers ask this to find out whether you have ever taken a position, because a planner who has never been wrong in public has never truly committed to a date. A polished non-answer does more damage here than the mistake ever did, and the same willingness is the gate on [the step from planning engineer to senior](https://pciworld.org/senior-planning-engineer-career-path).
+Interviewers ask this to find out whether you have ever taken a position, because a planner who has never been wrong in public has never truly committed to a date. A polished non-answer does more damage here than the mistake ever did. Interviews at the grade above press the same ground harder, because [what the step to senior planning engineer asks for](https://pciworld.org/senior-planning-engineer-career-path) is judgement that survives being challenged rather than more schedule.
 
 ## Where a credential fits
 
@@ -132,4 +132,4 @@ Say so, then say what you would do and what you would need to find out. Intervie
 
 ---
 
-*Linking note: this piece carried three links to one domain, so two were removed. The one kept is "a Primavera P6 practice test", which sits inside the answer about how much P6 to show and is the only one of the three that was already in a sentence rather than in a pointer block at the end of a section. The total float and schedule risk links went with that block: both questions are answered in the body here, at question 2 and question 14. Three same-domain links replace them: "the interview questions a controls seat opens with" in the opening, "a full critical path worked by hand" in the practical-test answer, and "the step from planning engineer to senior" after question 20. Reciprocal: the senior planning engineer career path piece should link back here with the anchor "the twenty planning questions that come up most".*
+*Linking note: four links, all inside sentences in the body. One cross-estate link — "a Primavera P6 practice test" sits inside the answer about how much P6 to show, where the piece says to rehearse and does not supply the rehearsal. Three same-domain links: "the interview questions a controls seat opens with" in the opening, for the reader whose seat is broader than planning; "a full critical path worked by hand" in the practical-test answer, which names a hand calculation without working one; "what the step to senior planning engineer asks for" after question 20, where the answer turns on judgement under challenge. Question 9 uses its own dataset rather than the one the project controls engineer page works, so the two pages do not publish the same worked block on one domain.*

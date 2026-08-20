@@ -17,7 +17,7 @@ ab_id:         AB-02559
 
 # How to become a planning engineer
 
-How to become a planning engineer, in one paragraph: learn to build and defend a network schedule, get onto live work in any support role that touches the programme, then take ownership of one package end to end. Most people arrive through an engineering, quantity surveying or construction management route and earn the title within two to four years.
+How to become a planning engineer, in one paragraph: learn to build and defend a network schedule, get onto live work in any support role that touches the programme, then take ownership of one package end to end. Most people arrive through an engineering, quantity surveying or construction management route, and the five routes set out below each carry the usual time from that starting point to a first planning role.
 
 Nobody hires a planning engineer for knowing the software. They hire one because someone has to be able to say which activity is driving the date, and be right.
 
@@ -139,4 +139,4 @@ It happens, mostly through PMO and reporting routes, but it is harder and it sho
 
 ---
 
-*Linking note: this piece carried four links to one domain, which is a footprint rather than a recommendation, so three were removed. The one kept is "what total float really means", because the worked network above turns on the total-float-against-free-float distinction and does not resolve it. The critical path method link went because the article works the method in full itself; the practice test and certification links went as surplus to the same domain, and both sentences stand without them. Three same-domain links replace them: "what the controls seat next to you actually does" at the adjacent-seat step, "the rungs above a first planning job" at the step about reading a cost report, and "the questions planning interviews actually open with" after the schedule-review section. Reciprocal: the planning engineer interview questions piece should link back here with the anchor "the route into a first planning role".*
+*Linking note: four links, all inside sentences in the body. One cross-estate link — "what total float really means" sits after the worked network, which turns on the total-float-against-free-float distinction and deliberately stops short of resolving it. Three same-domain links: "what the controls seat next to you actually does" at the adjacent-seat step, where the reader is choosing which seat to take; "the rungs above a first planning job" at the step about reading a cost report, which raises what the next promotion asks for; "the questions planning interviews actually open with" after the schedule-review section, where each of those four questions has an interview version. The two-to-four-year timescale in the opening is carried by the routes table rather than asserted on its own, and appears once more in the FAQ where it is hedged.*

@@ -17,7 +17,7 @@ ab_id:         —
 
 # PMI-SP exam prep: a realistic study plan for planners
 
-PMI-SP exam prep works best as eighty to a hundred hours across twelve weeks, built around PMI's published exam content outline rather than a textbook. Spend the first third on hand calculations, the middle third on PMI's process vocabulary, and the last third on timed scenario practice. Candidates who reverse that order usually fail on the scenarios.
+PMI-SP exam prep works best as eighty to a hundred hours across twelve weeks, built around PMI's published exam content outline rather than a textbook. Spend the first third on hand calculations, the middle third on PMI's process vocabulary, and the last third on timed scenario practice. Reversing that order leaves the scenario practice until there is no time left to repair what it exposes.
 
 > **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
 > Global, which awards the PCI credentials discussed below. It is not an independent comparison
@@ -37,7 +37,7 @@ If your working life is Primavera P6 on an EPC site, expect a vocabulary gap bef
 
 ## A twelve-week PMI-SP exam prep plan
 
-Eight hours a week, front-loaded on arithmetic. If [the forward and backward pass by hand](https://projectcontrolsinstitute.org/critical-path-method) is not yet automatic, weeks one and two are the whole plan. Adjust the calendar, not the order.
+About eight hours a week, front-loaded on arithmetic. If [the forward and backward pass by hand](https://projectcontrolsinstitute.org/critical-path-method) is not yet automatic, weeks one and two are the whole plan. Adjust the calendar, not the order.
 
 | Weeks | Focus | Hours | What you should be able to do at the end |
 |---|---|---|---|
@@ -50,7 +50,7 @@ Eight hours a week, front-loaded on arithmetic. If [the forward and backward pas
 | 10 | Communication and reporting | 6 | Write a schedule narrative a commercial manager will read |
 | 11–12 | Timed scenario practice and gap repair | 14 | Sit a full-length timed set at pace, then fix what broke |
 
-That is 92 hours. Track them honestly, because the plan that fails is the one where week three quietly becomes week seven.
+That is 92 hours across twelve weeks — an average just under eight a week, with the load sitting in the first half. Track them honestly, because the plan that fails is the one where week three quietly becomes week seven.
 
 ## The arithmetic that fails candidates
 
@@ -62,17 +62,21 @@ A programme has two paths. Path one runs A (10 days) then B (8 days) then C (12 
 
 Cost slope is the price of buying one day: (crash cost − normal cost) ÷ (normal duration − crash duration).
 
-| Activity | Normal | Normal cost | Crash | Crash cost | Days available | Cost slope |
-|---|---|---|---|---|---|---|
-| A | 10 d | £40,000 | 7 d | £58,000 | 3 | **£6,000/day** |
-| B | 8 d | £30,000 | 6 d | £39,000 | 2 | **£4,500/day** |
-| C | 12 d | £52,000 | 9 d | £73,000 | 3 | **£7,000/day** |
+| Activity | Path | Normal | Normal cost | Crash | Crash cost | Days available | Cost slope |
+|---|---|---|---|---|---|---|---|
+| A | one | 10 d | £40,000 | 7 d | £58,000 | 3 | **£6,000/day** |
+| B | one | 8 d | £30,000 | 6 d | £39,000 | 2 | **£4,500/day** |
+| C | one | 12 d | £52,000 | 9 d | £73,000 | 3 | **£7,000/day** |
+| D | two | 15 d | £62,000 | 12 d | £78,500 | 3 | **£5,500/day** |
+| E | two | 12 d | £45,000 | 10 d | £58,000 | 2 | **£6,500/day** |
+
+Both paths belong in the table, because the moment they are equal in length you will be buying from both.
 
 Buy the cheapest days on the critical path first. Crash B by 2 days at £4,500 = **£9,000**, and path one drops to 28 days. Crash A by 1 day at £6,000, and path one drops to 27 days.
 
-Path two is now also at 27 days, so both are critical. Getting to 26 means buying a day on both paths at once: one more day of A at **£6,000** plus the cheapest day on path two at **£5,500**, so that single day costs **£11,500**.
+Path two is now also at 27 days, so both are critical. Getting to 26 means buying a day on each path at once: one more day of A at **£6,000** plus the cheapest day on path two, which is D at **£5,500**, so that single day of programme costs **£11,500**.
 
-Total = 9,000 + 12,000 + 5,500 = **£26,500** for four days. The first day cost £4,500 and the fourth cost £11,500, and being able to show that curve is what stops a client asking for a fifth.
+Total = 9,000 on B + 12,000 on A + 5,500 on D = **£26,500** for four days. The first day cost £4,500 and the fourth cost £11,500, and being able to show that curve is what stops a client asking for a fifth.
 
 The wrong answer is instructive. Crashing C, the longest activity, buys three days for £21,000 and still misses the date, because the second path was never touched.
 
@@ -113,7 +117,9 @@ Progress measurement is the join. A steelwork package budgeted at **£6.5m** wit
 
 The same tonnage on the same day is worth **£250,000** more or less depending on a rule written months earlier. That number leaves the programme, sets the cost performance index, and eventually influences what the finance function may recognise as revenue. Which credentials cover that join and which stop at the programme is set out in [the planner's credential shortlist](https://credentialfinder.org/best-certification-for-planning-engineers).
 
-A chartered accountant is examined on recognition and provisions but not on float. An engineer is examined on float but not on cut-off. PCI AI Project Controls Leader (PCL-AI) examines both sides in one syllabus across 13 domains and 61 knowledge areas, with every PCI Body of Knowledge holding the same proportions: 40% finance and reporting, 40% project management, 20% governed AI.
+Which is a study problem as much as a syllabus one. Nothing in a twelve-week PMI-SP plan asks what that £250,000 does after it leaves the programme, and no scheduling paper will mark you on it.
+
+The PCI AI Project Controls Leader (PCL-AI) takes the programme, the cost report and the reporting consequence as one subject, across 13 domains and 61 knowledge areas proportioned 40% finance and reporting, 40% project management and 20% governed AI. That is a different examination from the one this plan prepares you for, not a competing one — sit PMI-SP if PMI-SP is what your market names, and treat this as what to read next.
 
 PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be, and it claims no recognition, endorsement, affiliation or partnership with PMI.
 
@@ -131,8 +137,8 @@ Neither is better in the abstract, and [where the two scheduling papers actually
 **Can I prepare without a course?**
 Yes, and many do. The free exam content outline, a current scheduling reference and disciplined hand practice cover the ground. A course helps most with pacing and with the framework vocabulary, so buy it for structure rather than for content you could read yourself.
 
-**What is the most common reason for failing?**
-Studying definitions instead of decisions. Candidates who can recite float definitions but have not worked a compression problem or a delay scenario under time pressure tend to lose exactly the scenario items the examination is built from.
+**What do candidates most often under-prepare?**
+Decisions, as against definitions. Reciting a float definition is quick and feels like progress; working a compression problem or a delay scenario against a clock is slow and is what the scenario items ask for. If your practice contains no timed scenarios, that is the gap to close first, whatever the rest of the plan says.
 
 **Does the credential expire?**
 It runs on a professional development cycle, so it lapses if you stop maintaining it. Budget the renewal cost and the development hours for as long as you expect to hold it, because over a career the cycle costs more than the original sitting.

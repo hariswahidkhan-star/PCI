@@ -17,7 +17,7 @@ ab_id:         —
 
 # AACE PSP certification guide: scope, cost and who it fits
 
-The PSP is AACE International's Planning and Scheduling Professional credential, and this AACE PSP certification guide sets out what it examines: schedule development, maintenance and control across the project life cycle, including the forensic use of a programme, assessed by written examination with practical exercises rather than recall alone. It suits planners with real site experience and a market that names AACE.
+The AACE PSP — Planning and Scheduling Professional — examines schedule development, maintenance and control across the project life cycle, including the forensic use of a programme, by written examination with practical exercises rather than recall alone. It suits planners with site experience in a market that names AACE. This AACE PSP certification guide covers the scope, the five fee lines and who it fits.
 
 > **Who publishes this page.** credentialfinder.org is published by Project Controls Institute
 > Global, which awards the PCI credentials discussed below. It is not an independent comparison
@@ -27,9 +27,9 @@ The PSP is AACE International's Planning and Scheduling Professional credential,
 
 It is not an entry-level certificate, and it is not a software qualification.
 
-## What an AACE PSP certification guide should tell you first
+## Where the current PSP fees and eligibility rules live
 
-Where the current facts live. AACE publishes the scope, the eligibility gate, the examination structure and the fees on its own certification pages and in the certification handbook, and revises them.
+AACE publishes the scope, the eligibility gate, the examination structure and the fees on its own certification pages and in the certification handbook, and revises them.
 
 Anything on this page that could go stale is described rather than quoted, so that you check the source instead of trusting a summary. The parts that do not go stale — what the discipline requires, and the arithmetic — are worked in full below.
 
@@ -48,9 +48,9 @@ The practical exercises are what make PSP different from a multiple-choice crede
 
 ## What it costs
 
-Five lines, and only the first is visible at the checkout: membership, application or eligibility review, the examination sitting, any retake, and recertification each cycle. Member and non-member pricing differ. Read them from AACE's fee page on the day you decide, and see [the five fee lines totalled over a ten-year hold](https://credentialfinder.org/aace-certification-cost) for what they come to once renewals repeat.
+Five lines, and only the first is visible at the checkout: membership, application or eligibility review, the examination sitting, any retake, and recertification each cycle. Member and non-member pricing differ. Read them from AACE's fee page on the day you decide, and see [which of the five fee lines keeps charging](https://credentialfinder.org/aace-certification-cost) once the certificate is on the wall.
 
-For contrast, PCI publishes its own figures in full. The PCL-AI certification examination is listed at **USD 500** with a current 30% discount applied, taking it to **USD 350**; student membership and registration is **USD 99 a year**, discounted 50% to **USD 49.50**; recertification and renewal is **USD 99 per three-year cycle**. Year one is 49.50 + 350 = **USD 399.50**, and ten years is 399.50 + (3 × 99) = **USD 696.50**.
+For contrast, PCI publishes its own figures in full. The PCL-AI certification examination is listed at **USD 500** with a current 30% discount applied, taking it to **USD 350**; student membership and registration is **USD 99 a year**, discounted 50% to **USD 49.50**; recertification and renewal is **USD 99 per three-year cycle**. Year one is 49.50 + 350 = **USD 399.50**. Beyond that, membership recurs annually and renewal every three years, so what a decade costs depends on whether membership has to run alongside the credential — ask before you multiply, and ask AACE the same question.
 
 Then the line that dwarfs both. A hundred hours of preparation, valued at USD 40 an hour, is **USD 4,000** of your own time. Choose on scope, not on price.
 
@@ -101,15 +101,15 @@ On a budget at completion of **£20.0m**, the index-based forecast moves from 20
 
 And the forecast does not stop at the cost report. Where progress for revenue purposes is measured by costs incurred against total expected costs, the forecast is the denominator, so it moves reported progress, reported revenue and reported margin. If forecast cost passes the contract price, the expected loss is recognised in full as soon as it is known rather than spread across the remaining months.
 
-A chartered accountant is examined on recognition and provisions, almost never on float. An engineer is examined on float, almost never on cut-off.
+The delay decision above was taken on schedule evidence by someone examined on float, and its £0.35m landed in a forecast that someone examined on recognition will have to book. Neither of them sat a paper covering the other's half.
 
-PSP examines one side of that line properly and stops. PCI AI Project Controls Leader (PCL-AI) examines both in one syllabus across 13 domains and 61 knowledge areas, and every PCI Body of Knowledge holds the same proportions: 40% finance and reporting, 40% project management, 20% governed AI.
+PSP examines one side of that line properly and stops.
 
 ## Where PCI fits, and what it does not claim
 
-The Project Controls Institute is an independent certifying body with three credentials: PCL-AI at 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
+The PCI AI Project Controls Leader (PCL-AI) is the credential this page keeps pointing at. It covers 13 domains and 61 knowledge areas, proportioned 40% finance and reporting, 40% project management and 20% governed AI, so the extended preliminaries above, the index they moved and the revenue that follows are examined in one paper rather than left to three professions.
 
-Behind them sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
+It is not a substitute for PSP, and this page is not the place to pretend otherwise. PSP is assessed by written examination with practical exercises and carries a market that already names it. PCL-AI is a scenario examination sat under remote proctoring, from a body young enough that the syllabus is the only evidence available to you.
 
 PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. It claims no recognition, endorsement, affiliation or partnership with AACE or any other body, and publishes no pass rates, salary figures or holder numbers.
 
@@ -135,4 +135,4 @@ If your programme feeds a cost report that someone books, yes. PSP proves you ca
 
 ---
 
-*Linking note: one cross-estate link is in the body, to the hub's definition of [total float, with worked examples](https://projectcontrolsinstitute.org/total-float), placed in the section arguing that float ownership decides money — the sentence that makes a reader want the definition nailed down. Three same-domain links sit where the question is raised: the AACE fee total in the cost section, the PSP versus PMI-SP comparison under the fit table where two rows often describe the same planner, and the PMI-SP study plan in the FAQ about PMI-standardised employers. The earlier note also proposed the hub's delay analysis page; that would have been a second link to the same domain, so it was dropped rather than retargeted. Opening reworked so the credential is defined first and the guide names itself in the same sentence. Reciprocal link worth making: the planner shortlist should point back here once, as the detailed PSP page.*
+*Linking note: one cross-estate link is in the body, to the hub's definition of [total float, with worked examples](https://projectcontrolsinstitute.org/total-float), placed in the section arguing that float ownership decides money — the sentence that makes a reader want the definition nailed down. Three same-domain links sit where the question is raised: the five AACE fee lines in the cost section, the PSP versus PMI-SP comparison under the fit table where two rows often describe the same planner, and the PMI-SP study plan in the FAQ about PMI-standardised employers. The earlier note also proposed the hub's delay analysis page; that would have been a second link to the same domain, so it was dropped rather than retargeted. Opening reworked so the definition answers first and the guide names its own scope afterwards. Reciprocal link worth making: the planner shortlist should point back here once, as the detailed PSP page.*

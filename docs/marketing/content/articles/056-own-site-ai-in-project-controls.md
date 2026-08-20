@@ -57,7 +57,7 @@ Tighten the confidence threshold and the trade moves. Suppose the model now flag
 
 Precision rises to 90 ÷ 150 = **0.60**, recall falls to 90 ÷ 180 = **0.50**, and F1 improves to 2 × 0.30 ÷ 1.10 = **0.55**. Review load drops to 15 hours.
 
-The second setting is better on F1 and much cheaper to run, and it lets twice as many errors through. Which one you want depends on what a missed miscoding costs you, and that is a business decision, not a modelling one.
+The second setting is better on F1 and much cheaper to run, and it lets half as many again through — 90 missed against 60. Which one you want depends on what a missed miscoding costs you, and that is a business decision, not a modelling one.
 
 A vendor who will not run this test on your data has told you something. Ask for precision and recall on a golden set you control, with the review time priced in.
 
@@ -82,7 +82,7 @@ Worked through: method one is 50 + 78 = £128.0m, and method two is 120 ÷ 0.84 
 
 Method three uses CPI × SPI = 0.84 × 0.875 = 0.735, so 50 + (78 ÷ 0.735) = 50 + 106.1 = £156.1m. Method four takes a re-priced remaining scope of £86m, giving 50 + 86 = £136.0m.
 
-The spread is **£28.1m on identical inputs**. A model computes all four in milliseconds and can tell you which one has been closest on your last thirty projects. It cannot tell you whether the flood that caused this overrun is over.
+The spread is **£28.1m on identical inputs**. A model computes all four in milliseconds and can tell you which one has been closest on whatever history you have. It cannot tell you whether the flood that caused this overrun is over.
 
 One more number frames the conversation. The to-complete performance index needed to land on the original budget is (BAC − EV) ÷ (BAC − AC) = 78 ÷ 70 = **1.114**.
 
@@ -98,7 +98,7 @@ Here is the crossing in one step. Progress read from site photographs is physica
 
 On a job where the expensive work is front-loaded, those two percentages are not close, and using the first to drive the second overstates margin.
 
-A model that reports "the project is 40% complete" without saying which 40% it means has produced a number that is right for the site meeting and wrong for the ledger. That is not a modelling defect. It is a scoping defect, and it is the most common one in the market.
+A model that reports "the project is 40% complete" without saying which 40% it means has produced a number that is right for the site meeting and wrong for the ledger. That is not a modelling defect. It is a scoping defect, and it survives longer than most, because both numbers look right to the person who asked for them.
 
 ## What governed AI means in practice
 

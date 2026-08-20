@@ -21,7 +21,7 @@ Certuvo is PCI's official platform for preparation and study. It provides struct
 
 ## What Certuvo is, and what it deliberately is not
 
-The Project Controls Institute owns the standard, the Bodies of Knowledge and the examinations; if the body itself is new to you, start with [who sets the standard](https://projectcontrolsinstitute.org/project-controls-institute). Certuvo is the platform that delivers the learning and practice behind them.
+Certuvo sits underneath the Institute rather than beside it. [The body that owns the standard, the Bodies of Knowledge and the examinations](https://projectcontrolsinstitute.org/project-controls-institute) decides what competence means; Certuvo delivers the learning and practice that help you reach it.
 
 | | PCI | Certuvo |
 |---|---|---|
@@ -43,13 +43,13 @@ Keeping preparation and assessment apart is a core principle of credible personn
 
 The practical consequence for you is simple. Candidates may prepare through self-study, employer training, real project experience, Certuvo, or any combination, and none of those routes changes how the examination is scored.
 
-Which of those routes is worth paying for is a different question, and [how to judge a preparation route](https://projectcontrolsinstitute.org/project-controls-training) is where to settle it.
+What the routes do differ in is cost and what they leave you able to produce, which is the test [judging a preparation route on what it makes you build](https://projectcontrolsinstitute.org/project-controls-training) applies to each of them in turn.
 
 ## What the platform provides
 
 Study material aligned to each certification's Body of Knowledge, structured so you can work through one domain at a time rather than reading front to back.
 
-Scenario-based question practice in the same format as the examination: a realistic project situation, four defensible-looking options, and a single best answer. If you want the scope behind that format first, [the PCL-AI credential and its exam format](https://projectcontrolsinstitute.org/pcl-ai-certification) sets out the domains being sampled.
+Scenario-based question practice in the same format as the examination: a realistic project situation, four defensible-looking options, and a single best answer. The scenarios are drawn from the syllabus of the credential you are sitting, so for the PCI AI Project Controls Leader (PCL-AI) it is worth reading [the domains that credential samples](https://projectcontrolsinstitute.org/pcl-ai-certification) alongside your first practice set.
 
 Full-length mock examinations under timed conditions, plus progress tracking that shows where your judgement is holding and where it is not.
 
@@ -77,21 +77,15 @@ It is not for someone hoping the platform will substitute for experience. The ex
 
 ## Working out where your hours should go
 
-Say a baseline mock returns 82% on project accounting and finance, 76% on project management principles, and 48% on the AI material.
+Allocate by gap multiplied by proportion, not by gap alone. A weak area that is a fifth of the syllabus does not deserve more than half your hours, and a gap-only split hands it exactly that.
 
-The plain average is (82 + 76 + 48) / 3 = **68.7%**.
+Say a baseline mock returns 82% on project accounting and finance, 76% on project management principles and 48% on the AI material, and you have 80 hours to spend. Splitting those hours in proportion to the gap to 100% alone gives 15, 20 and 45.
 
-Weight it by the Body of Knowledge's own proportions of 40% finance and reporting, 40% project management and 20% governed AI: (0.40 × 82) + (0.40 × 76) + (0.20 × 48) = 32.8 + 30.4 + 9.6 = **72.8%**.
+Multiplying each gap by that area's share of the Body of Knowledge — 40%, 40% and 20% — gives **21, 28 and 31 hours** instead. The weakest area still takes the largest single share; the difference is that two-fifths of the syllabus is no longer abandoned to fix one-fifth of it.
 
-The weighted figure is *higher* than the plain average, purely because the worst area is the smallest part of the syllabus. That is the first reason no single headline number should decide when you book.
+Do not let a single headline score decide when you book, either. Weighting can push an average *up* simply because your worst area is the smallest part of the syllabus, which is why the domain-by-domain picture is the one to read.
 
-Now allocate 80 study hours. Working purely from the gap to 100% gives shares of 18, 24 and 52, so 15 hours, 20 hours and 45 hours respectively — which pours over half your effort into a fifth of the material.
-
-A better allocation multiplies the gap by the proportion: 18 × 0.40 = 7.2, 24 × 0.40 = 9.6, 52 × 0.20 = 10.4. Those total 27.2, giving **21 hours, 28 hours and 31 hours**.
-
-The second plan still puts the most time into the weakest area, but it stops you abandoning two-fifths of the syllabus to fix one-fifth of it.
-
-One caveat, stated plainly: the 40 / 40 / 20 split describes the Body of Knowledge, not an examination blueprint. Item counts and the pass mark follow a job-task analysis and a modified-Angoff standard-setting study, and are not published. Treat the weighting as a study heuristic, not a scoring model.
+One caveat, stated plainly: the 40 / 40 / 20 split describes the Body of Knowledge, not an examination blueprint. Item counts will be confirmed by a job-task analysis, and the pass mark set by a modified-Angoff standard-setting study, before the examination goes live. Treat the weighting as a study heuristic, not a scoring model.
 
 ## Knowing when you are ready to book
 
@@ -138,4 +132,4 @@ After your mocks are consistently comfortable, not before. The examination fee o
 
 ---
 
-*Internal linking note: three same-domain links now sit in the body. "Who sets the standard" points at the Project Controls Institute guide, placed where the piece first names the body that owns the examinations, because a reader meeting Certuvo first will ask who PCI is. "How to judge a preparation route" points at the project controls training guide, placed where the piece says any preparation route is permitted, which immediately raises how to choose between them. "The PCL-AI credential and its exam format" points at the PCL-AI certification page, placed where the practice format is described, because the next question is what the format is sampling. No cross-estate link is carried: every question this piece raises is answered on the hub. Reciprocal: the project controls training and project controls certification online pieces should link back here with the anchor "PCI's official preparation platform".*
+*Internal linking note: three same-domain links now sit in the body. "The body that owns the standard, the Bodies of Knowledge and the examinations" points at the Project Controls Institute guide, placed on the sentence that separates the Institute from the platform, because a reader meeting Certuvo first will ask who decides anything. "Judging a preparation route on what it makes you build" points at the project controls training guide, placed where the piece says every preparation route is permitted and the reader is left choosing between them. "The domains that credential samples" points at the PCL-AI certification page, placed where the practice format is described, because the next question is what the scenarios are drawn from. No cross-estate link is carried: every question this piece raises is answered on the hub. Reciprocal: the project controls certification online guide already links here as "PCI's official preparation platform", so the project controls training guide should use a different anchor — "where the practice sets and mocks sit" — rather than the same string arriving from two pages.*

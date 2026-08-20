@@ -51,7 +51,7 @@ Here is the calculation that separates the two grades. A driving path has slippe
 
 **Option B — accelerate.** A second shift on the steel package costs £31,000 per week and is assumed to recover half a week for every week it runs. Six weeks of second shift costs 6 × 31,000 = £186,000 and recovers three weeks, leaving one week to absorb at £67,000. Total **£253,000**.
 
-Option B is £15,000 cheaper. A planning engineer stops there. A senior planning engineer says the next sentence: that £15,000 is 5.6% of the exposure and it rests entirely on the recovery rate.
+Option B is £15,000 cheaper. A planning engineer stops there. A senior planning engineer says the next sentence: that £15,000 is 5.6% of the £268,000 exposure in Option A, and it rests entirely on the assumed recovery rate.
 
 Test it. If the second shift returns 0.4 of a week per week instead of 0.5, six weeks recovers 2.4 weeks, the residual is 1.6 weeks at £67,000, and Option B costs 186,000 + 107,200 = **£293,200** — now £25,200 worse than doing nothing.
 
@@ -66,14 +66,11 @@ The other half of the senior role is the outturn cost, because the programme dri
 - Cost performance index: CPI = EV ÷ AC = 19.2 ÷ 22.5 = **0.853**
 - Schedule performance index: SPI = EV ÷ PV = 19.2 ÷ 21.6 = **0.889**
 
-| EAC method | Calculation on these inputs | Result | What it assumes |
-|---|---|---:|---|
-| AC + (BAC − EV) | 22.5 + (48.0 − 19.2) | **£51.3m** | The overspend was a one-off; the remaining work runs at plan |
-| BAC ÷ CPI | 48.0 ÷ 0.853 | **£56.25m** | Cost efficiency to date is the best available predictor of the rest |
-| AC + (BAC − EV) ÷ (CPI × SPI) | 22.5 + 28.8 ÷ 0.759 | **£60.47m** | Schedule pressure keeps driving cost, and both continue |
-| AC + bottom-up estimate to complete | 22.5 + a re-estimate of the remaining scope | Whatever the re-estimate says | The people doing the work have re-priced it; the only method that can honestly come in lower |
+Run the four estimate at completion methods on those inputs and they land between **£51.3m** and **£60.47m**. The lowest adds the remaining budget at plan, 22.5 + (48.0 − 19.2); the highest divides that remaining budget by CPI × SPI, 22.5 + 28.8 ÷ 0.759.
 
-The spread is £51.3m to £60.47m — **£9.17m** of difference produced by nothing but which assumption is signed. Naming the assumption in the same sentence as the number is the job.
+That is **£9.17m** of difference produced by nothing but which assumption is signed. The four methods worked side by side, against what each one commits the signer to, are set out in [what a project controls engineer produces at month end](https://pciworld.org/what-does-a-project-controls-engineer-do).
+
+The senior test is not the arithmetic, which a spreadsheet does. It is saying out loud, in a room that would prefer a lower figure, which of those four assumptions is true of this job and what evidence would tell you it had stopped being true.
 
 One more measure earns its place. To-complete performance index: TCPI = (BAC − EV) ÷ (BAC − AC) = 28.8 ÷ 25.5 = **1.129**. The remaining work must run 13% more efficiently than the plan, against the 0.853 achieved so far. That is the arithmetic way of saying a recovery narrative is not credible.
 
@@ -126,11 +123,11 @@ Commonly five to eight years from a first construction or project role, but the 
 Not usually to be promoted internally. It matters most at the point you move employers or markets, where a client-approved CV needs something external to point at. Certify against the gap on your record rather than the title you want, and the gap is usually cost and contract rather than more scheduling.
 
 **Is senior planning engineer a better path than project controls manager?**
-They are the same path at different depths. Senior planning goes deeper into schedule, risk and delay, and stays technical. Project controls management widens into cost, reporting and people, and gives up some depth; [what a project controls engineer owns day to day](https://pciworld.org/what-does-a-project-controls-engineer-do) is the clearest picture of what that widening looks like. Choose by whether you want to be the person who answers the technical question or the person who answers for the whole number.
+They are the same path at different depths. Senior planning goes deeper into schedule, risk and delay, and stays technical. Project controls management widens into cost, reporting and people, and gives up some depth in exchange. Choose by whether you want to be the person who answers the technical question or the person who answers for the whole number.
 
 **What is the hardest interview question at this grade?**
 "Which estimate at completion did you sign, and why not one of the others?" It cannot be answered without understanding the four methods and their assumptions, and it exposes anyone who has only ever produced the number a system generated. The rest of the ground an interview at this grade covers is in [the twenty planning questions that come up most](https://pciworld.org/planning-engineer-interview-questions).
 
 ---
 
-*Linking note: this piece carried three links to one domain, so two were removed. The one kept is "what makes a schedule risk model worth quoting", because the P80 section raises how the distribution is built and deliberately does not answer it. The four EAC formulas link went because the article works all four methods itself; the certified planning engineer link went as surplus to the same domain, and the sentence it sat in now makes the same point without pointing anywhere. Three same-domain links replace them: "the route into a first planning role" under the rung table, "what a project controls engineer owns day to day" in the two-paths answer, and "the twenty planning questions that come up most" after the hardest-question answer. Reciprocal: the how to become a planning engineer piece should link back here with the anchor "the rungs above a first planning job".*
+*Linking note: four links, all inside sentences in the body. One cross-estate link — "what makes a schedule risk model worth quoting" sits in the P80 section, which raises how the distribution is built and deliberately does not answer it. Three same-domain links: "the route into a first planning role" under the rung table; "what a project controls engineer produces at month end" on the forecast spread, where the reader needs the four methods worked out rather than summarised; "the twenty planning questions that come up most" after the hardest-question answer. The four estimate at completion methods are tabled once on this domain, on the project controls engineer page. This piece states the spread and the senior-grade point about defending an assumption, and links there for the method detail, so the two pages do not compete on one subject.*

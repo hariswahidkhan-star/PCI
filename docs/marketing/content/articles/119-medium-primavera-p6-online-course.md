@@ -39,13 +39,13 @@ Five routes exist, and they answer different questions. The table sets each one 
 | Live virtual instructor-led | Same syllabus, with questions answered live | Exercises reviewed by the tutor | You can operate the tool under supervision | Ends before you apply it to your own project |
 | Vendor certification (Oracle's own programme for its Primavera products) | Product knowledge to the vendor's specification | A vendor examination | You know the product to the vendor's standard | Tests the product, not the plan |
 | Employer-led, on a live schedule | Your organisation's coding, calendars and reporting rules | Your updates survive review, or they do not | You can work in that estate | Not portable; you learn one company's habits |
-| Method certification, such as PCI AI Project Controls Leader (PCL-AI) | Scheduling method, cost integration, risk and reporting | Scenario-based examination independent of any tool | You can build and defend a programme in any tool | Will not teach you which button to press |
+| Method certification, such as PCI AI Project Controls Leader (PCL-AI) | Scheduling method, cost integration, risk and reporting | Examined against the Body of Knowledge, tool-neutral by design | Assessed on scheduling method rather than on any one tool | Will not teach you which button to press |
 
 The routes are not rivals. A planner with method and no tool is unemployable on an EPC bid; a planner with tool and no method produces schedules that pass a file check and fail a challenge.
 
 Which of the two an employer can actually verify is a separate matter, and it is covered in [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification).
 
-We do not publish other providers' fees here, because they change by region and by reseller. A route priced in one market tells you nothing about another, which is why [Primavera P6 course options in Dubai](https://pciglobal.ai/primavera-p6-course-in-dubai) are set out separately. Ask for the current published price, and ask separately whether the examination fee is included in it.
+We do not publish other providers' fees here, because they change by region and by reseller. A route priced in one market tells you nothing about another, which is why [Primavera P6 course options in Dubai](https://pciglobal.ai/primavera-p6-course-in-dubai) are set out separately: that page gives the routes available locally and the market that hires from them, not provider pricing. Ask each provider for its current published price, and ask separately whether the examination fee is inside it.
 
 ## Is Primavera P6 certification worth it?
 
@@ -77,11 +77,11 @@ This is the overlap the discipline keeps losing money in. A finance team is exam
 
 Take a package where site preliminaries run at £45,000 a week. An eight-week forecast slip is 8 × 45,000 = **£360,000** of time-related cost, and it lands whether or not anyone has raised a variation for it.
 
-The revenue effect is separate, and larger. Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs, so the same slip changes the estimate at completion, which changes the percentage, which changes revenue recognised in the period.
+The revenue effect is separate, and it lands in the same period. Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs, so the same slip changes the estimate at completion, which changes the percentage, which changes revenue recognised in the period.
 
-Say costs incurred are £12.4m. At a total expected cost of £26.2m the measure is 12.4 ÷ 26.2 = **47.3%**. At £29.2m it is 12.4 ÷ 29.2 = **42.5%**.
+Say costs incurred are £12.4m. At a total expected cost of £26.2m the measure is 12.4 ÷ 26.2 = **47.3%**. Add the £360,000 of time-related cost and expected cost becomes £26.56m, so the measure is 12.4 ÷ 26.56 = **46.7%**.
 
-On a £27.5m contract price that is £13.02m against £11.68m of cumulative revenue: a **£1.34m** difference, produced by a scheduling assumption.
+On a £27.5m contract price that is £13.02m against £12.84m of cumulative revenue: **£0.18m** of the period's revenue, moved by a scheduling assumption and by nothing else.
 
 Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the contract. The point for a planner is narrower: a date is an accounting input, so the person who moves the date should know who else it moves.
 

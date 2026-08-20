@@ -71,7 +71,7 @@ Because an interim valuation is not only a payment document. It is the input to 
 
 Steps three and five both run on the quantity surveyor's file. The measure of progress comes from measurement, and the constraint on claims is assessed head by head against entitlement and correspondence.
 
-That is the finance and delivery overlap stated plainly. The constraint test runs on the surveyor's file — head by head, against entitlement and correspondence — and its answer lands in somebody else's accounts, months later, in a figure the surveyor never sees. The two ends of that handover are rarely learned by the same person, and the money goes missing in between.
+That is the finance and delivery overlap stated plainly. The judgement about what survives the constraint is made on the surveyor's file, and its consequence lands in somebody else's accounts months later, in a figure the surveyor never sees. The two ends of that handover are rarely learned by the same person, and the money goes missing in between.
 
 ## Where do AI and quantity surveyor roles actually diverge?
 

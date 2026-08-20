@@ -95,7 +95,7 @@ The same project, the same costs incurred, the same invoices issued. **Reported 
 
 Push the EAC past £60m and the effect changes character entirely. The contract becomes onerous, and the whole expected loss is recognised at once rather than spread across the remaining work.
 
-That is the mechanism behind the pattern every finance director recognises. A project reports acceptable margin for three quarters, then corrects violently in one month. The deterioration took nine months; the accounting event took one.
+That is the mechanism behind a familiar pattern. A project reports acceptable margin for three quarters, then corrects violently in one month. The deterioration took nine months; the accounting event took one.
 
 ## Why AI widened the gap instead of closing it
 

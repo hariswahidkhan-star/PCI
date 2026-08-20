@@ -53,11 +53,11 @@ The scheduling tool now needs a rule, and there are two.
 
 Carry both forward through 30 days of steel erection and 20 days of cladding: retained logic gives 22 + 30 + 20 = **day 72**, progress override gives 12 + 30 + 20 = **day 62**.
 
-Put a contractual completion obligation at day 80 beside those two finishes and the path carries eight days of total float on the retained-logic reading and eighteen on the progress-override reading.
-
 Ten days of forecast completion, decided by a setting. No model can choose correctly, because the right answer depends on whether the remaining pile caps are physically dependent on the remaining piles — a question answered by looking at the drawings and the site, not the file.
 
 A planner who understands that difference is worth more in an AI-heavy environment, not less, because the tool will now produce both answers instantly and someone still has to say which one goes to the client.
+
+The choice also moves the float. Against a contractual completion obligation at day 80, the retained-logic finish of day 72 leaves eight days of total float on that path and the progress-override finish of day 62 leaves eighteen, on the same site and the same progress.
 
 ## If AI makes scheduling faster, will teams get smaller?
 

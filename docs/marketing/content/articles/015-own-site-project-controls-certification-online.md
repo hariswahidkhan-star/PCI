@@ -30,7 +30,7 @@ Four different products are sold under similar wording, and the difference decid
 | Online-proctored certification examination | Applied competence against a published standard | Credential with a verifiable record | You met the standard on the day |
 | Fully online certification pathway | The same, with eligibility, decision and renewal online | Credential, plus a maintenance obligation | You met the standard and keep it current |
 
-Only the bottom two rows are certification. The top two are training, and training is useful — just not the same purchase. If you are still deciding which of the two you need, [how the certification routes compare](https://projectcontrolsinstitute.org/project-controls-certification) sets out what each one is evidence of.
+Only the bottom two rows are certification. The top two are training, and training is useful — just not the same purchase. Employers read the two differently because they are evidence of different things, which is the distinction [what a certification is evidence of, and what a course is](https://projectcontrolsinstitute.org/project-controls-certification) works through in full.
 
 The test is simple: ask who decides whether you passed. If the organisation that taught you also awards the outcome, you are buying a course. If an independent body assesses you against a published standard and can revoke the credential, you are buying certification.
 
@@ -48,7 +48,7 @@ Being eligible and being ready are different questions. Eligibility says you may
 
 ## What the cost is really made of
 
-Published fees change, so no figure is quoted here. The structure does not change, and knowing it stops you comparing two options on the wrong number.
+Published fees change, so no figure is quoted here; PCI's current ones sit on [the enrolment page, alongside what each fee covers](https://projectcontrolsinstitute.org/enrol). The structure does not change, and knowing it stops you comparing two options on the wrong number.
 
 | Cost component | Who charges it | The question to ask |
 |---|---|---|
@@ -105,7 +105,7 @@ PCI is not accredited by ANAB, IAS or any ISO/IEC accreditation body, and does n
 
 The examination is scenario-based multiple choice with a single best answer, and its item counts and pass mark follow a job-task analysis and a modified-Angoff standard-setting study before go-live rather than being set by marketing.
 
-The syllabus is published in three Bodies of Knowledge — PCL-AI over 13 domains and 61 knowledge areas, PFL-AI over 16 and 61, PML-AI over 16 and 63 — each built to the same 40% finance and reporting, 40% project management, 20% governed AI proportions. For the first of those, [what the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification) is set out domain by domain.
+The syllabus is published in three Bodies of Knowledge — the PCI AI Project Controls Leader (PCL-AI) over 13 domains and 61 knowledge areas, PFL-AI over 16 and 61, PML-AI over 16 and 63 — each built to the same 40% finance and reporting, 40% project management, 20% governed AI proportions. For the first of those, [what the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification) is set out domain by domain.
 
 Ask any other online provider for the same three things: the published syllabus, who sets the pass mark and how, and their accreditation position stated plainly. The answers are more informative than the price, and [a side-by-side comparison of the main credentials](https://credentialfinder.org/best-project-controls-certification) is a quicker way to see how the answers differ.
 
@@ -131,4 +131,4 @@ You resit. A criterion-referenced examination has no quota, so a fail means you 
 
 ---
 
-*Internal linking note: three same-domain links now sit in the body. "How the certification routes compare" points at the project controls certification pillar, placed under the four-products table where a reader has just learned the categories differ and needs the wider view. "PCI's official preparation platform" points at Certuvo, placed in the cost section where the piece raises whether preparation is a required line or an optional one. "What the PCL-AI examination covers" points at the PCL-AI page, placed where the three Bodies of Knowledge are named and the obvious next question is what the first of them contains. One cross-estate link is carried: "a side-by-side comparison of the main credentials" to credentialfinder.org, placed where the piece tells you to interrogate other providers, because comparison is that domain's territory rather than the hub's. The fourth proposal in the original note, a second hub link on "who awards the credential", was dropped to stay inside the two-to-three internal cap; the certification pillar already answers it. Reciprocal: the project controls course online and certification cost pieces should link back here with the anchor "the fully online certification route".*
+*Internal linking note: four same-domain links now sit in the body. "What a certification is evidence of, and what a course is" points at the project controls certification pillar, placed under the four-products table where a reader has just learned the categories differ and needs the wider view. "The enrolment page, alongside what each fee covers" points at enrolment, placed on the sentence that declines to quote a figure: the title promises cost, and the current figures exist in exactly one place, so the section that raises the question has to say where. That takes the piece to four internal links rather than three, and it is the fourth because a cost section with nowhere to send a reader is the worse fault. "PCI's official preparation platform" points at Certuvo, placed in the cost section where the piece raises whether preparation is a required line or an optional one. "What the PCL-AI examination covers" points at the PCL-AI page, placed where the three Bodies of Knowledge are named and the obvious next question is what the first of them contains. One cross-estate link is carried: "a side-by-side comparison of the main credentials" to credentialfinder.org, placed where the piece tells you to interrogate other providers, because comparison is that domain's territory rather than the hub's. Reciprocal: two pieces have reason to point here, and they should not arrive with the same string — the project controls course online guide with an anchor about sitting the assessment remotely, the certification cost guide with one about what the online route includes.*

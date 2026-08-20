@@ -17,7 +17,7 @@ ab_id:         AB-03683
 
 # Is project controls stressful? Where the pressure lands
 
-Yes, in bursts you can see coming. People asking *is project controls stressful* usually want to know whether it is the grinding kind or the concentrated kind, and it is the concentrated kind: cut-off week, forecast sign-off, and any window where a claim or a gate is live.
+Is project controls stressful? Yes, in bursts you can see coming: cut-off week, forecast sign-off, and any window where a claim or a gate is live. It is the concentrated kind of pressure rather than the grinding kind, which is the distinction most people are really asking about.
 
 The load is periodic rather than constant, and the underlying cause is simple: you publish a number that several people would prefer said something else. That is survivable if the month is designed properly and corrosive if it is not.
 
@@ -36,13 +36,13 @@ A monthly reporting cycle has a fixed shape, and most of the pressure sits in ab
 | +4 | Review; the numbers get challenged | Challenge arrives without evidence, and lands on you |
 | +5 | Report issued | Late data forces a restatement next month |
 
-Nine or ten working days a month are genuinely calm. The remaining five are not, and the intensity is the trade for the calm ones.
+About five of the twenty-one working days in a month are the hard ones. The other sixteen are ordinary, and the intensity of the five is the trade for the calm of the rest.
 
 ## The argument that causes most of the stress
 
 It is almost never the arithmetic. It is which costs belong on which side of a cut-off date, and here is why it matters.
 
-A package has a budget at completion of £11.0m. At cut-off, earned value is £4,180k and the cost ledger reports actual cost of £4,690k.
+Take an illustrative package with a budget at completion of £11.0m. At cut-off, earned value is £4,180k and the cost ledger reports actual cost of £4,690k. The figures are set to show what the argument does to the numbers; they are not from a real contract.
 
 Cost performance index = 4,180 ÷ 4,690 = **0.891**.
 
@@ -130,4 +130,4 @@ For people who like being the person who knows, generally yes. The work is measu
 
 ---
 
-*Internal links: this answer should link to [what a project controls engineer does](https://pciworld.org/what-does-a-project-controls-engineer-do) with that anchor, to [the month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with the anchor "how the reporting cut-off actually runs", and to [project controls salary expectations](https://pciworld.org/project-controls-salary) with the anchor "what the role pays for that responsibility". Quora rule: the single in-body link appears after the question has been fully answered, never in the opening paragraphs.*
+*Internal links: the body now carries one link, to https://pciworld.org/what-does-a-project-controls-engineer-do, anchored "a day in the project controls role". It sits at the end of the section on what reduces the load, on the sentence about weighing the career rather than the month — the question that raises is what the job contains outside the hard week, which is that page's subject, and it comes after the answer is complete. Two further links were proposed and are not placed: the salary page would be a second link to the same domain in one answer, and the hub's month-end close page describes a cycle this answer already tables day by day. Quora links are nofollow, so treat this as qualified traffic rather than link equity. Reciprocal: none — no PCI page should link out to a Quora answer.*

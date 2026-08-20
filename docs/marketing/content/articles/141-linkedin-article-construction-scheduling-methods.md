@@ -23,7 +23,7 @@ Written for LinkedIn as an original. It sits under the Institute's planning and 
 
 ## What do the four construction scheduling methods actually optimise?
 
-They optimise different things, which is why arguing about which is best rarely goes anywhere. CPM optimises the sequence of a one-off network. The other three optimise the flow of repeated work through space.
+They optimise different things, which is why arguing about which is best rarely goes anywhere. CPM optimises the sequence of a one-off network. Line of balance and takt optimise the flow of repeated work through space. Last Planner optimises something else again: the reliability of the promises trades make to each other in the coming weeks.
 
 A contract usually demands one of them and a site usually runs on another. That mismatch is normal and manageable, provided you know which document governs and which one the foreman believes.
 

@@ -50,7 +50,9 @@ AI does not replace an estimating method. It sits inside one, which is why "we u
 
 Estimate class matters more than method. A class is a label for how much of the design was actually fixed when the number was produced, and therefore how wide the number's honest range is.
 
-A concept figure built from a rate per square metre on a scheme that is still a sketch has a range wide enough to change a funding decision. A control estimate built from a full take-off at award has a narrow one, because the scope it prices is largely settled. Publishing the first as though it were the second is how a project acquires a budget it was never given. AACE International's recommended practices are the usual published reference for the class definitions themselves; they are named here and described in our own words rather than reproduced.
+A concept figure built from a rate per square metre on a scheme that is still a sketch has a range wide enough to change a funding decision. A control estimate built from a full take-off at award has a narrow one, because the scope it prices is largely settled. Publishing the first as though it were the second is how a project acquires a budget it was never given.
+
+AACE International's recommended practices are the usual published reference for the class definitions themselves. They are named here and described in our own words rather than reproduced.
 
 ## Measuring whether the tool is any good on your data
 
@@ -112,7 +114,9 @@ And commercial position. What a job should cost and what you should bid are diff
 
 PCI certifies the finance side of project work through the PCI AI Project Finance Leader (PFL-AI), which holds 16 domains and 61 knowledge areas. The controls credential, the PCI AI Project Controls Leader (PCL-AI), holds 13 domains and 61 knowledge areas, and the delivery credential, the PCI Project Management Leader – AI (PML-AI), holds 16 domains and 63 knowledge areas.
 
-The PCL-AI Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. Those are proportions of the syllabus, not of the examination, and they are why the handover from an estimate, to an expected total cost, to a recognised revenue figure sits inside one credential rather than falling between two. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite. Across the three volumes there are 92 sector case studies (26 + 33 + 33).
+The PCL-AI Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. Those are proportions of the syllabus, not of the examination, and they are why the handover from an estimate, to an expected total cost, to a recognised revenue figure sits inside one credential rather than falling between two.
+
+The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite. That verification is the same habit this page asks of a vendor: score the arithmetic against known answers before relying on it.
 
 PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
