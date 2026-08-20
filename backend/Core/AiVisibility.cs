@@ -196,9 +196,10 @@ public static class AiVisibility
         }
     }
 
-    // App shells / error pages are never listed (mirrors Sitemap's exclusions).
+    // App shells / error pages / server-side templates are never listed (mirrors Sitemap's exclusions).
     static readonly HashSet<string> _sitemapExclude = new(StringComparer.OrdinalIgnoreCase)
-    { "student.html", "admin.html", "exam-ui.html", "404.html", "500.html", "offline.html" };
+    { "student.html", "admin.html", "exam-ui.html", "404.html", "500.html", "offline.html",
+      "blog-shell.html", "careers-detail.html", "certification-detail.html" };
     static bool Sitemap_Excluded(string slug) => _sitemapExclude.Contains(slug);
 
     // llms.txt is plain text/Markdown, but titles/descriptions are stored HTML-encoded (they normally

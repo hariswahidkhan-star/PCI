@@ -12,8 +12,12 @@ namespace PCI.Backend.Core;
 public static class Sitemap
 {
     // App shells + non-content pages are never in the sitemap regardless of their pages-table flags.
+    // The three *-detail/shell entries are server-side templates, not pages: the backend reads them
+    // and substitutes {{CANONICAL}} and the rest to render a real page. Submitted as URLs they
+    // resolve to the raw template carrying an unsubstituted token.
     static readonly HashSet<string> Exclude = new(StringComparer.OrdinalIgnoreCase)
-    { "student.html", "admin.html", "exam-ui.html", "404.html", "500.html", "offline.html" };
+    { "student.html", "admin.html", "exam-ui.html", "404.html", "500.html", "offline.html",
+      "blog-shell.html", "careers-detail.html", "certification-detail.html" };
 
     static int _ver = -1;
     static string _xml = "";
@@ -38,6 +42,24 @@ public static class Sitemap
                 if (H.Str(r["updated_at"]) is { Length: >= 10 } u) sb.Append("<lastmod>").Append(Esc(u[..10])).Append("</lastmod>");
                 sb.Append("<changefreq>weekly</changefreq></url>\n");
             }
+            // Per-certification landing pages (/certifications/{slug}), server-rendered by CertPage from
+            // the certifications table. They are the commercial core of the site and had no route into
+            // the sitemap at all: they are not rows in `pages`, so the loop above never saw them and a
+            // crawler could only reach them by following nav links. Same active=1 filter CertPage.BySlug
+            // uses, so the sitemap can never advertise a slug that would 404.
+            try
+            {
+                foreach (var r in db.Query("SELECT slug,COALESCE(updated_at,created_at) upd FROM certifications WHERE active=1 AND slug IS NOT NULL AND slug<>'' ORDER BY slug"))
+                {
+                    var s = (H.Str(r["slug"]) ?? "").Trim();
+                    if (s.Length == 0 || s.Contains("..")) continue;
+                    sb.Append("  <url><loc>").Append(Esc(host + "/certifications/" + s)).Append("</loc>");
+                    if (H.Str(r["upd"]) is { Length: >= 10 } cu) sb.Append("<lastmod>").Append(Esc(cu[..10])).Append("</lastmod>");
+                    sb.Append("<changefreq>weekly</changefreq></url>\n");
+                }
+            }
+            catch { /* certifications table absent on a very early boot — sitemap still valid */ }
+
             // Dynamic blog posts (Content Centre) — published, indexable, canonical URLs only. Kept in the
             // main sitemap so Search Console/Bing discover them via the already-submitted /sitemap.xml.
             try
