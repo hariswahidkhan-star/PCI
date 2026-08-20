@@ -1,0 +1,2344 @@
+{
+ "keywords": [
+  {
+   "kw": "Keyword",
+   "cluster": "Cluster",
+   "intent": "Intent",
+   "funnel": "Funnel",
+   "vol": "Volume band",
+   "diff": "Difficulty"
+  },
+  {
+   "kw": "project controls institute",
+   "cluster": "Brand",
+   "intent": "Navigational",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Hard"
+  },
+  {
+   "kw": "PCL-AI certification",
+   "cluster": "Brand",
+   "intent": "Navigational",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "Certuvo",
+   "cluster": "Brand",
+   "intent": "Navigational",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "project controls certification",
+   "cluster": "Core",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "project controls training",
+   "cluster": "Core",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "project controls course",
+   "cluster": "Core",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Hard"
+  },
+  {
+   "kw": "project controls certification online",
+   "cluster": "Core",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project controls course online",
+   "cluster": "Core",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "certified project controls professional",
+   "cluster": "Core",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project controls certification cost",
+   "cluster": "Core",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "project controls qualifications",
+   "cluster": "Core",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Medium"
+  },
+  {
+   "kw": "planning engineer certification",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "certified planning engineer",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "how to become a planning engineer",
+   "cluster": "Role",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "senior planning engineer career path",
+   "cluster": "Role",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "planning engineer salary",
+   "cluster": "Role",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "cost controller certification",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "cost engineer certification",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project scheduler certification",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "AACE PSP certification guide",
+   "cluster": "Conquest",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "quantity surveyor certification",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Hard"
+  },
+  {
+   "kw": "quantity surveyor certification online",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "PMO certification",
+   "cluster": "Role",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "what does a project controls engineer do",
+   "cluster": "Role",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "how to become a project controls manager",
+   "cluster": "Role",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "project controls salary",
+   "cluster": "Role",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "what is project controls",
+   "cluster": "Skills",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "project controls vs project management",
+   "cluster": "Skills",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "earned value management certification",
+   "cluster": "Skills",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "earned value management training",
+   "cluster": "Skills",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "what is earned value management",
+   "cluster": "Skills",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "earned value formulas cheat sheet",
+   "cluster": "Skills",
+   "intent": "Informational",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "primavera p6 certification",
+   "cluster": "Skills",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "primavera p6 online course",
+   "cluster": "Skills",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "schedule risk analysis",
+   "cluster": "Skills",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "quantitative schedule risk analysis QSRA",
+   "cluster": "Skills",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "cost control in construction",
+   "cluster": "Skills",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Hard"
+  },
+  {
+   "kw": "AI in project controls",
+   "cluster": "AI",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "AI project controls certification",
+   "cluster": "AI",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "AI for construction scheduling",
+   "cluster": "AI",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "AI in construction project management",
+   "cluster": "AI",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Hard"
+  },
+  {
+   "kw": "will AI replace planning engineers",
+   "cluster": "AI",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "will AI replace project managers",
+   "cluster": "AI",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "AI project management certification",
+   "cluster": "AI",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Hard"
+  },
+  {
+   "kw": "future of project controls",
+   "cluster": "AI",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "AI for cost estimating in construction",
+   "cluster": "AI",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "best AI construction scheduling software",
+   "cluster": "AI",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project controls courses in Dubai",
+   "cluster": "Geo",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "project controls training UAE",
+   "cluster": "Geo",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "planning engineer course in Saudi Arabia",
+   "cluster": "Geo",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "project controls certification UK",
+   "cluster": "Geo",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project controls certification USA",
+   "cluster": "Geo",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project controls course India",
+   "cluster": "Geo",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "primavera p6 course in Dubai",
+   "cluster": "Geo",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "project controls courses in Qatar",
+   "cluster": "Geo",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "planning engineer jobs in UAE",
+   "cluster": "Geo",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "High",
+   "diff": "Hard"
+  },
+  {
+   "kw": "planning engineer salary UAE",
+   "cluster": "Geo",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project controls jobs in Saudi Arabia",
+   "cluster": "Geo",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Hard"
+  },
+  {
+   "kw": "best project controls certification",
+   "cluster": "Comparison",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Medium"
+  },
+  {
+   "kw": "AACE CCP vs PMP",
+   "cluster": "Conquest",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "PMI-SP vs AACE PSP",
+   "cluster": "Conquest",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "PMI-SP worth it",
+   "cluster": "Conquest",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "AACE certification cost",
+   "cluster": "Conquest",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "CCP certification worth it",
+   "cluster": "Conquest",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "best certification for planning engineers",
+   "cluster": "Comparison",
+   "intent": "Commercial",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "project controls exam questions",
+   "cluster": "Exam prep",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "planning engineer interview questions",
+   "cluster": "Exam prep",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "High",
+   "diff": "Medium"
+  },
+  {
+   "kw": "project controls interview questions",
+   "cluster": "Exam prep",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "primavera p6 practice test",
+   "cluster": "Exam prep",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "earned value practice questions",
+   "cluster": "Exam prep",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "CCP exam questions",
+   "cluster": "Exam prep",
+   "intent": "Transactional",
+   "funnel": "BOFU",
+   "vol": "Medium",
+   "diff": "Easy"
+  },
+  {
+   "kw": "PMI-SP exam prep",
+   "cluster": "Exam prep",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Medium"
+  },
+  {
+   "kw": "honorary fellowship engineering",
+   "cluster": "Honorary",
+   "intent": "Informational",
+   "funnel": "TOFU",
+   "vol": "Low",
+   "diff": "Medium"
+  },
+  {
+   "kw": "how to become a fellow of a professional institution",
+   "cluster": "Honorary",
+   "intent": "Informational",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "professional fellowship application",
+   "cluster": "Honorary",
+   "intent": "Informational",
+   "funnel": "MOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "fellowship for project professionals",
+   "cluster": "Honorary",
+   "intent": "Commercial",
+   "funnel": "BOFU",
+   "vol": "Low",
+   "diff": "Easy"
+  },
+  {
+   "kw": "1.  project controls institute",
+   "cluster": "Brand defense: the .com competitor owns your exact name today \u2014 you cannot build a certification brand while another PCI outranks you for it.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "2.  planning engineer certification",
+   "cluster": "BOFU commercial term where only low-authority cert mills rank; the largest single role in the Gulf-heavy audience.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "3.  cost controller certification",
+   "cluster": "Thin SERP (resume blogs + obscure issuers), direct product match, winnable in months.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "4.  AI project controls certification",
+   "cluster": "A true SERP gap: nobody has named this category and it is literally the product (PCL-AI). Define it before someone else does.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "5.  AI in project controls",
+   "cluster": "The differentiator pillar; only vendor blogs rank, no authority owner; every AI spoke feeds it internal links.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "6.  will AI replace planning engineers",
+   "cluster": "Easy question SERP (auto-generated career sites); taps the exact anxiety the AI-era curriculum answers; strong email-capture page.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "7.  best project controls certification",
+   "cluster": "Zippia's thin programmatic listicles are beatable with a genuinely expert, honest comparison; highest-leverage MOFU asset.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "8.  AACE certification cost",
+   "cluster": "One solo niche site dominates; a full cost-comparison table conquests AACE-intent traffic at its decision moment.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "9.  project controls exam questions",
+   "cluster": "SERP gap (results bleed to PMP prep); a free Certuvo question bank ranks fast and feeds the funnel.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  },
+  {
+   "kw": "10.  project controls courses in Dubai",
+   "cluster": "Gulf commercial intent served today by generic PM-course directories, not project-controls pages; a dedicated Dubai landing page closes the gap.",
+   "intent": null,
+   "funnel": null,
+   "vol": null,
+   "diff": null
+  }
+ ],
+ "briefs": [
+  {
+   "id": "AB-00044",
+   "title": "AI project management certification: an honest comparison",
+   "pillar": "AI in project controls",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00100",
+   "title": "AI skills in demand: what employers now ask of project controls professionals",
+   "pillar": "AI in project controls",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00042",
+   "title": "Will AI replace planning engineers: the questions people really ask",
+   "pillar": "AI in project controls",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00188",
+   "title": "Primavera P6 export file types explained: XER, XML, XLSX",
+   "pillar": "AI in project controls",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00039",
+   "title": "AI project controls certification: what it covers, what it costs and who it suits",
+   "pillar": "AI in project controls",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00150",
+   "title": "Prompt engineering for project professionals: a working introduction",
+   "pillar": "AI in project controls",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00038",
+   "title": "AI in project controls: everything the search actually asks",
+   "pillar": "AI in project controls",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-05561",
+   "title": "Standing up Power BI for project controls on a new project: the first 30 days",
+   "pillar": "AI in project controls",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00154",
+   "title": "Building an AI policy for a project controls team",
+   "pillar": "AI in project controls",
+   "format": "template"
+  },
+  {
+   "id": "AB-00018",
+   "title": "Cost engineer certification: an honest comparison",
+   "pillar": "Certification and careers",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00087",
+   "title": "How many project controls jobs are there? The 2026 market, by region and role",
+   "pillar": "Certification and careers",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00010",
+   "title": "Project controls certification cost: the questions people really ask",
+   "pillar": "Certification and careers",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00001",
+   "title": "Project controls institute: what it is, who it is for, and how to start",
+   "pillar": "Certification and careers",
+   "format": "guide"
+  },
+  {
+   "id": "AB-02559",
+   "title": "How to become a planning engineer: qualifications, path and first role",
+   "pillar": "Certification and careers",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00004",
+   "title": "Project controls certification: everything the search actually asks",
+   "pillar": "Certification and careers",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-00169",
+   "title": "The 20 hardest earned value questions (with full solutions)",
+   "pillar": "Certification and careers",
+   "format": "practice"
+  },
+  {
+   "id": "AB-04569",
+   "title": "Earned value management: 10 interview questions and strong answers",
+   "pillar": "Certification and careers",
+   "format": "qa-list"
+  },
+  {
+   "id": "AB-00016",
+   "title": "Planning engineer salary: a free tool and how to use it",
+   "pillar": "Certification and careers",
+   "format": "template"
+  },
+  {
+   "id": "AB-00253",
+   "title": "IFRS 15 vs IAS 11: what actually changed for construction",
+   "pillar": "Cost control and estimating",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00304",
+   "title": "Global construction cost inflation: what Turner & Townsend's index shows",
+   "pillar": "Cost control and estimating",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00273",
+   "title": "What is three-point estimating?",
+   "pillar": "Cost control and estimating",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00789",
+   "title": "What is cost estimating? Definition, examples and why it matters",
+   "pillar": "Cost control and estimating",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00079",
+   "title": "Cost control methods that catch overruns early",
+   "pillar": "Cost control and estimating",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00212",
+   "title": "The S-curve formula with a free calculator walkthrough",
+   "pillar": "Cost control and estimating",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00092",
+   "title": "IFRS for project controls: the standards every cost engineer must know",
+   "pillar": "Cost control and estimating",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-00141",
+   "title": "Month-end close for projects: the controls-to-finance handshake",
+   "pillar": "Cost control and estimating",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00213",
+   "title": "Construction cash flow spreadsheet: build it once, use it always",
+   "pillar": "Cost control and estimating",
+   "format": "template"
+  },
+  {
+   "id": "AB-00264",
+   "title": "What is BCWS vs BCWP? (the old names for PV and EV)",
+   "pillar": "Earned value management",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00451",
+   "title": "What is earned value management? Definition, examples and why it matters",
+   "pillar": "Earned value management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00080",
+   "title": "Earned value management explained with a worked example",
+   "pillar": "Earned value management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00215",
+   "title": "Using EVM to predict final project costs: the four EAC formulas",
+   "pillar": "Earned value management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00091",
+   "title": "Earned value management: the complete guide (EVM pillar)",
+   "pillar": "Earned value management",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-05467",
+   "title": "Standing up earned value management on a new project: the first 30 days",
+   "pillar": "Earned value management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00453",
+   "title": "Earned value management checklist: what good looks like",
+   "pillar": "Earned value management",
+   "format": "template"
+  },
+  {
+   "id": "AB-00229",
+   "title": "Construction scheduling methods compared: CPM, LOB, takt, agile",
+   "pillar": "Planning and scheduling",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00268",
+   "title": "What are the five levels of a work breakdown structure?",
+   "pillar": "Planning and scheduling",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00183",
+   "title": "Hard vs soft constraints in Primavera P6",
+   "pillar": "Planning and scheduling",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00078",
+   "title": "How to build a realistic project schedule in Primavera P6",
+   "pillar": "Planning and scheduling",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00182",
+   "title": "Negative float in Primavera P6: causes and fixes",
+   "pillar": "Planning and scheduling",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05472",
+   "title": "Standing up critical path method (CPM) on a new project: the first 30 days",
+   "pillar": "Planning and scheduling",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00194",
+   "title": "Ten must-have P6 layouts and how to build them",
+   "pillar": "Planning and scheduling",
+   "format": "template"
+  },
+  {
+   "id": "AB-00028",
+   "title": "Project controls vs project management: an honest comparison",
+   "pillar": "Project controls fundamentals",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-03325",
+   "title": "Why oil and gas projects overrun: causes and the data",
+   "pillar": "Project controls fundamentals",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00282",
+   "title": "What KPIs belong on a project dashboard?",
+   "pillar": "Project controls fundamentals",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01108",
+   "title": "What is contract administration? Definition, examples and why it matters",
+   "pillar": "Project controls fundamentals",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00029",
+   "title": "Earned value management certification: what it covers, what it costs and who it suits",
+   "pillar": "Project controls fundamentals",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00247",
+   "title": "FIDIC's 84-day fully detailed claim (20.2.4): building the submission",
+   "pillar": "Project controls fundamentals",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00027",
+   "title": "What is project controls: everything the search actually asks",
+   "pillar": "Project controls fundamentals",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-00208",
+   "title": "The capital project management process, step by step",
+   "pillar": "Project controls fundamentals",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01110",
+   "title": "Contract administration checklist: what good looks like",
+   "pillar": "Project controls fundamentals",
+   "format": "template"
+  },
+  {
+   "id": "AB-01031",
+   "title": "What is project risk management? Definition, examples and why it matters",
+   "pillar": "Risk management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00081",
+   "title": "Quantitative schedule risk analysis for beginners",
+   "pillar": "Risk management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01032",
+   "title": "How to manage project risk: a step-by-step guide",
+   "pillar": "Risk management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05523",
+   "title": "Standing up project risk management on a new project: the first 30 days",
+   "pillar": "Risk management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01033",
+   "title": "Project risk management checklist: what good looks like",
+   "pillar": "Risk management",
+   "format": "template"
+  },
+  {
+   "id": "AB-00047",
+   "title": "Best AI construction scheduling software: an honest comparison",
+   "pillar": "AI in project controls",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00302",
+   "title": "Two-thirds of Gulf professionals already use AI at work: the skills signal",
+   "pillar": "AI in project controls",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00147",
+   "title": "Will AI replace planning engineers? The evidence, not the hype",
+   "pillar": "AI in project controls",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01371",
+   "title": "What is project data model? Definition, examples and why it matters",
+   "pillar": "AI in project controls",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00040",
+   "title": "AI for construction scheduling explained: a practitioner's guide",
+   "pillar": "AI in project controls",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00151",
+   "title": "Using large language models to review schedules: a practical protocol",
+   "pillar": "AI in project controls",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00099",
+   "title": "AI in project management: the 2026 state of play",
+   "pillar": "AI in project controls",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-05562",
+   "title": "Standing up ETL for project data on a new project: the first 30 days",
+   "pillar": "AI in project controls",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01376",
+   "title": "Power BI for project controls checklist: what good looks like",
+   "pillar": "AI in project controls",
+   "format": "template"
+  },
+  {
+   "id": "AB-00053",
+   "title": "Project controls course India: an honest comparison",
+   "pillar": "Certification and careers",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00118",
+   "title": "Project controls salary report: what the market pays in 2026",
+   "pillar": "Certification and careers",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00062",
+   "title": "PMI-SP worth it: the questions people really ask",
+   "pillar": "Certification and careers",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00002",
+   "title": "PCL-AI certification: what it is, who it is for, and how to start",
+   "pillar": "Certification and careers",
+   "format": "guide"
+  },
+  {
+   "id": "AB-02570",
+   "title": "How to become a senior planning engineer: qualifications, path and first role",
+   "pillar": "Certification and careers",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00005",
+   "title": "Project controls training: everything the search actually asks",
+   "pillar": "Certification and careers",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-00170",
+   "title": "Scheduling practice questions: 25 exam-style problems solved",
+   "pillar": "Certification and careers",
+   "format": "practice"
+  },
+  {
+   "id": "AB-04570",
+   "title": "Planned value (PV): 10 interview questions and strong answers",
+   "pillar": "Certification and careers",
+   "format": "qa-list"
+  },
+  {
+   "id": "AB-00026",
+   "title": "Project controls salary: a free tool and how to use it",
+   "pillar": "Certification and careers",
+   "format": "template"
+  },
+  {
+   "id": "AB-00254",
+   "title": "Percentage of completion vs completed contract method",
+   "pillar": "Cost control and estimating",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00305",
+   "title": "Labour availability: now the number-one construction cost driver",
+   "pillar": "Cost control and estimating",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00274",
+   "title": "Cost overrun vs cost escalation: the difference",
+   "pillar": "Cost control and estimating",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00793",
+   "title": "What is estimate classification (AACE 17R-97)? Definition, examples and why it matters",
+   "pillar": "Cost control and estimating",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00094",
+   "title": "EAC accounting: how estimate at completion flows into the financial statements",
+   "pillar": "Cost control and estimating",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00257",
+   "title": "WIP journal entries on construction contracts: a walkthrough",
+   "pillar": "Cost control and estimating",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00095",
+   "title": "Project budgeting and forecasting: a practical end-to-end guide",
+   "pillar": "Cost control and estimating",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-05495",
+   "title": "Standing up cost estimating on a new project: the first 30 days",
+   "pillar": "Cost control and estimating",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00791",
+   "title": "Cost estimating checklist: what good looks like",
+   "pillar": "Cost control and estimating",
+   "format": "template"
+  },
+  {
+   "id": "AB-00265",
+   "title": "What does a CPI below 1 mean (and what to do about it)?",
+   "pillar": "Earned value management",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00455",
+   "title": "What is planned value (PV)? Definition, examples and why it matters",
+   "pillar": "Earned value management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00101",
+   "title": "Project performance management: from metrics to decisions",
+   "pillar": "Earned value management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00452",
+   "title": "How to manage earned value: a step-by-step guide",
+   "pillar": "Earned value management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05468",
+   "title": "Standing up earned value management system (EVMS) on a new project: the first 30 days",
+   "pillar": "Earned value management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00562",
+   "title": "Earned value management system (EVMS) checklist: what good looks like",
+   "pillar": "Earned value management",
+   "format": "template"
+  },
+  {
+   "id": "AB-03488",
+   "title": "Is Primavera P6 certification worth it? Training options compared",
+   "pillar": "Planning and scheduling",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00269",
+   "title": "What is the 100% rule in WBS?",
+   "pillar": "Planning and scheduling",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00591",
+   "title": "What is critical path method (CPM)? Definition, examples and why it matters",
+   "pillar": "Planning and scheduling",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00105",
+   "title": "WBS-level reporting in agile environments: making hybrid delivery measurable",
+   "pillar": "Planning and scheduling",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00185",
+   "title": "How total float is calculated in Primavera P6",
+   "pillar": "Planning and scheduling",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05473",
+   "title": "Standing up re-baselining on a new project: the first 30 days",
+   "pillar": "Planning and scheduling",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00593",
+   "title": "Critical path method (CPM) checklist: what good looks like",
+   "pillar": "Planning and scheduling",
+   "format": "template"
+  },
+  {
+   "id": "AB-00200",
+   "title": "Choosing a delay analysis technique: impacted-as-planned, windows, TIA, as-built-but-for",
+   "pillar": "Project controls fundamentals",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-03327",
+   "title": "Cost benchmarks and metrics for oil and gas projects",
+   "pillar": "Project controls fundamentals",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00288",
+   "title": "What is EPC? What planners need to know about contract delivery models",
+   "pillar": "Project controls fundamentals",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01112",
+   "title": "What are NEC4 compensation events? Definition, examples and why they matter",
+   "pillar": "Project controls fundamentals",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00030",
+   "title": "Earned value management training: what it covers, what it costs and who it suits",
+   "pillar": "Project controls fundamentals",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01109",
+   "title": "How to run a contract administration: a step-by-step guide",
+   "pillar": "Project controls fundamentals",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00035",
+   "title": "Schedule risk analysis: everything the search actually asks",
+   "pillar": "Project controls fundamentals",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-05532",
+   "title": "Standing up contract administration on a new project: the first 30 days",
+   "pillar": "Project controls fundamentals",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01123",
+   "title": "FIDIC claims procedure checklist: what good looks like",
+   "pillar": "Project controls fundamentals",
+   "format": "template"
+  },
+  {
+   "id": "AB-01035",
+   "title": "What is risk register? Definition, examples and why it matters",
+   "pillar": "Risk management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00225",
+   "title": "Risk analysis as a cost probability distribution: reading the curve",
+   "pillar": "Risk management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01037",
+   "title": "How to build a risk register stakeholders actually use",
+   "pillar": "Risk management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05524",
+   "title": "Standing up qualitative risk analysis on a new project: the first 30 days",
+   "pillar": "Risk management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01036",
+   "title": "Risk register template: structure, example and how to use it",
+   "pillar": "Risk management",
+   "format": "template"
+  },
+  {
+   "id": "AB-00148",
+   "title": "Will AI replace quantity surveyors? What the data says",
+   "pillar": "AI in project controls",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01374",
+   "title": "What is Power BI for project controls? Definition, examples and why it matters",
+   "pillar": "AI in project controls",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00041",
+   "title": "AI in construction project management explained: a practitioner's guide",
+   "pillar": "AI in project controls",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00157",
+   "title": "Generative AI for project reports: speed without losing the audit trail",
+   "pillar": "AI in project controls",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05563",
+   "title": "Standing up P6 database queries on a new project: the first 30 days",
+   "pillar": "AI in project controls",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01383",
+   "title": "ETL for project data checklist: what good looks like",
+   "pillar": "AI in project controls",
+   "format": "template"
+  },
+  {
+   "id": "AB-00059",
+   "title": "Best project controls certification: an honest comparison",
+   "pillar": "Certification and careers",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00119",
+   "title": "The Gulf giga-projects hiring wave: what it means for planners and cost engineers",
+   "pillar": "Certification and careers",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00114",
+   "title": "How to verify a PCI AI credential (and why verification matters)",
+   "pillar": "Certification and careers",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00003",
+   "title": "Certuvo: what it is, who it is for, and how to start",
+   "pillar": "Certification and careers",
+   "format": "guide"
+  },
+  {
+   "id": "AB-02581",
+   "title": "How to become a project controls engineer: qualifications, path and first role",
+   "pillar": "Certification and careers",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00006",
+   "title": "Project controls course: everything the search actually asks",
+   "pillar": "Certification and careers",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-00171",
+   "title": "Cost management practice questions: 25 exam-style problems solved",
+   "pillar": "Certification and careers",
+   "format": "practice"
+  },
+  {
+   "id": "AB-04571",
+   "title": "Earned value (EV): 10 interview questions and strong answers",
+   "pillar": "Certification and careers",
+   "format": "qa-list"
+  },
+  {
+   "id": "AB-00069",
+   "title": "Primavera p6 practice test: a free tool and how to use it",
+   "pillar": "Certification and careers",
+   "format": "template"
+  },
+  {
+   "id": "AB-00306",
+   "title": "The most expensive cities to build in: the cost-per-m2 league table",
+   "pillar": "Cost control and estimating",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00275",
+   "title": "What is a schedule of values?",
+   "pillar": "Cost control and estimating",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00796",
+   "title": "What is class 5 estimate? Definition, examples and why it matters",
+   "pillar": "Cost control and estimating",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00096",
+   "title": "Project cash flow: modelling, S-curves and the forecast the CFO actually reads",
+   "pillar": "Cost control and estimating",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00790",
+   "title": "How to do cost estimating: a step-by-step guide",
+   "pillar": "Cost control and estimating",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05496",
+   "title": "Standing up parametric estimating on a new project: the first 30 days",
+   "pillar": "Cost control and estimating",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00807",
+   "title": "Parametric estimating checklist: what good looks like",
+   "pillar": "Cost control and estimating",
+   "format": "template"
+  },
+  {
+   "id": "AB-00266",
+   "title": "When should you use bottom-up ETC?",
+   "pillar": "Earned value management",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00460",
+   "title": "What is earned value (EV)? Definition, examples and why it matters",
+   "pillar": "Earned value management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00214",
+   "title": "Earned value reporting thresholds: when variances must trigger action",
+   "pillar": "Earned value management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00456",
+   "title": "How to calculate planned value (PV): formula, worked example and Excel steps",
+   "pillar": "Earned value management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05469",
+   "title": "Standing up integrated baseline review (IBR) on a new project: the first 30 days",
+   "pillar": "Earned value management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00566",
+   "title": "Integrated baseline review (IBR) checklist: what good looks like",
+   "pillar": "Earned value management",
+   "format": "template"
+  },
+  {
+   "id": "AB-03496",
+   "title": "Is Microsoft Project certification worth it? Training options compared",
+   "pillar": "Planning and scheduling",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00270",
+   "title": "WBS vs project schedule: what is the difference?",
+   "pillar": "Planning and scheduling",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00595",
+   "title": "What is critical path? Definition, examples and why it matters",
+   "pillar": "Planning and scheduling",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00184",
+   "title": "What a Must Finish By date really does to your schedule",
+   "pillar": "Planning and scheduling",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00195",
+   "title": "Graphing a P6 resource S-curve in Excel",
+   "pillar": "Planning and scheduling",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05474",
+   "title": "Standing up work breakdown structure (WBS) on a new project: the first 30 days",
+   "pillar": "Planning and scheduling",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00622",
+   "title": "Re-baselining checklist: what good looks like",
+   "pillar": "Planning and scheduling",
+   "format": "template"
+  },
+  {
+   "id": "AB-00249",
+   "title": "FIDIC Red vs Yellow Book 2017: design responsibility and claims",
+   "pillar": "Project controls fundamentals",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-03333",
+   "title": "Why LNG projects overrun: causes and the data",
+   "pillar": "Project controls fundamentals",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00290",
+   "title": "How do you apply for an extension of time?",
+   "pillar": "Project controls fundamentals",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01115",
+   "title": "What are NEC4 early warnings? Definition, examples and why they matter",
+   "pillar": "Project controls fundamentals",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00031",
+   "title": "What is earned value management explained: a practitioner's guide",
+   "pillar": "Project controls fundamentals",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01122",
+   "title": "How to run an FIDIC claims procedure: a step-by-step guide",
+   "pillar": "Project controls fundamentals",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00207",
+   "title": "What are capital projects? The complete beginner's guide",
+   "pillar": "Project controls fundamentals",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-05533",
+   "title": "Standing up FIDIC claims procedure on a new project: the first 30 days",
+   "pillar": "Project controls fundamentals",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01127",
+   "title": "Extension of time (EOT) checklist: what good looks like",
+   "pillar": "Project controls fundamentals",
+   "format": "template"
+  },
+  {
+   "id": "AB-01039",
+   "title": "What is risk breakdown structure? Definition, examples and why it matters",
+   "pillar": "Risk management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00226",
+   "title": "QRA capability: building quantitative risk analysis into the organisation",
+   "pillar": "Risk management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01043",
+   "title": "How to run a qualitative risk analysis: a step-by-step guide",
+   "pillar": "Risk management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05525",
+   "title": "Standing up quantitative risk analysis (QRA) on a new project: the first 30 days",
+   "pillar": "Risk management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01044",
+   "title": "Qualitative risk analysis checklist: what good looks like",
+   "pillar": "Risk management",
+   "format": "template"
+  },
+  {
+   "id": "AB-00149",
+   "title": "Will AI replace cost engineers? Role change vs role loss",
+   "pillar": "AI in project controls",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01378",
+   "title": "What are dashboards in Power BI vs Excel? Definition, examples and why they matter",
+   "pillar": "AI in project controls",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00043",
+   "title": "Will AI replace project managers explained: a practitioner's guide",
+   "pillar": "AI in project controls",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00189",
+   "title": "Cleaning POBS data: why your XER imports slowly and how to fix it",
+   "pillar": "AI in project controls",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05564",
+   "title": "Standing up master data management on projects on a new project: the first 30 days",
+   "pillar": "AI in project controls",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01387",
+   "title": "P6 database queries checklist: what good looks like",
+   "pillar": "AI in project controls",
+   "format": "template"
+  },
+  {
+   "id": "AB-00060",
+   "title": "AACE CCP vs PMP: an honest comparison",
+   "pillar": "Certification and careers",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00127",
+   "title": "Women in project controls: the state of the profession",
+   "pillar": "Certification and careers",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00120",
+   "title": "Is project controls a good career? An honest assessment",
+   "pillar": "Certification and careers",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00007",
+   "title": "Project controls certification online: entry routes, fees and what you actually get",
+   "pillar": "Certification and careers",
+   "format": "guide"
+  },
+  {
+   "id": "AB-02592",
+   "title": "How to become a project controls manager: qualifications, path and first role",
+   "pillar": "Certification and careers",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00084",
+   "title": "Why PCI AI? Inside the Project Controls Institute and its AI-era credentials",
+   "pillar": "Certification and careers",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-00172",
+   "title": "Risk management practice questions: 20 exam-style problems solved",
+   "pillar": "Certification and careers",
+   "format": "practice"
+  },
+  {
+   "id": "AB-04572",
+   "title": "Actual cost (AC): 10 interview questions and strong answers",
+   "pillar": "Certification and careers",
+   "format": "qa-list"
+  },
+  {
+   "id": "AB-00070",
+   "title": "Earned value practice questions: a free tool and how to use it",
+   "pillar": "Certification and careers",
+   "format": "template"
+  },
+  {
+   "id": "AB-00276",
+   "title": "What is a construction draw schedule?",
+   "pillar": "Cost control and estimating",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00799",
+   "title": "What is class 3 estimate? Definition, examples and why it matters",
+   "pillar": "Cost control and estimating",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00102",
+   "title": "Project financing explained for project controls professionals",
+   "pillar": "Cost control and estimating",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00806",
+   "title": "How to do parametric estimating: a step-by-step guide",
+   "pillar": "Cost control and estimating",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05497",
+   "title": "Standing up analogous estimating on a new project: the first 30 days",
+   "pillar": "Cost control and estimating",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00811",
+   "title": "Analogous estimating checklist: what good looks like",
+   "pillar": "Cost control and estimating",
+   "format": "template"
+  },
+  {
+   "id": "AB-00267",
+   "title": "What are the four EAC formulas and when does each apply?",
+   "pillar": "Earned value management",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00465",
+   "title": "What is actual cost (AC)? Definition, examples and why it matters",
+   "pillar": "Earned value management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00216",
+   "title": "EVM as management practice, not compliance theatre",
+   "pillar": "Earned value management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00461",
+   "title": "How to calculate earned value (EV): formula, worked example and Excel steps",
+   "pillar": "Earned value management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05470",
+   "title": "Standing up progress measurement on a new project: the first 30 days",
+   "pillar": "Earned value management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00569",
+   "title": "Variance analysis report template: structure, example and how to use it",
+   "pillar": "Earned value management",
+   "format": "template"
+  },
+  {
+   "id": "AB-03504",
+   "title": "Is Deltek Cobra certification worth it? Training options compared",
+   "pillar": "Planning and scheduling",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00271",
+   "title": "How many levels should a WBS have?",
+   "pillar": "Planning and scheduling",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00598",
+   "title": "What is near-critical path? Definition, examples and why it matters",
+   "pillar": "Planning and scheduling",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00186",
+   "title": "Schedule percent complete in P6: how each setting calculates",
+   "pillar": "Planning and scheduling",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00196",
+   "title": "P6 layouts for baseline vs updated schedule comparison",
+   "pillar": "Planning and scheduling",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05475",
+   "title": "Standing up activity duration estimating on a new project: the first 30 days",
+   "pillar": "Planning and scheduling",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00629",
+   "title": "Work breakdown structure (WBS) checklist: what good looks like",
+   "pillar": "Planning and scheduling",
+   "format": "template"
+  },
+  {
+   "id": "AB-00250",
+   "title": "FIDIC 1999 vs 2017 claims regimes compared",
+   "pillar": "Project controls fundamentals",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-03335",
+   "title": "Cost benchmarks and metrics for LNG projects",
+   "pillar": "Project controls fundamentals",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-03683",
+   "title": "Is project controls a stressful job?",
+   "pillar": "Project controls fundamentals",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01118",
+   "title": "What are NEC4 main options (A to F)? Definition, examples and why they matter",
+   "pillar": "Project controls fundamentals",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00032",
+   "title": "Earned value formulas cheat sheet explained: a practitioner's guide",
+   "pillar": "Project controls fundamentals",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01126",
+   "title": "How to run an extension of time (EOT): a step-by-step guide",
+   "pillar": "Project controls fundamentals",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05534",
+   "title": "Standing up extension of time (EOT) on a new project: the first 30 days",
+   "pillar": "Project controls fundamentals",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01137",
+   "title": "Time impact analysis checklist: what good looks like",
+   "pillar": "Project controls fundamentals",
+   "format": "template"
+  },
+  {
+   "id": "AB-01042",
+   "title": "What is qualitative risk analysis? Definition, examples and why it matters",
+   "pillar": "Risk management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00234",
+   "title": "AACE 42R-08: contingency by parametric estimating",
+   "pillar": "Risk management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01047",
+   "title": "How to run a quantitative risk analysis (QRA): a step-by-step guide",
+   "pillar": "Risk management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05526",
+   "title": "Standing up Monte Carlo cost simulation on a new project: the first 30 days",
+   "pillar": "Risk management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01048",
+   "title": "Quantitative risk analysis (QRA) checklist: what good looks like",
+   "pillar": "Risk management",
+   "format": "template"
+  },
+  {
+   "id": "AB-00283",
+   "title": "What is generative scheduling?",
+   "pillar": "AI in project controls",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01381",
+   "title": "What is ETL for project data? Definition, examples and why it matters",
+   "pillar": "AI in project controls",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00045",
+   "title": "Future of project controls explained: a practitioner's guide",
+   "pillar": "AI in project controls",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00190",
+   "title": "Importing an XER from a newer P6 version",
+   "pillar": "AI in project controls",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05565",
+   "title": "Standing up Python for planners on a new project: the first 30 days",
+   "pillar": "AI in project controls",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01397",
+   "title": "Master data management on projects checklist: what good looks like",
+   "pillar": "AI in project controls",
+   "format": "template"
+  },
+  {
+   "id": "AB-00061",
+   "title": "PMI-SP vs AACE PSP: an honest comparison",
+   "pillar": "Certification and careers",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00292",
+   "title": "Project management jobs growing 6% to 2034: inside the BLS outlook",
+   "pillar": "Certification and careers",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00258",
+   "title": "What industries pay project controls professionals the most?",
+   "pillar": "Certification and careers",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00008",
+   "title": "Project controls course online: entry routes, fees and what you actually get",
+   "pillar": "Certification and careers",
+   "format": "guide"
+  },
+  {
+   "id": "AB-02603",
+   "title": "How to become a project controls lead: qualifications, path and first role",
+   "pillar": "Certification and careers",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-00088",
+   "title": "Why a certification that blends finance + project management + AI had to exist",
+   "pillar": "Certification and careers",
+   "format": "pillar"
+  },
+  {
+   "id": "AB-00173",
+   "title": "Project finance practice questions: 20 exam-style problems solved",
+   "pillar": "Certification and careers",
+   "format": "practice"
+  },
+  {
+   "id": "AB-04573",
+   "title": "Budget at completion (BAC): 10 interview questions and strong answers",
+   "pillar": "Certification and careers",
+   "format": "qa-list"
+  },
+  {
+   "id": "AB-00128",
+   "title": "The project controls skills matrix: rate yourself honestly",
+   "pillar": "Certification and careers",
+   "format": "template"
+  },
+  {
+   "id": "AB-00277",
+   "title": "Front-loaded vs back-loaded cash flow: what it signals",
+   "pillar": "Cost control and estimating",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00802",
+   "title": "What is class 1 estimate? Definition, examples and why it matters",
+   "pillar": "Cost control and estimating",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00130",
+   "title": "IFRS 15 for construction: percentage of completion and performance obligations",
+   "pillar": "Cost control and estimating",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00810",
+   "title": "How to do analogous estimating: a step-by-step guide",
+   "pillar": "Cost control and estimating",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05498",
+   "title": "Standing up bottom-up estimating on a new project: the first 30 days",
+   "pillar": "Cost control and estimating",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00815",
+   "title": "Bottom-up estimating checklist: what good looks like",
+   "pillar": "Cost control and estimating",
+   "format": "template"
+  },
+  {
+   "id": "AB-00272",
+   "title": "Control account vs work package: the difference",
+   "pillar": "Earned value management",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00470",
+   "title": "What is budget at completion (BAC)? Definition, examples and why it matters",
+   "pillar": "Earned value management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00217",
+   "title": "Common misconceptions about earned value management",
+   "pillar": "Earned value management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00466",
+   "title": "How to calculate actual cost (AC): formula, worked example and Excel steps",
+   "pillar": "Earned value management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05471",
+   "title": "Standing up performance reporting on a new project: the first 30 days",
+   "pillar": "Earned value management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00585",
+   "title": "Progress measurement checklist: what good looks like",
+   "pillar": "Earned value management",
+   "format": "template"
+  },
+  {
+   "id": "AB-03547",
+   "title": "Is Primavera Risk Analysis certification worth it? Training options compared",
+   "pillar": "Planning and scheduling",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00289",
+   "title": "What is a recovery schedule?",
+   "pillar": "Planning and scheduling",
+   "format": "faq"
+  },
+  {
+   "id": "AB-00601",
+   "title": "What is total float? Definition, examples and why it matters",
+   "pillar": "Planning and scheduling",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00187",
+   "title": "Planned value vs earned value under different P6 settings",
+   "pillar": "Planning and scheduling",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00199",
+   "title": "Recovery schedules: when the engineer demands one and how to build it",
+   "pillar": "Planning and scheduling",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05476",
+   "title": "Standing up schedule crashing on a new project: the first 30 days",
+   "pillar": "Planning and scheduling",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-00632",
+   "title": "WBS dictionary template: structure, example and how to use it",
+   "pillar": "Planning and scheduling",
+   "format": "template"
+  },
+  {
+   "id": "AB-03341",
+   "title": "Why rail projects overrun: causes and the data",
+   "pillar": "Project controls fundamentals",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-03684",
+   "title": "Is project controls in demand?",
+   "pillar": "Project controls fundamentals",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01121",
+   "title": "What is FIDIC claims procedure? Definition, examples and why it matters",
+   "pillar": "Project controls fundamentals",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00033",
+   "title": "Primavera p6 certification: what it covers, what it costs and who it suits",
+   "pillar": "Project controls fundamentals",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01136",
+   "title": "How to run a time impact analysis: a step-by-step guide",
+   "pillar": "Project controls fundamentals",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05535",
+   "title": "Standing up time impact analysis on a new project: the first 30 days",
+   "pillar": "Project controls fundamentals",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01141",
+   "title": "As-planned vs as-built analysis checklist: what good looks like",
+   "pillar": "Project controls fundamentals",
+   "format": "template"
+  },
+  {
+   "id": "AB-01046",
+   "title": "What is quantitative risk analysis (QRA)? Definition, examples and why it matters",
+   "pillar": "Risk management",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00235",
+   "title": "AACE 44R-08: contingency by expected value",
+   "pillar": "Risk management",
+   "format": "guide"
+  },
+  {
+   "id": "AB-01051",
+   "title": "How to run a Monte Carlo cost simulation: a step-by-step guide",
+   "pillar": "Risk management",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05527",
+   "title": "Standing up contingency drawdown on a new project: the first 30 days",
+   "pillar": "Risk management",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01052",
+   "title": "Monte Carlo cost simulation checklist: what good looks like",
+   "pillar": "Risk management",
+   "format": "template"
+  },
+  {
+   "id": "AB-00284",
+   "title": "How accurate is AI construction cost estimating?",
+   "pillar": "AI in project controls",
+   "format": "faq"
+  },
+  {
+   "id": "AB-01385",
+   "title": "What are P6 database queries? Definition, examples and why they matter",
+   "pillar": "AI in project controls",
+   "format": "glossary"
+  },
+  {
+   "id": "AB-00046",
+   "title": "AI for cost estimating in construction explained: a practitioner's guide",
+   "pillar": "AI in project controls",
+   "format": "guide"
+  },
+  {
+   "id": "AB-00191",
+   "title": "Fixing budgeted cost changes on XER export/import",
+   "pillar": "AI in project controls",
+   "format": "how-to"
+  },
+  {
+   "id": "AB-05566",
+   "title": "Standing up pandas for schedule analysis on a new project: the first 30 days",
+   "pillar": "AI in project controls",
+   "format": "process-guide"
+  },
+  {
+   "id": "AB-01401",
+   "title": "Python for planners checklist: what good looks like",
+   "pillar": "AI in project controls",
+   "format": "template"
+  },
+  {
+   "id": "AB-00063",
+   "title": "AACE certification cost: an honest comparison",
+   "pillar": "Certification and careers",
+   "format": "comparison"
+  },
+  {
+   "id": "AB-00293",
+   "title": "Cost estimator jobs: declining headcount, 17,000 openings a year (BLS)",
+   "pillar": "Certification and careers",
+   "format": "data-study"
+  },
+  {
+   "id": "AB-00259",
+   "title": "How do you get into project controls with no experience?",
+   "pillar": "Certification and careers",
+   "format": "faq"
+  }
+ ],
+ "publishing": [
+  {
+   "rank": 1,
+   "platform": "LinkedIn Articles",
+   "purpose": "Credibility with a professional audience and branded search. The strongest of the ten for reaching decision-makers directly.",
+   "links": "Links are usable and the audience is the right one, but treat reach, not SEO, as the return.",
+   "canonical": "NO. LinkedIn articles support no canonical tag, so LinkedIn is treated as the original source.",
+   "rule": "Never republish an article that already exists on your own site - you would be handing LinkedIn the credit for your own page. Write LinkedIn-first pieces, or post a short summary with a link to the site version."
+  },
+  {
+   "rank": 2,
+   "platform": "Medium",
+   "purpose": "Domain authority and distribution for educational articles. Good for being found by people already reading in your subject area.",
+   "links": "Outbound links are nofollow, so they pass no direct link equity. The value is referral traffic and brand exposure.",
+   "canonical": "YES. Use the story settings or the import tool to set the canonical to your original article.",
+   "rule": "Publish on your own site first, wait for it to be indexed (allow roughly 2-10 days), then republish here with the canonical set back to your site."
+  },
+  {
+   "rank": 3,
+   "platform": "Substack",
+   "purpose": "Building an owned mailing list and earning referral traffic from other newsletters. This is an audience channel, not a search channel.",
+   "links": "Links work normally, and the recommendation network between newsletters is the real growth mechanism.",
+   "canonical": "NO. Substack does not let publishers set a canonical, so its version is treated as canonical to Substack.",
+   "rule": "Because there is no canonical, either write newsletter-first content or link prominently to the full article on your site. Expect the traffic to come from subscribers, not from Google."
+  },
+  {
+   "rank": 4,
+   "platform": "Quora",
+   "purpose": "Intercepting people who are already searching your subject. Quora answers themselves rank in Google, which is the point.",
+   "links": "All Quora links are nofollow. Judge this channel on qualified traffic and on the answers ranking, never on backlinks.",
+   "canonical": "Not applicable - answers are original content, not republished articles.",
+   "rule": "Answer the question fully before any link, and never put a link in the opening paragraphs. Name a Space for the subject rather than the brand; people follow topics, not vendors."
+  },
+  {
+   "rank": 5,
+   "platform": "WordPress.com",
+   "purpose": "A branded educational blog with contextual links back to the main site.",
+   "links": "Links behave normally, which makes this one of the few genuinely dofollow options on the list.",
+   "canonical": "You control the content, so this can host originals rather than republished copies.",
+   "rule": "CHECK THE COST FIRST: the free tier gives only a name.wordpress.com subdomain, 1GB storage, no plugins (so no SEO plugin) and shows adverts you neither control nor earn from. For a brand blog, budget for the entry paid tier or accept those limits in writing."
+  },
+  {
+   "rank": 6,
+   "platform": "Blogger",
+   "purpose": "Supplementary and repurposed content. Google-owned and free, but carries little editorial weight.",
+   "links": "Links behave normally.",
+   "canonical": "You control the template, so a manual canonical link back to the original is possible.",
+   "rule": "Use for repurposed content only, and always link to the original article. Do not spend original writing time here while ranks 1-5 are still under-served."
+  },
+  {
+   "rank": 7,
+   "platform": "Tumblr",
+   "purpose": "Short educational posts, infographics and brand citations.",
+   "links": "Links behave normally but the audience overlap with a professional certification audience is thin.",
+   "canonical": "Not applicable for short-form posts.",
+   "rule": "Short-form and visual only. Do not put long-form educational articles here."
+  },
+  {
+   "rank": 8,
+   "platform": "Vocal Media",
+   "purpose": "Contributed articles across educational and professional topics; useful for reach and citations.",
+   "links": "Links work, but every submission passes through moderation before it appears.",
+   "canonical": "No canonical control, so avoid posting an exact copy of a page you want to rank.",
+   "rule": "Rewrite rather than copy. Treat as an occasional reach channel, not a pillar."
+  },
+  {
+   "rank": 9,
+   "platform": "DEV Community",
+   "purpose": "Only for genuine technical writing about the AI coach, learning technology or platform engineering.",
+   "links": "Links work, but the terms of service explicitly prohibit content posted primarily for promotion or for creating backlinks.",
+   "canonical": "YES. DEV supports a canonical_url field.",
+   "rule": "READ THE RULES BEFORE POSTING: DEV prohibits promotional-first content and prohibits stub posts that merely link out to the full article. The full text must live on DEV. Use the organisation CTA link rather than in-body promotion. A marketing article posted he"
+  },
+  {
+   "rank": 10,
+   "platform": "Hashnode",
+   "purpose": "Technical content about the learning platform and its AI features.",
+   "links": "Links work; reach comes from tag feeds rather than search.",
+   "canonical": "YES. Draft Settings has an 'Are you republishing?' field for the canonical URL.",
+   "rule": "Technical write-ups only. Set the canonical on every republished piece, and reply in the comments - engagement is what surfaces posts in tag feeds."
+  }
+ ]
+}
