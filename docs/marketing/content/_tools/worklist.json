@@ -1,0 +1,4837 @@
+{
+ "url_map": [
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-certification",
+   "url": "https://projectcontrolsinstitute.org/project-controls-certification",
+   "title": "Project controls certification: what it actually proves",
+   "kw": "project controls certification",
+   "pillar": "Certification and careers",
+   "type": "pillar",
+   "file": "articles/001-own-site-project-controls-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "what-is-project-controls",
+   "url": "https://projectcontrolsinstitute.org/what-is-project-controls",
+   "title": "What is project controls, and who actually does it?",
+   "kw": "what is project controls",
+   "pillar": "Project controls fundamentals",
+   "type": "pillar",
+   "file": "articles/002-own-site-what-is-project-controls.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "earned-value-management",
+   "url": "https://projectcontrolsinstitute.org/earned-value-management",
+   "title": "What is earned value management? The practitioner's guide",
+   "kw": "what is earned value management",
+   "pillar": "Earned value management",
+   "type": "pillar",
+   "file": "articles/003-own-site-earned-value-management.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-training",
+   "url": "https://projectcontrolsinstitute.org/project-controls-training",
+   "title": "Project controls training: what actually prepares you",
+   "kw": "project controls training",
+   "pillar": "Certification and careers",
+   "type": "pillar",
+   "file": "articles/004-own-site-project-controls-training.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-course",
+   "url": "https://projectcontrolsinstitute.org/project-controls-course",
+   "title": "Project controls course: how to judge one before you pay",
+   "kw": "project controls course",
+   "pillar": "Certification and careers",
+   "type": "pillar",
+   "file": "articles/005-own-site-project-controls-course.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "schedule-risk-analysis",
+   "url": "https://projectcontrolsinstitute.org/schedule-risk-analysis",
+   "title": "Schedule risk analysis: everything the search actually asks",
+   "kw": "schedule risk analysis",
+   "pillar": "Risk management",
+   "type": "pillar",
+   "file": "articles/006-own-site-schedule-risk-analysis.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "ifrs-for-project-controls",
+   "url": "https://projectcontrolsinstitute.org/ifrs-for-project-controls",
+   "title": "IFRS for project controls: what cost engineers must know",
+   "kw": "IFRS for project controls",
+   "pillar": "Cost control and estimating",
+   "type": "pillar",
+   "file": "articles/007-own-site-ifrs-for-project-controls.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-budgeting-and-forecasting",
+   "url": "https://projectcontrolsinstitute.org/project-budgeting-and-forecasting",
+   "title": "Project budgeting and forecasting: an end-to-end guide",
+   "kw": "project budgeting and forecasting",
+   "pillar": "Cost control and estimating",
+   "type": "pillar",
+   "file": "articles/008-own-site-project-budgeting-and-forecasting.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "what-are-capital-projects",
+   "url": "https://projectcontrolsinstitute.org/what-are-capital-projects",
+   "title": "What are capital projects? The complete beginner's guide",
+   "kw": "what are capital projects",
+   "pillar": "Project controls fundamentals",
+   "type": "pillar",
+   "file": "articles/009-own-site-what-are-capital-projects.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "finance-and-project-management-certification",
+   "url": "https://projectcontrolsinstitute.org/finance-and-project-management-certification",
+   "title": "Why finance and project management certification exists",
+   "kw": "finance and project management certification",
+   "pillar": "Certification and careers",
+   "type": "pillar",
+   "file": "articles/010-own-site-finance-and-project-management-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "why-pci-ai",
+   "url": "https://projectcontrolsinstitute.org/why-pci-ai",
+   "title": "Project controls qualifications: the gap PCI AI fills",
+   "kw": "project controls qualifications",
+   "pillar": "Certification and careers",
+   "type": "pillar",
+   "file": "articles/011-own-site-why-pci-ai.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-institute",
+   "url": "https://projectcontrolsinstitute.org/project-controls-institute",
+   "title": "Project controls institute: what it is and how to start",
+   "kw": "project controls institute",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/012-own-site-project-controls-institute.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "pcl-ai-certification",
+   "url": "https://projectcontrolsinstitute.org/pcl-ai-certification",
+   "title": "PCL-AI certification: what it covers and how to start",
+   "kw": "PCL-AI certification",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/013-own-site-pcl-ai-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "certuvo",
+   "url": "https://projectcontrolsinstitute.org/certuvo",
+   "title": "Certuvo: what it is, who it is for, and how to start",
+   "kw": "Certuvo",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/014-own-site-certuvo.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-certification-online",
+   "url": "https://projectcontrolsinstitute.org/project-controls-certification-online",
+   "title": "Project controls certification online: routes and cost",
+   "kw": "project controls certification online",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/015-own-site-project-controls-certification-online.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-course-online",
+   "url": "https://projectcontrolsinstitute.org/project-controls-course-online",
+   "title": "Project controls course online: what you actually get",
+   "kw": "project controls course online",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/016-own-site-project-controls-course-online.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-certification-cost",
+   "url": "https://projectcontrolsinstitute.org/project-controls-certification-cost",
+   "title": "Project controls certification cost: the real answers",
+   "kw": "project controls certification cost",
+   "pillar": "Certification and careers",
+   "type": "faq",
+   "file": "articles/017-own-site-project-controls-certification-cost.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "certified-project-controls-professional",
+   "url": "https://projectcontrolsinstitute.org/certified-project-controls-professional",
+   "title": "Certified project controls professional: what it proves",
+   "kw": "certified project controls professional",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/018-own-site-certified-project-controls-professional.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "earned-value-management-certification",
+   "url": "https://projectcontrolsinstitute.org/earned-value-management-certification",
+   "title": "Earned value management certification: who it suits",
+   "kw": "earned value management certification",
+   "pillar": "Earned value management",
+   "type": "guide",
+   "file": "articles/019-own-site-earned-value-management-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "earned-value-management-training",
+   "url": "https://projectcontrolsinstitute.org/earned-value-management-training",
+   "title": "Earned value management training: what actually works",
+   "kw": "earned value management training",
+   "pillar": "Earned value management",
+   "type": "guide",
+   "file": "articles/020-own-site-earned-value-management-training.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "earned-value-worked-example",
+   "url": "https://projectcontrolsinstitute.org/earned-value-worked-example",
+   "title": "Earned value worked example: a full month, end to end",
+   "kw": "earned value worked example",
+   "pillar": "Earned value management",
+   "type": "guide",
+   "file": "articles/021-own-site-earned-value-worked-example.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "earned-value-formulas-cheat-sheet",
+   "url": "https://projectcontrolsinstitute.org/earned-value-formulas-cheat-sheet",
+   "title": "Earned value formulas cheat sheet, explained properly",
+   "kw": "earned value formulas cheat sheet",
+   "pillar": "Earned value management",
+   "type": "guide",
+   "file": "articles/022-own-site-earned-value-formulas-cheat-sheet.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "four-eac-formulas",
+   "url": "https://projectcontrolsinstitute.org/four-eac-formulas",
+   "title": "The four EAC formulas: predicting final project cost",
+   "kw": "four EAC formulas",
+   "pillar": "Earned value management",
+   "type": "how-to",
+   "file": "articles/023-own-site-four-eac-formulas.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-performance-management",
+   "url": "https://projectcontrolsinstitute.org/project-performance-management",
+   "title": "Project performance management: metrics to decisions",
+   "kw": "project performance management",
+   "pillar": "Earned value management",
+   "type": "guide",
+   "file": "articles/024-own-site-project-performance-management.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "earned-value-reporting-thresholds",
+   "url": "https://projectcontrolsinstitute.org/earned-value-reporting-thresholds",
+   "title": "Earned value reporting thresholds that trigger action",
+   "kw": "earned value reporting thresholds",
+   "pillar": "Earned value management",
+   "type": "guide",
+   "file": "articles/025-own-site-earned-value-reporting-thresholds.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "earned-value-practice-questions",
+   "url": "https://projectcontrolsinstitute.org/earned-value-practice-questions",
+   "title": "Earned value practice questions and how to use them",
+   "kw": "earned value practice questions",
+   "pillar": "Certification and careers",
+   "type": "template",
+   "file": "articles/026-own-site-earned-value-practice-questions.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "eac-accounting",
+   "url": "https://projectcontrolsinstitute.org/eac-accounting",
+   "title": "EAC accounting: how a forecast becomes reported profit",
+   "kw": "EAC accounting",
+   "pillar": "Cost control and estimating",
+   "type": "guide",
+   "file": "articles/027-own-site-eac-accounting.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "month-end-close-for-projects",
+   "url": "https://projectcontrolsinstitute.org/month-end-close-for-projects",
+   "title": "Month-end close for projects: the controls handshake",
+   "kw": "month-end close for projects",
+   "pillar": "Cost control and estimating",
+   "type": "process-guide",
+   "file": "articles/028-own-site-month-end-close-for-projects.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "ifrs-15-for-construction",
+   "url": "https://projectcontrolsinstitute.org/ifrs-15-for-construction",
+   "title": "IFRS 15 for construction contracts: measuring progress",
+   "kw": "IFRS 15 for construction",
+   "pillar": "Cost control and estimating",
+   "type": "guide",
+   "file": "articles/029-own-site-ifrs-15-for-construction.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-cash-flow-forecasting",
+   "url": "https://projectcontrolsinstitute.org/project-cash-flow-forecasting",
+   "title": "Project cash flow forecasting: S-curves that hold up",
+   "kw": "project cash flow forecasting",
+   "pillar": "Cost control and estimating",
+   "type": "guide",
+   "file": "articles/030-own-site-project-cash-flow-forecasting.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "cost-control-in-construction",
+   "url": "https://projectcontrolsinstitute.org/cost-control-in-construction",
+   "title": "Cost control in construction: catching overruns early",
+   "kw": "cost control in construction",
+   "pillar": "Cost control and estimating",
+   "type": "guide",
+   "file": "articles/031-own-site-cost-control-in-construction.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "cost-engineer-certification",
+   "url": "https://projectcontrolsinstitute.org/cost-engineer-certification",
+   "title": "Cost engineer certification: an honest route comparison",
+   "kw": "cost engineer certification",
+   "pillar": "Certification and careers",
+   "type": "comparison",
+   "file": "articles/032-own-site-cost-engineer-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "cost-controller-certification",
+   "url": "https://projectcontrolsinstitute.org/cost-controller-certification",
+   "title": "Cost controller certification: what it covers, who it suits",
+   "kw": "cost controller certification",
+   "pillar": "Cost control and estimating",
+   "type": "guide",
+   "file": "articles/033-own-site-cost-controller-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-exam-questions",
+   "url": "https://projectcontrolsinstitute.org/project-controls-exam-questions",
+   "title": "Project controls exam questions: 25 problems solved",
+   "kw": "project controls exam questions",
+   "pillar": "Certification and careers",
+   "type": "practice",
+   "file": "articles/034-own-site-project-controls-exam-questions.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "primavera-p6-certification",
+   "url": "https://projectcontrolsinstitute.org/primavera-p6-certification",
+   "title": "Primavera P6 certification: cost, content and value",
+   "kw": "primavera p6 certification",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/035-own-site-primavera-p6-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "primavera-p6-online-course",
+   "url": "https://projectcontrolsinstitute.org/primavera-p6-online-course",
+   "title": "Primavera P6 online course: is certification worth it?",
+   "kw": "primavera p6 online course",
+   "pillar": "Planning and scheduling",
+   "type": "comparison",
+   "file": "articles/036-own-site-primavera-p6-online-course.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "primavera-p6-practice-test",
+   "url": "https://projectcontrolsinstitute.org/primavera-p6-practice-test",
+   "title": "Primavera P6 practice test: a free tool and how to use it",
+   "kw": "primavera p6 practice test",
+   "pillar": "Certification and careers",
+   "type": "template",
+   "file": "articles/037-own-site-primavera-p6-practice-test.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "realistic-schedule-in-primavera-p6",
+   "url": "https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6",
+   "title": "Build a realistic schedule in Primavera P6: eight steps",
+   "kw": "realistic schedule in Primavera P6",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/038-own-site-realistic-schedule-in-primavera-p6.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "critical-path-method",
+   "url": "https://projectcontrolsinstitute.org/critical-path-method",
+   "title": "Critical path method definition, with a worked example",
+   "kw": "critical path method definition",
+   "pillar": "Planning and scheduling",
+   "type": "glossary",
+   "file": "articles/039-own-site-critical-path-method.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "total-float",
+   "url": "https://projectcontrolsinstitute.org/total-float",
+   "title": "Total float definition, examples and why it matters",
+   "kw": "total float definition",
+   "pillar": "Planning and scheduling",
+   "type": "glossary",
+   "file": "articles/040-own-site-total-float.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "planning-engineer-certification",
+   "url": "https://projectcontrolsinstitute.org/planning-engineer-certification",
+   "title": "Planning engineer certification: the routes compared",
+   "kw": "planning engineer certification",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/041-own-site-planning-engineer-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "certified-planning-engineer",
+   "url": "https://projectcontrolsinstitute.org/certified-planning-engineer",
+   "title": "Certified planning engineer: what it actually proves",
+   "kw": "certified planning engineer",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/042-own-site-certified-planning-engineer.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-scheduler-certification",
+   "url": "https://projectcontrolsinstitute.org/project-scheduler-certification",
+   "title": "Project scheduler certification: scope, cost and fit",
+   "kw": "project scheduler certification",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/043-own-site-project-scheduler-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "quantitative-schedule-risk-analysis",
+   "url": "https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis",
+   "title": "Quantitative schedule risk analysis: a beginner's guide",
+   "kw": "quantitative schedule risk analysis QSRA",
+   "pillar": "Risk management",
+   "type": "guide",
+   "file": "articles/044-own-site-quantitative-schedule-risk-analysis.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "monte-carlo-cost-simulation",
+   "url": "https://projectcontrolsinstitute.org/monte-carlo-cost-simulation",
+   "title": "How to run a Monte Carlo cost simulation, step by step",
+   "kw": "Monte Carlo cost simulation",
+   "pillar": "Risk management",
+   "type": "how-to",
+   "file": "articles/045-own-site-monte-carlo-cost-simulation.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "risk-register-that-gets-used",
+   "url": "https://projectcontrolsinstitute.org/risk-register-that-gets-used",
+   "title": "How to build a risk register that gets used, not filed",
+   "kw": "risk register that gets used",
+   "pillar": "Risk management",
+   "type": "how-to",
+   "file": "articles/046-own-site-risk-register-that-gets-used.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "project-controls-vs-project-management",
+   "url": "https://projectcontrolsinstitute.org/project-controls-vs-project-management",
+   "title": "Project controls vs project management: the real split",
+   "kw": "project controls vs project management",
+   "pillar": "Project controls fundamentals",
+   "type": "comparison",
+   "file": "articles/047-own-site-project-controls-vs-project-management.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "delay-analysis-techniques",
+   "url": "https://projectcontrolsinstitute.org/delay-analysis-techniques",
+   "title": "Delay analysis techniques compared: which one, and when",
+   "kw": "delay analysis techniques",
+   "pillar": "Project controls fundamentals",
+   "type": "comparison",
+   "file": "articles/048-own-site-delay-analysis-techniques.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "capital-project-management-process",
+   "url": "https://projectcontrolsinstitute.org/capital-project-management-process",
+   "title": "The capital project management process, step by step",
+   "kw": "capital project management process",
+   "pillar": "Project controls fundamentals",
+   "type": "process-guide",
+   "file": "articles/049-own-site-capital-project-management-process.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "pmo-certification",
+   "url": "https://projectcontrolsinstitute.org/pmo-certification",
+   "title": "PMO certification: what it covers and where it stops",
+   "kw": "PMO certification",
+   "pillar": "Project controls fundamentals",
+   "type": "guide",
+   "file": "articles/050-own-site-pmo-certification.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "how-to-become-a-project-controls-manager",
+   "url": "https://projectcontrolsinstitute.org/how-to-become-a-project-controls-manager",
+   "title": "How to become a project controls manager: the route",
+   "kw": "how to become a project controls manager",
+   "pillar": "Certification and careers",
+   "type": "how-to",
+   "file": "articles/051-own-site-how-to-become-a-project-controls-manager.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "honorary-fellowship-engineering",
+   "url": "https://projectcontrolsinstitute.org/honorary-fellowship-engineering",
+   "title": "Honorary fellowship in engineering: what it recognises",
+   "kw": "honorary fellowship engineering",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/052-own-site-honorary-fellowship-engineering.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "how-to-become-a-fellow-of-a-professional-institution",
+   "url": "https://projectcontrolsinstitute.org/how-to-become-a-fellow-of-a-professional-institution",
+   "title": "How to become a fellow of a professional institution",
+   "kw": "how to become a fellow of a professional institution",
+   "pillar": "Certification and careers",
+   "type": "how-to",
+   "file": "articles/053-own-site-how-to-become-a-fellow-of-a-professional-institution.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "professional-fellowship-application",
+   "url": "https://projectcontrolsinstitute.org/professional-fellowship-application",
+   "title": "Professional fellowship application: what assessors look for",
+   "kw": "professional fellowship application",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/054-own-site-professional-fellowship-application.md"
+  },
+  {
+   "host": "projectcontrolsinstitute.org",
+   "slug": "fellowship-for-project-professionals",
+   "url": "https://projectcontrolsinstitute.org/fellowship-for-project-professionals",
+   "title": "Fellowship for project professionals: routes and evidence",
+   "kw": "fellowship for project professionals",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/055-own-site-fellowship-for-project-professionals.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-in-project-controls",
+   "url": "https://pciai.org/ai-in-project-controls",
+   "title": "AI in project controls: what works and what does not",
+   "kw": "AI in project controls",
+   "pillar": "AI in project controls",
+   "type": "pillar",
+   "file": "articles/056-own-site-ai-in-project-controls.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-project-controls-certification",
+   "url": "https://pciai.org/ai-project-controls-certification",
+   "title": "AI project controls certification: what it examines",
+   "kw": "AI project controls certification",
+   "pillar": "AI in project controls",
+   "type": "guide",
+   "file": "articles/057-own-site-ai-project-controls-certification.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-for-construction-scheduling",
+   "url": "https://pciai.org/ai-for-construction-scheduling",
+   "title": "AI for construction scheduling: a practitioner's guide",
+   "kw": "AI for construction scheduling",
+   "pillar": "AI in project controls",
+   "type": "guide",
+   "file": "articles/058-own-site-ai-for-construction-scheduling.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-in-construction-project-management",
+   "url": "https://pciai.org/ai-in-construction-project-management",
+   "title": "AI in construction project management: an honest guide",
+   "kw": "AI in construction project management",
+   "pillar": "AI in project controls",
+   "type": "guide",
+   "file": "articles/059-own-site-ai-in-construction-project-management.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "will-ai-replace-planning-engineers",
+   "url": "https://pciai.org/will-ai-replace-planning-engineers",
+   "title": "Will AI replace planning engineers? The honest answer",
+   "kw": "will AI replace planning engineers",
+   "pillar": "AI in project controls",
+   "type": "faq",
+   "file": "articles/060-own-site-will-ai-replace-planning-engineers.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "will-ai-replace-project-managers",
+   "url": "https://pciai.org/will-ai-replace-project-managers",
+   "title": "Will AI replace project managers? A practitioner's view",
+   "kw": "will AI replace project managers",
+   "pillar": "AI in project controls",
+   "type": "guide",
+   "file": "articles/061-own-site-will-ai-replace-project-managers.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-project-management-certification",
+   "url": "https://pciai.org/ai-project-management-certification",
+   "title": "AI project management certification: how to compare",
+   "kw": "AI project management certification",
+   "pillar": "AI in project controls",
+   "type": "comparison",
+   "file": "articles/062-own-site-ai-project-management-certification.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "future-of-project-controls",
+   "url": "https://pciai.org/future-of-project-controls",
+   "title": "The future of project controls: what actually changes",
+   "kw": "future of project controls",
+   "pillar": "AI in project controls",
+   "type": "guide",
+   "file": "articles/063-own-site-future-of-project-controls.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-for-cost-estimating-in-construction",
+   "url": "https://pciai.org/ai-for-cost-estimating-in-construction",
+   "title": "AI for cost estimating in construction: an honest guide",
+   "kw": "AI for cost estimating in construction",
+   "pillar": "AI in project controls",
+   "type": "guide",
+   "file": "articles/064-own-site-ai-for-cost-estimating-in-construction.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "best-ai-construction-scheduling-software",
+   "url": "https://pciai.org/best-ai-construction-scheduling-software",
+   "title": "Best AI construction scheduling software: how to judge",
+   "kw": "best AI construction scheduling software",
+   "pillar": "AI in project controls",
+   "type": "comparison",
+   "file": "articles/065-own-site-best-ai-construction-scheduling-software.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-in-project-management-2026",
+   "url": "https://pciai.org/ai-in-project-management-2026",
+   "title": "AI in project management in 2026: the state of play",
+   "kw": "AI in project management in 2026",
+   "pillar": "AI in project controls",
+   "type": "pillar",
+   "file": "articles/066-own-site-ai-in-project-management-2026.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "prompt-engineering-for-project-professionals",
+   "url": "https://pciai.org/prompt-engineering-for-project-professionals",
+   "title": "Prompt engineering for project professionals explained",
+   "kw": "prompt engineering for project professionals",
+   "pillar": "AI in project controls",
+   "type": "how-to",
+   "file": "articles/067-own-site-prompt-engineering-for-project-professionals.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "llm-schedule-review",
+   "url": "https://pciai.org/llm-schedule-review",
+   "title": "LLM schedule review: a protocol for planning teams",
+   "kw": "LLM schedule review",
+   "pillar": "AI in project controls",
+   "type": "how-to",
+   "file": "articles/068-own-site-llm-schedule-review.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "ai-policy-for-project-controls",
+   "url": "https://pciai.org/ai-policy-for-project-controls",
+   "title": "AI policy for project controls: a template you can use",
+   "kw": "AI policy for project controls",
+   "pillar": "AI in project controls",
+   "type": "template",
+   "file": "articles/069-own-site-ai-policy-for-project-controls.md"
+  },
+  {
+   "host": "pciai.org",
+   "slug": "generative-ai-project-reporting",
+   "url": "https://pciai.org/generative-ai-project-reporting",
+   "title": "Generative AI project reporting: keep the audit trail",
+   "kw": "generative AI project reporting",
+   "pillar": "AI in project controls",
+   "type": "how-to",
+   "file": "articles/070-own-site-generative-ai-project-reporting.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "project-controls-certification-uk",
+   "url": "https://pciglobal.ai/project-controls-certification-uk",
+   "title": "Project controls certification UK: what actually counts",
+   "kw": "project controls certification UK",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/071-own-site-project-controls-certification-uk.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "project-controls-certification-usa",
+   "url": "https://pciglobal.ai/project-controls-certification-usa",
+   "title": "Project controls certification USA: what actually counts",
+   "kw": "project controls certification USA",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/072-own-site-project-controls-certification-usa.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "project-controls-course-india",
+   "url": "https://pciglobal.ai/project-controls-course-india",
+   "title": "Project controls course India: an honest comparison",
+   "kw": "project controls course India",
+   "pillar": "Certification and careers",
+   "type": "comparison",
+   "file": "articles/073-own-site-project-controls-course-india.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "project-controls-courses-dubai",
+   "url": "https://pciglobal.ai/project-controls-courses-dubai",
+   "title": "Project controls courses in Dubai: how to choose one",
+   "kw": "project controls courses in Dubai",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/074-own-site-project-controls-courses-dubai.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "project-controls-training-uae",
+   "url": "https://pciglobal.ai/project-controls-training-uae",
+   "title": "Project controls training UAE: the real 2026 options",
+   "kw": "project controls training UAE",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/075-own-site-project-controls-training-uae.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "planning-engineer-course-in-saudi-arabia",
+   "url": "https://pciglobal.ai/planning-engineer-course-in-saudi-arabia",
+   "title": "Planning engineer course in Saudi Arabia: the routes",
+   "kw": "planning engineer course in Saudi Arabia",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/076-own-site-planning-engineer-course-in-saudi-arabia.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "project-controls-courses-in-qatar",
+   "url": "https://pciglobal.ai/project-controls-courses-in-qatar",
+   "title": "Project controls courses in Qatar: what to look for",
+   "kw": "project controls courses in Qatar",
+   "pillar": "Certification and careers",
+   "type": "guide",
+   "file": "articles/077-own-site-project-controls-courses-in-qatar.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "primavera-p6-course-in-dubai",
+   "url": "https://pciglobal.ai/primavera-p6-course-in-dubai",
+   "title": "Primavera P6 course in Dubai: choosing the right one",
+   "kw": "primavera p6 course in Dubai",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/078-own-site-primavera-p6-course-in-dubai.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "quantity-surveyor-certification",
+   "url": "https://pciglobal.ai/quantity-surveyor-certification",
+   "title": "Quantity surveyor certification: global routes compared",
+   "kw": "quantity surveyor certification",
+   "pillar": "Cost control and estimating",
+   "type": "guide",
+   "file": "articles/079-own-site-quantity-surveyor-certification.md"
+  },
+  {
+   "host": "pciglobal.ai",
+   "slug": "quantity-surveyor-certification-online",
+   "url": "https://pciglobal.ai/quantity-surveyor-certification-online",
+   "title": "Quantity surveyor certification online: what you get",
+   "kw": "quantity surveyor certification online",
+   "pillar": "Cost control and estimating",
+   "type": "guide",
+   "file": "articles/080-own-site-quantity-surveyor-certification-online.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "planning-engineer-salary",
+   "url": "https://pciworld.org/planning-engineer-salary",
+   "title": "Planning engineer salary: a free tool and how to use it",
+   "kw": "planning engineer salary",
+   "pillar": "Certification and careers",
+   "type": "template",
+   "file": "articles/081-own-site-planning-engineer-salary.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "project-controls-salary",
+   "url": "https://pciworld.org/project-controls-salary",
+   "title": "Project controls salary: a free tool and how to use it",
+   "kw": "project controls salary",
+   "pillar": "Certification and careers",
+   "type": "template",
+   "file": "articles/082-own-site-project-controls-salary.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "planning-engineer-salary-uae",
+   "url": "https://pciworld.org/planning-engineer-salary-uae",
+   "title": "Planning engineer salary UAE: what the market really pays",
+   "kw": "planning engineer salary UAE",
+   "pillar": "Certification and careers",
+   "type": "data-study",
+   "file": "articles/083-own-site-planning-engineer-salary-uae.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "planning-engineer-jobs-in-uae",
+   "url": "https://pciworld.org/planning-engineer-jobs-in-uae",
+   "title": "Planning engineer jobs in UAE: where the demand sits",
+   "kw": "planning engineer jobs in UAE",
+   "pillar": "Certification and careers",
+   "type": "data-study",
+   "file": "articles/084-own-site-planning-engineer-jobs-in-uae.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "project-controls-jobs-in-saudi-arabia",
+   "url": "https://pciworld.org/project-controls-jobs-in-saudi-arabia",
+   "title": "Project controls jobs in Saudi Arabia: the giga-projects",
+   "kw": "project controls jobs in Saudi Arabia",
+   "pillar": "Certification and careers",
+   "type": "data-study",
+   "file": "articles/085-own-site-project-controls-jobs-in-saudi-arabia.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "how-to-become-a-planning-engineer",
+   "url": "https://pciworld.org/how-to-become-a-planning-engineer",
+   "title": "How to become a planning engineer: route and first job",
+   "kw": "how to become a planning engineer",
+   "pillar": "Certification and careers",
+   "type": "how-to",
+   "file": "articles/086-own-site-how-to-become-a-planning-engineer.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "senior-planning-engineer-career-path",
+   "url": "https://pciworld.org/senior-planning-engineer-career-path",
+   "title": "Senior planning engineer career path: the real gates",
+   "kw": "senior planning engineer career path",
+   "pillar": "Certification and careers",
+   "type": "how-to",
+   "file": "articles/087-own-site-senior-planning-engineer-career-path.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "what-does-a-project-controls-engineer-do",
+   "url": "https://pciworld.org/what-does-a-project-controls-engineer-do",
+   "title": "What does a project controls engineer do? A day in the role",
+   "kw": "what does a project controls engineer do",
+   "pillar": "Project controls fundamentals",
+   "type": "guide",
+   "file": "articles/088-own-site-what-does-a-project-controls-engineer-do.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "planning-engineer-interview-questions",
+   "url": "https://pciworld.org/planning-engineer-interview-questions",
+   "title": "Planning engineer interview questions: 20 that come up",
+   "kw": "planning engineer interview questions",
+   "pillar": "Planning and scheduling",
+   "type": "qa-list",
+   "file": "articles/089-own-site-planning-engineer-interview-questions.md"
+  },
+  {
+   "host": "pciworld.org",
+   "slug": "project-controls-interview-questions",
+   "url": "https://pciworld.org/project-controls-interview-questions",
+   "title": "Project controls interview questions and strong answers",
+   "kw": "project controls interview questions",
+   "pillar": "Certification and careers",
+   "type": "qa-list",
+   "file": "articles/090-own-site-project-controls-interview-questions.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "best-project-controls-certification",
+   "url": "https://credentialfinder.org/best-project-controls-certification",
+   "title": "Best project controls certification: an honest comparison",
+   "kw": "best project controls certification",
+   "pillar": "Certification and careers",
+   "type": "comparison",
+   "file": "articles/091-own-site-best-project-controls-certification.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "best-certification-for-planning-engineers",
+   "url": "https://credentialfinder.org/best-certification-for-planning-engineers",
+   "title": "Best certification for planning engineers, compared",
+   "kw": "best certification for planning engineers",
+   "pillar": "Planning and scheduling",
+   "type": "comparison",
+   "file": "articles/092-own-site-best-certification-for-planning-engineers.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "aace-ccp-vs-pmp",
+   "url": "https://credentialfinder.org/aace-ccp-vs-pmp",
+   "title": "AACE CCP vs PMP: which certification fits your role",
+   "kw": "AACE CCP vs PMP",
+   "pillar": "Certification and careers",
+   "type": "comparison",
+   "file": "articles/093-own-site-aace-ccp-vs-pmp.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "pmi-sp-vs-aace-psp",
+   "url": "https://credentialfinder.org/pmi-sp-vs-aace-psp",
+   "title": "PMI-SP vs AACE PSP: which scheduling credential fits",
+   "kw": "PMI-SP vs AACE PSP",
+   "pillar": "Certification and careers",
+   "type": "comparison",
+   "file": "articles/094-own-site-pmi-sp-vs-aace-psp.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "pmi-sp-worth-it",
+   "url": "https://credentialfinder.org/pmi-sp-worth-it",
+   "title": "Is PMI-SP worth it? The questions people really ask",
+   "kw": "PMI-SP worth it",
+   "pillar": "Certification and careers",
+   "type": "faq",
+   "file": "articles/095-own-site-pmi-sp-worth-it.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "aace-certification-cost",
+   "url": "https://credentialfinder.org/aace-certification-cost",
+   "title": "AACE certification cost: fees, renewals and the real total",
+   "kw": "AACE certification cost",
+   "pillar": "Cost control and estimating",
+   "type": "comparison",
+   "file": "articles/096-own-site-aace-certification-cost.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "ccp-certification-worth-it",
+   "url": "https://credentialfinder.org/ccp-certification-worth-it",
+   "title": "Is CCP certification worth it? An honest assessment",
+   "kw": "CCP certification worth it",
+   "pillar": "Cost control and estimating",
+   "type": "faq",
+   "file": "articles/097-own-site-ccp-certification-worth-it.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "ccp-exam-questions",
+   "url": "https://credentialfinder.org/ccp-exam-questions",
+   "title": "CCP exam questions: what the paper actually tests you on",
+   "kw": "CCP exam questions",
+   "pillar": "Cost control and estimating",
+   "type": "practice",
+   "file": "articles/098-own-site-ccp-exam-questions.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "pmi-sp-exam-prep",
+   "url": "https://credentialfinder.org/pmi-sp-exam-prep",
+   "title": "PMI-SP exam prep: a realistic study plan for planners",
+   "kw": "PMI-SP exam prep",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/099-own-site-pmi-sp-exam-prep.md"
+  },
+  {
+   "host": "credentialfinder.org",
+   "slug": "aace-psp-certification-guide",
+   "url": "https://credentialfinder.org/aace-psp-certification-guide",
+   "title": "AACE PSP certification guide: scope, cost and who it fits",
+   "kw": "AACE PSP certification guide",
+   "pillar": "Planning and scheduling",
+   "type": "guide",
+   "file": "articles/100-own-site-aace-psp-certification-guide.md"
+  }
+ ],
+ "batches": [
+  {
+   "id": 1,
+   "files": [
+    {
+     "file": "articles/091-own-site-best-project-controls-certification.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1711,
+     "type": "comparison",
+     "primary_kw": "best project controls certification",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/092-own-site-best-certification-for-planning-engineers.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1706,
+     "type": "comparison",
+     "primary_kw": "best certification for planning engineers",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/093-own-site-aace-ccp-vs-pmp.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1688,
+     "type": "comparison",
+     "primary_kw": "aace ccp vs pmp",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/094-own-site-pmi-sp-vs-aace-psp.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1615,
+     "type": "comparison",
+     "primary_kw": "pmi-sp vs aace psp",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/095-own-site-pmi-sp-worth-it.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1628,
+     "type": "faq",
+     "primary_kw": "pmi-sp worth it",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/096-own-site-aace-certification-cost.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1650,
+     "type": "comparison",
+     "primary_kw": "aace certification cost",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/097-own-site-ccp-certification-worth-it.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1601,
+     "type": "faq",
+     "primary_kw": "ccp certification worth it",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/098-own-site-ccp-exam-questions.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1870,
+     "type": "practice",
+     "primary_kw": "ccp exam questions",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/099-own-site-pmi-sp-exam-prep.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1639,
+     "type": "guide",
+     "primary_kw": "pmi-sp exam prep",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/100-own-site-aace-psp-certification-guide.md",
+     "platform": "Own site \u2014 credentialfinder.org",
+     "host": "credentialfinder.org",
+     "canonical": "original",
+     "words": 1691,
+     "type": "guide",
+     "primary_kw": "aace psp certification guide",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/056-own-site-ai-in-project-controls.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 2208,
+     "type": "pillar",
+     "primary_kw": "ai in project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "files": [
+    {
+     "file": "articles/057-own-site-ai-project-controls-certification.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1465,
+     "type": "guide",
+     "primary_kw": "ai project controls certification",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/058-own-site-ai-for-construction-scheduling.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1722,
+     "type": "guide",
+     "primary_kw": "ai for construction scheduling",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/059-own-site-ai-in-construction-project-management.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1514,
+     "type": "guide",
+     "primary_kw": "ai in construction project management",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/060-own-site-will-ai-replace-planning-engineers.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1452,
+     "type": "faq",
+     "primary_kw": "will ai replace planning engineers",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/061-own-site-will-ai-replace-project-managers.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1658,
+     "type": "guide",
+     "primary_kw": "will ai replace project managers",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/062-own-site-ai-project-management-certification.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1684,
+     "type": "comparison",
+     "primary_kw": "ai project management certification",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/063-own-site-future-of-project-controls.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1672,
+     "type": "guide",
+     "primary_kw": "future of project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/064-own-site-ai-for-cost-estimating-in-construction.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1731,
+     "type": "guide",
+     "primary_kw": "ai for cost estimating in construction",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/065-own-site-best-ai-construction-scheduling-software.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1735,
+     "type": "comparison",
+     "primary_kw": "best ai construction scheduling software",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/066-own-site-ai-in-project-management-2026.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 2495,
+     "type": "pillar",
+     "primary_kw": "ai in project management in 2026",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/067-own-site-prompt-engineering-for-project-professionals.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1656,
+     "type": "how-to",
+     "primary_kw": "prompt engineering for project professionals",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "files": [
+    {
+     "file": "articles/068-own-site-llm-schedule-review.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1727,
+     "type": "how-to",
+     "primary_kw": "llm schedule review",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/069-own-site-ai-policy-for-project-controls.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1731,
+     "type": "template",
+     "primary_kw": "ai policy for project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/070-own-site-generative-ai-project-reporting.md",
+     "platform": "Own site \u2014 pciai.org",
+     "host": "pciai.org",
+     "canonical": "original",
+     "words": 1788,
+     "type": "how-to",
+     "primary_kw": "generative ai project reporting",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/071-own-site-project-controls-certification-uk.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1724,
+     "type": "guide",
+     "primary_kw": "project controls certification uk",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/072-own-site-project-controls-certification-usa.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1718,
+     "type": "guide",
+     "primary_kw": "project controls certification usa",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/073-own-site-project-controls-course-india.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1732,
+     "type": "comparison",
+     "primary_kw": "project controls course india",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/074-own-site-project-controls-courses-dubai.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1684,
+     "type": "guide",
+     "primary_kw": "project controls courses in dubai",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/075-own-site-project-controls-training-uae.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1739,
+     "type": "guide",
+     "primary_kw": "project controls training uae",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/076-own-site-planning-engineer-course-in-saudi-arabia.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1749,
+     "type": "guide",
+     "primary_kw": "planning engineer course in saudi arabia",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/077-own-site-project-controls-courses-in-qatar.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1738,
+     "type": "guide",
+     "primary_kw": "project controls courses in qatar",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/078-own-site-primavera-p6-course-in-dubai.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1584,
+     "type": "guide",
+     "primary_kw": "primavera p6 course in dubai",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "files": [
+    {
+     "file": "articles/079-own-site-quantity-surveyor-certification.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1772,
+     "type": "guide",
+     "primary_kw": "quantity surveyor certification",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/080-own-site-quantity-surveyor-certification-online.md",
+     "platform": "Own site \u2014 pciglobal.ai",
+     "host": "pciglobal.ai",
+     "canonical": "original",
+     "words": 1627,
+     "type": "guide",
+     "primary_kw": "quantity surveyor certification online",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/081-own-site-planning-engineer-salary.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 1750,
+     "type": "template",
+     "primary_kw": "planning engineer salary",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/082-own-site-project-controls-salary.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 1663,
+     "type": "template",
+     "primary_kw": "project controls salary",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/083-own-site-planning-engineer-salary-uae.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 1713,
+     "type": "data-study",
+     "primary_kw": "planning engineer salary uae",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/084-own-site-planning-engineer-jobs-in-uae.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 1544,
+     "type": "data-study",
+     "primary_kw": "planning engineer jobs in uae",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/085-own-site-project-controls-jobs-in-saudi-arabia.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 2061,
+     "type": "data-study",
+     "primary_kw": "project controls jobs in saudi arabia",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/086-own-site-how-to-become-a-planning-engineer.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 1753,
+     "type": "how-to",
+     "primary_kw": "how to become a planning engineer",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/total-float",
+       "anchor": "what total float really means"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/critical-path-method",
+       "anchor": "the critical path method explained"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/primavera-p6-practice-test",
+       "anchor": "a Primavera P6 practice test"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/planning-engineer-certification",
+       "anchor": "planning engineer certification compared"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 4x cross-link to projectcontrolsinstitute.org",
+      "RATIONALISE: 4 cross-estate links (max 3)",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/087-own-site-senior-planning-engineer-career-path.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 1760,
+     "type": "how-to",
+     "primary_kw": "senior planning engineer career path",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "the four EAC formulas"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/quantitative-schedule-risk-analysis",
+       "anchor": "quantitative schedule risk analysis"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/certified-planning-engineer",
+       "anchor": "certified planning engineer, honestly assessed"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/088-own-site-what-does-a-project-controls-engineer-do.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 1898,
+     "type": "guide",
+     "primary_kw": "what does a project controls engineer do",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/month-end-close-for-projects",
+       "anchor": "the project month-end close"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "the four EAC formulas"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-cash-flow-forecasting",
+       "anchor": "project cash flow forecasting"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/what-is-project-controls",
+       "anchor": "what project controls covers"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 4x cross-link to projectcontrolsinstitute.org",
+      "RATIONALISE: 4 cross-estate links (max 3)",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/089-own-site-planning-engineer-interview-questions.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 2198,
+     "type": "qa-list",
+     "primary_kw": "planning engineer interview questions",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/total-float",
+       "anchor": "what total float really means"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/quantitative-schedule-risk-analysis",
+       "anchor": "quantitative schedule risk analysis"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/primavera-p6-practice-test",
+       "anchor": "a Primavera P6 practice test"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "files": [
+    {
+     "file": "articles/090-own-site-project-controls-interview-questions.md",
+     "platform": "Own site \u2014 pciworld.org",
+     "host": "pciworld.org",
+     "canonical": "original",
+     "words": 2349,
+     "type": "qa-list",
+     "primary_kw": "project controls interview questions",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/certified-project-controls-professional",
+       "anchor": "what a certified project controls professional proves"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-controls-exam-questions",
+       "anchor": "project controls exam questions"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/ifrs-for-project-controls",
+       "anchor": "IFRS for project controls"
+      },
+      {
+       "domain": "pciworld.org",
+       "path": "/planning-engineer-interview-questions",
+       "anchor": "planning engineer interview questions"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org",
+      "INTERNAL: only 1 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/002-own-site-what-is-project-controls.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1933,
+     "type": "pillar",
+     "primary_kw": "what is project controls",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-controls-certification",
+       "anchor": "the certification pillar"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-management",
+       "anchor": "earned value management"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/003-own-site-earned-value-management.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 2205,
+     "type": "pillar",
+     "primary_kw": "what is earned value management",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/what-is-project-controls",
+       "anchor": "what is project controls"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-controls-certification",
+       "anchor": "the certification pillar"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/006-own-site-schedule-risk-analysis.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 2236,
+     "type": "pillar",
+     "primary_kw": "schedule risk analysis",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/007-own-site-ifrs-for-project-controls.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 2432,
+     "type": "pillar",
+     "primary_kw": "ifrs for project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/008-own-site-project-budgeting-and-forecasting.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 2552,
+     "type": "pillar",
+     "primary_kw": "project budgeting and forecasting",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/009-own-site-what-are-capital-projects.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 2339,
+     "type": "pillar",
+     "primary_kw": "what are capital projects",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/010-own-site-finance-and-project-management-certification.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 2037,
+     "type": "pillar",
+     "primary_kw": "finance and project management certification",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/011-own-site-why-pci-ai.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 2139,
+     "type": "pillar",
+     "primary_kw": "project controls qualifications",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/012-own-site-project-controls-institute.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1479,
+     "type": "guide",
+     "primary_kw": "project controls institute",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/013-own-site-pcl-ai-certification.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1685,
+     "type": "guide",
+     "primary_kw": "pcl-ai certification",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "files": [
+    {
+     "file": "articles/014-own-site-certuvo.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1534,
+     "type": "guide",
+     "primary_kw": "certuvo",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/015-own-site-project-controls-certification-online.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1676,
+     "type": "guide",
+     "primary_kw": "project controls certification online",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/021-own-site-earned-value-worked-example.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1708,
+     "type": "guide",
+     "primary_kw": "earned value worked example",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/022-own-site-earned-value-formulas-cheat-sheet.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1689,
+     "type": "guide",
+     "primary_kw": "earned value formulas cheat sheet",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/023-own-site-four-eac-formulas.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1729,
+     "type": "how-to",
+     "primary_kw": "four eac formulas",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/024-own-site-project-performance-management.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1835,
+     "type": "guide",
+     "primary_kw": "project performance management",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "PCL-AI Body of Knowledge"
+      }
+     ],
+     "jobs": [
+      "INTERNAL: only 1 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/025-own-site-earned-value-reporting-thresholds.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1773,
+     "type": "guide",
+     "primary_kw": "earned value reporting thresholds",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/036-own-site-primavera-p6-online-course.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1585,
+     "type": "comparison",
+     "primary_kw": "primavera p6 online course",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/037-own-site-primavera-p6-practice-test.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1861,
+     "type": "template",
+     "primary_kw": "primavera p6 practice test",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/038-own-site-realistic-schedule-in-primavera-p6.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1816,
+     "type": "guide",
+     "primary_kw": "realistic schedule in primavera p6",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/039-own-site-critical-path-method.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1682,
+     "type": "glossary",
+     "primary_kw": "critical path method definition",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "files": [
+    {
+     "file": "articles/040-own-site-total-float.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1742,
+     "type": "glossary",
+     "primary_kw": "total float definition",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/044-own-site-quantitative-schedule-risk-analysis.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1746,
+     "type": "guide",
+     "primary_kw": "quantitative schedule risk analysis qsra",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/monte-carlo-cost-simulation",
+       "anchor": "how to run a Monte Carlo cost simulation"
+      }
+     ],
+     "jobs": [
+      "INTERNAL: only 1 internal links (need 2-3)",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/045-own-site-monte-carlo-cost-simulation.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1744,
+     "type": "how-to",
+     "primary_kw": "monte carlo cost simulation",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/quantitative-schedule-risk-analysis",
+       "anchor": "quantitative schedule risk analysis"
+      }
+     ],
+     "jobs": [
+      "INTERNAL: only 1 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/046-own-site-risk-register-that-gets-used.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1880,
+     "type": "how-to",
+     "primary_kw": "risk register that gets used",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/047-own-site-project-controls-vs-project-management.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1616,
+     "type": "comparison",
+     "primary_kw": "project controls vs project management",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/048-own-site-delay-analysis-techniques.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1817,
+     "type": "comparison",
+     "primary_kw": "delay analysis techniques",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/049-own-site-capital-project-management-process.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1846,
+     "type": "process-guide",
+     "primary_kw": "capital project management process",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/050-own-site-pmo-certification.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1643,
+     "type": "guide",
+     "primary_kw": "pmo certification",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "INTERNAL: only 0 internal links (need 2-3)"
+     ]
+    },
+    {
+     "file": "articles/052-own-site-honorary-fellowship-engineering.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1510,
+     "type": "guide",
+     "primary_kw": "honorary fellowship engineering",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/pcl-ai-certification",
+       "anchor": "the PCL-AI certification guide"
+      }
+     ],
+     "jobs": [
+      "INTERNAL: only 1 internal links (need 2-3)",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/053-own-site-how-to-become-a-fellow-of-a-professional-institution.md",
+     "platform": "Own site \u2014 projectcontrolsinstitute.org",
+     "host": "projectcontrolsinstitute.org",
+     "canonical": "original",
+     "words": 1645,
+     "type": "how-to",
+     "primary_kw": "how to become a fellow of a professional institution",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/honorary-fellowship-engineering",
+       "anchor": "what an honorary fellowship in engineering recognises"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/certified-project-controls-professional",
+       "anchor": "what a certified project controls professional proves"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/101-medium-what-is-earned-value-management.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /earned-value-management (own site #003)",
+     "words": 2287,
+     "type": "pillar",
+     "primary_kw": "what is earned value management",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "PCI AI Project Controls Leader (PCL-AI) Body of Knowledge"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-controls-certification",
+       "anchor": "the project controls certification pillar"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "files": [
+    {
+     "file": "articles/102-medium-earned-value-worked-example.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /earned-value-worked-example (own site #021)",
+     "words": 1696,
+     "type": "guide",
+     "primary_kw": "earned value worked example",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/103-medium-four-eac-formulas.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /eac-formulas (own site #023)",
+     "words": 1776,
+     "type": "how-to",
+     "primary_kw": "four eac formulas",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/finance-and-project-management-certification",
+       "anchor": "PCI AI Project Finance Leader (PFL-AI) credential"
+      }
+     ],
+     "jobs": [
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/106-medium-ifrs-for-project-controls.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /ifrs-for-project-controls (own site #007)",
+     "words": 2645,
+     "type": "pillar",
+     "primary_kw": "ifrs for project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/107-medium-eac-accounting.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /eac-accounting (own site #027)",
+     "words": 1756,
+     "type": "guide",
+     "primary_kw": "eac accounting",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/108-medium-month-end-close-for-projects.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /month-end-close-for-projects (own site #028)",
+     "words": 1748,
+     "type": "process-guide",
+     "primary_kw": "month-end close for projects",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/109-medium-ifrs-15-for-construction.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /ifrs-15-for-construction (own site #029)",
+     "words": 1841,
+     "type": "guide",
+     "primary_kw": "ifrs 15 for construction",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/110-medium-project-cash-flow-forecasting.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /project-cash-flow-forecasting (own site #030)",
+     "words": 1824,
+     "type": "guide",
+     "primary_kw": "project cash flow forecasting",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/111-medium-ai-in-project-controls.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /ai-in-project-controls (own site #056)",
+     "words": 2419,
+     "type": "pillar",
+     "primary_kw": "ai in project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/112-medium-ai-for-construction-scheduling.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /ai-for-construction-scheduling (own site #058)",
+     "words": 1755,
+     "type": "guide",
+     "primary_kw": "ai for construction scheduling",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/113-medium-will-ai-replace-planning-engineers.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /will-ai-replace-planning-engineers (own site #",
+     "words": 1597,
+     "type": "faq",
+     "primary_kw": "will ai replace planning engineers",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/114-medium-future-of-project-controls.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /future-of-project-controls (own site #063)",
+     "words": 1683,
+     "type": "guide",
+     "primary_kw": "future of project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "files": [
+    {
+     "file": "articles/115-medium-ai-for-cost-estimating-in-construction.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /ai-for-cost-estimating-in-construction (own si",
+     "words": 1790,
+     "type": "guide",
+     "primary_kw": "ai for cost estimating in construction",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/116-medium-realistic-schedule-in-primavera-p6.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /realistic-schedule-in-primavera-p6 (own site #",
+     "words": 1847,
+     "type": "guide",
+     "primary_kw": "realistic schedule in primavera p6",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/117-medium-critical-path-method.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /critical-path-method (own site #039)",
+     "words": 1759,
+     "type": "glossary",
+     "primary_kw": "critical path method definition",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/118-medium-total-float.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /total-float (own site #040)",
+     "words": 1800,
+     "type": "glossary",
+     "primary_kw": "total float definition",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/119-medium-primavera-p6-online-course.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /primavera-p6-online-course (own site #036)",
+     "words": 1648,
+     "type": "comparison",
+     "primary_kw": "primavera p6 online course",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/120-medium-quantitative-schedule-risk-analysis.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /quantitative-schedule-risk-analysis (own site ",
+     "words": 1962,
+     "type": "guide",
+     "primary_kw": "quantitative schedule risk analysis qsra",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/121-medium-monte-carlo-cost-simulation.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /monte-carlo-cost-simulation (own site #045)",
+     "words": 1809,
+     "type": "how-to",
+     "primary_kw": "monte carlo cost simulation",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/122-medium-risk-register-that-gets-used.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /risk-register-that-gets-used (own site #046)",
+     "words": 1958,
+     "type": "how-to",
+     "primary_kw": "risk register that gets used",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/123-medium-what-is-project-controls.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /what-is-project-controls (own site #002)",
+     "words": 2164,
+     "type": "pillar",
+     "primary_kw": "what is project controls",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "PCI AI Project Controls Leader (PCL-AI) Body of Knowledge"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-controls-certification",
+       "anchor": "the certification pillar"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-management",
+       "anchor": "earned value management"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/124-medium-project-controls-vs-project-management.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /project-controls-vs-project-management (own si",
+     "words": 1910,
+     "type": "comparison",
+     "primary_kw": "project controls vs project management",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/125-medium-what-are-capital-projects.md",
+     "platform": "Medium",
+     "host": null,
+     "canonical": "canonical -> /what-are-capital-projects (own site #009)",
+     "words": 2458,
+     "type": "pillar",
+     "primary_kw": "what are capital projects",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "files": [
+    {
+     "file": "articles/126-linkedin-article-ifrs-15-vs-ias-11.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1712,
+     "type": "comparison",
+     "primary_kw": "ifrs 15 vs ias 11",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/eac-accounting",
+       "anchor": "how the estimate at completion reaches the accounts"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/finance-and-project-management-certification",
+       "anchor": "PCI AI Project Finance Leader (PFL-AI)"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/127-linkedin-article-percentage-of-completion-vs-completed-contract.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1607,
+     "type": "comparison",
+     "primary_kw": "percentage of completion method",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/ifrs-15-for-construction",
+       "anchor": "IFRS 15 for construction contracts"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-cash-flow-forecasting",
+       "anchor": "project cash flow forecasting"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/128-linkedin-article-wip-journal-entries-construction.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1622,
+     "type": "how-to",
+     "primary_kw": "construction contract wip journal entries",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/eac-accounting",
+       "anchor": "how the estimate at completion reaches the accounts"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/month-end-close-for-projects",
+       "anchor": "month-end close for projects"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/129-linkedin-article-project-financing-for-project-controls.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1697,
+     "type": "guide",
+     "primary_kw": "project financing for project controls",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/eac-accounting",
+       "anchor": "how the estimate at completion reaches the accounts"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/project-cash-flow-forecasting",
+       "anchor": "project cash flow forecasting"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/finance-and-project-management-certification",
+       "anchor": "PCI AI Project Finance Leader (PFL-AI)"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/130-linkedin-article-earned-value-management-practice.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1708,
+     "type": "guide",
+     "primary_kw": "earned value management practice",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "the four EAC formulas"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/critical-path-method",
+       "anchor": "critical path method"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-reporting-thresholds",
+       "anchor": "earned value reporting thresholds"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/131-linkedin-article-earned-value-misconceptions.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1828,
+     "type": "guide",
+     "primary_kw": "earned value misconceptions",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-management",
+       "anchor": "earned value management pillar"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-reporting-thresholds",
+       "anchor": "Earned value reporting thresholds"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/pcl-ai-certification",
+       "anchor": "PCI AI Project Controls Leader (PCL-AI)"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/132-linkedin-article-ai-and-planning-engineer-roles.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1559,
+     "type": "faq",
+     "primary_kw": "ai and planning engineer roles",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-in-project-controls",
+       "anchor": "AI in project controls"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/llm-schedule-review",
+       "anchor": "working review protocol for machine-produced schedules"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-project-controls-certification",
+       "anchor": "PCI AI Project Controls Leader (PCL-AI)"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to pciai.org"
+     ]
+    },
+    {
+     "file": "articles/133-linkedin-article-ai-and-cost-engineer-roles.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1548,
+     "type": "faq",
+     "primary_kw": "ai and cost engineer roles",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-in-project-controls",
+       "anchor": "AI in project controls"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/eac-accounting",
+       "anchor": "Estimate at completion"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/finance-and-project-management-certification",
+       "anchor": "PCI AI Project Finance Leader (PFL-AI)"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/134-linkedin-article-ai-and-quantity-surveyor-roles.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1568,
+     "type": "faq",
+     "primary_kw": "ai and quantity surveyor roles",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-in-project-controls",
+       "anchor": "AI in project controls"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/ifrs-15-for-construction",
+       "anchor": "IFRS 15 for construction contracts"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/finance-and-project-management-certification",
+       "anchor": "PCI AI Project Finance Leader (PFL-AI)"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org",
+      "QUALITY: primary_kw not in H1"
+     ]
+    },
+    {
+     "file": "articles/135-linkedin-article-ai-skills-in-project-controls.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1660,
+     "type": "data-study",
+     "primary_kw": "ai skills in project controls",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-in-project-controls",
+       "anchor": "AI in project controls"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "the four EAC formulas"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "the rule for what project data may go into a hosted tool"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-project-controls-certification",
+       "anchor": "PCI AI Project Controls Leader (PCL-AI)"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to pciai.org",
+      "RATIONALISE: 4 cross-estate links (max 3)"
+     ]
+    },
+    {
+     "file": "articles/137-linkedin-article-is-project-controls-a-good-career.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1671,
+     "type": "faq",
+     "primary_kw": "is project controls a good career",
+     "current_links": [
+      {
+       "domain": "pciworld.org",
+       "path": "/what-does-a-project-controls-engineer-do",
+       "anchor": "what a project controls engineer does"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "four EAC formulas and what each assumes"
+      },
+      {
+       "domain": "pciworld.org",
+       "path": "/project-controls-salary",
+       "anchor": "five-band project controls scope ladder"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to pciworld.org"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "files": [
+    {
+     "file": "articles/139-linkedin-article-highest-paying-project-controls-industries.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1694,
+     "type": "faq",
+     "primary_kw": "highest paying project controls industries",
+     "current_links": [
+      {
+       "domain": "pciworld.org",
+       "path": "/project-controls-jobs-in-saudi-arabia",
+       "anchor": "Saudi giga-programme roles"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/ifrs-15-for-construction",
+       "anchor": "IFRS 15 for construction"
+      },
+      {
+       "domain": "pciworld.org",
+       "path": "/project-controls-salary",
+       "anchor": "five-band project controls scope ladder"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to pciworld.org"
+     ]
+    },
+    {
+     "file": "articles/140-linkedin-article-women-in-project-controls.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1679,
+     "type": "data-study",
+     "primary_kw": "women in project controls",
+     "current_links": [
+      {
+       "domain": "pciworld.org",
+       "path": "/project-controls-salary",
+       "anchor": "five-band project controls scope ladder"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/verify",
+       "anchor": "verify a PCI credential"
+      },
+      {
+       "domain": "pciworld.org",
+       "path": "/how-to-become-a-planning-engineer",
+       "anchor": "How to become a planning engineer"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to pciworld.org"
+     ]
+    },
+    {
+     "file": "articles/141-linkedin-article-construction-scheduling-methods.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1699,
+     "type": "comparison",
+     "primary_kw": "construction scheduling methods",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/142-linkedin-article-must-finish-by-date-p6.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1567,
+     "type": "guide",
+     "primary_kw": "must finish by date p6",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/143-linkedin-article-recovery-schedule.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1842,
+     "type": "how-to",
+     "primary_kw": "how to build a recovery schedule",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/144-linkedin-article-cost-probability-distribution.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1665,
+     "type": "guide",
+     "primary_kw": "cost probability distribution",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/145-linkedin-article-qra-capability.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1759,
+     "type": "guide",
+     "primary_kw": "qra capability",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/147-linkedin-article-lng-project-overruns.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1708,
+     "type": "data-study",
+     "primary_kw": "lng project overruns",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/148-linkedin-article-rail-project-overruns.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1768,
+     "type": "data-study",
+     "primary_kw": "rail project overruns",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/149-linkedin-article-what-is-an-epc-contract.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1778,
+     "type": "faq",
+     "primary_kw": "what is epc contract",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/150-linkedin-article-project-dashboard-kpis.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original",
+     "words": 1779,
+     "type": "faq",
+     "primary_kw": "project dashboard kpis",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "files": [
+    {
+     "file": "articles/151-substack-construction-cost-inflation.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1510,
+     "type": "data-study",
+     "primary_kw": "construction cost inflation",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/152-substack-labour-availability-cost-driver.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1600,
+     "type": "data-study",
+     "primary_kw": "construction labour cost driver",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1"
+     ]
+    },
+    {
+     "file": "articles/153-substack-cost-per-square-metre-league-table.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1382,
+     "type": "data-study",
+     "primary_kw": "cost per square metre to build",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/154-substack-when-to-use-each-eac-formula.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1593,
+     "type": "faq",
+     "primary_kw": "when to use each eac formula",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1"
+     ]
+    },
+    {
+     "file": "articles/155-substack-cpi-below-1-meaning.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1800,
+     "type": "faq",
+     "primary_kw": "cpi below 1 meaning",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/156-substack-bottom-up-etc.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1810,
+     "type": "faq",
+     "primary_kw": "bottom-up etc",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/157-substack-oil-and-gas-cost-benchmarks.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1788,
+     "type": "data-study",
+     "primary_kw": "oil and gas cost benchmarks",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/158-substack-lng-cost-benchmarks.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1750,
+     "type": "data-study",
+     "primary_kw": "lng cost benchmarks",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/159-substack-fidic-fully-detailed-claim.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1851,
+     "type": "how-to",
+     "primary_kw": "fidic fully detailed claim",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/160-substack-generative-scheduling.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1729,
+     "type": "faq",
+     "primary_kw": "generative scheduling",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/161-substack-ai-cost-estimating-accuracy.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1658,
+     "type": "faq",
+     "primary_kw": "ai cost estimating accuracy",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "files": [
+    {
+     "file": "articles/162-substack-planned-value-vs-earned-value-in-p6.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1619,
+     "type": "guide",
+     "primary_kw": "planned value vs earned value in p6",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/163-substack-wbs-reporting-in-agile.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1649,
+     "type": "guide",
+     "primary_kw": "wbs reporting in agile",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/164-substack-contingency-by-parametric-estimating.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1755,
+     "type": "guide",
+     "primary_kw": "contingency by parametric estimating",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/165-substack-project-controls-job-market.md",
+     "platform": "Substack",
+     "host": null,
+     "canonical": "original",
+     "words": 1751,
+     "type": "data-study",
+     "primary_kw": "project controls job market",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/166-dev-community-llm-schedule-review.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> /llm-schedule-review (own site #068)",
+     "words": 1749,
+     "type": "how-to",
+     "primary_kw": "llm schedule review",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/167-dev-community-prompt-engineering-for-project-professionals.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> /prompt-engineering-for-project-professionals (",
+     "words": 1654,
+     "type": "how-to",
+     "primary_kw": "prompt engineering for project professionals",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/168-dev-community-generative-ai-project-reporting.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> /generative-ai-project-reporting (own site #070",
+     "words": 1810,
+     "type": "how-to",
+     "primary_kw": "generative ai project reporting",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/169-dev-community-ai-policy-for-project-controls.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> /ai-policy-for-project-controls (own site #069)",
+     "words": 1816,
+     "type": "template",
+     "primary_kw": "ai policy for project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/170-dev-community-best-ai-construction-scheduling-software.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> /best-ai-construction-scheduling-software (own ",
+     "words": 1793,
+     "type": "comparison",
+     "primary_kw": "best ai construction scheduling software",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/171-dev-community-ai-in-construction-project-management.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> pciai.org/ai-in-construction-project-management",
+     "words": 1756,
+     "type": "guide",
+     "primary_kw": "ai in construction project management",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/172-dev-community-monte-carlo-cost-simulation.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/monte-carlo-cost-s",
+     "words": 1733,
+     "type": "how-to",
+     "primary_kw": "monte carlo cost simulation",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "files": [
+    {
+     "file": "articles/173-dev-community-critical-path-method.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/critical-path-meth",
+     "words": 1718,
+     "type": "glossary",
+     "primary_kw": "critical path method definition",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/174-dev-community-project-cash-flow-forecasting.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/project-cash-flow-",
+     "words": 1781,
+     "type": "guide",
+     "primary_kw": "project cash flow forecasting",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/175-dev-community-four-eac-formulas.md",
+     "platform": "DEV Community",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/four-eac-formulas",
+     "words": 1751,
+     "type": "how-to",
+     "primary_kw": "four eac formulas",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "articles/176-hashnode-ai-in-project-controls.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> pciai.org/ai-in-project-controls",
+     "words": 2376,
+     "type": "pillar",
+     "primary_kw": "ai in project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/177-hashnode-ai-for-cost-estimating-in-construction.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> pciai.org/ai-for-cost-estimating-in-constructio",
+     "words": 1571,
+     "type": "guide",
+     "primary_kw": "ai for cost estimating in construction",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/178-hashnode-realistic-schedule-in-primavera-p6.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/realistic-schedule",
+     "words": 1767,
+     "type": "guide",
+     "primary_kw": "realistic schedule in primavera p6",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/179-hashnode-total-float.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/total-float",
+     "words": 1778,
+     "type": "glossary",
+     "primary_kw": "total float definition",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/180-hashnode-quantitative-schedule-risk-analysis.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/quantitative-sched",
+     "words": 1772,
+     "type": "guide",
+     "primary_kw": "quantitative schedule risk analysis qsra",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/181-hashnode-risk-register-that-gets-used.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/risk-register-that",
+     "words": 1741,
+     "type": "how-to",
+     "primary_kw": "risk register that gets used",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/schedule-risk-analysis",
+       "anchor": "schedule risk analysis"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/monte-carlo-cost-simulation",
+       "anchor": "a Monte Carlo cost simulation"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/182-hashnode-cost-control-in-construction.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/cost-control-in-co",
+     "words": 1685,
+     "type": "guide",
+     "primary_kw": "cost control in construction",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "the four EAC formulas"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/what-is-project-controls",
+       "anchor": "what project controls covers"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/183-hashnode-eac-accounting.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/eac-accounting",
+     "words": 1749,
+     "type": "guide",
+     "primary_kw": "eac accounting",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "the four EAC formulas"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/ifrs-for-project-controls",
+       "anchor": "IFRS for project controls"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "files": [
+    {
+     "file": "articles/184-hashnode-earned-value-worked-example.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/earned-value-worke",
+     "words": 1708,
+     "type": "guide",
+     "primary_kw": "earned value worked example",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-management",
+       "anchor": "the earned value management pillar"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/four-eac-formulas",
+       "anchor": "the four EAC formulas"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/185-hashnode-capital-project-management-process.md",
+     "platform": "Hashnode",
+     "host": null,
+     "canonical": "canonical -> projectcontrolsinstitute.org/capital-project-ma",
+     "words": 1742,
+     "type": "process-guide",
+     "primary_kw": "capital project management process",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/quantitative-schedule-risk-analysis",
+       "anchor": "the quantified risk analysis"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/what-is-project-controls",
+       "anchor": "what project controls covers"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "articles/186-quora-will-ai-replace-planning-engineers.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1627,
+     "type": "qa-list",
+     "primary_kw": "will ai replace planning engineers",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-project-controls-certification",
+       "anchor": "PCI AI Project Controls Leader (PCL-AI)"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/187-quora-will-ai-replace-project-managers.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1606,
+     "type": "qa-list",
+     "primary_kw": "will ai replace project managers",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-project-management-certification",
+       "anchor": "PCI Project Management Leader \u2013 AI (PML-AI)"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/188-quora-is-project-controls-in-demand.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1579,
+     "type": "qa-list",
+     "primary_kw": "is project controls in demand",
+     "current_links": [
+      {
+       "domain": "pciworld.org",
+       "path": "/what-does-a-project-controls-engineer-do",
+       "anchor": "what a project controls engineer actually does"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/189-quora-is-project-controls-stressful.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1546,
+     "type": "qa-list",
+     "primary_kw": "is project controls stressful",
+     "current_links": [
+      {
+       "domain": "pciworld.org",
+       "path": "/what-does-a-project-controls-engineer-do",
+       "anchor": "what a project controls engineer actually does"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/190-quora-bcws-vs-bcwp.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1628,
+     "type": "qa-list",
+     "primary_kw": "bcws vs bcwp",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-management",
+       "anchor": "the earned value management guide"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/191-quora-control-account-vs-work-package.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1421,
+     "type": "qa-list",
+     "primary_kw": "control account vs work package",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/192-quora-three-point-estimating.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1441,
+     "type": "qa-list",
+     "primary_kw": "three-point estimating",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/193-quora-cost-overrun-vs-cost-escalation.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1549,
+     "type": "qa-list",
+     "primary_kw": "cost overrun vs cost escalation",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "articles/194-quora-schedule-of-values.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1358,
+     "type": "qa-list",
+     "primary_kw": "schedule of values",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "files": [
+    {
+     "file": "articles/195-quora-construction-draw-schedule.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1454,
+     "type": "qa-list",
+     "primary_kw": "construction draw schedule",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "articles/196-quora-100-percent-rule-wbs.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1395,
+     "type": "qa-list",
+     "primary_kw": "100% rule wbs",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/197-quora-wbs-vs-project-schedule.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1451,
+     "type": "qa-list",
+     "primary_kw": "wbs vs project schedule",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/198-quora-recovery-schedule.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1594,
+     "type": "qa-list",
+     "primary_kw": "what is a recovery schedule",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/199-quora-how-many-wbs-levels.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1491,
+     "type": "qa-list",
+     "primary_kw": "how many wbs levels",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "articles/200-quora-how-to-apply-for-an-extension-of-time.md",
+     "platform": "Quora",
+     "host": null,
+     "canonical": "original",
+     "words": 1656,
+     "type": "qa-list",
+     "primary_kw": "how to apply for an extension of time",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why.",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "flagship/blogger-post.md",
+     "platform": "Blogger (Blogspot, repurposed post carry",
+     "host": null,
+     "canonical": "canonical -> https://projectcontrolsinstitute.org/earned-val",
+     "words": 1268,
+     "type": "guide",
+     "primary_kw": "project accruals",
+     "current_links": [
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-certification-for-planning-engineers",
+       "anchor": "which certifications examine cost and which examine only the schedule"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-in-project-controls",
+       "anchor": "what AI can and cannot decide in project controls"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the 13 domains and 61 knowledge areas of PCL-AI"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-worked-example",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org",
+      "RATIONALISE: 4 cross-estate links (max 3)"
+     ]
+    },
+    {
+     "file": "flagship/dev-community-article.md",
+     "platform": "DEV Community (dev.to)",
+     "host": null,
+     "canonical": "canonical -> https://pciai.org/ai-governance-in-project-cont",
+     "words": 1596,
+     "type": "guide",
+     "primary_kw": "ai in project controls \u2014 inherited via the canonical, not targeted here",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the PCL-AI syllabus, domain by domain"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "The decision rights an AI policy for project controls has to set out"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "which credential examines which half of the problem"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "flagship/digital-pm-article.md",
+     "platform": "The Digital Project Manager (thedigitalp",
+     "host": null,
+     "canonical": "original \u2014 written for DPM, never a copy of the own-site pil",
+     "words": 1394,
+     "type": "article",
+     "primary_kw": "agile earned value",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "which numbers a model may originate and which it may only repeat back"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "Comparing the main controls credentials by what is on their syllabuses"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the 13 domains and 61 knowledge areas in full"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "flagship/directory-boilerplate.md",
+     "platform": "Directory and profile boilerplate set \u2014 ",
+     "host": null,
+     "canonical": "original \u2014 the hub's About page is the canonical text; every",
+     "words": 1540,
+     "type": "boilerplate-set",
+     "primary_kw": "project controls institute",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "",
+       "anchor": ""
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge`",
+       "anchor": ""
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification`",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "flagship/discord-slack-intro.md",
+     "platform": "Discord and Slack \u2014 community introducti",
+     "host": null,
+     "canonical": "original",
+     "words": 263,
+     "type": "community-intro",
+     "primary_kw": "",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    }
+   ]
+  },
+  {
+   "id": 17,
+   "files": [
+    {
+     "file": "flagship/elearning-industry-article.md",
+     "platform": "eLearning Industry (elearningindustry.co",
+     "host": null,
+     "canonical": "original \u2014 exclusive to eLearning Industry, never republishe",
+     "words": 1416,
+     "type": "article",
+     "primary_kw": "what makes a credential examinable",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "which forecast decisions a model may originate and which it may only restate"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": "The mechanics of checking what a certification body actually examines"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "read the 13 domains and 61 knowledge areas of PCL-AI in full"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "flagship/eng-tips-post.md",
+     "platform": "Eng-Tips Forums \u2014 new thread on the proj",
+     "host": null,
+     "canonical": "original. This wording exists nowhere else in the run and no",
+     "words": 690,
+     "type": "forum-post",
+     "primary_kw": "cpi cost basis",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "flagship/hashnode-article.md",
+     "platform": "Hashnode (personal blog on the PCI Hashn",
+     "host": null,
+     "canonical": "canonical -> https://projectcontrolsinstitute.org/month-end-",
+     "words": 1577,
+     "type": "guide",
+     "primary_kw": "project cost data model",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the domains and knowledge areas PCL-AI examines"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "Who owns a figure a model produced"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "how the main controls certifications line up against each other"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "flagship/linkedin-article.md",
+     "platform": "LinkedIn Article",
+     "host": null,
+     "canonical": "original \u2014 LinkedIn carries no canonical tag, so nothing her",
+     "words": 1576,
+     "type": "guide",
+     "primary_kw": "cost report cut-off",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/generative-ai-project-reporting",
+       "anchor": "generative AI in project reporting"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "13 domains and 61 knowledge areas of PCL-AI"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "compare what each certification examines"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "flagship/linkedin-newsletter-issue.md",
+     "platform": "LinkedIn Newsletter \u2014 issue 1 of \"The Ov",
+     "host": null,
+     "canonical": "original \u2014 LinkedIn supports no canonical tag, so this must ",
+     "words": 1185,
+     "type": "linkedin-newsletter",
+     "primary_kw": "cost performance index accrual * \u2014 subject tag, not a search target; see notes",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-governance-in-project-controls",
+       "anchor": "what it may never decide on its own"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the 13 domains and 61 knowledge areas of PCL-AI"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "comparing on what each one examines"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta",
+      "QUALITY: no table (GEO: tables are the most cited format)"
+     ]
+    },
+    {
+     "file": "flagship/medium-article.md",
+     "platform": "Medium (member-facing story, submitted t",
+     "host": null,
+     "canonical": "canonical -> https://projectcontrolsinstitute.org/finance-an",
+     "words": 1567,
+     "type": "guide",
+     "primary_kw": "finance and project management certification \u2014 inherited via the canonical, not targeted here",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "What an AI policy for project controls has to settle in writing"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "a like-for-like comparison of what the main controls certifications examine"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "Read the PCL-AI Body of Knowledge in full"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta"
+     ]
+    },
+    {
+     "file": "flagship/oer-commons-resource.md",
+     "platform": "OER Commons (ISKME) resource submission,",
+     "host": null,
+     "canonical": "original (the listing is a catalogue record pointing at the ",
+     "words": 725,
+     "type": "educational-resource-listing",
+     "primary_kw": "earned value practice questions",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "mapping against a module of your own"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": "the checks to run on a certifying body before you assign its material"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-worked-example",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    },
+    {
+     "file": "flagship/pbc-today-article.md",
+     "platform": "PBC Today (pbctoday.co.uk) \u2014 contributed",
+     "host": null,
+     "canonical": "original \u2014 written once, published here, never a copy of the",
+     "words": 1155,
+     "type": "article",
+     "primary_kw": "cost control in construction",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "which figures a model may originate and which it may only restate"
+      },
+      {
+       "domain": "pciglobal.ai",
+       "path": "/project-controls-certification-uk",
+       "anchor": "the qualifications a commercial team here already holds"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "13 domains and 61 knowledge areas of the PCL-AI Body of Knowledge"
+      }
+     ],
+     "jobs": [
+      "QUALITY: no FAQ block"
+     ]
+    },
+    {
+     "file": "flagship/pm-world-journal-paper.md",
+     "platform": "PM World Journal (featured paper, submit",
+     "host": null,
+     "canonical": "original",
+     "words": 2608,
+     "type": "paper",
+     "primary_kw": "cut-off differential",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "The boundary between figures a model may originate and figures it may only restate"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "a side-by-side reading of what the main controls certifications examine"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the 13 domains and 61 knowledge areas of the PCL-AI Body of Knowledge"
+      }
+     ],
+     "jobs": [
+      "QUALITY: title 86ch (50-60)",
+      "QUALITY: meta 184ch (140-158)",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta",
+      "QUALITY: no FAQ block",
+      "QUALITY: 2 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "flagship/pmi-community-post.md",
+     "platform": "PMI Community \u2014 ProjectManagement.com, m",
+     "host": null,
+     "canonical": "original. This wording exists nowhere else in the run and no",
+     "words": 892,
+     "type": "community-discussion-post",
+     "primary_kw": "actual cost evm",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "flagship/press-release.md",
+     "platform": "Press release for distribution \u2014 wire se",
+     "host": null,
+     "canonical": "original \u2014 written for distribution and hosted on the Instit",
+     "words": 568,
+     "type": "press-release",
+     "primary_kw": "project controls certification",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the Bodies of Knowledge behind its three credentials"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": "the test that works on a certifying body nobody has heard of"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 18,
+   "files": [
+    {
+     "file": "flagship/project-times-article.md",
+     "platform": "Project Times (projecttimes.com) \u2014 contr",
+     "host": null,
+     "canonical": "original \u2014 write once, publish here, never a copy of the own",
+     "words": 1363,
+     "type": "article",
+     "primary_kw": "project controls vs project management",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "written down before the tool is switched on rather than after a board paper goes out"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "A like-for-like reading of what the main controls credentials actually test"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "13 domains and 61 knowledge areas of the PCL-AI Body of Knowledge"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "flagship/reddit-post.md",
+     "platform": "Reddit \u2014 r/projectmanagement (text post,",
+     "host": null,
+     "canonical": "original \u2014 nothing in this post appears in this wording on a",
+     "words": 749,
+     "type": "community-post",
+     "primary_kw": "cost performance index accrual",
+     "current_links": [],
+     "jobs": [
+      "EMBED: no links at all. Add them per the architecture."
+     ]
+    },
+    {
+     "file": "flagship/slideshare-deck-script.md",
+     "platform": "SlideShare (Scribd) \u2014 16:9 deck, uploade",
+     "host": null,
+     "canonical": "original",
+     "words": 2949,
+     "type": "deck-script",
+     "primary_kw": "",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "PCI's policy on what a model may decide"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": "How to verify a certification"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": ""
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": ""
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": ""
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 3x cross-link to projectcontrolsinstitute.org (same page)",
+      "RATIONALISE: 2x cross-link to pciai.org (same page)",
+      "RATIONALISE: 2x cross-link to credentialfinder.org (same page)",
+      "RATIONALISE: 7 cross-estate links (max 3)"
+     ]
+    },
+    {
+     "file": "flagship/stack-exchange-answer.md",
+     "platform": "Project Management Stack Exchange (pm.st",
+     "host": null,
+     "canonical": "original. Nothing in this answer appears in this wording on ",
+     "words": 572,
+     "type": "qa-answer",
+     "primary_kw": "actual cost evm accrued or invoiced",
+     "current_links": [],
+     "jobs": [
+      "EMBED: no links at all. Add them per the architecture."
+     ]
+    },
+    {
+     "file": "flagship/substack-issue.md",
+     "platform": "Substack \u2014 issue 1 of \"The Overlap\"",
+     "host": null,
+     "canonical": "original \u2014 Substack supports no canonical tag, so this must ",
+     "words": 1413,
+     "type": "substack-newsletter",
+     "primary_kw": "work done not yet invoiced",
+     "current_links": [
+      {
+       "domain": "pciai.org",
+       "path": "/ai-governance-in-project-controls",
+       "anchor": "what a model may propose and what it may never decide by itself"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the 13 domains and 61 knowledge areas"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "set side by side on what each one examines"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: primary_kw not in meta",
+      "QUALITY: no FAQ block"
+     ]
+    },
+    {
+     "file": "flagship/training-industry-article.md",
+     "platform": "Training Industry (trainingindustry.com)",
+     "host": null,
+     "canonical": "original \u2014 written for this publication, never a copy of the",
+     "words": 1388,
+     "type": "article",
+     "primary_kw": "project controls training",
+     "current_links": [
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "how to check what a credential actually examines"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "what an AI policy for project reporting has to decide"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the PCL-AI Body of Knowledge, domain by domain"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in first 60 words",
+      "QUALITY: no FAQ block",
+      "QUALITY: 1 paragraphs over 90 words (GEO)"
+     ]
+    },
+    {
+     "file": "flagship/tumblr-post.md",
+     "platform": "Tumblr (text post, image as the first bl",
+     "host": null,
+     "canonical": "original",
+     "words": 2309,
+     "type": "tumblr-post",
+     "primary_kw": "",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/earned-value-worked-example",
+       "anchor": "the earned value worked example"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/month-end-close-for-projects",
+       "anchor": "month-end close for projects"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 4x cross-link to projectcontrolsinstitute.org",
+      "RATIONALISE: 4 cross-estate links (max 3)"
+     ]
+    },
+    {
+     "file": "flagship/webinar-event-listing.md",
+     "platform": "Eventbrite (public listing), Luma (regis",
+     "host": null,
+     "canonical": "original (the listing is a registration page, not an article",
+     "words": 3025,
+     "type": "webinar-event-listing",
+     "primary_kw": "earned value management training",
+     "current_links": [
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": "the checks worth running on any certifying body"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "Body of Knowledge"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "a governance question long before it is a tooling one"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": "the checks worth running on any certifying body"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "the written policy position"
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to credentialfinder.org (same page)",
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org (same page)",
+      "RATIONALISE: 2x cross-link to pciai.org (same page)",
+      "RATIONALISE: 6 cross-estate links (max 3)"
+     ]
+    },
+    {
+     "file": "flagship/wordpress-blog-post.md",
+     "platform": "WordPress.com blog post (branded educati",
+     "host": null,
+     "canonical": "original \u2014 nothing here may be republished on a PCI domain, ",
+     "words": 1543,
+     "type": "guide",
+     "primary_kw": "estimate at completion assumptions",
+     "current_links": [
+      {
+       "domain": "credentialfinder.org",
+       "path": "/aace-ccp-vs-pmp",
+       "anchor": "where the CCP's syllabus and the PMP's syllabus divide this ground"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-for-cost-estimating-in-construction",
+       "anchor": "how to measure whether a model's cost estimate is any good"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the PCL-AI syllabus, domain by domain"
+      }
+     ],
+     "jobs": [
+      "QUALITY: primary_kw not in H1",
+      "QUALITY: primary_kw not in first 60 words"
+     ]
+    },
+    {
+     "file": "flagship/youtube-short-script.md",
+     "platform": "YouTube Shorts (primary) \u00b7 TikTok \u00b7 Inst",
+     "host": null,
+     "canonical": "original",
+     "words": 1615,
+     "type": "video-script",
+     "primary_kw": "",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "how the credentials compare"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org (same page)"
+     ]
+    },
+    {
+     "file": "flagship/youtube-video-description.md",
+     "platform": "YouTube \u2014 long-form video (16:9, 22:31).",
+     "host": null,
+     "canonical": "original",
+     "words": 2063,
+     "type": "video-description",
+     "primary_kw": "",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": "the PCL-AI Body of Knowledge"
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": "how the credentials sit against each other"
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": "the written policy position"
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge",
+       "anchor": ""
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/best-project-controls-certification",
+       "anchor": ""
+      },
+      {
+       "domain": "pciai.org",
+       "path": "/ai-policy-for-project-controls",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org (same page)",
+      "RATIONALISE: 2x cross-link to credentialfinder.org (same page)",
+      "RATIONALISE: 2x cross-link to pciai.org (same page)",
+      "RATIONALISE: 6 cross-estate links (max 3)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 19,
+   "files": [
+    {
+     "file": "flagship/zenodo-dataset-record.md",
+     "platform": "Zenodo (CERN / OpenAIRE open repository)",
+     "host": null,
+     "canonical": "original deposit \u2014 the Zenodo record is the citable copy of ",
+     "words": 759,
+     "type": "repository-record",
+     "primary_kw": "",
+     "current_links": [
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge.",
+       "anchor": ""
+      },
+      {
+       "domain": "projectcontrolsinstitute.org",
+       "path": "/body-of-knowledge.",
+       "anchor": ""
+      },
+      {
+       "domain": "credentialfinder.org",
+       "path": "/how-to-verify-a-certification",
+       "anchor": ""
+      }
+     ],
+     "jobs": [
+      "RATIONALISE: 2x cross-link to projectcontrolsinstitute.org (same page)"
+     ]
+    },
+    {
+     "file": "social/276-instagram-facebook-what-is-project-controls.md",
+     "platform": "Instagram / Facebook",
+     "host": null,
+     "canonical": "original",
+     "words": 672,
+     "type": "carousel",
+     "primary_kw": "what is project controls",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "social/277-instagram-facebook-capital-project-lifecycle.md",
+     "platform": "Instagram / Facebook",
+     "host": null,
+     "canonical": "original",
+     "words": 644,
+     "type": "carousel",
+     "primary_kw": "what are capital projects",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "social/278-instagram-facebook-extension-of-time-five-steps.md",
+     "platform": "Instagram / Facebook",
+     "host": null,
+     "canonical": "original",
+     "words": 583,
+     "type": "carousel",
+     "primary_kw": "extension of time claim",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "social/279-instagram-facebook-contract-administrator-week.md",
+     "platform": "Instagram / Facebook",
+     "host": null,
+     "canonical": "original",
+     "words": 655,
+     "type": "carousel",
+     "primary_kw": "contract administration",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    },
+    {
+     "file": "social/280-instagram-facebook-five-kpis-that-change-a-decision.md",
+     "platform": "Instagram / Facebook",
+     "host": null,
+     "canonical": "original",
+     "words": 604,
+     "type": "carousel",
+     "primary_kw": "project dashboard kpis",
+     "current_links": [],
+     "jobs": [
+      "EMBED: the piece carries a linking note but no link in the body. Place the links inside the prose, in the sentences that raise the question each answers, then rewrite the note to record what was placed and why."
+     ]
+    }
+   ]
+  }
+ ]
+}

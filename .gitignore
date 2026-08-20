@@ -7,3 +7,6 @@ backend/pci.db.migrate.lock
 # Python bytecode (regenerated on import; never useful in VCS)
 __pycache__/
 *.py[cod]
+
+# Workflow agent reports from the content run — regenerated per run, not source.
+docs/marketing/content/_tools/reports/
