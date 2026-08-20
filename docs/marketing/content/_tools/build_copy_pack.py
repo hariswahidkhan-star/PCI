@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
-"""Build the copy pack: every piece's text, ready to paste, with nothing a poster does not need.
+"""Build the copy pack: one self-contained block per post, to select and paste.
 
-The front matter, the audit trail and the linking rationale are all stripped. What survives is
-the copy itself, the one link to place, the hashtags, and any timing note — laid out so
-somebody can work down it with the tracker open beside them.
+Written for somebody who has not read any of the briefing and should not have to. Each entry
+says which platform and which account, gives one block that already contains the text, the
+URL and the hashtags, and then says what to do after pasting. Nothing is assembled by the
+poster and nothing is looked up in another file.
+
+How the URL appears depends on where the copy is going, because the two destinations behave
+differently. Long articles are pasted into a CMS, which accepts rich text, so their links
+stay as real clickable hyperlinks and read as published prose. Social copy is pasted into a
+plain-text composer that discards formatting, so a clickable link would arrive as bare
+anchor text with the address gone — those get the URL written out literally instead.
 """
 import importlib.util
 import re
@@ -16,6 +23,63 @@ bb = importlib.util.module_from_spec(_b); _b.loader.exec_module(bb)
 _p = importlib.util.spec_from_file_location("mp", HERE / "build_marketing_pack.py")
 mp = importlib.util.module_from_spec(_p); _p.loader.exec_module(mp)
 
+# Where the link goes on each surface, in plain words. A poster should never have to know
+# that LinkedIn suppresses reach on posts with an outbound link in the body.
+PLACEMENT = {
+    "linkedin post": "Post the text above. Then add a comment on your own post containing "
+                     "only this link:",
+    "linkedin carousel": "Upload the slides as a document post with the caption above. Then "
+                         "add a comment on your own post containing only this link:",
+    "linkedin company page post": "Post from the PCI company page. Then add a comment "
+                                  "containing only this link:",
+    "linkedin personal/founder post": "Post from your personal profile, not the company page. "
+                                      "Then add a comment containing only this link:",
+    "instagram": "Put this link in the bio before posting, because Instagram captions "
+                 "cannot contain a clickable link:",
+    "instagram / facebook": "On Instagram put this link in the bio first. On Facebook it can "
+                            "go in the post itself:",
+    "instagram / facebook carousel": "On Instagram put this link in the bio first. On "
+                                     "Facebook it can go in the post itself:",
+    "pinterest": "Set this as the Pin's destination link:",
+    "youtube shorts": "Put this link in the video description:",
+}
+
+
+def placement_note(platform):
+    p = platform.lower()
+    for k, v in PLACEMENT.items():
+        if p.startswith(k):
+            return v
+    return None
+
+
+def fm_value(fm, key):
+    """Read a front-matter value, including YAML block scalars.
+
+    bb.g reads to the end of the line, which is right for 43 of the 47 pieces that carry a
+    posting note and useless for the other four: they write it as a block scalar, so the line
+    holds only the "|" and the entry rendered as "When: |". Reading the indented block that
+    follows is the difference between a timing instruction and a stray pipe character.
+    """
+    m = re.search(rf"^{key}:[ \t]*(.*)$", fm, re.M)
+    if not m:
+        return ""
+    head = m.group(1).strip()
+    if head not in ("|", ">", "|-", ">-", "|+", ">+"):
+        return head.strip('"')
+    lines = fm[m.end():].split("\n")[1:] if False else fm[m.end():].lstrip("\n").split("\n")
+    out = []
+    for ln in lines:
+        if ln.strip() and not ln.startswith((" ", "\t")):
+            break
+        out.append(ln.strip())
+    return " ".join(x for x in out if x)
+
+
+def social_links(md):
+    """Write links out literally, for copy that lands in a plain-text composer."""
+    return re.sub(r"\[([^\]]*)\]\((https?://[^)]*)\)", r"\1: \2", md)
+
 
 def build():
     files = bb.load()
@@ -23,28 +87,31 @@ def build():
         m = bb.FM.match(r["path"].read_text(encoding="utf-8"))
         fm = m.group(1) if m else ""
         r["cta"] = bb.g(fm, "cta_link")
-        r["when"] = bb.g(fm, "when_to_post")
+        r["when"] = fm_value(fm, "when_to_post")
         r["phase"], r["phase_name"] = mp.phase_of(r)
     files.sort(key=lambda r: (r["phase"], r["group"], r["path"].name))
 
-    o = ["% PCI content copy pack", "% Project Controls Institute Global", "",
-         "# How to use this", "",
-         "Every piece is here in the order to post it, with the copy ready to paste. The "
-         "posting tracker spreadsheet has the same order, so keep the two side by side: the "
-         "tracker tells you what is due, this tells you what to say.", "",
-         "Each entry gives you the copy, the one link that piece carries, and its hashtags. "
-         "Nothing else needs to travel with it.", "",
-         "**Four things that must not change on any platform.** The 15,613 calculation checks "
-         "may only appear in a sentence that also says it covers PFL-AI and PML-AI. The "
-         "40/40/20 split describes the Body of Knowledge and never the examination. No "
-         "accreditation, recognition or endorsement may be claimed. No pass rates, student "
-         "numbers or salary figures.", "",
-         "**Do not add links.** Each piece carries one, chosen so that no piece points at all "
-         "five domains and none points twice at the same one. That restraint is what keeps the "
-         "five sites from being read as a link network.", "", "\\newpage", ""]
+    o = ["% PCI content — ready to post", "% Project Controls Institute Global", "",
+         "# Read this once, then you can work down the list", "",
+         "Every post is below in the order to publish it. Each one gives you the platform, "
+         "the account to post from, and one block of text to select and paste. The links and "
+         "the hashtags are already inside that block. You do not need any other file.", "",
+         "Where a platform wants the link somewhere other than the post itself — LinkedIn "
+         "wants it in the first comment, Instagram wants it in the bio — the entry says so "
+         "underneath, with the link on its own line to copy.", "",
+         "**Four things that must never be changed, on any platform.**", "",
+         "1. Wherever the figure 15,613 appears, the same sentence must also say it covers "
+         "PFL-AI and PML-AI. Never quote it on its own.", "",
+         "2. The 40/40/20 split describes the Body of Knowledge. It is never an exam "
+         "weighting, because the exam blueprint has not been decided.", "",
+         "3. Never say or imply that PCI is accredited, recognised, endorsed, affiliated or "
+         "partnered with anyone. It is not, and it says so openly.", "",
+         "4. Never add a pass rate, a student number, a salary figure or a success statistic. "
+         "If a number is not already in the text, it does not go in.", "",
+         "**Do not add links.** Each post carries the one link it is meant to carry. Adding "
+         "more can cost all five PCI websites their standing at once.", "", "\\newpage", ""]
 
-    phase, grp = None, None
-    n = 0
+    phase, grp, n = None, None, 0
     for r in files:
         if r["phase_name"] != phase:
             phase = r["phase_name"]
@@ -54,41 +121,70 @@ def build():
             grp = r["group"]
             o += ["", f"## {grp}", ""]
         n += 1
-        o += ["", f"### {n}. {r['title']}", ""]
-        bits = []
-        if r["kw"]:
-            bits.append(f"**Keyword:** {r['kw']}")
-        bits.append(f"**Length:** {r['words']:,} words")
-        # Same rule as the tracker, so the two never disagree about which link to place:
-        # the declared call to action first, the first estate link in the prose only as a
-        # fallback.
+        long_form = r["words"] > 700 and r["phase"] in (2, 3, 4)
+
+        o += ["", f"### Post {n} — {r['title']}", "",
+              f"**Where it goes:** {r['platform']}", ""]
+        if r["when"]:
+            o += [f"**When:** {mp.clean(r['when'], 420, keep_urls=False)}", ""]
+        # Match whole words. A plain substring test classified anything whose platform
+        # mentioned a "description" as designer copy, because "description" contains
+        # "script" — which swept 43 pieces into the wrong bucket, including the webinar
+        # listing that should have had its own.
+        t = (r["type"] + " " + r["platform"]).lower()
+        def has(*words):
+            return any(re.search(rf"\b{w}\b", t) for w in words)
+        if has("boilerplate", "directory"):
+            action = ("**This one is a reference sheet, not a post.** It gives you the wording "
+                      "to use when filling in a company profile on Crunchbase, Google Business "
+                      "Profile, Credly and the rest. Use the longest version that fits each "
+                      "field, and do not write anything that is not here.**")
+        elif has("pitch", "email", "haro", "sos"):
+            action = ("**This one is an email, not a post.** Send it to one named person. "
+                      "Copy everything between the two lines into the message body.**")
+        elif has("script", "deck", "carousel", "pin"):
+            action = ("**This one is the words for a designer, not a post.** Everything "
+                      "between the two lines goes onto the slides or the graphic. The caption "
+                      "to post with it is inside.**")
+        elif has("listing", "event"):
+            action = ("**This one is a listing, not a post.** Copy everything between the two "
+                      "lines into the event or resource form.**")
+        else:
+            action = "**Copy everything between the two lines and paste it.**"
+        o += [action, "", "---", ""]
+
+        body = bb.demote(r["body"], 4)
+        o += [body if long_form else social_links(body), ""]
+
+        tags = r["hashtags"]
+        if tags and not tags.lower().startswith(("n/a", "none")) and "#" in tags:
+            o += ["", tags.split("(")[0].strip(), ""]
+        o += ["---", ""]
+
         cta = ""
         if r["cta"]:
-            m2 = re.search(r"https?://\S+", r["cta"])
-            if m2:
-                cta = m2.group(0).rstrip(".,;)")
+            mm = re.search(r"https?://\S+", r["cta"])
+            if mm:
+                cta = mm.group(0).rstrip(".,;)")
         if not cta and r["links"]:
             l = r["links"][0]
             cta = f"https://{l['domain']}{l['path']}"
-        bits.append(f"**Link to place:** {cta}" if cta
-                    else "**No link** — deliberate on this platform")
-        o += [" · ".join(bits), ""]
-        if r["hashtags"] and not r["hashtags"].lower().startswith(("n/a", "none")):
-            o += [f"**Hashtags:** {r['hashtags'][:300]}", ""]
-        if r["when"]:
-            o += [f"**When:** {mp.clean(r['when'], 700)}", ""]
-        o += ["---", "", bb.demote(r["body"], 4), ""]
+        note = placement_note(r["platform"])
+        if note and cta:
+            o += [f"**After posting.** {note}", "", cta, ""]
+        elif not r["links"] and not cta:
+            o += ["**No link on this one.** This platform removes posts that carry a "
+                  "promotional link, so it deliberately has none. Do not add one.", ""]
 
-    src = bb.ROOT.parent / "_copy_pack.md"
+    src = bb.ROOT.parent / "_copy.md"
     src.write_text("\n".join(o), encoding="utf-8")
-    dest = bb.ROOT.parent / "PCI-content-copy-pack.docx"
-    subprocess.run(["pandoc", str(src), "-o", str(dest),
-                    "--toc", "--toc-depth=2", "-V", "geometry:margin=2cm"],
-                   check=True, capture_output=True)
+    dest = bb.ROOT.parent / "PCI-ready-to-post.docx"
+    subprocess.run(["pandoc", str(src), "-o", str(dest), "--toc", "--toc-depth=2",
+                    "-V", "geometry:margin=2cm"], check=True, capture_output=True)
     src.unlink()
     return dest, n
 
 
 if __name__ == "__main__":
     d, n = build()
-    print(f"{d}  ({d.stat().st_size/1024:.0f} KB)  {n} pieces")
+    print(f"{d}  ({d.stat().st_size/1024:.0f} KB)  {n} posts")
