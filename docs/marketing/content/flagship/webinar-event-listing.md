@@ -83,11 +83,14 @@ notes: |
   refusal and the accreditation refusal, which are the three things the FAQ does not say. A denial
   repeated is a denial that starts to sound rehearsed.
   LINKS. Three, one per domain, each answering a question the sentence it sits in raises, none of them
-  in a block at the end. The syllabus link is the ask and answers "what else is in this". The
-  credentialfinder.org link answers "how do I check a certifying body I have not heard of", raised by
-  the sentence that disclaims accreditation, and it is the strongest link here because it invites the
-  reader to audit us. The pciai.org link answers "what happens when a model does this forecasting",
-  raised by the agenda item that says a model trained on the invoice register learns the wrong index.
+  in a block at the end, and none of them repeated anywhere in the file. The syllabus link is the ask
+  and answers "what else is in this". The credentialfinder.org link answers "how do I check a
+  certifying body I have not heard of", raised by the sentence that disclaims accreditation, and it is
+  the strongest link here because it invites the reader to audit us; it goes to the comparison of what
+  each body examines rather than to a verification page on the hub, because a second hub link in one
+  listing is the duplication this estate does not run. The pciai.org link answers "what happens when a
+  model does this forecasting", raised by the agenda item that says a model trained on the invoice
+  register learns the wrong index.
   No pciworld.org and no pciglobal.ai: this listing raises no careers question and no regional one, and
   a link with no question behind it is exactly the footprint _LINK_ARCHITECTURE.md exists to avoid.
   THE PRESENTER GATE. Do not publish with the presenter block empty or filled with "PCI Faculty". A
@@ -208,7 +211,7 @@ It is not for anyone hoping to watch a tool demonstrated: no product appears in 
 
 ### What the session does not do
 
-The 40/40/20 proportions describe the Body of Knowledge, and no examination weighting is published or discussed in the hour, because the exam blueprint is an open decision. Nor is any comparison drawn that places another body's credential below PCI's. PCI holds no accreditation, recognition or endorsement from any body and claims none; if that matters to you, and it should, [the checks worth running on any certifying body](https://credentialfinder.org/how-to-verify-a-certification) sets out how to test it before you spend an hour with us.
+The 40/40/20 proportions describe the Body of Knowledge, and no examination weighting is published or discussed in the hour, because the exam blueprint is an open decision. Nor is any comparison drawn that places another body's credential below PCI's. PCI holds no accreditation, recognition or endorsement from any body and claims none; if that matters to you, and it should, read [what each certifying body actually puts on its examination, ours included](https://credentialfinder.org/best-project-controls-certification) before you spend an hour with us.
 
 ### Before you come
 
@@ -303,4 +306,4 @@ The optional registration question is optional in the form and it earns its plac
 
 ---
 
-*Links: three, one per domain, each attached to a question its own sentence raises. The ask points at [the PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge), which answers what the 13 domains and 61 knowledge areas contain for someone deciding whether the hour is worth a diary slot. The accreditation sentence points at [the checks worth running on any certifying body](https://credentialfinder.org/how-to-verify-a-certification), because a stranger being asked for an hour of their time is entitled to audit us first and that is the honest place to send them. The AI question points at [the written policy position](https://pciai.org/ai-policy-for-project-controls), which keeps "will a model catch this" out of the live Q&A where it would take the last ten minutes. No fourth link, nothing to pciworld.org or pciglobal.ai, and no link at all in the reminder emails except the joining link.*
+*Linking note: three links in the listing, one per domain, each attached to a question its own sentence raises. The ask under "Before you come" points at projectcontrolsinstitute.org/body-of-knowledge, which answers what the 13 domains and 61 knowledge areas contain for someone deciding whether the hour is worth a diary slot. The accreditation sentence points at credentialfinder.org/best-project-controls-certification, because a stranger being asked for an hour of their time is entitled to audit us first, and the honest form of that audit is reading what each body examines rather than what it asserts. That sentence previously pointed at a verification slug on credentialfinder.org that does not exist; the hub's own verification page would have been the literal replacement, but it would have put a second link to the hub in one listing, which is the pattern this estate does not run. The AI question in the FAQ points at pciai.org/ai-policy-for-project-controls, which keeps "will a model catch this" out of the live Q&A where it would take the last ten minutes. Three earlier duplicates were cut: each of the three URLs was repeated in this note as a live link, so a three-link listing audited as a six-link one. Nothing to pciworld.org or pciglobal.ai — the listing raises no career and no regional question. No link of any kind in the reminder emails except the joining link, and none in the recording notice except the recording. Reciprocally, the hub's earned value management training page should carry one line pointing at the recording once it exists, anchored "the month-end hour, worked by hand".*

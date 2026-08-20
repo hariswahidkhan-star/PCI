@@ -84,7 +84,7 @@ notes: |
 when_to_post:  Launch week + 3. Publish only after the hub original has been live and indexed for at least a full week, and leave at least five clear days after the DEV article: both are technical, both carry the same locked arithmetic under a canonical, and the two audiences overlap at the edges. Tuesday, 08:00–09:00 US Eastern (13:00–14:00 UK), when the tag feeds are busiest and a post gets its longest run near the top. Hashnode weights early engagement, so the author has to be available to answer comments for the first six hours; an unanswered technical post here is a dead post. Avoid Fridays and US public holidays.
 ---
 
-Paste the canonical into the republishing field in the Hashnode post settings before the first publish. It is not optional, and it cannot be done properly afterwards.
+*Instruction to whoever publishes this, not part of the article: paste the canonical into the republishing field in the Hashnode post settings before the first publish. It is not optional, and it cannot be done properly afterwards.*
 
 ---
 

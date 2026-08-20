@@ -183,7 +183,7 @@ and it corroborates nothing if the details drift.
 | Display name | Project Controls Institute Global |
 | Short name, where a field is tight | Project Controls Institute |
 | Abbreviation | PCI, and only after the full name has appeared in the same field |
-| Website | `https://projectcontrolsinstitute.org` — no trailing path, no UTM, no variation |
+| Website | https://projectcontrolsinstitute.org — no trailing path, no UTM, no variation |
 | Credential names, in full | PCI AI Project Controls Leader (PCL-AI) · PCI AI Project Finance Leader (PFL-AI) · PCI Project Management Leader – AI (PML-AI) |
 | Name, address, telephone | Exactly as on the hub's About page and Google Business Profile, to the punctuation |
 
@@ -265,8 +265,8 @@ argument it exists to make.
 | Instagram and Threads | Bio | The tagline, or the 100-character version | 150 characters — the 160 overflows both |
 | YouTube | Channel description | 160 characters, then the 100 words below it (796 characters together) | 1,000 characters — the 250-word version is 1,591 and does not fit |
 | Slide, document and PDF footers | One line | Tagline | n/a |
-| Any second URL field labelled for it | Syllabus, programme or "learn more" | `https://projectcontrolsinstitute.org/body-of-knowledge` | n/a |
-| Any field labelled verification | Verify a credential | `https://credentialfinder.org/how-to-verify-a-certification` | n/a |
+| Any second URL field labelled for it | Syllabus, programme or "learn more" | https://projectcontrolsinstitute.org/body-of-knowledge | n/a |
+| Any field labelled verification | Verify a credential | https://projectcontrolsinstitute.org/verify.html | n/a |
 
 **Two rules the table depends on.**
 
@@ -326,15 +326,19 @@ after the trade press, not before it.
 
 ---
 
-*Internal links: the directory Website field is not an editorial link and is not counted against
-_LINK_ARCHITECTURE.md §2 — it is the same URL in every listing by design, because identical is the
-point. Two deep links exist in this set and each sits in a field built for it: the [PCL-AI Body of
-Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) goes in a syllabus or "learn
-more" field, answering the question every description raises about what 13 domains contain; [the
-standard method for checking what a credential examines](https://credentialfinder.org/how-to-verify-a-certification)
-goes in a verification field, answering how a stranger would check any of this independently. No
-listing carries a third deep link, and none carries pciai.org, pciworld.org or pciglobal.ai, because
-no directory field raises a question those domains answer and a profile listing all five domains is
-the footprint the estate exists to avoid. Once the first profiles are live, the hub's About page
-cites the Credential Registry entry once with the anchor "the Institute's registry entry", and every
-live profile URL is added to the sameAs array on all five domains.*
+*Internal links: this file is a set of field values, not a published page, and no single profile ever
+shows more than two of them. The directory Website field is not an editorial link and is not counted
+against _LINK_ARCHITECTURE.md §2 — it is the same URL in every listing by design, because identical
+is the point. Two deep links exist in the set and each sits in a field built for it, one per listing
+at most: the [PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) goes
+in a syllabus or "learn more" field, answering the question every description raises about what 13
+domains contain; [how to check that a PCI credential is genuine](https://projectcontrolsinstitute.org/verify.html)
+goes in a verification field, answering how a stranger confirms any of this without taking the
+listing's word for it. That verification field previously carried a credentialfinder.org address for
+a page that was never authored; credentialfinder.org compares credentials rather than verifying
+them, so the field now points at the Institute's own verification page, which exists. No listing
+carries a third deep link, and none carries pciai.org, pciworld.org or pciglobal.ai, because no
+directory field raises a question those domains answer and a profile listing all five domains is the
+footprint the estate exists to avoid. Once the first profiles are live, the hub's About page cites
+the Credential Registry entry once with the anchor "the Institute's registry entry", and every live
+profile URL is added to the sameAs array on all five domains.*

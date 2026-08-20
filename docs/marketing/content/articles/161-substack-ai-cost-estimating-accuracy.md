@@ -103,7 +103,7 @@ Precision below a half sounds like failure and is not, because the cost of a fal
 
 An estimate is not only a bid. Where progress is measured by a cost-based input method, the total expected cost is the denominator of percentage complete, so a model that runs 15% low on engineered work overstates progress from the first month.
 
-Overstated progress means revenue recognised early, and a catch-up reversal in the period the forecast is corrected. The estimating error becomes a reporting error without anyone touching the ledger.
+Overstated progress means revenue recognised early, and a catch-up reversal in the period the forecast is corrected. The estimating error becomes a reporting error without anyone touching the ledger, which is [how a cost forecast turns into reported profit](https://projectcontrolsinstitute.org/eac-accounting) whether or not anyone intended it to.
 
 This is the overlap PCI was built for. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy, almost never on how an estimate was produced. An engineer is examined on quantities and rates, almost never on cut-off.
 
@@ -117,7 +117,7 @@ The calculation worked examples across the PCI AI Project Finance Leader (PFL-AI
 Enough to have several in each segment you actually bid, which in practice means a minimum of five or six per type rather than a large total. Twelve projects spread across four types gives you three per type and an error bar too wide to act on. Test the segments you win work in and leave the rest untested rather than pretending.
 
 **Is a model more accurate than an experienced estimator?**
-On repeat work with good historical data, often yes, and faster. On first-of-a-kind work it is worse, because it has no case to reason from and will still return a confident number. The productive arrangement is the model producing the first pass and a check against comparables, and the estimator owning the judgement about whether this job resembles the history at all.
+On repeat work with good historical data, often yes, and faster. On first-of-a-kind work it is worse, because it has no case to reason from and will still return a confident number, which is the split that runs through [how estimators are actually using models today](https://pciai.org/ai-for-cost-estimating-in-construction). The productive arrangement is the model producing the first pass and a check against comparables, and the estimator owning the judgement about whether this job resembles the history at all.
 
 **Does a wide accuracy range mean the estimate is bad?**
 No. Early estimates are prepared at low definition and carry a wide expected range by design; that is what the estimate class system exists to communicate. A narrow range quoted at concept stage is the warning sign, not a wide one. What matters is that the stated range matches the definition maturity and that the model was tested at that same maturity.
@@ -132,4 +132,4 @@ In the basis of estimate, with the model version, the test set, the date and the
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so nothing here is a copy of a page on the PCI site.*
 
-*Internal links: this piece should link to [AI for cost estimating in construction](https://pciai.org/ai-for-cost-estimating-in-construction) with the anchor "where a model helps an estimator and where it does not", to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with that anchor, and to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how the estimate becomes the denominator of percentage complete".*
+*Linking note: two links are now in the body, one per domain. "How a cost forecast turns into reported profit" sits where the estimating error becomes a reporting error (https://projectcontrolsinstitute.org/eac-accounting), because that sentence raises the question of how the forecast reaches the accounts at all. "How estimators are actually using models today" sits in the FAQ comparing a model with an experienced estimator (https://pciai.org/ai-for-cost-estimating-in-construction). The AI in project controls pillar was dropped, because two links to pciai.org from one piece is the tell the architecture warns about, and the cost estimating page is the closer answer. The hub link was retargeted from IFRS 15 to EAC accounting, which is what the sentence actually asks. Reciprocal: the pciai.org cost estimating page has a real reason to cite the back-testing method here, and that is the link back worth making.*

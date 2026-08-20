@@ -41,7 +41,7 @@ The gap between a planning engineer and a senior one is not more schedule. It is
 | Planning manager | Method, systems and planners across projects | Can you make it repeatable without you? | A standard other projects adopted |
 | Project controls manager | Cost, schedule, reporting and the team | Can you answer to a board for the whole number? | A decision taken on your analysis |
 
-The gate column is the useful one: each rung asks a different question, and excelling at the previous one is not an answer.
+The gate column is the useful one: each rung asks a different question, and excelling at the previous one is not an answer. For the rung below the table, [the route into a first planning role](https://pciworld.org/how-to-become-a-planning-engineer) covers how people arrive at it in the first place.
 
 ## The arithmetic: pricing a four-week slip
 
@@ -85,7 +85,7 @@ Say the deterministic remaining duration is 320 days, the P50 comes back at 338 
 
 The gap between deterministic and P80 — 46 days here — is the schedule contingency conversation. Presenting the 320 as a commitment and the 366 as a risk is the mistake; the deterministic date usually has a far lower confidence than anyone in the room assumes.
 
-How to build that model, and what makes it worthless, is covered in [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis).
+Building the distribution behind those numbers is its own discipline, and [what makes a schedule risk model worth quoting](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) sets out how it is done and how it fails.
 
 ## Six moves that get you the step up
 
@@ -115,7 +115,7 @@ The senior planning role sits exactly on the boundary between delivery and money
 
 A chartered accountant is examined on when revenue may be recognised, almost never on a driving path. An engineer is examined on float, almost never on cut-off. The project lives in the overlap, and so does the loss.
 
-PCI examines that overlap deliberately. The PCI AI Project Controls Leader (PCL-AI) credential runs to 13 domains and 61 knowledge areas, with a Body of Knowledge proportioned **40 / 40 / 20** across finance and reporting, project management and governed AI, and resting on **113 mandatory PCI Standards carrying 532 process requirements**. For what a planning credential can and cannot evidence, see [certified planning engineer, honestly assessed](https://projectcontrolsinstitute.org/certified-planning-engineer).
+PCI examines that overlap deliberately. The PCI AI Project Controls Leader (PCL-AI) credential runs to 13 domains and 61 knowledge areas, with a Body of Knowledge proportioned **40 / 40 / 20** across finance and reporting, project management and governed AI, and resting on **113 mandatory PCI Standards carrying 532 process requirements**. A credential evidences examined knowledge and nothing more; it does not grant the scope, and the scope is what the step up is made of.
 
 ## Frequently asked questions
 
@@ -126,11 +126,11 @@ Commonly five to eight years from a first construction or project role, but the 
 Not usually to be promoted internally. It matters most at the point you move employers or markets, where a client-approved CV needs something external to point at. Certify against the gap on your record rather than the title you want, and the gap is usually cost and contract rather than more scheduling.
 
 **Is senior planning engineer a better path than project controls manager?**
-They are the same path at different depths. Senior planning goes deeper into schedule, risk and delay, and stays technical. Project controls management widens into cost, reporting and people, and gives up some depth. Choose by whether you want to be the person who answers the technical question or the person who answers for the whole number.
+They are the same path at different depths. Senior planning goes deeper into schedule, risk and delay, and stays technical. Project controls management widens into cost, reporting and people, and gives up some depth; [what a project controls engineer owns day to day](https://pciworld.org/what-does-a-project-controls-engineer-do) is the clearest picture of what that widening looks like. Choose by whether you want to be the person who answers the technical question or the person who answers for the whole number.
 
 **What is the hardest interview question at this grade?**
-"Which estimate at completion did you sign, and why not one of the others?" It cannot be answered without understanding the four methods and their assumptions, and it exposes anyone who has only ever produced the number a system generated.
+"Which estimate at completion did you sign, and why not one of the others?" It cannot be answered without understanding the four methods and their assumptions, and it exposes anyone who has only ever produced the number a system generated. The rest of the ground an interview at this grade covers is in [the twenty planning questions that come up most](https://pciworld.org/planning-engineer-interview-questions).
 
 ---
 
-*Internal links: link to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas), [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) and [certified planning engineer, honestly assessed](https://projectcontrolsinstitute.org/certified-planning-engineer), each with that anchor; the how to become a planning engineer and project controls interview questions pieces should link back here with the anchor "senior planning engineer career path".*
+*Linking note: this piece carried three links to one domain, so two were removed. The one kept is "what makes a schedule risk model worth quoting", because the P80 section raises how the distribution is built and deliberately does not answer it. The four EAC formulas link went because the article works all four methods itself; the certified planning engineer link went as surplus to the same domain, and the sentence it sat in now makes the same point without pointing anywhere. Three same-domain links replace them: "the route into a first planning role" under the rung table, "what a project controls engineer owns day to day" in the two-paths answer, and "the twenty planning questions that come up most" after the hardest-question answer. Reciprocal: the how to become a planning engineer piece should link back here with the anchor "the rungs above a first planning job".*

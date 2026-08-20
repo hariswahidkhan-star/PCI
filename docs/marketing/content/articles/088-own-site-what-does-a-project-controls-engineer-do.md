@@ -17,7 +17,7 @@ ab_id:         —
 
 # What does a project controls engineer do?
 
-A project controls engineer keeps the cost and schedule baseline honest, measures what has actually been built rather than what has been spent, and turns that into a forecast someone can act on. The day is progress data in the morning, variance analysis by midday, and a defence of one number in the afternoon.
+What does a project controls engineer do? Keep the cost and schedule baseline honest, measure what has actually been built rather than what has been spent, and turn that into a forecast someone can act on. The day is progress data in the morning, variance analysis by midday, and a defence of one number in the afternoon.
 
 The role exists because a project generates two versions of the truth — the site's and the ledger's — and somebody has to reconcile them before the board sees either.
 

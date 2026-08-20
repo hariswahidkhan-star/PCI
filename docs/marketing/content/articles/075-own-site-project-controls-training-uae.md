@@ -17,7 +17,7 @@ ab_id:         —
 
 # Project controls training UAE: the real 2026 options
 
-Project controls training in the UAE now comes in five forms: classroom short courses at licensed institutes, employer in-house programmes, academic modules, software training, and independent certification examined remotely. The first four teach. Only the last produces evidence somebody else can verify, and in 2026 the last no longer requires you to be in the country.
+Project controls training UAE-wide now comes in five forms: classroom short courses at licensed institutes, employer in-house programmes, academic modules, software training, and independent certification examined remotely. The first four teach. Only the last produces evidence somebody else can verify, and in 2026 the last no longer requires you to be in the country.
 
 ## What project controls training UAE providers actually sell
 
@@ -29,7 +29,7 @@ Project controls training in the UAE now comes in five forms: classroom short co
 | Software training (Primavera P6, Power BI, Deltek) | Days | The vendor or partner | A vendor certificate | Version-dependent, teaches a tool not a discipline |
 | Independent certification by examination | Self-paced study, one examination | A certifying body, independently | A verifiable credential and a renewal obligation | Requires real preparation; no attendance route |
 
-Regulators differ by emirate. Dubai licenses private training institutes through the Knowledge and Human Development Authority; other emirates run their own, so a Dubai attestation does not automatically cover Abu Dhabi.
+Regulators differ by emirate. Dubai licenses private training institutes through the Knowledge and Human Development Authority; other emirates run their own, so a Dubai attestation does not automatically cover Abu Dhabi. [How to judge a Dubai course](https://pciglobal.ai/project-controls-courses-dubai) goes through that licensing and what it does not promise.
 
 Licensing regulates the provider and accreditation regulates the certifying body. Assessment is the only one that is about you.
 
@@ -41,7 +41,7 @@ Governed AI has entered scope, because a forecast assembled with model assistanc
 
 ## The model UAE project professionals are expected to know
 
-UAE entities report under international accounting standards, so the revenue on your project is recognised under IFRS 15. In the Institute's own words rather than reproduced, the standard runs in five steps.
+UAE entities report under international accounting standards, so the revenue on your project is recognised under IFRS 15. In the Institute's own words rather than reproduced, the standard runs in five steps, with [measuring progress under IFRS 15](https://projectcontrolsinstitute.org/ifrs-15-for-construction) worked through in detail separately.
 
 **Step one: identify the contract.** An enforceable agreement with commercial substance, where the parties are committed and it is probable you will collect what you are owed.
 
@@ -89,7 +89,7 @@ Evidenced progress measurement rather than estimated progress, since certificati
 
 Reporting into IFRS-based accounts, since the monthly project position ends up in the statutory numbers. The UAE has also operated a federal corporate tax regime for financial years beginning on or after 1 June 2023, another reason project numbers get read closely, though nothing here is tax advice.
 
-Tools sit below all of that; P6 competence is assumed rather than admired.
+Tools sit below all of that; P6 competence is assumed rather than admired. Where it is genuinely missing, [choosing a P6 course in Dubai](https://pciglobal.ai/primavera-p6-course-in-dubai) is a decision of its own.
 
 ## Where PCI fits
 
@@ -123,7 +123,7 @@ Total each option over nine years before comparing, including membership and two
 Training providers are, and the arrangements differ by emirate: Dubai licenses private institutes through the Knowledge and Human Development Authority, while other emirates run their own. That licensing regulates delivery, not your competence. No UAE authority licenses project controls as a profession, so a credential's worth depends on who examined you against what standard.
 
 **Can I train in the UAE and certify with an international body?**
-Yes, and it is a common combination. Take classroom or in-house training locally to close a named gap, then sit an independently examined certification a future employer anywhere can verify. Keep the two separate on purpose: a body that both taught you and awarded the result is worth less to a recruiter who understands the conflict.
+Yes, and it is a common combination. Take classroom or in-house training locally to close a named gap, then sit an independently examined certification a future employer anywhere can verify. Keep the two separate on purpose: a body that both taught you and awarded the result is worth less to a recruiter who understands the conflict. If you may move on later, [how the British market judges the same credentials](https://pciglobal.ai/project-controls-certification-uk) is a useful check.
 
 **Do I have to travel to sit the exam?**
 No. PCI's examination is sat online under remote proctoring, with a test centre available if you would rather the room were someone else's problem. Check in under the same name as your enrolment record, since mismatches are the commonest cause of delays, and test your equipment where you will sit.
@@ -139,4 +139,4 @@ Because the forecast you produce becomes revenue, margin and a contract asset in
 
 ---
 
-*Internal links: this guide should link to [project controls courses in Dubai](https://pciglobal.ai/project-controls-courses-dubai) with the anchor "choosing a Dubai course", to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "measuring progress under IFRS 15", to [the project controls training pillar](https://projectcontrolsinstitute.org/project-controls-training) with the anchor "how the training routes compare", and to [project controls certification UK](https://pciglobal.ai/project-controls-certification-uk) with the anchor "how the British market screens".*
+*Internal links: placed in the body. Three on pciglobal.ai — project controls courses in Dubai, at the sentence about emirate-by-emirate licensing; the Primavera P6 course in Dubai, where the piece says tool skill is assumed; and project controls certification UK, in the FAQ about training here and certifying elsewhere, which is the sentence that raises how another market reads the same credential. One cross-estate link, to the hub's IFRS 15 for construction page, at the five-step model, because the worked dirham example turns on the measure of progress and the hub owns that explanation. The training pillar link in the original note was dropped to hold one link per cross-estate domain; IFRS 15 sits in the stronger sentence. Reciprocal: the Dubai and India guides link here for the wider UAE picture, with their own anchors.*

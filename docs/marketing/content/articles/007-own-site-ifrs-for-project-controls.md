@@ -51,7 +51,9 @@ IFRS 15 replaced the old construction-contract approach with a single model buil
 
 **Step five: recognise revenue as each obligation is satisfied.** Either over time, as the work progresses, or at a point in time when control passes.
 
-Step five is the one that pulls project controls into financial reporting. Revenue is recognised over time when the customer receives and consumes the benefit as work is performed, or controls the asset as it is created, or when the asset has no alternative use to the contractor and there is an enforceable right to payment for work completed to date. Most construction contracts meet at least one of those tests, and [the five steps applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction) works through which ones qualify, what counts as a single contract, and when a variation becomes revenue.
+Step five is the one that pulls project controls into financial reporting. Revenue is recognised over time when the customer receives and consumes the benefit as work is performed, or controls the asset as it is created, or when the asset has no alternative use to the contractor and there is an enforceable right to payment for work completed to date. Most construction contracts meet at least one of those tests.
+
+Which ones qualify, what counts as a single contract, and when a variation becomes revenue are worked through in [the five steps applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
 
 ## Measuring progress: input methods and output methods
 

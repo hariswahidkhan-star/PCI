@@ -50,7 +50,9 @@ notes: |
   who has never computed a CPI, and a cold open that needs a glossary is not a hook. The canonical
   consequence still lands in full where the arithmetic is shown. Not blended with A or B.
   Title question answered by the standfirst and again in the first body line, inside the first 25
-  words either way and well within the AEO window.
+  words either way and well within the AEO window. The consequence line and the definition sit in
+  one opening paragraph rather than two, so the hook still lands first and the primary keyword is
+  inside the opening 60 words where an answer engine looks for it.
   NUMBERS AUDIT: 2,200,000 / 1,850,000 / 240,000 / 2,090,000 / 1.19 / 1.05 from _STORY.md §3 with
   both divisions and the addition shown. No new arithmetic is derived from them — the 13 per cent
   rule of thumb belongs to the Project Times piece and is deliberately not repeated. Register figures
@@ -81,9 +83,7 @@ notes: |
 
 *Your velocity is real. Your cost report has a hole in it, and the hole is the invoice that hasn't arrived.*
 
-Your best sprint this quarter was probably the one whose invoices hadn't arrived yet.
-
-Agile earned value is the budget attached to work your team has had accepted, divided by the cost your ledger has posted. Accepted work closes at sprint end. Cost closes at the ledger's cut-off. Two dates, one division, and nothing on your board says they disagree.
+Your best sprint this quarter was probably the one whose invoices hadn't arrived yet. Agile earned value is the budget attached to work your team has had accepted, divided by the cost your ledger has posted. Accepted work closes at sprint end. Cost closes at the ledger's cut-off. Two dates, one division, and nothing on your board says they disagree.
 
 ## Agile earned value in three numbers
 
