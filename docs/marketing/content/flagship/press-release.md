@@ -28,6 +28,15 @@ notes: |
   The only evaluative words left are attributed inside the quotation, which is where a reporter expects
   opinion and where it is fair to place it. Third person throughout, present perfect in the lead, no
   second person and no direct address, because a release that says "you" is an advertisement.
+  PRIMARY KEYWORD PLACEMENT. "Project controls certification" is the estate's head term and a wire
+  headline is the wrong place to carry it: the headline has to name the organisation in full for a
+  correspondent reading cold. It sits once instead in the About block, which is the paragraph a trade
+  desk republishes verbatim and the one an indexer reads as the definition of the body. Once is the
+  whole placement; a release is filed, not optimised, and repeating it would show.
+  PARAGRAPH LENGTH IS A DISTRIBUTION DECISION. The worked example, the credential figures and the
+  closing block are each split so that no paragraph runs past about 70 words. A sub-editor cuts a long
+  paragraph whole, and the denials, the 15,613 scope sentence and the invitation are the three things
+  most likely to be lifted alone, so each stands as its own block.
   HEADLINE LENGTH DEVIATES FROM _BRIEF.md §4 DELIBERATELY. The 50–60 character rule governs an SEO page
   title competing in a results list. This is a wire headline read in an inbox and on a newsroom feed,
   where the convention is 60–90 characters and where naming the organisation in full is mandatory: "PCI
@@ -85,17 +94,25 @@ notes: |
 
 **[CITY], [COUNTRY], [DD MONTH 2026]** — Project Controls Institute Global has published [the Bodies of Knowledge behind its three credentials](https://projectcontrolsinstitute.org/body-of-knowledge) in full, before any examination has been sat. Each syllabus examines project finance and project delivery together, on the Institute's argument that a project's money is lost in the gap between the accountant's ledger and the engineer's schedule.
 
-Accountancy examinations rarely test float. Engineering examinations rarely test cut-off. The arithmetic the Institute puts behind that claim is small enough to check by hand: earned value of 2,200,000 against invoiced cost of 1,850,000 gives a cost performance index of 1.19 (2,200,000 ÷ 1,850,000), and the report reads as a job running under budget. Add an accrual of 240,000 for work done and not yet invoiced, cost becomes 2,090,000, and the index is 1.05 (2,200,000 ÷ 2,090,000). Fourteen points moved on one missing accrual. The error is accounting and the damage is delivery. The figures are illustrative arithmetic, not a case study.
+Accountancy examinations rarely test float. Engineering examinations rarely test cut-off. The arithmetic the Institute puts behind that claim is small enough to check by hand: earned value of 2,200,000 against invoiced cost of 1,850,000 gives a cost performance index of 1.19 (2,200,000 ÷ 1,850,000), and the report reads as a job running under budget.
 
-The PCI AI Project Controls Leader (PCL-AI) examines 13 domains and 61 knowledge areas. The PCI AI Project Finance Leader (PFL-AI) examines 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) examines 16 domains and 63 knowledge areas. All three sit on 113 mandatory PCI Standards carrying 532 process requirements, which are certification requirements set by the Institute and are not regulation. The published material includes 92 sector case studies across three volumes. A suite of 15,613 machine calculation checks runs against the PFL-AI and PML-AI calculation content, all of them passing; PCL-AI has no equivalent suite.
+Add an accrual of 240,000 for work done and not yet invoiced, cost becomes 2,090,000, and the index is 1.05 (2,200,000 ÷ 2,090,000). Fourteen points moved on one missing accrual. The error is accounting and the damage is delivery. The figures are illustrative arithmetic, not a case study.
+
+The PCI AI Project Controls Leader (PCL-AI) examines 13 domains and 61 knowledge areas. The PCI AI Project Finance Leader (PFL-AI) examines 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) examines 16 domains and 63 knowledge areas.
+
+All three sit on 113 mandatory PCI Standards carrying 532 process requirements, which are certification requirements set by the Institute and are not regulation. The published material includes 92 sector case studies across three volumes. A suite of 15,613 machine calculation checks runs against the PFL-AI and PML-AI calculation content, all of them passing; PCL-AI has no equivalent suite.
 
 [SPOKESPERSON NAME], [TITLE] at the Project Controls Institute, said: "The gap is in what each profession is examined on, not in what its practitioners can do. Someone signs a forecast whose accuracy turns on a cut-off decision no examination they ever sat has tested, and finds out at year end. We have published what we examine so that it can be argued with before anyone sits anything. A syllabus nobody has read is not a standard."
 
-The Institute is publishing a syllabus, not opening an examination. The PCL-AI Body of Knowledge is 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI; that is the shape of the syllabus, and no examination weighting has been set. The Institute holds no accreditation, recognition or endorsement from any other body and claims none. It publishes no pass rate and no salary or outcome claim. Practitioners and employers are invited to read the domains and knowledge areas against their own last month-end, and to apply to every issuer including this one the test that works on a certifying body nobody has heard of: read what it examines, not what it promises. Setting that beside [what the established controls credentials examine](https://credentialfinder.org/best-project-controls-certification) is a check that costs nothing.
+The Institute is publishing a syllabus, not opening an examination. The PCL-AI Body of Knowledge is 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI; that is the shape of the syllabus, and no examination weighting has been set.
+
+The Institute holds no accreditation, recognition or endorsement from any other body and claims none. It publishes no pass rate and no salary or outcome claim.
+
+Practitioners and employers are invited to read the domains and knowledge areas against their own last month-end, and to apply to every issuer including this one the test that works on a certifying body nobody has heard of: read what it examines, not what it promises. Setting that beside [what the established controls credentials examine](https://credentialfinder.org/best-project-controls-certification) is a check that costs nothing.
 
 **About the Project Controls Institute**
 
-Project Controls Institute Global is an independent certifying body for project controls, project finance and project management. It sets the PCI Standards, maintains the Bodies of Knowledge behind the PCL-AI, PFL-AI and PML-AI credentials, and publishes them in full for public reading. The PCI Standards are the Institute's own certification requirements. Nothing the Institute publishes is legal, tax or accounting advice.
+Project Controls Institute Global is an independent certifying body for project controls, project finance and project management. It sets the PCI Standards and maintains the Bodies of Knowledge behind the PCL-AI, PFL-AI and PML-AI credentials. The Institute's project controls certification syllabuses are published in full for public reading. The PCI Standards are the Institute's own certification requirements. Nothing the Institute publishes is legal, tax or accounting advice.
 
 **Media contact**
 

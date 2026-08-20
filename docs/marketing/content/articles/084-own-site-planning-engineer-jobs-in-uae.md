@@ -4,7 +4,7 @@ type:          data-study
 title:         Planning engineer jobs in UAE: where the demand sits
 meta:          Planning engineer jobs in UAE concentrate by employer type and sector, not by city. How to measure the market yourself, and why good people get filtered out.
 primary_kw:    planning engineer jobs in UAE
-secondary_kw:  UAE construction recruitment, transferable visa, applicant screening, precision and recall
+secondary_kw:  where planning engineer demand sits in the UAE, UAE planning engineer employer types, transferable visa, applicant screening
 pillar:        Certification and careers
 credential:    suite
 target_domain: pciworld.org
@@ -88,7 +88,11 @@ Read the two results together. The tighter filter looks marginally better on F1,
 
 For you it is a disaster. Your chance of surviving the screen as a qualified candidate has fallen from 0.75 to 0.50, and twenty qualified people are now invisible, many of them purely on vocabulary.
 
-The practical response is not keyword stuffing, which fails at the human stage. It is to write the true words the screen is looking for: the actual tool name and version, the contract form, the sector term the market uses, and the country. If you have run a shutdown under a FIDIC-based form using P6 EPPM, say exactly that.
+The practical response is not keyword stuffing, which fails at the human stage. It is to write the true words the screen is looking for: the actual tool name and version, the contract form, the sector term the market uses, and the country.
+
+Write both versions of one line and compare them. "Responsible for planning and progress reporting on a major project" carries nothing a filter can match on. "Planned a refinery turnaround in Abu Dhabi in Primavera P6 EPPM under a FIDIC-based contract, statusing weekly and writing the delay narrative" matches on tool, version, sector, country and contract form at once.
+
+The second version is only worth writing if every clause of it is true of you. The screen is not the interview, and the interview is where an invented line comes apart.
 
 ## What this market buys now that it did not buy in 2016
 

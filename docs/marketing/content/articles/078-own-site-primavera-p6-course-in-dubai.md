@@ -63,31 +63,17 @@ Calendars are the third trap, and in the UAE they are not the default. The local
 
 ## What the tool will not tell you
 
-Total float belongs to the path; free float belongs to the activity. Total float is how long an activity can slip before the project end moves.
+Driving relationships matter more than the critical path label. The path that is actually pushing your milestone can include activities with small positive float, and a layout filtered to zero-float activities will hide every one of them.
 
-Free float is how long it can slip before its own successor's early start moves. A planner who reports the first and gives away the second has handed over time that was never available.
-
-Float that increases is usually bad news. When a critical path slips, the float on parallel non-critical work rises by the same amount, and a report saying "float has improved across temporary works" has described a delay as an improvement.
-
-Driving relationships matter more than the critical path label. The path that is actually pushing your milestone can include activities with small positive float, and a tool set to show only zero-float activities will hide them.
+The second blind spot is float a setting produced rather than the work. Negative float that came from a typed constraint date rather than from logic or progress is arithmetic, not criticality, and a report that presents it as criticality is describing somebody's preference as a fact about the job.
 
 None of this is a P6 feature. It is scheduling method, and it is what separates a planner from a person who owns the licence.
-
-## What does a slipped path cost?
-
-Six days is an arithmetic question. Take time-related site costs of AED 12,000 per working day: 6 × 12,000 = **AED 72,000** on that path alone, before any argument about entitlement.
-
-Earned value states the same problem as a ratio. If earned value is AED 40.0m against a planned value of AED 44.0m, the schedule performance index is 40.0 ÷ 44.0 = **0.909**, and that number exists before anyone writes a narrative about it.
-
-The consequence travels further than most planning courses admit. The delay has to be accrued at month-end whether or not it is invoiced, and it raises the total expected cost that a cost-to-cost revenue measure divides by, which moves recognised revenue.
-
-An engineer is examined on float and progress measurement and almost never on cut-off; an accountant is examined on when revenue may be recognised and almost never on a driving path. The schedule change lands in both places and is usually only understood in one.
 
 ## How to check a provider in Dubai
 
 Ask which version of P6 is taught, and whether it matches what your employer runs. Ask whether you get a licence to practise on during and after the course.
 
-Ask for the certificate wording in advance. "Attended" and "assessed" are different words and employers read them differently.
+Ask for the certificate wording in advance. "Attended" and "assessed" are different words and employers read them differently, and if you want the second word on paper, [the examined routes available across the UAE](https://pciglobal.ai/project-controls-training-uae) are where it comes from.
 
 Ask who the trainer is and what they have planned. A trainer who has never defended a programme in a client review will teach you the buttons and none of the judgement.
 
@@ -99,7 +85,7 @@ PCI does not sell software training and does not certify tool operation; [what a
 
 The Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. Behind the syllabus sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
 
-The sensible combination for a planner in the UAE is both: tool training for the software, an examined credential for the method, and [the examined routes available across the UAE](https://pciglobal.ai/project-controls-training-uae) cover that second half. PCI is an independent certifying body, examinations are delivered online under proctoring, and nothing here is legal, tax or accounting advice.
+The sensible combination for a planner in the UAE is both: tool training for the software, an examined credential for the method. PCI is an independent certifying body, examinations are delivered online under proctoring, and nothing here is legal, tax or accounting advice.
 
 ## Frequently asked questions
 
@@ -120,4 +106,4 @@ Whether your schedule is honest. Earning rules, progress measurement, the differ
 
 ---
 
-*Internal links: placed in the body. Two on pciglobal.ai — project controls courses in Dubai, at the end of the provider checklist, where the same questions apply to cost and reporting courses; and project controls training UAE, at the sentence recommending tool training plus an examined credential, since that is where a reader asks where the second half comes from. The original note gave the Dubai target as /project-controls-courses-in-dubai, which does not exist; the live slug is /project-controls-courses-dubai and that is what is in the body. One cross-estate link, to the hub's Primavera P6 certification page, at the line saying PCI does not certify tool operation, which is the sentence that raises what a P6 certification does prove. The second hub link proposed, to building a realistic schedule in P6, was dropped to hold one link per cross-estate domain; it is the better reciprocal, because that page's out-of-sequence section raises the retained logic question worked here.*
+*Internal links: placed in the body. Two on pciglobal.ai — project controls courses in Dubai, at the end of the provider checklist, where the same questions apply to cost and reporting courses; and project controls training UAE, inside the provider checklist at the difference between an "attended" and an "assessed" certificate, which is the sentence that asks where an assessed route comes from. The original note gave the Dubai target as /project-controls-courses-in-dubai, which does not exist; the live slug is /project-controls-courses-dubai and that is what is in the body. One cross-estate link, to the hub's Primavera P6 certification page, at the line saying PCI does not certify tool operation, which is the sentence that raises what a P6 certification does prove. The second hub link proposed, to building a realistic schedule in P6, was dropped to hold one link per cross-estate domain. The prolongation-cost section and the total-float-versus-free-float passage were cut because both restated the Saudi planning guide on the same domain almost sentence for sentence; what remains here is the retained-logic-versus-progress-override material, which that page does not carry. No reciprocal link is asked for.*

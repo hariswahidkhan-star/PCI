@@ -19,8 +19,6 @@ ab_id:         AB-00147
 
 No, and the honest version of that answer is more useful than either the hype or the reassurance. AI and planning engineer roles are separating into two halves: the mechanical half, which is already being automated, and the judgement half, which decides what the logic means. Only one of those halves is at risk.
 
-Written for LinkedIn as an original. It sits under the Institute's AI in project controls pillar.
-
 ## What is the planner's job, once you strip out the software?
 
 A planner produces a defensible statement about when things will finish and what has to happen first. The programme file is the record of that statement, not the statement itself.
@@ -62,7 +60,7 @@ Now the judgement. If B slips four days it changes nothing, because it consumes 
 
 Every one of those statements depends on D genuinely requiring B. If that link is there because someone assumed the piling rig would still be occupying the erection area, and the rig has since been rescheduled, the whole answer is wrong and no tool will tell you.
 
-One constraint changes it again. A finish-no-later-than date on D set to day 38 makes the reported float on B collapse towards zero and the file starts reporting five days of pressure that does not exist.
+One constraint changes it again, and only if it bites. Put a finish-no-later-than date of day 33 on D — a commercial date somebody typed in, not a logic one — and the backward pass restarts from 33 instead of 38. D's late finish is 33 and its late start 25. B must now finish by 25, so its late start is 25 − 15 = 10, the same as its early start, and **B's five days of float are gone**. A, C and D come back at minus five days. Set the same constraint at day 38 and nothing moves at all, because that is the date the logic already produced. Before believing any float figure, find the constraints and check which of them is earlier than the calculated finish.
 
 ## What breaks when the schedule is generated rather than built?
 
@@ -84,7 +82,7 @@ They pay for the ability to say, in a meeting where money is at stake, why the d
 
 They also increasingly pay for the ability to review a machine-produced schedule properly. Checking a generated network is a harder skill than building one, because a wrong network that is internally consistent looks exactly like a right one.
 
-That reviewing skill is why governed AI carries 20% of the Body of Knowledge's proportions across PCI's credentials, alongside 40% finance and reporting and 40% project management. The [PCI AI Project Controls Leader (PCL-AI)](https://projectcontrolsinstitute.org/pcl-ai-certification) credential examines the schedule side of that across 13 domains and 61 knowledge areas.
+The Body of Knowledge's proportions are 40% finance and reporting, 40% project management and 20% governed AI. The [PCI AI Project Controls Leader (PCL-AI)](https://projectcontrolsinstitute.org/pcl-ai-certification) credential covers the schedule side of that across 13 domains and 61 knowledge areas.
 
 ## Which planning roles are genuinely exposed?
 
@@ -117,4 +115,4 @@ Learn to review, not just produce. Be able to take any schedule and state within
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: two links are in the body, on two different domains. "A working review protocol for machine-produced schedules" points to https://pciai.org/llm-schedule-review, in the paragraph that lists the three things a generated network breaks and says a protocol handles all three. "PCI AI Project Controls Leader (PCL-AI)" points to https://projectcontrolsinstitute.org/pcl-ai-certification, because the credential itself is the hub's territory and the sentence asks what it examines. The standfirst pillar link was removed: with the protocol link already going to that domain, a second one is a tell rather than a help. Reciprocal: https://pciai.org/will-ai-replace-planning-engineers could cite this piece for the four-activity float example.*
+*Internal links: two links are in the body, on two different domains. "A working review protocol for machine-produced schedules" points to https://pciai.org/llm-schedule-review, in the paragraph that lists the three things a generated network breaks and says a protocol handles all three. "PCI AI Project Controls Leader (PCL-AI)" points to https://projectcontrolsinstitute.org/pcl-ai-certification, because the credential itself is the hub's territory and the sentence asks what it covers. A second link to the pillar page was left out: with the protocol link already going to that domain, a second one is a tell rather than a help. Reciprocal: none warranted.*

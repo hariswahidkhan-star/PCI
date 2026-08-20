@@ -51,7 +51,7 @@ IFRS 15 replaced the old construction-contract approach with a single model buil
 
 **Step five: recognise revenue as each obligation is satisfied.** Either over time, as the work progresses, or at a point in time when control passes.
 
-Step five is the one that pulls project controls into financial reporting. Revenue is recognised over time when the customer receives and consumes the benefit as work is performed, or controls the asset as it is created, or when the asset has no alternative use to the contractor and there is an enforceable right to payment for work completed to date. Most construction contracts meet at least one of those tests.
+Step five is the one that pulls project controls into financial reporting. Whether an obligation is satisfied over time turns on three questions, and one yes is enough. Is the customer already taking the benefit as the work is done, the way a maintenance service is consumed? Is the thing being built theirs as it goes up, because it sits on their land or inside their existing plant? Or is the work so specific to that customer that nobody else could take it on, with a contractual right to be paid for what has been built if the job stops? Most construction contracts answer yes to at least one.
 
 Which ones qualify, what counts as a single contract, and when a variation becomes revenue are worked through in [the five steps applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
 
@@ -85,13 +85,13 @@ This is the single most useful thing a cost engineer can understand about IFRS. 
 
 **Position three, the estimate at completion moves to £105m.** The contract is now expected to lose £5m over its life. IAS 37 applies to that expectation.
 
-An onerous contract is one where the unavoidable costs of meeting the obligations exceed the benefits expected from it. When a contract becomes onerous, the entire expected loss is recognised immediately, not spread across the remaining work.
+A contract turns onerous when the entity cannot walk away from the work and finishing it will cost more than the contract will ever pay for it. IAS 37 then requires the whole expected loss to be booked at once, rather than letting it emerge as the remaining work is done.
 
 Work the arithmetic. Progress is 40 / 105 = 38.1%, so cumulative revenue is £38.1m against costs of £40m, giving a cumulative loss of £1.9m through the normal measurement.
 
 The full expected loss is £5m. The provision required is therefore £5m − £1.9m = £3.1m, recognised in the period the forecast crossed the line.
 
-That is why the month a forecast turns negative is a reporting event rather than a project event. A £15m movement in the estimate at completion, in a business with a 10% net margin, wipes out the profit of a substantial amount of other work in one journal entry.
+That is why the month a forecast turns negative is a reporting event rather than a project event. A £15m movement in the estimate at completion, in a business running at a 10% net margin, removes the profit earned on £150m of turnover, in one journal entry.
 
 ## Contract assets, contract liabilities and the number people call WIP
 
@@ -107,7 +107,7 @@ An unconditional right to payment makes it a receivable instead. That distinctio
 
 ## Variations and claims are not revenue until the constraint is passed
 
-Step three of the model includes variable consideration, and step three also constrains it. Variable amounts are included in the transaction price only to the extent that it is highly probable a significant reversal of cumulative revenue will not occur later.
+Step three of the model includes variable consideration, and step three also constrains it. An uncertain amount only enters the transaction price as far as the entity is confident it will stay there: where booking it now leaves a real chance of taking material revenue back out in a later period, it stays outside the price until the evidence improves.
 
 The practical effect is blunt. A £4m claim sitting in the cost report as an expected recovery is not £4m of revenue, and a contractor who books it before the constraint is satisfied is creating a reversal for a future period.
 
@@ -119,9 +119,9 @@ Contract modifications have their own treatment. A variation that adds distinct 
 
 On the owner's side of the table, the question changes from when revenue may be recognised to what may be added to the asset.
 
-IAS 16 allows the purchase price plus costs directly attributable to bringing the asset to the location and condition needed for its intended use. Site preparation, installation, testing and professional fees attributable to the work qualify. General administrative overhead, training and the cost of an idle period do not.
+IAS 16 lets a business carry what it paid for the asset, plus what it took to get that asset in place and working the way it was meant to work. Site preparation, installation, testing and professional fees attributable to the work qualify. General administrative overhead, training and the cost of an idle period do not.
 
-IAS 23 requires borrowing costs directly attributable to acquiring or constructing a qualifying asset to be capitalised while that asset is being readied. Capitalisation is suspended during extended periods of suspended activity and stops when the asset is substantially ready.
+IAS 23 treats the interest on money borrowed to build a long-lead asset as part of that asset's cost, for the period the asset is actually being built. It pauses if construction stops for an extended spell, and it ends when the asset is substantially ready.
 
 Depreciation begins when the asset is available for use, which is not the same date as practical completion or as the ribbon-cutting. A three-month commissioning delay is therefore both a schedule event and a depreciation event.
 
@@ -158,10 +158,10 @@ Effectively yes, but not by that name and not as a free choice. Where an obligat
 Because cost-to-cost progress is costs incurred divided by total forecast costs, and increasing the denominator reduces the percentage. On the worked example above, moving the forecast from £80m to £90m cut progress from 50% to 44.4% and reversed £5.6m of revenue that had already been reported. No cash moved.
 
 **What makes a contract onerous?**
-The unavoidable costs of meeting the obligations exceed the economic benefits expected from it. In project terms, the forecast final cost exceeds the forecast final value, including any variable consideration that has passed the constraint. Once that is true, IAS 37 requires the whole expected loss to be recognised immediately rather than as it is incurred.
+The entity is locked into finishing work that will cost more than it will ever be paid for it. In project terms, the forecast final cost exceeds the forecast final value, including any variable consideration that has passed the constraint. Once that is true, IAS 37 requires the whole expected loss to be recognised immediately rather than as it is incurred.
 
 **Can we include a pending claim in the forecast revenue?**
-Only to the extent it is highly probable that a significant reversal will not occur. That is a high bar, and an optimistic entitlement view does not clear it. The claim can and should sit in the commercial forecast used to manage the job, while the recognised transaction price stays at the constrained figure until the evidence supports more.
+Only as far as you are confident the revenue will not have to come back out in a later period. That is a high bar, and an optimistic entitlement view does not clear it. The claim can and should sit in the commercial forecast used to manage the job, while the recognised transaction price stays at the constrained figure until the evidence supports more.
 
 **Is this different under US GAAP?**
 The revenue model is substantially converged, since IFRS 15 and ASC 606 were developed jointly. Differences remain elsewhere, including aspects of onerous contract treatment and the capitalisation of borrowing costs. Any group reporting under both should confirm its own policy rather than assuming the two answers match.
@@ -171,4 +171,4 @@ Finance owns the entry, project controls owns the estimate behind it, and the di
 
 ---
 
-*Internal linking note: three same-domain links are now in the body. [The five steps applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction) sits at the end of step five, where the over-time tests are stated and the reader asks which contracts pass them. [How a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) sits in the worked example, at the sentence that says the estimate at completion is a direct input to reported revenue. [A credential that examines both sides of the handover](https://projectcontrolsinstitute.org/finance-and-project-management-certification) sits where the piece names the gap between the two professions. The month-end close and cash flow forecasting pieces were dropped to hold the two-to-three internal cap; neither question is raised sharply enough in this prose to justify a fourth and fifth link. Reciprocal link worth making: the EAC accounting and IFRS 15 for construction pieces should point back here with the anchor "the five standards a cost forecast feeds".*
+*Internal linking note: three same-domain links are now in the body. [The five steps applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction) sits at the end of step five, where the over-time tests are stated and the reader asks which contracts pass them. [How a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) sits in the worked example, at the sentence that says the estimate at completion is a direct input to reported revenue. [A credential that examines both sides of the handover](https://projectcontrolsinstitute.org/finance-and-project-management-certification) sits where the piece names the gap between the two professions. The month-end close and cash flow forecasting pieces were dropped to hold the two-to-three internal cap; neither question is raised sharply enough in this prose to justify a fourth and fifth link. No reciprocal link is proposed: this piece already points at the EAC accounting and IFRS 15 for construction pages, and asking them to point back would build the symmetry the link architecture exists to avoid.*

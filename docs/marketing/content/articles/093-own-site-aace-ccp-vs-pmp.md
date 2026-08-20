@@ -39,7 +39,7 @@ Both are respected. Neither substitutes for the other, and holding one does not 
 | Renewal | Recertification cycle with continuing education | Professional development units on a fixed cycle |
 | Travels well in | Engineering, construction, energy, mining, government cost communities | Almost every sector, and most HR filters |
 
-Requirements and fees are revised, so confirm both against the current AACE and PMI handbooks before you plan a study calendar. The AACE side of that, from application through to each renewal cycle, is totalled in [what an AACE credential costs over ten years](https://credentialfinder.org/aace-certification-cost).
+Requirements and fees are revised, so confirm both against the current AACE and PMI handbooks before you plan a study calendar. The AACE side of that, from application through to each renewal cycle, is broken out in [the five lines an AACE credential charges across](https://credentialfinder.org/aace-certification-cost).
 
 ## The difference in one question each
 
@@ -64,7 +64,7 @@ The team has been running at 0.889 and would have to run at 1.091, a **23% impro
 
 Cost control is about spend. Commercial survival is about when the cash arrives.
 
-Take a contractor turning over **£18.0m** a year on a project, which is £18,000,000 ÷ 365 = **£49,315 a day**.
+Take a contractor turning over **£18.0m** a year on a project, which is £18,000,000 ÷ 365 = **£49,315 a day**. That daily rate is turnover-based, while the cycle below is built from certification and payment lags; mixing the two bases is the conventional simplification and worth stating rather than hiding.
 
 Money owed by the client after certification runs at 74 days. Work done but not yet certified sits at 21 days. Money owed to the supply chain runs at 46 days.
 
@@ -86,9 +86,9 @@ Step three is where project people get caught. Suppose you have incurred **£520
 
 The cost is real and it is in your cost report this month. The revenue is variable consideration, and it may only be recognised to the extent that a significant reversal is not expected later. If your evidence does not support that, the month shows **£520,000** of cost against nothing, and the package reports a loss it will later reverse.
 
-A chartered accountant is examined on that constraint and almost never on a critical path. An engineer is examined on float and almost never on cut-off.
+That constraint is examined by accountants who will never be asked to defend a critical path. The critical path is examined by engineers who will never be asked when a claim may be recognised.
 
-The project lives in the overlap, and the overlap is where the money is lost. PCI's credentials examine both sides deliberately, which is a different proposition from CCP or PMP rather than a better version of either.
+The £600,000 above needs both answers in one head at one cut-off. Neither the CCP paper nor the PMP paper puts them there, which makes PCI's credentials a different proposition from either rather than a better version of one.
 
 ## Which one first?
 
@@ -105,24 +105,16 @@ Two credentials in one year rarely changes anything an employer can see. One cre
 
 ## Where PCI fits
 
-The Project Controls Institute is an independent certifying body with three AI-era credentials.
+The worked examples on this page kept landing on one boundary: the variation claimed but not yet recognisable, and the certification lag funded out of working capital. A candidate who owns those is being asked to hold cost engineering and financial reporting in the same head at the same cut-off.
 
-| Credential | Full name | Shape |
-|---|---|---|
-| PCL-AI | PCI AI Project Controls Leader | 13 domains, 61 knowledge areas |
-| PFL-AI | PCI AI Project Finance Leader | 16 domains, 61 knowledge areas |
-| PML-AI | PCI Project Management Leader – AI | 16 domains, 63 knowledge areas |
+That is the ground the Project Controls Institute examines. The PCI AI Project Finance Leader (PFL-AI) carries 16 domains and 61 knowledge areas, the PCI AI Project Controls Leader (PCL-AI) 13 and 61, and the PCI Project Management Leader – AI (PML-AI) 16 and 63. Entry is around three years of professional experience in any field, and the paper is scenario-based multiple choice sat under remote proctoring.
 
-Each Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI. Behind them sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
-
-Entry is around three years of professional experience in any field, with no degree requirement. The examination is scenario-based multiple choice, single best answer, sat under remote proctoring, and the fee opens a 12-month scheduling window from payment.
-
-PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is designed with reference to ISO/IEC 17024 principles, including a criterion-referenced cut score and separation of preparation from the certification decision. PCI claims no recognition, endorsement, affiliation or partnership with AACE, PMI or any other body.
+Then apply this page's last FAQ to the Institute itself, because it earns no exemption. Its pass mark is criterion-referenced and set independently of the people who prepare candidates. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body, does not claim to be, and claims no recognition, endorsement, affiliation or partnership with AACE or PMI.
 
 ## Frequently asked questions
 
 **Is CCP harder than PMP?**
-They are hard in different ways. CCP demands numerical fluency and, for many candidates, a written component that cannot be crammed. PMP demands breadth across predictive and adaptive delivery and a feel for the way its situational items are written. Cost engineers usually find CCP the more natural paper and PMP the more unfamiliar vocabulary.
+They are hard in different ways. CCP demands numerical fluency and, for many candidates, a written component that cannot be crammed. PMP demands breadth across predictive and adaptive delivery and a feel for the way its situational items are written. CCP's vocabulary is the cost report; PMP's is PMI's process language. Whichever of those you use daily is the paper that will read as natural, and the other is the one to plan more hours for.
 
 **Which is more recognised by employers?**
 PMP passes more HR filters because it spans every sector. CCP carries more weight with people who read cost reports for a living, particularly in engineering, energy and heavy construction. If a specific employer matters, read their live job advertisements and count which acronym appears in the requirements rather than the nice-to-haves.

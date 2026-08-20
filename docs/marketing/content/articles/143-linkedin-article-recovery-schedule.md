@@ -19,8 +19,6 @@ ab_id:         AB-00199
 
 A recovery schedule is a revised programme showing how the remaining work will meet the contract completion date after progress has fallen behind. It is not a new baseline and not an extension of time. How to build a recovery schedule comes down to six steps: status honestly, size the gap in days, isolate the driving path, price the levers, test the logic, submit the assumptions.
 
-Written for LinkedIn as an original. It sits under the Institute's planning and scheduling pillar.
-
 ## When does the engineer get to demand one?
 
 When actual progress no longer accords with the accepted programme and the completion date is at risk. Most standard forms carry a provision along those lines, expressed differently in each, and the demand usually follows a progress report rather than arriving out of nowhere.
@@ -74,7 +72,7 @@ Every recovery option has a cost per day recovered, and ranking by that slope is
 
 Piling works out at (520,000 − 400,000) ÷ 8 = **£15,000 per day**, steel at (2,050,000 − 1,800,000) ÷ 10 = **£25,000 per day**, cladding at (1,060,000 − 900,000) ÷ 5 = **£32,000 per day**.
 
-The driving path therefore offers **8 + 10 + 5 = 23 days** in total, against a gap of 34. The arithmetic has already told you that crashing alone will not close it.
+The driving path therefore offers **8 + 10 + 5 = 23 days** of crash capacity in total, against a gap of 34. The arithmetic has already told you that crashing alone will not close it, and step five shows that the achievable figure is lower still.
 
 ## Step five: test what happens when the path moves
 
@@ -84,11 +82,15 @@ Days one to twelve are cheap. Eight days of piling at £15,000 and four days of 
 
 Days thirteen onwards have to come off both paths at once. Each further day now costs £25,000 on steel plus £18,000 on mechanical first fix, which is **£43,000 per day**, above the damages rate on its own.
 
+That window closes sooner than the driving path suggests. Mechanical first fix can only be crashed by **8 days**, so days thirteen to twenty are available at £43,000 each — **8 × £43,000 = £344,000** — and past day twenty there is nothing left on the mechanical path to buy at any price.
+
+Achievable crash recovery is therefore **12 + 8 = 20 days**, at £220,000 + £344,000 = **£564,000**, and not the 23 days the driving path's crash capacity appeared to offer.
+
 Look at the full exposure before you stop there. With **£180,000,000** drawn and earning nothing at a **7%** nominal rate, the carrying cost is £12,600,000 a year, which is 12,600,000 ÷ 365 = **£34,521 per day**.
 
-Total exposure is therefore roughly 40,000 + 34,521 = **£74,521 per day**, and recovery at £43,000 per day is still worth buying. That is the calculation the delivery team cannot do alone and the finance team will not do unprompted, and it is precisely where projects lose money.
+Total exposure is therefore roughly 40,000 + 34,521 = **£74,521 per day**, and recovery at £43,000 per day is still worth buying up to the point it runs out. That is the calculation the delivery team cannot do alone and the finance team will not do unprompted, and it is precisely where projects lose money.
 
-The last **11 days** are not available from crashing at all. They have to come from re-sequencing, overlapping design and construction, off-site fabrication, a sectional handover, or an entitlement position on the causes of the original slippage.
+The last **14 days** are not available from crashing at all. They have to come from re-sequencing, overlapping design and construction, off-site fabrication, a sectional handover, or an entitlement position on the causes of the original slippage.
 
 | Lever | Days it can buy | Cost driver | Risk it introduces | Evidence to keep |
 |---|---|---|---|---|
@@ -130,7 +132,7 @@ Not by default. The baseline is the measurement datum for variance and entitleme
 Rarely through the site programme, which is why the arithmetic matters early. The levers are expediting, split deliveries, alternative suppliers, and re-sequencing to a package that can start without the missing item. Each one carries a cost and a risk that belongs in the submission.
 
 **What if the gap cannot be closed at all?**
-Say so, with the number. A submission showing 23 days of achievable recovery against a 34-day gap, with the remaining 11 days identified and priced, is far more useful to everyone than a document that closes the gap on paper and fails in month three.
+Say so, with the number. A submission showing 20 days of achievable recovery against a 34-day gap, with the remaining 14 days identified and priced, is far more useful to everyone than a document that closes the gap on paper and fails in month three.
 
 ---
 
@@ -138,4 +140,4 @@ Say so, with the number. A submission showing 23 days of achievable recovery aga
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Linking note: one cross-estate link now sits in the body, in the section separating recovery from entitlement. That sentence tells the reader to keep the entitlement analysis in its own document, which raises the question of how that analysis is actually done, and the hub's comparison of delay analysis techniques answers it. The note originally proposed two more hub links, to total float and project cash flow forecasting. Both were dropped because only one link per domain is allowed per piece, and the float behind the driving path is explained in step three of this article rather than elsewhere. A reciprocal link back to this piece would fit on the delay analysis techniques page, where the difference between a recovery submission and an entitlement position deserves a pointer.*
+*Linking note: one cross-estate link now sits in the body, in the section separating recovery from entitlement. That sentence tells the reader to keep the entitlement analysis in its own document, which raises the question of how that analysis is actually done, and the hub's comparison of delay analysis techniques answers it. The note originally proposed two more hub links, to total float and project cash flow forecasting. Both were dropped because only one link per domain is allowed per piece, and the float behind the driving path is explained in step three of this article rather than elsewhere.*

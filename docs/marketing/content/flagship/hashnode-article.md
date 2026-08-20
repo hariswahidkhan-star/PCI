@@ -205,15 +205,15 @@ The Project Controls Institute exists for that handover. Three credentials, each
 
 Under them sit 113 mandatory PCI Standards carrying 532 process requirements. Those are certification requirements set by the Institute, not law, and nothing PCI publishes is legal, tax or accounting advice.
 
-The Bodies of Knowledge run 40 per cent finance and reporting, 40 project management, 20 governed AI. Those are the Body of Knowledge's proportions, not the examination's. No examination weighting is published: the syllabus is settled, the exam blueprint is not, and any PCI exam weighting quoted at you did not come from us.
+The PCL-AI Body of Knowledge runs 40 per cent finance and reporting, 40 project management, 20 governed AI. Those are the Body of Knowledge's proportions, not the examination's. No examination weighting is published: the syllabus is settled, the exam blueprint is not, and any PCI exam weighting quoted at you did not come from us.
 
-Reproducibility is a fair test to turn back on us: 15,613 machine calculation checks run against PFL-AI and PML-AI, all passing. PCL-AI has no equivalent suite yet. The scope belongs in that sentence every time, because a check count published without its scope is the kind of number this article is about.
+Reproducibility is a fair test to turn back on us: 15,613 machine calculation checks run against PFL-AI and PML-AI, all passing. PCL-AI has no equivalent suite. The scope belongs in that sentence every time, because a check count published without its scope is the kind of number this article is about.
 
 ## The part that is yours
 
 You sign the forecast. Miss the accrual and the number you defended was wrong before you saw it. Seniority means owning both ledgers, and a credential that examines only one half leaves you accountable for a gap that nobody taught you.
 
-Do not take this article's word for the syllabus. Read [the domains and knowledge areas PCL-AI examines](https://projectcontrolsinstitute.org/body-of-knowledge) against your own last month-end.
+Do not take this article's word for the syllabus. Read [where cut-off and the posting date sit in the PCL-AI domain list](https://projectcontrolsinstitute.org/body-of-knowledge) against your own last month-end.
 
 Then set `:as_at` to your own closing date and find out what your report said on the day you signed it.
 
@@ -242,4 +242,4 @@ No, and it is not built to. Where statutory or chartered status is required, the
 
 ---
 
-*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [The domains and knowledge areas PCL-AI examines](https://projectcontrolsinstitute.org/body-of-knowledge) answers "what would examining both sides actually cover", raised by the ask. [Who owns a figure a model produced](https://pciai.org/ai-policy-for-project-controls) answers "so who signs a number a model wrote", raised by the accrual-estimation question. [How the main controls certifications line up against each other](https://credentialfinder.org/best-project-controls-certification) answers "how is this different from the credential I already hold". The canonical carries the relationship to the hub's month-end close page, so that page is deliberately not linked in the body as well: one link per domain, per _LINK_ARCHITECTURE.md §2. In the comments, point anyone arguing about temporal joins at [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects), and anyone who wants the full period worked through at [the earned value worked example](https://projectcontrolsinstitute.org/earned-value-worked-example).*
+*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [Where cut-off and the posting date sit in the PCL-AI domain list](https://projectcontrolsinstitute.org/body-of-knowledge) answers "what would examining both sides actually cover", raised by the ask. [Who owns a figure a model produced](https://pciai.org/ai-policy-for-project-controls) answers "so who signs a number a model wrote", raised by the accrual-estimation question. [How the main controls certifications line up against each other](https://credentialfinder.org/best-project-controls-certification) answers "how is this different from the credential I already hold". The canonical carries the relationship to the hub's month-end close page, so that page is deliberately not linked in the body as well: one link per domain, per _LINK_ARCHITECTURE.md §2. The same rule governs the comments, which carry no URLs at all: a reader arguing about temporal joins is told in plain words that the hub's month-end close page is where the calendar argument is made, and a reader who wants the full period is told the hub carries a worked earned value example. Pasting either address under the post would put three projectcontrolsinstitute.org links on one page, and §2 counts links under an article the same as links in it.*

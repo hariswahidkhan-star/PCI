@@ -80,7 +80,7 @@ The to-complete performance index is the honesty check: (BAC − EV) ÷ (BAC −
 
 This is the part almost no course in the region teaches, and it is where the money goes missing.
 
-IFRS 15 sets out a five-step model, described here in PCI's own words. Identify the contract with the customer. Identify the distinct performance obligations in it.
+IFRS 15 sets out a five-step model. Identify the contract with the customer. Identify the distinct performance obligations in it.
 
 Determine the transaction price, including variable consideration and the limit on how much of it may be recognised. Allocate that price across the obligations. Recognise revenue as each obligation is satisfied, over time where the criteria for that are met, otherwise at a point in time.
 
@@ -104,7 +104,7 @@ Ask whether you build and status a schedule and a cost report with real data, or
 
 ## How does PCI examine this?
 
-PCI Global is an independent certifying body with three AI-era credentials. The PCI AI Project Controls Leader (PCL-AI) has 13 domains and 61 knowledge areas. The PCI AI Project Finance Leader (PFL-AI) has 16 domains and 61 knowledge areas. The PCI Project Management Leader – AI (PML-AI) has 16 domains and 63 knowledge areas.
+The Project Controls Institute (PCI) is an independent certifying body with three AI-era credentials. The PCI AI Project Controls Leader (PCL-AI) has 13 domains and 61 knowledge areas. The PCI AI Project Finance Leader (PFL-AI) has 16 domains and 61 knowledge areas. The PCI Project Management Leader – AI (PML-AI) has 16 domains and 63 knowledge areas.
 
 Each Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI, which is the structural answer to the overlap described above. Behind the syllabus sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
 
@@ -129,4 +129,4 @@ It needs to teach governed use of them. Models draft narrative well and source n
 
 ---
 
-*Internal links: placed in the body. Two on pciglobal.ai — the planning engineer course in Saudi Arabia, where the market section describes interface reviews planners meet across the Gulf; and project controls courses in Dubai, after the course-type table, as the check on whether the four-way test is local or general. The original note gave that second target as /project-controls-courses-in-dubai, which does not exist; the live slug is /project-controls-courses-dubai and that is what is in the body. Two cross-estate links, one per domain: the hub's four EAC formulas page, after the QAR 19.0m spread, because that is the sentence that asks which assumption is defensible; and pciai.org's generative AI reporting how-to in the FAQ on AI tools, which is a satellite-to-satellite link made deliberately, because provenance in AI-assisted reporting is that domain's subject and not this one's. The hub certification link was dropped to keep one link per cross-estate domain. Reciprocal: the Dubai guide links back here as the neighbouring Gulf comparison.*
+*Internal links: placed in the body. Two on pciglobal.ai — the planning engineer course in Saudi Arabia, where the market section describes interface reviews planners meet across the Gulf; and project controls courses in Dubai, after the course-type table, as the check on whether the four-way test is local or general. The original note gave that second target as /project-controls-courses-in-dubai, which does not exist; the live slug is /project-controls-courses-dubai and that is what is in the body. Two cross-estate links, one per domain: the hub's four EAC formulas page, after the QAR 19.0m spread, because that is the sentence that asks which assumption is defensible; and pciai.org's generative AI reporting how-to in the FAQ on AI tools, which is a satellite-to-satellite link made deliberately, because provenance in AI-assisted reporting is that domain's subject and not this one's. The hub certification link was dropped to keep one link per cross-estate domain. No page currently links back to this one, and none is asked to: an inbound link placed only because this page links out is the symmetry the link architecture warns against.*

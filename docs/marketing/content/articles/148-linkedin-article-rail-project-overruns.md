@@ -1,13 +1,13 @@
 ---
 platform:      LinkedIn Article
 type:          data-study
-title:         Rail project overruns: the causes and how to read them
+title:         Rail project overruns: separating price from performance
 meta:          Rail project overruns mix inflation, scope change and real cost growth. How to separate them, with rebasing, P50 versus P80 and possession arithmetic.
 primary_kw:    rail project overruns
 secondary_kw:  price base rebasing, optimism bias, P50 and P80, possession productivity
 pillar:        Project controls fundamentals
 credential:    PFL-AI
-target_domain: pciglobal.ai
+target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article + FAQPage
 word_count:    1816
@@ -15,15 +15,13 @@ hashtags:      #ProjectControls #CostEngineering #Scheduling #RiskManagement
 ab_id:         AB-03341
 ---
 
-# Rail project overruns: the causes and how to read them
+# Rail project overruns: separating price from performance
 
 Rail project overruns are three different things reported as one number: inflation between price bases, scope that changed after the first announcement, and genuine cost growth. Separate the three before comparing anything. The figure first put into the public domain is often a funding envelope, not an estimate.
 
-Written for LinkedIn as an original. It sits under the Institute's project controls fundamentals pillar.
+## What are rail project overruns actually measured against?
 
-## Why are rail project overruns reported so differently by different sources?
-
-Because five different numbers all get called "the budget", and a headline can compare any one of them against any other. PCI publishes no industry overrun percentage for this sector, because the reported figures are not measuring a common thing.
+Against one of five different figures, all of which get called "the budget". A headline can compare any one of them with any other, so settle which two are in play before quoting a percentage.
 
 | The number | What it actually is | Who sets it | Why it moves |
 |---|---|---|---|
@@ -32,6 +30,8 @@ Because five different numbers all get called "the budget", and a headline can c
 | Control estimate | The cost engineer's estimate at a stated price base and scope | Project | Rises with design definition, falls with descoping |
 | Target price | A contractual figure with a pain and gain mechanism | Client and contractor | Reflects risk transfer and market conditions at award |
 | Outturn | Cash actually spent, in the money of the day | Everyone, afterwards | Includes inflation, all approved change and often land and consents |
+
+PCI publishes no industry overrun percentage for rail, because these five are not measuring a common thing and no published series reconciles them.
 
 Compare an outturn in the money of the day against an announcement made a decade earlier in that year's prices and you will produce a large percentage that is mostly arithmetic. Say which two numbers you are comparing, or say nothing.
 
@@ -101,9 +101,11 @@ For the sponsor, expenditure on an asset under construction sits on the balance 
 
 For the contractor, revenue on a long-term contract is usually recognised over time by measuring progress, commonly cost incurred against total forecast cost. Raising the forecast cost lowers the measured percentage complete, so a delivery decision made on site becomes a correction to revenue already reported.
 
-An engineer is examined on float, possessions and progress measurement, and almost never on cut-off, capitalisation or a contract asset. An accountant is examined on when revenue may be recognised, and almost never on a possession productivity rate. Rail programmes lose money precisely in that gap, which is why the PCI AI Project Finance Leader (PFL-AI) credential, at 16 domains and 61 knowledge areas, examines both sides rather than one, against 113 mandatory PCI Standards carrying 532 process requirements.
+The two worlds train different people. A planner's formation covers float, possessions and progress measurement and stops short of cut-off, capitalisation and the contract asset; a reporting accountant's covers recognition and disclosure and stops short of a possession productivity rate.
 
-Which qualifications carry weight on a British programme is a separate question from what they examine, and [what actually counts as a project controls qualification in the UK](https://pciglobal.ai/project-controls-certification-uk) works through the routes available in that market.
+Rail programmes lose money in the space between the two, which is why the PCI AI Project Finance Leader (PFL-AI) credential, at 16 domains and 61 knowledge areas, examines both sides rather than one.
+
+The Institute's own requirements sit alongside that as 113 mandatory PCI Standards carrying 532 process requirements. They are certification requirements established by the Institute, not law, and they exist so that a process claim can be tested rather than asserted.
 
 ## How should a rail cost report be presented so it cannot be misread?
 
@@ -133,4 +135,4 @@ Design deliverables approved against plan, in the year before main works start. 
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Linking note: two cross-estate links now sit in the body. The hub link to quantitative schedule risk analysis sits after the possession arithmetic, because ranging usable hours is what turns a single date into a P50 and a P80, and this piece stops at the point estimate. The pciglobal.ai link sits after the credential paragraph, which names what a credential examines but not which routes a British programme's market offers, and that is the regional domain's territory. The proposed second hub link to total float was dropped: only one link per domain is allowed per piece, and the six weeks of float in the possession example is worked here rather than elsewhere. A reciprocal link back to this piece would fit on the UK certification page, where rail and public-sector programmes are the obvious employer.*
+*Linking note: one cross-estate link now sits in the body. The hub link to quantitative schedule risk analysis sits after the possession arithmetic, because ranging usable hours is what turns a single date into a P50 and a P80, and this piece stops at the point estimate. The pciglobal.ai link to the UK certification page has been removed. It sat after the credential paragraph and was justified by the regional domain's territory rather than by a question the sentence asked — the sentence itself conceded that market recognition was "a separate question" and then linked anyway. Nothing in a piece about price bases, possession productivity and capitalisation raises which qualifications a British market recognises, so the link has gone rather than been moved to a sentence written to host it. The target domain moved with it: this piece works rebasing, P50 and P80, possession arithmetic and capitalisation, which is hub territory, and it now carries no regional framing to justify filing it against pciglobal.ai. The proposed second hub link to total float was dropped: only one link per domain is allowed per piece, and the six weeks of float in the possession example is worked here rather than elsewhere.*

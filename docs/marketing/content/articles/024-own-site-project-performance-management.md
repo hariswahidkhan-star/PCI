@@ -64,7 +64,7 @@ Path one totals 10 + 15 + 20 + 8 = **53 days**. Path two totals 10 + 12 + 18 + 8
 
 Now let C slip by seven days. Path two becomes 55 days and path one stays at 53. The project is now two days longer than planned, the critical path has moved to A → C → E → F, and B and D have acquired two days of float.
 
-This is why a performance report that tracks a frozen list of critical activities goes quietly wrong. Report float erosion across every path with less than about fifteen days of float, and let the network tell you which one is driving.
+This is why a performance report that tracks a frozen list of critical activities goes quietly wrong. Watch every path carrying less than fifteen days of float, and let the network tell you which one is driving. Watching and acting are different bands. Fifteen days is where a path earns a line on the report; ten days is where someone has to act on it. Setting the watch band above the trigger is what makes pressure visible for a period or two before a decision is forced.
 
 Two habits corrupt the measure. Constraints applied to hold a date, which manufacture float that does not exist, and negative lags used to compress a sequence nobody intends to work that way.
 

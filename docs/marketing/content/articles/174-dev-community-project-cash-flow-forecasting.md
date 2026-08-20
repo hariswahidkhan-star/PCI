@@ -36,9 +36,9 @@ A fifth, the commitment curve, runs ahead of all of them and is the earliest war
 
 The gap between cost incurred and cash received is the funding requirement. The gap between revenue recognised and cash received is working capital. Different gaps, closing at different times.
 
-## The transform is a lag and a haircut
+## How do payment terms turn cost into cash?
 
-Cash is not a separate model. It is the cost and revenue arrays put through two operators.
+Cash is not a separate model. It is the cost and revenue arrays put through two operators: a lag, which moves money later, and a haircut, which holds part of it back.
 
 ```python
 def cash_curves(cost, revenue, retention=0.05, cert_lag=1, pay_split=(0.5, 0.5)):
@@ -79,11 +79,11 @@ Terms: applications certified and paid 60 days after the period end, so cash arr
 
 The closing cumulative is £4.80m, equal to the margin, so the model ties. Period two cash in is 0.95 × £2.00m of period-one revenue, and the post-completion row carries the £1.20m retention release.
 
-**Peak funding is £1.30m, reached at the end of period two and held through period three.** Months three to six are when this contract needs a facility, and a profitable contract is where most contractors run out of money.
+**Peak funding is £1.30m, reached at the end of period two and held through period three.** The contract is cash-negative from period one to the end of period four — months one to eight — so the facility has to be in place before the first certificate, and a profitable contract is where most contractors run out of money.
 
-## One lever, £1.30m
+## What 15 days of supplier terms does to peak funding
 
-Move supplier terms from 45 days to 60, so a period's cost is paid entirely in the following period. In the code above that is one argument: `pay_split=(0.0, 1.0)`.
+Move supplier terms from 45 days to 60, so a period's cost is paid entirely in the following period rather than half in the period it is incurred. In the model that is one argument: the payment split changes from `pay_split=(0.5, 0.5)` to `pay_split=(0.0, 1.0)`.
 
 | Period | Cash in | Cash out | Net | Cumulative |
 |---|---:|---:|---:|---:|
@@ -171,4 +171,4 @@ Through the forecast cost at completion, which drives measured progress and ther
 
 *First published on projectcontrolsinstitute.org; the `canonical_url` on this post points there. DEV prohibits stub posts, so the full build including the S-curve arithmetic is here.*
 
-*Internal links: one is now in the body. "The time-phased cost baseline" points at projectcontrolsinstitute.org/project-budgeting-and-forecasting, placed where the piece says an S-curve drawn from the payment schedule is decoration, because that sentence raises where the baseline behind the curve is supposed to come from and this piece assumes it exists. The eac-accounting and month-end-close links proposed earlier were dropped: one link per domain per piece, and those two sentences are already answered in place. No second domain earns a link here — cash arithmetic raises no question that the AI, careers, regional or verification sites answer better. Reciprocal: the eac-accounting page should link back to this one from its cash-effect paragraph, with an anchor about peak funding rather than about cash flow generally.*
+*Internal links: one is now in the body. "The time-phased cost baseline" points at projectcontrolsinstitute.org/project-budgeting-and-forecasting, placed where the piece says an S-curve drawn from the payment schedule is decoration, because that sentence raises where the baseline behind the curve is supposed to come from and this piece assumes it exists. The eac-accounting and month-end-close links proposed earlier were dropped and stay dropped: this post sits on DEV rather than on a PCI domain, so every hub URL in it is a cross-estate link and the cap is one per domain, not the two-to-three internal links an own-site page carries. No second domain earns a link here — cash arithmetic raises no question that the AI, careers, regional or verification sites answer better. No reciprocal link is asked for.*

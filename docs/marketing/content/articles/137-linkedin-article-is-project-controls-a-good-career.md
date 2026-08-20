@@ -19,8 +19,6 @@ ab_id:         AB-00120
 
 Is project controls a good career? Yes, for someone willing to be the person whose number gets tested in public, and no for almost everyone else. Pay tracks accountability rather than title, demand follows capital spending and is cyclical, and the ceiling is high only once you own a forecast rather than produce a report.
 
-Written for LinkedIn as an original. It sits under the Institute's certification and careers pillar.
-
 ## What is the job on a normal month?
 
 Project controls is the function that keeps one consistent statement of where a project is on time and money, and makes that statement defensible.
@@ -77,7 +75,7 @@ Not at a title change. It steps up when the organisation stops treating your out
 
 Before that line you produce numbers and somebody else signs them. After it, the sentence "we are forecasting £11.7m and here is why" has your name attached when a lender, a client or an auditor tests it.
 
-The bands people describe as seniority are really bands of scope, and the short version is that most careers stall one band below the signature.
+What people here call seniority is really scope: how much of the position you own, and whether somebody above you re-checks it before it leaves the building. The step that matters is the one where nobody does.
 
 ## Is project controls a good career if you dislike conflict?
 
@@ -103,7 +101,7 @@ The parts that automate are the parts that were never the job. Extraction, recon
 
 What does not move is the ability to say why the number is the number, under questioning, with the contract and the accounting treatment both in view. A model can produce a forecast. It cannot be accountable for one.
 
-The practical consequence for a new entrant is that the old training route through years of manual updating is closing, so the skill has to be built deliberately. Reviewing machine output well is harder than producing it, because a wrong answer that is internally consistent looks exactly like a right one.
+The practical consequence for a new entrant is that the old training route through years of manual updating is closing, so the skill has to be built deliberately. Updating a file by hand taught you which figures move, which never do, and which one will be picked on in the meeting. A reviewer who has never had that argument cannot tell a forecast that is merely plausible from one that will hold, and that is the part now being learned late or not at all.
 
 ## Frequently asked questions
 
@@ -128,4 +126,4 @@ It is not a gate in most markets, and no credential guarantees a role. What a cr
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: two links are in the body, on two different domains. "What a project controls engineer does" points to https://pciworld.org/what-does-a-project-controls-engineer-do, in the section describing the shape of a normal month, where a reader will want the task-level account. "The four EAC formulas and what each assumes" points to https://projectcontrolsinstitute.org/four-eac-formulas, under the table where four defensible answers span £1.9m. The scope-ladder link to the same careers domain was removed and the sentence now makes its own point; one link per domain per piece is the rule. Reciprocal: https://pciworld.org/project-controls-salary could cite this piece for the point at which a forecast becomes a signature.*
+*Internal links: two links are in the body, on two different domains. "What a project controls engineer does" points to https://pciworld.org/what-does-a-project-controls-engineer-do, in the section describing the shape of a normal month, where a reader will want the task-level account. "The four EAC formulas and what each assumes" points to https://projectcontrolsinstitute.org/four-eac-formulas, under the table where four defensible answers span £1.9m. The scope-ladder link to the same careers domain was removed, and that paragraph now defines the bands in its own words instead of pointing at them; one link per domain per piece is the rule. Reciprocal: none warranted.*

@@ -33,9 +33,11 @@ notes: |
   affiliation in the author block persuades better than a paragraph of persuasion would.
   NO FAQ BLOCK, DELIBERATELY. _BRIEF.md §8 specifies one for articles. An edited construction title
   does not print a FAQ under a contributor byline, and one in the manuscript reads as repurposed blog
-  copy. The AEO work is done instead by the four-row table, the standalone definition sentences and
-  the arithmetic shown as division, all of which are more extractable than a FAQ and native to the
-  page. The FAQ block lives on the own-site pillar, where it belongs.
+  copy. The AEO work is done instead by the four-row table, the arithmetic shown as division, and the
+  one-sentence definition of cost value reconciliation that opens the table section — the table's own
+  cells are fragments that mean nothing lifted out, so the definition is there to be the block an
+  answer engine can quote with no context around it. The FAQ block lives on the own-site pillar,
+  where it belongs.
   HOOK B (contrast first) per _STORY.md §2, which names it for articles. Not blended with A or C, and
   deliberately different from the Project Times byline, which took hook C. The title question is
   answered inside the first 56 words, before any preamble.
@@ -74,9 +76,11 @@ notes: |
   flagship asset written for one national market, and the UK reader genuinely asks where a project
   controls credential sits against the routes already on their team. No credentialfinder.org link —
   the Project Times byline already carries the comparison question, and this piece does not raise it.
-  The syllabus link sits in the author block rather than the argument, where a trade reader expects an
-  author's own material and where it does not compromise the editorial line. The author block is a
-  placeholder because the byline must be a person, not the Institute.
+  The syllabus link sits in the argument, in the sentence that tells the reader to judge an issuer on
+  what it examines, and not in the author block: an earlier draft put it under the piece, which is a
+  link block at the end whatever the trade convention says about author material. The author block
+  now carries the affiliation and nothing else, and is a placeholder because the byline must be a
+  person, not the Institute.
 ---
 
 # Cost control in construction: a margin that was never there
@@ -129,6 +133,8 @@ One month can report better margin and less turnover from one missing accrual. E
 
 ## Where cost control in construction actually fails
 
+Cost value reconciliation is the monthly comparison of the value of work executed on a project against the cost incurred to produce it, taken over the same scope of work and to the same date. It fails at the joins where those two conditions quietly stop holding.
+
 | Join in the chain | The valuation holds | The ledger holds | Effect on margin |
 |---|---|---|---|
 | Cut-off dates | Works measured to the reporting date | Costs posted to the ledger close | Flattered if the ledger closed first |
@@ -152,7 +158,7 @@ That is what the Project Controls Institute was built around. The PCI AI Project
 
 Its Body of Knowledge is built 40 per cent finance and reporting, 40 per cent project management, 20 per cent governed use of machine output. That is the shape of the syllabus, not an examination weighting: the syllabus is settled, the examination blueprint still an open decision.
 
-Weigh that against [the qualifications a commercial team here already holds](https://pciglobal.ai/project-controls-certification-uk), and apply one test to every issuer, ours included: read what it examines, not what it promises.
+Weigh that against [the qualifications a commercial team here already holds](https://pciglobal.ai/project-controls-certification-uk). Then apply one test to every issuer, ours included: read what it examines, not what it promises. Ours is published as [the domain and knowledge-area list a PCL-AI candidate is examined against](https://projectcontrolsinstitute.org/body-of-knowledge), and it is best read next to your own last reconciliation.
 
 ## The part that is yours
 
@@ -164,8 +170,8 @@ Whichever it is, you will know something about the reconciliation that the recon
 
 ---
 
-**[AUTHOR NAME]** is [role] at the Project Controls Institute. [Two sentences of verifiable career detail: years in the discipline, sectors actually worked in, any membership genuinely held. Claim no accreditation or affiliation that has not happened.] The [13 domains and 61 knowledge areas of the PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) are best read against your own last month-end. [PHOTO TO BE SUPPLIED.]
+**[AUTHOR NAME]** is [role] at the Project Controls Institute. [Two sentences of verifiable career detail: years in the discipline, sectors actually worked in, any membership genuinely held. Claim no accreditation or affiliation that has not happened.] [PHOTO TO BE SUPPLIED.]
 
 ---
 
-*Internal links: three, one per domain, each sitting in a body sentence that raises the question its target answers. [Which figures a model may originate and which it may only restate](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "so what is that policy supposed to say", raised at the close of the AI section. [The qualifications a commercial team here already holds](https://pciglobal.ai/project-controls-certification-uk) on pciglobal.ai answers "where does this sit against the UK routes I know", which only this asset raises, because only this asset is written for one national market. [The 13 domains and 61 knowledge areas of the PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub sits in the author block, where a trade reader looks for the author's own material. All three anchors are unique to this asset. No credentialfinder.org link: the comparison question belongs to the Project Times byline and this piece does not raise it, and a link with no question behind it is the footprint we avoid. Once this is live, the own-site pillar should cite it once with the anchor "the commercial chain, worked through in PBC Today", and the UK regional page on pciglobal.ai should cite it once as its worked example — that is the asymmetric flow the estate needs, satellite citing hub far more often than the reverse. The launch LinkedIn post points at the PBC Today URL, not at the hub, so the earned citation is the thing being amplified.*
+*Internal links: three, one per domain, each sitting in a body sentence that raises the question its target answers. [Which figures a model may originate and which it may only restate](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "so what is that policy supposed to say", raised at the close of the AI section. [The qualifications a commercial team here already holds](https://pciglobal.ai/project-controls-certification-uk) on pciglobal.ai answers "where does this sit against the UK routes I know", which only this asset raises, because only this asset is written for one national market. [The domain and knowledge-area list a PCL-AI candidate is examined against](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "so what does this one examine", raised by the sentence that tells the reader to judge every issuer on what it examines. It sits in that argument rather than in the author block: a link under the piece is a block at the end however it is dressed, and the author block now carries the affiliation in words only. The hub anchor is written around this piece's own test, so it does not repeat the domain-count anchor the journal paper and the newsletter use for the same page. All three anchors are unique to this asset. No credentialfinder.org link: the comparison question belongs to the Project Times byline and this piece does not raise it, and a link with no question behind it is the footprint we avoid. Once this is live, the own-site pillar should cite it once with the anchor "the commercial chain, worked through in PBC Today", and the UK regional page on pciglobal.ai should cite it once as its worked example — that is the asymmetric flow the estate needs, satellite citing hub far more often than the reverse. The launch LinkedIn post points at the PBC Today URL, not at the hub, so the earned citation is the thing being amplified.*

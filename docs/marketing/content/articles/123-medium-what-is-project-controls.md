@@ -101,15 +101,19 @@ The critical path is A–B–D. C is not unimportant; it has slack. If C slips s
 
 ## Where the money is actually lost
 
-A chartered accountant is examined on when revenue may be recognised and on what a provision must satisfy. They are almost never examined on a critical path or an earning rule.
+Take a package reporting 62% complete. That figure came out of an earning rule somebody chose — units delivered, milestones weighted, or hours burnt against a budget — and a planner chose it to make a monthly report honest.
 
-An engineer is examined on float and progress measurement. They are almost never examined on cut-off, or on what makes something a contract asset rather than a receivable.
+Finance may be measuring the same package a different way, usually cost incurred against total expected cost. Two defensible methods, one package, one month, and two different answers.
 
-A project lives in the overlap. The classic loss is a package reporting 62% complete on the delivery side while the finance side has recognised revenue on a different measure, with nobody reconciling the two until the year-end audit asks why the contract asset moved.
+Nobody is examined on both ends of that handover. The person who set the earning rule was examined on float and progress; the person who used its output was examined on recognition and cut-off. Neither was asked what the other does with the number.
 
-Earned value is a control number, not a revenue number. Treating one as the other is how a project can be simultaneously ahead on the cost report and in trouble in the accounts.
+So the two versions run alongside each other until the year-end audit asks why the contract asset moved, which is long after the point where the fix was cheap.
+
+Earned value is a control number, not a revenue number. Treating one as the other is how a project can be simultaneously ahead on the cost report and in trouble in the accounts. Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the contract.
 
 The PCI credentials are built around that overlap. The PCI AI Project Controls Leader (PCL-AI) Body of Knowledge sets **13 domains and 61 knowledge areas** in the proportions **40 / 40 / 20** across finance and reporting, project management, and governed AI.
+
+PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
 ## What AI has changed, and what it has not
 
@@ -123,13 +127,13 @@ That is why governed AI is examined as a competence in its own right across the 
 
 ## The roles inside a controls team
 
-| Role | Owns | The number they are judged on |
-|---|---|---|
-| Planning engineer / scheduler | Network logic, progress, float, forecast finish | Whether the forecast date moved before the slip was visible |
-| Cost engineer / cost controller | Commitments, accruals, actuals, estimate at completion | Whether the EAC held up as the package closed out |
-| Estimator | The basis of estimate and the classed estimate | Whether outturn landed inside the estimate class range |
-| Risk analyst | Quantified register, contingency position, drawdown | Whether contingency ran out before the work did |
-| Project controls manager | The integrated position across all four | Whether the sponsor was surprised |
+| Role | Owns |
+|---|---|
+| Planning engineer / scheduler | Network logic, progress, float, forecast finish |
+| Cost engineer / cost controller | Commitments, accruals, actuals, estimate at completion |
+| Estimator | The basis of estimate and the classed estimate |
+| Risk analyst | Quantified register, contingency position, drawdown |
+| Project controls manager | The integrated position across all four |
 
 The last row is the job. Any of the first four can be right on their own while the reported position is wrong, and reconciling them is the work that gets skipped when the month is short.
 
@@ -143,9 +147,6 @@ What each qualification is actually evidence of is a separate question, answered
 
 ## Frequently asked questions
 
-**Is project controls a good career?**
-It is durable work, because every capital project needs somebody who can state what the position really is. Demand concentrates where large projects are, which currently means energy, infrastructure, data centres and the Gulf programmes. The trade-off is honest: month-end has a rhythm, deadlines are fixed, and you will sometimes deliver news nobody wants.
-
 **What qualifications do I need to start?**
 None are mandatory to enter, and people arrive from engineering, surveying, finance and the trades. Employers look for the monthly cycle, one scheduling tool used properly, and the ability to explain a variance without hedging. Certification matters more at the point you want to be trusted with the integrated position rather than one input to it.
 
@@ -157,9 +158,6 @@ Yes, in proportion. A £2m fit-out does not need a five-person team, but it stil
 
 **Which software does project controls use?**
 Scheduling usually runs on Primavera P6 or Microsoft Project, cost sits in the ERP plus a controls layer, and reporting increasingly lives in Power BI. Tools turn over every few years, so employers hire for the method and train the tool. Learning one scheduler deeply teaches you more than sampling four of them.
-
-**Is project controls stressful?**
-It has a fixed rhythm rather than constant crisis: cut-off, forecast, report, repeat. The pressure arrives at month-end and whenever a forecast is unwelcome. People who like a defensible answer and a clear cadence tend to stay in the discipline for decades.
 
 ---
 

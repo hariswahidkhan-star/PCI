@@ -90,7 +90,7 @@ The questions below are not about PCI. They are the ones worth asking of any cre
 
 **Is the body that trains you also the body that decides your result?** Separation between preparation and certification decisions is a structural safeguard, and you should be able to see it stated.
 
-**What exactly is claimed about recognition?** PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation. Any body making a stronger claim should be able to name the accreditor and the scope of the accreditation.
+**What exactly is claimed about recognition?** PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation. Its scheme is developed with reference to the ISO/IEC 17024 principles for personnel certification, and accreditation is being pursued rather than claimed. Any body making a stronger claim should be able to name the accreditor and the scope of the accreditation.
 
 ## Frequently asked questions
 

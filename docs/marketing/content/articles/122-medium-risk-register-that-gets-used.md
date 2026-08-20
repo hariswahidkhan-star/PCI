@@ -84,7 +84,7 @@ Run all three in that order. The matrix picks the rows worth quantifying, expect
 
 ## The arithmetic, shown
 
-Six quantified risks on a substructure and steel package. The probabilities are the ones the owners signed up to; the impacts are the most likely cost if the event occurs.
+Six quantified risks on a substructure and steel package, shown here as a worked illustration rather than as any real project's register. Each probability is the risk owner's own assessment, recorded with the reasoning that produced it. Each impact is the most likely cost if the event occurs, built up from quantities and rates in the way the two derivations below are.
 
 | Risk | Probability | Cost impact | Expected value |
 |---|---:|---:|---:|
@@ -97,6 +97,10 @@ Six quantified risks on a substructure and steel package. The probabilities are 
 | **Total** | | | **£585,500** |
 
 The steel impact of £260,000 is not a feeling. Three weeks is fifteen working days, time-related site costs run at £14,000 a day, and the subcontractor has quoted £50,000 for an extended shift pattern: 15 × 14,000 + 50,000 = **£260,000**.
+
+The consent condition is built the same way. The barrier is 220 metres of acoustic fencing at £550 a metre, which is £121,000, plus £19,000 of design and discharge work: 220 × 550 + 19,000 = **£140,000**.
+
+Every row in that table has to come apart like those two. A number the owner cannot take apart in front of the room is a feeling with a currency symbol on it, and it gets argued away in the first review where it matters.
 
 Two things about the £585,500. It is a mean, and a mean is the one outcome that will not occur, so it is a reasonable opening contingency figure and a poor closing one.
 
@@ -129,6 +133,8 @@ Contingency comes out of the register. That is the point of quantifying it, and 
 
 Contingency held inside a project budget against identified risks is a control account, not an accounting provision. A provision has recognition criteria of its own under the accounting standards, tested by the finance team rather than settled in a risk workshop.
 
+Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the contract.
+
 This is the overlap the discipline keeps failing at. An engineer is examined on probability and float, almost never on when an obligation may be recognised. An accountant is examined on recognition, almost never on a risk-adjusted forecast. The contingency line belongs to both.
 
 Publish the drawdown curve beside the register: contingency at sanction, drawn down to date, remaining, and remaining exposure. Where remaining contingency has fallen faster than remaining exposure, the project is in trouble and the register shows it first.
@@ -138,6 +144,8 @@ Publish the drawdown curve beside the register: contingency at sanction, drawn d
 The PCI AI Project Controls Leader (PCL-AI) examines **13 domains across 61 knowledge areas**, with risk management sitting alongside cost control, scheduling and earned value rather than in a stream of its own.
 
 The Body of Knowledge runs in a **40 / 40 / 20** proportion across finance and reporting, project management, and governed AI. Risk quantification sits in the middle block; what a contingency release does to a reported forecast sits in the first.
+
+PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
 ## Frequently asked questions
 
@@ -160,4 +168,4 @@ About two hours for a register of thirty rows, if the owners have updated their 
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: one is now placed in the body. The Monte Carlo how-to (projectcontrolsinstitute.org) sits on "running the simulation across the same inputs", in the sentence describing the third sizing method — the reader has just been told expected value is a mean that never happens, so the question of how the tail gets tested is live at exactly that point. The note also proposed the schedule risk analysis pillar and the month-end close piece; both are dropped from this republish, because three links to one domain from a single article is the link-scheme pattern rather than an editorial one, and both are the own-site original's internal links. Reciprocal: the month-end close piece should link back here with the anchor "the contingency drawdown curve behind the forecast", since it reports the position this register produces.*
+*Internal links: one is now placed in the body. The Monte Carlo how-to (projectcontrolsinstitute.org) sits on "running the simulation across the same inputs", in the sentence describing the third sizing method — the reader has just been told expected value is a mean that never happens, so the question of how the tail gets tested is live at exactly that point. The note also proposed the schedule risk analysis pillar and the month-end close piece; both are dropped from this republish. This copy is published on Medium rather than on a PCI domain, so every projectcontrolsinstitute.org link in it is a cross-estate link and the estate caps those at one per domain per piece. On the own-site original at /risk-register-that-gets-used the same three URLs are internal links, which the architecture asks for two to three of and which carry no scheme risk, so that is where all three belong. Reciprocal: the month-end close piece should link back here with the anchor "the contingency drawdown curve behind the forecast", since it reports the position this register produces.*

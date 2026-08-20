@@ -21,8 +21,6 @@ Project financing for project controls professionals starts from one fact: the m
 
 It is therefore not a finance topic to be handed upstairs. It is a set of tests your monthly outputs have to pass, in someone else's format, to a date you do not control.
 
-This is a LinkedIn original under the Institute's cost control and estimating pillar.
-
 ## Project finance and corporate finance are not the same borrowing
 
 | Axis | Corporate borrowing | Project financing |
@@ -41,7 +39,7 @@ The last row deserves saying plainly. Project financing is expensive and slow. I
 
 A worked structure. Capital cost **£500m**: EPC contract £430m, owner's costs £30m, development costs £15m, contingency £25m.
 
-Add the two items that are not in the estimate. **Interest during construction** and arrangement fees. Total funding requirement becomes **£535m**, geared roughly 70:30, so **£375m** of debt and **£160m** of equity.
+Add the two items that are not in the estimate. **Interest during construction**, worked below at **£29.5m**, and **£5.5m** of arrangement and advisory fees. £500m plus £29.5m plus £5.5m gives a total funding requirement of **£535m**, geared roughly 70:30, so **£375m** of debt and **£160m** of equity.
 
 Interest during construction is circular. The interest depends on the drawdown profile, the drawdown profile depends on the facility size, and the facility size includes the interest. Models solve it by iteration, and the answer is sensitive to the S-curve you supplied.
 
@@ -82,7 +80,7 @@ Read those two percentages together and the discipline makes sense. A 3.5% miss 
 
 **Contingency drawing rules.** Contingency in a project-financed structure is usually not the sponsor's to spend. Drawing it needs a stated cause and, above a threshold, lender consent.
 
-None of this works if the cost report and the programme disagree. The forecast that supports a drawdown, the forecast that supports revenue recognition and the forecast the project team believes have to be the same forecast, produced once and used three times.
+None of this works if the cost report and the programme disagree. The forecast that supports a drawdown, the forecast that supports revenue recognition and the forecast the project team believes have to be the same forecast, produced once and used three times. Producing it once takes the cover ratios and the earning rules in the same head, which is the ground the [PCI AI Project Finance Leader (PFL-AI)](https://projectcontrolsinstitute.org/finance-and-project-management-certification) credential covers, across 16 domains and 61 knowledge areas.
 
 ## Delay costs money twice, and only one part is obvious
 
@@ -108,8 +106,6 @@ Net working capital funded = 40.5 + 10.4 − 23.7 = **£27.2m**, on a cash conve
 
 Ten days off receivable days releases 10 / 365 × 200 = **£5.5m**, permanently, with no change to revenue or cost. Almost all of it comes from applications that match the certification rules rather than from chasing.
 
-The finance director's version of this question is the same arithmetic run on the certification calendar rather than on the cost report.
-
 ## Frequently asked questions
 
 **Do I need to understand the financial model to do my job?**
@@ -125,7 +121,7 @@ Operating revenue less operating costs, maintenance capital expenditure and tax,
 Yes, and a sharper one than usual. The drawdown certificate needs cost incurred and cost to complete, and earned value is the most defensible way to show that spend and progress are consistent. A cost performance index near 1.00 on a package that is visibly behind is exactly what a lenders' technical adviser is looking for.
 
 **Where does a project controls professional learn the finance side properly?**
-Not from a scheduling course, and not from an accounting qualification either, because neither examines the overlap. A chartered accountant is rarely examined on a drawdown certificate; an engineer is rarely examined on a cover ratio. The [PCI AI Project Finance Leader (PFL-AI)](https://projectcontrolsinstitute.org/finance-and-project-management-certification) credential sits in that gap, across 16 domains and 61 knowledge areas.
+Not from a scheduling course, and not from an accounting qualification either, because neither covers the overlap on its own. A chartered accountant is rarely asked to defend a drawdown certificate; an engineer is rarely asked to defend a cover ratio. The usual route is a financed job and somebody in the treasury team willing to explain the model, followed by a credential built on the overlap rather than on one side of it.
 
 ---
 
@@ -133,4 +129,4 @@ Not from a scheduling course, and not from an accounting qualification either, b
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: one link is in the body, in the closing question of the FAQ, which asks where a project controls professional learns the finance side properly. "PCI AI Project Finance Leader (PFL-AI)" points to https://projectcontrolsinstitute.org/finance-and-project-management-certification, the page that says what that credential examines. The drawdown paragraph and the working capital paragraph previously carried two further links to the same domain; both now make their point without one, because three links to one domain in a single piece is the pattern that gets a cluster devalued. Reciprocal: https://projectcontrolsinstitute.org/project-cash-flow-forecasting could cite this piece for what a drawdown certificate demands of a cash forecast.*
+*Internal links: one link is in the body, in the paragraph that says the drawdown forecast, the revenue forecast and the team's forecast have to be one forecast — the sentence that raises where anyone learns to produce it. "PCI AI Project Finance Leader (PFL-AI)" points to https://projectcontrolsinstitute.org/finance-and-project-management-certification, the page that sets out what that credential covers. The closing FAQ answer makes the same point without a link, because a link in the last line of an FAQ is a call to action wearing an FAQ answer. The drawdown paragraph and the working capital paragraph previously carried two further links to the same domain; both now make their point without one, because three links to one domain in a single piece is the pattern that gets a cluster devalued. Reciprocal: none warranted.*

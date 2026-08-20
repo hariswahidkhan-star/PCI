@@ -17,9 +17,7 @@ ab_id:         AB-00148
 
 # AI and quantity surveyor roles: the measurable answer
 
-AI is not replacing the role, and the reason is measurable rather than sentimental. AI and quantity surveyor roles are being reshaped at the take-off, where automated classification is now good but not good enough to price from. A tool scoring 0.90 on F1 has still under-measured, and somebody has to find the missing 11%.
-
-Written for LinkedIn as an original. It sits under the Institute's pillar on [what AI actually changes in project controls](https://pciai.org/ai-in-project-controls).
+AI is not replacing the role, and the reason is measurable rather than sentimental. AI and quantity surveyor roles are being reshaped at the take-off, where automated classification is now good but not good enough to price from. A tool with recall of 0.889 has missed one item in nine, and somebody has to find them.
 
 ## What does the evidence actually support?
 
@@ -27,7 +25,7 @@ Less than the headlines claim in either direction, and this piece is not going t
 
 What can be inspected is the performance of the tools themselves, because take-off and classification are measurable tasks with published-style metrics. That is a better basis for a career decision than a survey.
 
-So the question becomes narrower and more useful. Which quantity surveying tasks does a measurable machine already do well, and what happens to the ones it does at 90%?
+So the question becomes narrower and more useful. Which quantity surveying tasks does a measurable machine already do well, and what happens to the ones it does at 90%? That is the same test the pillar on [what AI actually changes in project controls](https://pciai.org/ai-in-project-controls) applies across the other project controls roles.
 
 ## How good is automated take-off, in numbers?
 
@@ -73,7 +71,7 @@ Because an interim valuation is not only a payment document. It is the input to 
 
 Steps three and five both run on the quantity surveyor's file. The measure of progress comes from measurement, and the constraint on claims is assessed head by head against entitlement and correspondence.
 
-That is the finance and delivery overlap stated plainly. A chartered accountant is examined on when revenue may be recognised, and almost never on measurement. A surveyor is examined on measurement, and almost never on the constraint test. Projects lose money in the gap between the two.
+That is the finance and delivery overlap stated plainly. The constraint test runs on the surveyor's file — head by head, against entitlement and correspondence — and its answer lands in somebody else's accounts, months later, in a figure the surveyor never sees. The two ends of that handover are rarely learned by the same person, and the money goes missing in between.
 
 ## Where do AI and quantity surveyor roles actually diverge?
 
@@ -97,7 +95,7 @@ Explain why a claim assessed as probable at £4.0m might enter revenue at £1.5m
 
 Say what a contract asset is, why it is not a receivable, and what has to happen for the balance to move.
 
-That combined ground, measurement discipline plus the accounting consequence, is what the PCI AI Project Finance Leader (PFL-AI) credential examines across 16 domains and 61 knowledge areas.
+The third of those is the one that decides whether a valuation becomes cash or a balance nobody will settle, and it cannot be answered from measurement alone or from the accounts alone. That combined ground is what the PCI AI Project Finance Leader (PFL-AI) credential covers, across 16 domains and 61 knowledge areas.
 
 ## Where should a firm actually deploy this?
 
@@ -130,4 +128,4 @@ It pushes certification towards the overlap. Measurement standards on their own 
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: two links are in the body, on two different domains. "What AI actually changes in project controls" points to https://pciai.org/ai-in-project-controls, the pillar this piece sits under, with an anchor that differs from the other role pieces rather than repeating one phrase across all of them. "IFRS 15 for construction contracts" points to https://projectcontrolsinstitute.org/ifrs-15-for-construction, where the piece walks the five steps and the reader will want the fuller treatment. The PFL-AI mention later on is left unlinked so the hub is cited once, not twice. Reciprocal: https://pciglobal.ai/quantity-surveyor-certification could cite this piece for the precision, recall and F1 arithmetic on an automated take-off.*
+*Internal links: two links are in the body, on two different domains. "What AI actually changes in project controls" points to https://pciai.org/ai-in-project-controls, in the sentence that narrows the question to which surveying tasks a measurable machine already does well, which is the question that pillar answers across the other roles; the anchor differs from the other role pieces rather than repeating one phrase across all of them. "IFRS 15 for construction contracts" points to https://projectcontrolsinstitute.org/ifrs-15-for-construction, where the piece walks the five steps and the reader will want the fuller treatment. The PFL-AI mention later on is left unlinked so the hub is cited once, not twice. Reciprocal: none warranted.*

@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          comparison
-title:         AACE certification cost: fees, renewals and the real total
-meta:          AACE certification cost is five separate lines, not one fee. What each line covers, how renewals compound, and the ten-year total worked properly.
+title:         AACE certification cost: the five lines behind the fee
+meta:          AACE certification cost is five separate lines, not one fee: membership, application, sitting, retake and recertification. What each buys and what to check.
 primary_kw:    AACE certification cost
 secondary_kw:  CCP certification, PSP certification, recertification fees, estimate at completion
 pillar:        Cost control and estimating
@@ -15,7 +15,7 @@ hashtags:      n/a (own site)
 ab_id:         AB-00063
 ---
 
-# AACE certification cost: fees, renewals and the real total
+# AACE certification cost: the five lines behind the fee
 
 AACE certification cost is never one number. Every AACE credential charges across five lines: membership, application, the examination sitting, any retake, and recertification each cycle. Member and non-member pricing differ on most of them. Take the current figures from AACE's own fee page, then add the line that dwarfs them all — your own hours.
 
@@ -25,7 +25,7 @@ AACE certification cost is never one number. Every AACE credential charges acros
 > should be checked there before you decide anything, because they change and because we are not
 > a neutral party about one of the entries.
 
-This page will not quote AACE's dollar figures. Fee schedules change, and a number copied from a comparison blog is usually a year stale by the time you read it.
+This page does not quote AACE's dollar figures. Fee schedules change, and a number copied from a comparison blog is usually a year stale by the time you read it. What it gives you instead is the five lines to price, what each one buys, and the arithmetic to run once you have read the current figures off AACE's own page.
 
 ## The five lines that make up any AACE certification cost
 
@@ -57,14 +57,16 @@ The PCL-AI certification examination is listed at **USD 500** with a current 30%
 
 Recertification and renewal is **USD 99 per three-year cycle**. The retake fee is stated as to be confirmed and displayed before any retake booking completes, which is the honest position for a scheme at founding stage.
 
-| Line | PCI, as published | Year one | Ten-year total |
-|---|---|---|---|
-| Membership and registration | USD 99, currently USD 49.50 | 49.50 | 49.50 |
-| Examination | USD 500, currently USD 350 | 350.00 | 350.00 |
-| Recertification and renewal | USD 99 per three-year cycle | — | 3 × 99 = 297.00 |
-| **Total** | | **USD 399.50** | **USD 696.50** |
+| Line | PCI, as published | Year one |
+|---|---|---|
+| Membership and registration | USD 99 a year, currently USD 49.50 | 49.50 |
+| Examination | USD 500, currently USD 350 | 350.00 |
+| Recertification and renewal | USD 99 per three-year cycle | — |
+| **Total, year one** | | **USD 399.50** |
 
-The arithmetic: 49.50 + 350 = **USD 399.50** in year one, then 99 at each three-year renewal, so 399.50 + 297 = **USD 696.50** across ten years. Discounts are described as current, which means they are a decision by the Institute and not a permanent price.
+The arithmetic for year one is 49.50 + 350 = **USD 399.50**. After that two lines recur on different clocks: membership at USD 99 a year for as long as you keep it, and USD 99 at each three-year renewal.
+
+This page prints no ten-year figure, and the reason is worth copying. Whether membership has to run alongside the credential, or only makes the examination cheaper in the year you sit it, decides the answer — and multiplying it out either way would be a guess dressed as a total. Ask the body, then do the multiplication yourself. Discounts are described as current, which means they are a decision by the Institute and not a permanent price.
 
 Build the same three-row table for the AACE credential you are considering, from AACE's page, on the day you decide. Two filled-in tables beat any ranked list.
 
@@ -102,15 +104,15 @@ Then the part a cost examination stops short of. Revenue on a contract like this
 
 Move the EAC from £25.40m to £28.53m and you move reported progress, reported revenue and reported margin in the same keystroke, which is [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) step by step — and if forecast cost passes the contract price, the expected loss is recognised in full as soon as it is known rather than spread across the remaining months.
 
-A chartered accountant is examined on recognition and provisions, almost never on an earning rule. An engineer is examined on progress measurement, almost never on cut-off. The number above sits between them, which is why PCI examines both sides in one syllabus rather than treating the join as somebody else's subject.
+The £3.13m spread above is chosen by a planner and booked by an accountant, and the two are examined from different syllabuses by people who rarely read each other's. That join is what PCI's own examination is built on, which is the honest reason its fee appears on this page at all.
 
-## Where PCI fits, and what it does not claim
+## What the PCI fee above actually buys
 
-The Project Controls Institute is an independent certifying body with three credentials, each with its own Body of Knowledge and examination: PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
+The figures in the one table this page can source belong to the Project Controls Institute, so the same five-line test should be turned on them.
 
-Each Body of Knowledge holds the same proportions: 40% finance and reporting, 40% project management, 20% governed AI. Behind them sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
+The examination fee buys a scenario paper against a published Body of Knowledge — 40% finance and reporting, 40% project management, 20% governed AI — which is why the EAC arithmetic above and the accounting consequence behind it are examined in the same sitting. It does not buy preparation: the Institute separates the people who prepare candidates from the decision on whether they passed, which is the test applied to every other body on this page.
 
-Stated plainly: PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body, and does not claim to be. It claims no recognition, endorsement, affiliation or partnership with AACE or any other body, and publishes no pass rates, salary figures or holder numbers.
+What the fee does not buy is accreditation. PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body, does not claim to be, claims no recognition or partnership with AACE, and publishes no pass rates, salary figures or holder numbers. Price that in when you set the line above against AACE's.
 
 ## Frequently asked questions
 
@@ -118,7 +120,7 @@ Stated plainly: PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17
 Usually yes, on arithmetic alone. Bodies price examinations lower for members, and the saving on a single sitting often covers most of a year's membership. Do the subtraction for your own case: member fee plus membership against non-member fee. If the difference is close, join for the recommended practices rather than the discount.
 
 **How much does recertification cost over a career?**
-More than the examination, given enough years. A credential renewed every three years for fifteen years is five renewal payments plus the continuing education behind them. Price a credential on its cycle cost multiplied by the years you expect to hold it, not on the sitting fee, then ask [whether the CCP earns back that ten-year total](https://credentialfinder.org/ccp-certification-worth-it).
+More than the examination, given enough years. A credential renewed every three years for fifteen years is five renewal payments plus the continuing education behind them. Price a credential on its cycle cost multiplied by the years you expect to hold it, not on the sitting fee, then ask [whether the CCP earns back what it charges](https://credentialfinder.org/ccp-certification-worth-it).
 
 **Are training courses included in the certification fee?**
 No, and treat any provider that bundles them with suspicion. If the organisation taking your training fee also decides whether you passed, you bought a course rather than a certification. Preparation and the certification decision should sit with different parties.

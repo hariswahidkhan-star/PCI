@@ -44,9 +44,9 @@ An application that scores well on responsibility and badly on contribution is t
 
 **4. Gather artefacts, not adjectives.** The procedure you wrote, with the version history showing others adopted it. The training deck someone else now delivers. The published article. The signed baseline. Assessors trust documents that existed before the application did.
 
-**5. Quantify one contribution properly.** Numbers with a method behind them separate a strong case from a plausible one. There is a worked example below.
+**5. Quantify one contribution properly.** Numbers with a method behind them separate a strong case from a plausible one. The cash conversion cycle example in the next section shows what that looks like.
 
-**6. Brief your referees.** Send each one the criteria, your case, and the two or three specific things you would like them to speak to from direct knowledge. A vague reference is usually a badly briefed one.
+**6. Brief your referees.** Send each one the criteria, your case, and the two or three specific things you would like them to speak to from direct knowledge. A referee who has read [what assessors look for in a fellowship application](https://projectcontrolsinstitute.org/professional-fellowship-application) writes to it; a vague reference is usually a badly briefed one.
 
 **7. Submit, then stay available.** Panels ask clarifying questions and often defer rather than reject. A prompt, precise answer to a question is itself evidence of how you work.
 
@@ -128,4 +128,4 @@ Typically weeks to months, depending on how often the reviewing panel sits. Publ
 
 ---
 
-*Internal links: this how-to should link to [what an honorary fellowship in engineering recognises](https://projectcontrolsinstitute.org/honorary-fellowship-engineering) with that anchor, to [what assessors look for in a professional fellowship application](https://projectcontrolsinstitute.org/professional-fellowship-application), and to [what a certified project controls professional proves](https://projectcontrolsinstitute.org/certified-project-controls-professional); the fellowship for project professionals piece should link back here with the anchor "how to become a fellow of a professional institution".*
+*Internal links now in the body, all on this domain: [what assessors look for in a fellowship application](https://projectcontrolsinstitute.org/professional-fellowship-application) sits in step 6, where the reader is told to brief referees and the obvious next question is what the referee should be writing towards; [what an honorary fellowship in engineering recognises](https://projectcontrolsinstitute.org/honorary-fellowship-engineering) sits in the section on choosing an institution, at the sentence that separates certification from recognition; and [what a certified project controls professional proves](https://projectcontrolsinstitute.org/certified-project-controls-professional) sits where the examined credentials are named and held apart from the fellowship grades. Three same-domain links is the limit, so nothing further was added, and no reciprocal link is asked for.*

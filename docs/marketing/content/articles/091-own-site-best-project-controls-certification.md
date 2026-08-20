@@ -42,9 +42,11 @@ Six families exist in this discipline, and they are not competing versions of th
 
 Read the columns, not the badge. A tool certificate and a chartered route sit in the same list only because employers put them in the same box on a job advertisement.
 
-## The one question that sorts every certification in a minute
+The three credentials in the last row are the PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI); the codes stand in for them from here on.
 
-Ask who decides whether you passed. If the organisation that took your training fee also awards the certificate, you bought a course, and a course is an input rather than evidence.
+## Who decides whether you passed?
+
+That is the question, and it sorts the table above in about a minute. If the organisation that took your training fee also awards the certificate, you bought a course, and a course is an input rather than evidence.
 
 Then ask what happens if you fail. A certification publishes a resit fee, a waiting period and domain-level feedback. A course publishes none of that, because failing is not one of its outcomes.
 
@@ -92,15 +94,15 @@ Same site, same month, same field data. One assumption chosen by a planner decid
 
 Pick the row that matches your next eighteen months, not the row with the most familiar acronym. Anyone sitting in the first row can compare [what each scheduling credential examines](https://credentialfinder.org/best-certification-for-planning-engineers) before paying a fee.
 
-## What it costs, over ten years rather than at the checkout
+## What it costs, over the years you hold it rather than at the checkout
 
 Every credential has five cost lines: application, examination, any membership required to sit, renewal per cycle, and the retake. Compare the filled-in version.
 
 PCI publishes its fees. The PCL-AI examination is listed at **USD 500** with a current 30% discount applied, taking it to **USD 350**. Student membership and registration is **USD 99 a year**, discounted 50% to **USD 49.50**. Recertification and renewal is listed at **USD 99 per three-year cycle**.
 
-A candidate who passes first time and stays a member pays 49.50 + 350 = **USD 399.50** in year one, then 99 at each renewal. Over ten years that is 399.50 + (3 × 99) = **USD 696.50**.
+A candidate who passes first time pays 49.50 + 350 = **USD 399.50** in year one. After that two lines recur on different clocks: membership at USD 99 a year for as long as you keep it, and USD 99 at each three-year renewal. Multiply those out for the years you expect to hold the credential, and ask any body — this one included — whether membership has to run alongside the certificate before you assume either answer.
 
-For AACE and PMI, gather the same five lines from their own fee pages on the day you decide, because member and non-member pricing differ and published figures go stale within a year. The five lines for the AACE credentials, and what they come to once renewals are counted, are set out in [the AACE fee and renewal breakdown](https://credentialfinder.org/aace-certification-cost). Then add the hours: eighty hours of preparation valued at even USD 40 an hour is USD 3,200 of your own time, which dwarfs every fee here.
+For AACE and PMI, gather the same five lines from their own fee pages on the day you decide, because member and non-member pricing differ and published figures go stale within a year. What each of those lines buys, and what to check on it before you total anything, is set out in [the five AACE fee lines](https://credentialfinder.org/aace-certification-cost). Then add the hours: eighty hours of preparation valued at even USD 40 an hour is USD 3,200 of your own time, which dwarfs every fee here.
 
 ## Where PCI fits, and what it does not claim
 
@@ -112,9 +114,11 @@ The Project Controls Institute is an independent certifying body with three AI-e
 | PFL-AI | PCI AI Project Finance Leader | 16 domains, 61 knowledge areas |
 | PML-AI | PCI Project Management Leader – AI | 16 domains, 63 knowledge areas |
 
-Each Body of Knowledge holds the same proportions: 40% finance and reporting, 40% project management, 20% governed AI. Behind them sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
+Now run the entry through the two axes this page has used on every other row. On scope, each Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI, which puts the overlap worked above — the earning rule, the forecast and what a finance function does with it — inside one syllabus instead of on either side of a professional boundary.
 
-Stated plainly: PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body, and does not claim to be. The scheme is designed with reference to ISO/IEC 17024 principles, including a criterion-referenced cut score and strict separation between preparation and the certification decision. PCI claims no recognition, endorsement, affiliation or partnership with any other body, and publishes no pass rates, salary figures or holder numbers, because at founding stage it would be inventing them.
+On independence, the cut score is criterion-referenced rather than set against a cohort, and the people who prepare candidates do not decide whether they passed.
+
+On the third test any reader is entitled to apply, PCI is the youngest name in the table and reads like it. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be, it claims no recognition, endorsement, affiliation or partnership with any other body, and it publishes no pass rates, salary figures or holder numbers, because at founding stage it would be inventing them. Read the syllabus and the cut-score policy before you weigh it against the older families above.
 
 ## Frequently asked questions
 

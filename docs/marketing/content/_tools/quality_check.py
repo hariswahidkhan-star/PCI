@@ -20,7 +20,14 @@ BANNED = ["in today's fast-paced", "delve", "unlock the", "game-changer", "game 
           "seamless", "tapestry", "testament to", "it's important to note",
           "navigate the complexities", "robust solution", "ever-evolving", "in conclusion",
           "dive deep", "moreover,", "furthermore,"]
-LEVERAGE = re.compile(r"\bleverag(e|es|ed|ing)\b", re.I)
+# _BRIEF.md bans "leverage" as a VERB, which is the generated-text tell. The noun is ordinary
+# English and ordinary finance: "its leverage is in the timing", "a highly leveraged balance
+# sheet". Matching the stem flags both, so the verb senses are matched specifically — the
+# inflections that can only be verbs, and the bare form when it follows a subject or an
+# auxiliary rather than a determiner or possessive.
+LEVERAGE = re.compile(r"\bleverag(es|ing)\b"
+                      r"|\b(?:to|can|could|will|would|should|must|may|might|helps?|lets?|"
+                      r"we|they|you|it|teams?|firms?|and|then)\s+leverage\b", re.I)
 LANDSCAPE = re.compile(r"\blandscape\b", re.I)
 
 

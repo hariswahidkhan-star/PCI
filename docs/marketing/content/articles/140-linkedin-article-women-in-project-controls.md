@@ -19,8 +19,6 @@ ab_id:         AB-00127
 
 There is no credible published figure for the share of women in project controls, because national statistics contain no such occupation and the profession has never run a census. What can be measured, honestly and quickly, is progression inside a single function. The method below takes an afternoon and produces numbers you can defend.
 
-Written for LinkedIn as an original. It sits under the Institute's certification and careers pillar.
-
 ## Why is there no reliable figure for women in project controls?
 
 Because the profession is invisible to the systems that count professions.
@@ -30,6 +28,16 @@ Occupational classifications used by national statistics offices do not carry a 
 Job titles compound it. Planner, cost engineer, cost controller, scheduler, controls analyst and controls manager describe overlapping work that different firms slice differently, so no title-based sample captures the same population twice.
 
 Any figure you see for the profession's gender composition has therefore been assembled from a survey of unknown coverage, a job-board scrape, or one company's headcount. None of those is the profession, and PCI will not publish a number it cannot source.
+
+## What is the profession, and how do people get into it?
+
+Project controls is the function that plans a project's time and cost, measures what has actually happened, forecasts where it will end, and reports that position to whoever has to decide something. Planners, schedulers, cost engineers, cost controllers, estimators and controls analysts all sit inside it.
+
+Almost nobody arrives with a project controls degree, because there is no standard one. People move across from site engineering, quantity surveying, accounting, construction management, procurement or data analysis, usually after two to five years in that first discipline.
+
+Two routes dominate. The first is internal: an engineer or surveyor picks up the programme or the cost report on a live job and keeps it, and the title follows the work a year later. The second is an advertised analyst role, where the employer expects tool literacy and teaches the discipline on the job.
+
+Communities form around tools, sectors and regional practitioner groups rather than around one professional association, which is part of why nobody has ever run a census. That is worth knowing before you go looking for the profession's numbers, and it is why the rest of this piece measures a function rather than a field.
 
 ## What can a single organisation measure instead?
 
@@ -130,4 +138,4 @@ There is no reliable series to answer that, which is itself the honest answer. A
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Linking note: two cross-estate links now sit in the body. The pciworld.org link on the planning engineer route sits in the paragraph about making invisible allocation decisions visible, because that is where a reader entering the profession asks what the first documented step looks like. The hub verification link sits where the piece says a credential is a documentary input, because the question that sentence raises is how a third party checks it. The earlier link to credentialfinder.org/verify was wrong — no such page exists — and it has been retargeted to the Institute's own verification page. The second pciworld.org link, to the salary scope ladder, was dropped to keep one link per domain; the funnel table names the five bands itself, so the sentence loses nothing. A reciprocal link back to this piece would fit on the planning engineer route page, where progression evidence is discussed.*
+*Linking note: two cross-estate links now sit in the body. The pciworld.org link on the planning engineer route sits in the paragraph about making invisible allocation decisions visible, because that is where a reader entering the profession asks what the first documented step looks like. The hub verification link sits where the piece says a credential is a documentary input, because the question that sentence raises is how a third party checks it. The earlier link to credentialfinder.org/verify was wrong — no such page exists — and it has been retargeted to the Institute's own verification page. That is the right destination on the merits and not only on availability: credentialfinder.org owns comparison and what an examinable standard requires, but it does not hold the register, and a hiring manager checking whether a named person actually holds a PCI credential has to reach the issuing body. The comparison domain would need its own verification explainer before it could carry this link, and the estate does not have one yet; until it does, verification of a PCI credential belongs on the hub. The second pciworld.org link, to the salary scope ladder, was dropped to keep one link per domain; the funnel table names the five bands itself, so the sentence loses nothing.*

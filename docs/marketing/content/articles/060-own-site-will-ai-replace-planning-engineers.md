@@ -17,7 +17,7 @@ ab_id:         AB-00042
 
 # Will AI replace planning engineers? The honest answer
 
-Will AI replace planning engineers? No. It removes most of the assembly work — updating, checking, formatting, first-draft commentary — and leaves the two things it cannot do: deciding whether the logic reflects how the work will be built, and standing behind a forecast date when money depends on it. The role shrinks in hours and grows in consequence.
+Will AI replace planning engineers? No, but it is taking the file maintenance. Updating, checking, reformatting and first-draft commentary are all going. What stays is the work that gets argued over in a progress meeting: whether the logic matches how the crews will actually build it, and whose name is on the completion date the client is given.
 
 People asking the question usually mean will the job still exist in ten years. It will. The rest of this page is the detail behind that, including the arithmetic that shows exactly where a model stops being able to help.
 
@@ -53,6 +53,8 @@ The scheduling tool now needs a rule, and there are two.
 
 Carry both forward through 30 days of steel erection and 20 days of cladding: retained logic gives 22 + 30 + 20 = **day 72**, progress override gives 12 + 30 + 20 = **day 62**.
 
+Put a contractual completion obligation at day 80 beside those two finishes and the path carries eight days of total float on the retained-logic reading and eighteen on the progress-override reading.
+
 Ten days of forecast completion, decided by a setting. No model can choose correctly, because the right answer depends on whether the remaining pile caps are physically dependent on the remaining piles — a question answered by looking at the drawings and the site, not the file.
 
 A planner who understands that difference is worth more in an AI-heavy environment, not less, because the tool will now produce both answers instantly and someone still has to say which one goes to the client.
@@ -69,9 +71,11 @@ The teams that do shrink are the ones whose planning function was mostly adminis
 
 More than before, because the checking burden has moved. When a person builds a forward and backward pass by hand, errors are slow and visible; when a tool produces it instantly, errors are fast and invisible.
 
-Two examples are worth keeping in mind. A programme can have more than one critical path, and a summary that names only one has hidden half the exposure; [a network with two governing chains, worked through by hand](https://pciai.org/ai-for-construction-scheduling) shows how easily an assistant reports just the one. And total float belongs to somebody under most contracts, so the arithmetic tells you there are five days while [who owns the float under your contract](https://projectcontrolsinstitute.org/total-float) decides who may spend them.
+Two examples are worth keeping in mind. A programme can have more than one critical path, and a summary that names only one has hidden half the exposure; [a network with two governing chains, worked through by hand](https://pciai.org/ai-for-construction-scheduling) shows how easily an assistant reports just the one. And total float belongs to somebody under most contracts, so a piling path forecast to finish on day 72 against a day-80 completion obligation carries eight days of it, while [who owns the float under your contract](https://projectcontrolsinstitute.org/total-float) decides who may spend them.
 
-The same holds on the cost side. Four estimate-at-completion methods produce four different final costs from identical inputs, and choosing between them is a statement about what caused the variance. A model computes all four; it cannot tell you whether the cause has passed.
+The same holds on the cost side. Four estimate-at-completion methods produce four different final costs from identical inputs. On a £100m budget with £40m spent against £35m of earned value, treating the overrun as a one-off gives £105m and assuming performance continues gives £114.3m.
+
+Choosing between them is a statement about what caused the variance. A model computes all four; it cannot tell you whether the cause has passed.
 
 ## What happens to junior planning engineers?
 

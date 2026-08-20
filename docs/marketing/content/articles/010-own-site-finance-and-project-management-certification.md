@@ -42,31 +42,17 @@ A project lives in the overlap, and the overlap is where the money is lost. It i
 
 Look at the estimate at completion row. It is produced by one profession, consumed by the other, and examined properly by neither.
 
-## The £5.6m illustration
+## What a revised forecast does to reported profit
 
-A fixed-price contract of £100m carries a forecast cost of £80m, so an expected margin of £20m. Costs incurred to date are £40m.
+A revised estimate at completion is not an internal management number. Where progress is measured as costs incurred divided by total forecast costs, raising the forecast lowers the percentage complete and reverses revenue that has already been reported. No cash moves and no invoice changes.
 
-Under cost-to-cost measurement, progress is 40 / 80 = 50%. Cumulative revenue is £50m, cost is £40m, and reported margin is £10m.
+Push the forecast past the contract value and the effect changes character. The job is now expected to lose money, and the whole expected loss lands in one period rather than spreading across the work that remains.
 
-Now the cost engineer revises the forecast to £90m. Nothing has been spent that was not spent before, and no invoice has changed.
-
-Progress becomes 40 / 90 = 44.4%. Cumulative revenue becomes £44.4m. Reported margin falls from £10m to £4.4m, which is a **£5.6m reduction in profit produced by a forecast**.
-
-The engineer who moved that number was doing their job well. Very few of them know they moved reported profit by £5.6m, because nobody ever examined them on it.
-
-Push the forecast past £100m and the effect sharpens. The contract becomes onerous, and the entire expected loss is recognised at once rather than spread over the remaining work.
-
-That is the mechanism behind the pattern every senior finance director recognises: a project that reports acceptable margin for three quarters, then corrects violently in one month. The engineering deterioration happened over nine months. The financial event happened in one.
-
-## Why AI widened the gap rather than closing it
-
-Model output is now entering forecasts, schedules and risk registers, often through a tool that arrived with a licence rather than through a decision.
-
-A model that predicts activity slippage, classifies cost codes or drafts a variance narrative is making an assertion that will be reported. The person accountable for that report has to be able to say how good the assertion is.
-
-That requires a specific literacy, and it is not the literacy either profession was examined on. Knowing that a model is 91% accurate is worth nothing without knowing what the base rate was.
+The engineer who moved that number was doing their job well. Very few of them know what it did to reported profit, because nobody ever examined them on it. [How a forecast is consumed under IFRS 15](https://projectcontrolsinstitute.org/ifrs-for-project-controls) works the movement through in pounds, from a fixed-price contract to the margin that lands in the accounts.
 
 ## What governed AI means in an examination
+
+Model output now arrives inside forecasts, schedules and risk registers, usually with a software licence rather than with a decision anyone recorded, so a third competence has to be examined: whether a machine-produced number is fit to be reported. [How AI widened the gap between the two syllabuses](https://projectcontrolsinstitute.org/why-pci-ai) makes that case against the qualifications already on the market. What examining it looks like is the arithmetic below.
 
 Take a model that flags schedule activities at risk of slipping. The project has 1,000 remaining activities, of which 120 will genuinely slip. The model flags 150, and 90 of those do slip.
 
@@ -122,23 +108,15 @@ Where statutory or chartered status is required for a piece of work, that requir
 
 ## Choosing a finance and project management certification
 
-Start from what you are asked to defend in a meeting.
+Choose by the side of the gap you arrived from, because the credential's job is to take you across it.
 
-If you are asked to defend a date, a float position or a progress figure, PCL-AI is the closest fit. The measurement discipline is the centre of it, and the finance content exists so that you can say what your measurement did to the reported number. [What the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification), domain by domain, is the place to test that against your own week.
+Someone who came up through measurement — planning, progress, earned value — crosses into reporting through PCL-AI, and [what the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification), domain by domain, is the place to test that against your own week.
 
-If you are asked to defend a forecast, a margin or a cash position, PFL-AI fits. The reporting content is the centre, and the delivery content exists so that you can interrogate the forecast rather than receive it.
+Someone who came up through finance crosses the other way through PFL-AI, which examines the delivery mechanics behind a forecast they currently receive and cannot interrogate.
 
-If you are asked to defend the delivery of the whole thing, PML-AI fits. Contract, scope, integration and stakeholders sit at the centre, with enough of both other disciplines to stop you being told two different truths by two different reports.
+Someone accountable for the whole result takes PML-AI, where contract, scope and integration sit at the centre, with enough of both other disciplines to stop two reports telling them two different things.
 
-None of the three is a beginner's qualification, and none of them is a replacement for experience. They are examinations of whether you can do the crossing that the job already requires.
-
-## What changes for someone who holds one
-
-The month-end conversation changes first. A cost engineer who can state what their revised estimate at completion does to recognised revenue is no longer handing over a number and hoping.
-
-The forecast basis improves next, because someone who knows [how a forecast is consumed under IFRS 15](https://projectcontrolsinstitute.org/ifrs-for-project-controls) writes down why it moved. That written basis is the difference between a forecast that survives an audit and one that survives a meeting.
-
-And the AI question becomes answerable. Somebody in the room can say what precision and recall the model achieved on this project's data, and whether that is good enough for the decision being taken.
+None of the three is a beginner's qualification, and none of them replaces experience. They examine the crossing the job already requires.
 
 ## Frequently asked questions
 
@@ -146,7 +124,7 @@ And the AI question becomes answerable. Somebody in the room can say what precis
 Both, deliberately. The Bodies of Knowledge devote 40% to finance and reporting, 40% to project management and 20% to governed AI, so the syllabus never lets a candidate read only the side they came from. The point is the crossing between them, because that is where projects lose money and where neither traditional syllabus goes.
 
 **Why not just take an accounting qualification and a project management one?**
-You can, and some people do. It takes years and still leaves the handover unexamined, because each syllabus stops at its own boundary. Neither will ask you what a revised estimate at completion does to recognised revenue, which is the question a project actually poses every month. [The standard a project controls certification is decided against](https://projectcontrolsinstitute.org/project-controls-certification) is the wider comparison.
+You can, and some people do. It takes years and still leaves the handover unexamined, because each syllabus stops at its own boundary. Neither will ask you what a revised estimate at completion does to recognised revenue, which is the question a project actually poses every month.
 
 **What does the AI component cover?**
 The governed use of machine output in project decisions. That includes reading precision, recall and F1 rather than headline accuracy, understanding base rates, knowing when a model's training data no longer resembles your project, and keeping an audit trail when generated text enters a report someone signs.
@@ -157,9 +135,6 @@ No. The credentials are structured by the discipline you defend rather than by t
 **How many domains and knowledge areas are there?**
 PCL-AI covers 13 domains across 61 knowledge areas. PFL-AI covers 16 domains across 61 knowledge areas. PML-AI covers 16 domains across 63 knowledge areas. Underneath sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes.
 
-**Which one should I take first?**
-Take the one that matches what you are accountable for now, not the one that matches where you would like to be. The credentials are designed to be read across, so the second is substantially easier than the first, and starting with the material you use daily makes the crossing into the other discipline concrete rather than theoretical.
-
 ---
 
-*Internal linking note: three same-domain links are now in the body. [What the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification) sits in the choosing section, at the paragraph that names PCL-AI as the fit for someone defending dates and progress. [How a forecast is consumed under IFRS 15](https://projectcontrolsinstitute.org/ifrs-for-project-controls) sits where the piece says a holder writes down why the forecast moved. [The standard a project controls certification is decided against](https://projectcontrolsinstitute.org/project-controls-certification) answers the FAQ asking why two separate qualifications are not enough. The why-PCI-AI and budgeting pieces were dropped to hold the two-to-three internal cap; the why-PCI-AI pillar links here instead, which keeps the flow one way. Reciprocal link worth making: the PCL-AI certification guide should point back here with the anchor "why the two syllabuses leave a gap".*
+*Internal linking note: three same-domain links are in the body. [How a forecast is consumed under IFRS 15](https://projectcontrolsinstitute.org/ifrs-for-project-controls) sits in the forecast-movement section, where the reader is told a revised estimate at completion changes reported profit and asks by how much; the IFRS pillar carries the worked pounds, so this page states the mechanism and sends them there rather than repeating the arithmetic. [How AI widened the gap between the two syllabuses](https://projectcontrolsinstitute.org/why-pci-ai) sits at the head of the governed-AI section, which is where the rationale argument belongs — that pillar owns it, and this page keeps only the examination arithmetic. [What the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification) sits in the choosing section, at the paragraph naming PCL-AI as the crossing for someone who arrived through measurement. The certification-pillar link in the FAQ was dropped to hold the two-to-three internal cap. No reciprocal link is proposed; the flow here runs one way, out to the pages that own each subject.*

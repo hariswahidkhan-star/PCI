@@ -43,11 +43,15 @@ Five routes exist, and they answer different questions. The table sets them agai
 
 The routes are not rivals. A planner with method and no tool is unemployable on an EPC bid; a planner with tool and no method produces schedules that pass a file check and fail a challenge. The wider question of [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification) sits behind every row of that table.
 
-We do not publish other providers' fees here, because they change by region and reseller. Ask for the current published price, and ask separately whether the examination fee is included.
+We do not publish other providers' fees here, because they change by region and reseller. What does not change is the shape of the bill, and separating it is what makes two quotes comparable.
+
+A self-paced library is priced per seat for a fixed access period. A live virtual course is priced per delegate per day, and the day rate is buying tutor time rather than content. Sandbox access to a licensed copy of P6 is sometimes inside the price and sometimes a separate line, which is the item most often missed. A vendor examination fee is normally billed apart from any course, and employer-led training costs nothing in cash and is paid for in portability.
+
+Ask for those lines separately, ask what a resit costs, and ask whether the price includes the licence you will practise on.
 
 ## Is Primavera P6 certification worth it?
 
-Buy it when a named market requires it. Large contractors, owner clients in oil and gas, rail and defence, and consultancy benches often screen on the tool by name, and a vendor certificate clears that screen quickly.
+Buy it when a named market requires it. Test that yourself before paying: pull twenty adverts for the roles you actually want and count how many name P6 in the essential requirements rather than the desirable ones. Where the tool is in the essential list, a vendor certificate clears that screen quickly.
 
 Skip it when your work is already inside a P6 estate. If you update the same programme every month, your evidence is the programme, and a certificate adds little to a portfolio that already exists.
 
@@ -69,13 +73,13 @@ The same update, run under the two settings, can produce different completion da
 
 ## What does the schedule do to the money?
 
-This is the overlap the discipline keeps losing money in. A finance team is examined on cut-off and revenue; an engineer is examined on float and progress. The forecast finish date sits in both and belongs to neither.
+This is the overlap the discipline keeps losing money in. A forecast finish date is a delivery number and an accounting input at the same time, and it is usually owned by someone who is measured on only one of the two.
 
-Take a package where site preliminaries run at £45,000 a week. An eight-week forecast slip is 8 × 45,000 = **£360,000** of time-related cost, and it lands whether or not anyone has raised a variation for it.
+Take a fit-out package with a contract price of £18.0m and a cost base of £16.2m, of which £9.0m has been incurred at the cut-off. Site preliminaries run at £45,000 a week, so an eight-week forecast slip is 8 × 45,000 = **£360,000** of time-related cost, and it lands whether or not anyone has raised a variation for it.
 
-The revenue effect is separate and larger. Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs, so the same slip changes the estimate at completion, which changes the percentage, which changes revenue recognised in the period.
+The revenue effect comes out of that same £360,000, and it runs the opposite way to the one people expect. Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs. Adding the slip to the cost base moves the denominator without changing what has been earned, so reported revenue falls.
 
-Say costs incurred are £12.4m. At a total expected cost of £26.2m the measure is 12.4 ÷ 26.2 = **47.3%**. At £29.2m it is 12.4 ÷ 29.2 = **42.5%**. On a £27.5m contract price that is £13.02m against £11.68m of cumulative revenue, a **£1.34m** difference produced by a scheduling assumption.
+Before the slip: 9.0 ÷ 16.2 = **55.6%** complete, which on an £18.0m price is **£10.00m** of cumulative revenue. After it: 9.0 ÷ 16.56 = **54.3%**, or **£9.78m**. The period takes a **£217,000** reversal on work already done, on top of the £360,000 of cost, and the expected margin falls from £1.8m to £1.44m.
 
 Nothing PCI publishes is accounting advice, and the treatment depends on the contract. The point for a planner is narrower: a date is an accounting input, so the person who moves the date should know who else it moves.
 
@@ -95,11 +99,11 @@ Where the answer is a method credential rather than a tool course, [how the plan
 
 ## Where scheduling sits in the PCI curriculum
 
-PCL-AI examines 13 domains across 61 knowledge areas, and project scheduling is one domain among them rather than the whole subject. What [the tool-neutral scheduling credential](https://projectcontrolsinstitute.org/pcl-ai-certification) covers in the other twelve is set out in full there.
+Scheduling is one domain of the thirteen PCL-AI examines, and the proportion is the point. A planner who cannot read a cost report is not short of harder scheduling questions; they are short of the questions the other domains ask. What [the tool-neutral scheduling credential](https://projectcontrolsinstitute.org/pcl-ai-certification) covers in the remaining twelve is set out in full there.
 
-The Body of Knowledge is built in a 40 / 40 / 20 proportion of finance and reporting, project management, and governed AI. Scheduling sits in the middle block, next to cost management, earned value and risk, because that is where it is actually used.
+The examination is tool-neutral by design. A scenario hands you a network, a progress position and a contract condition, and asks what you would do about them. It never asks where a dialogue box lives, because that answer changes with the release and the judgement does not.
 
-The examination is tool-neutral by design. If a credential can only be earned by people who use one vendor's software, it is measuring software.
+That is also the test to apply to any credential you are considering. If it can only be earned by people who use one vendor's software, it is measuring the software.
 
 ## Frequently asked questions
 

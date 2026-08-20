@@ -68,13 +68,19 @@ There is no single estimate at completion. There are four standard methods, each
 
 The spread between the cheapest and dearest method is **£2.17m** on a £12m package, more than most of the variances anybody will argue about this month.
 
-Two of those rows are the same calculation in different clothes, and knowing that is part of the competence: BAC ÷ CPI and AC + (BAC − EV) ÷ CPI both reduce to AC × BAC ÷ EV.
-
 Controls picks the method, states the assumption in writing and defends it. Here the overrun is spread across several cost codes rather than sitting in one settled claim, so **£13.65m** — an overrun of about £1.65m — is the defensible answer.
 
 What controls does not decide is whether 0.879 is acceptable, whether to accelerate the steel, or whether to raise a claim. It decides whether 0.879 is *true*: whether earned value is measured properly, whether actual cost includes everything committed, and whether the cut-off is clean.
 
 Management makes the call from there. The reason to separate the two is that the person who will have to explain a £1.65m overrun should not also be the person choosing the percentage complete.
+
+## Why do two of the four EAC formulas give the same answer?
+
+Because two of them are one calculation in different clothes. BAC ÷ CPI and AC + (BAC − EV) ÷ CPI both reduce to AC × BAC ÷ EV whenever CPI is the cumulative index, so the two rows cannot disagree.
+
+Check it on the figures above. BAC ÷ CPI is 12,000,000 ÷ 0.879 = **£13.65m**. AC + (BAC − EV) ÷ CPI is 4,300,000 + 8,220,000 ÷ 0.879 = 4,300,000 + 9,350,794 = **£13.65m**.
+
+It matters in a forecast review. A pack listing both as separate methods and noting that they agree has quoted one method twice and called it corroboration. The two genuinely different assumptions are in the first and fourth rows, and the spread between those is the one worth arguing about.
 
 ## Why project controls reports independently
 
@@ -119,17 +125,23 @@ The move from controls into management is common, because a controls background 
 
 Project management syllabuses examine planning, stakeholders and scope. Project controls training examines schedule, cost and earned value. Neither, traditionally, examines what happens once the number leaves the project.
 
-A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy, and almost never on a critical path or an earning rule. An engineer is examined on float and progress measurement, and almost never on cut-off or a contract asset.
+The £3,780,000 of earned value above was produced by a rule of credit that a planner wrote and a controls lead approved. Neither of them was examined on where that figure goes next.
 
-That earned value figure of £3,780,000 is also an input to a measure of progress used to recognise revenue over time. Loose earning rules make loose accounting, and the audit conversation lands on a controls method never designed to be defended in those terms.
+It goes into the accounts. Where progress towards a performance obligation is measured on a cost-based input basis, the same measurement feeds revenue recognised in the period, so a rule of credit written to make a monthly report readable ends up standing behind a number in the financial statements.
+
+Loose earning rules make loose accounting, and the audit conversation lands on a controls method never designed to be defended in those terms.
+
+Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the contract.
 
 ## How PCI examines the two sides
 
 The PCI AI Project Controls Leader (PCL-AI) examines **13 domains across 61 knowledge areas**, covering the measurement side and its reporting consequences together.
 
-The PCI Project Management Leader – AI (PML-AI) examines **16 domains across 63 knowledge areas**, weighted towards delivery, contract and governance.
+The PCI Project Management Leader – AI (PML-AI) examines **16 domains across 63 knowledge areas**, covering the delivery and decision side of the same work.
 
 Both Bodies of Knowledge run in a **40 / 40 / 20** proportion across finance and reporting, project management, and governed AI, which is the deliberate answer to the gap described above.
+
+PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
 ## Frequently asked questions
 

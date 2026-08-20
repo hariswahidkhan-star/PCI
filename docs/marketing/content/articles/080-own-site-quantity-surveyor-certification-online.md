@@ -42,6 +42,8 @@ It does not change supervised experience. Chartered routes assess judgement buil
 
 It also does not change the local rules. Standard methods of measurement, contract forms and payment legislation differ by market, so check the syllabus states which market it teaches, or that it teaches principles and says so plainly.
 
+In a market carrying dozens of providers selling the same phrase, that single question sorts them faster than any brochure, and [how the courses in one crowded market actually differ](https://pciglobal.ai/project-controls-course-india) works the same test through against one country's offering.
+
 ## How do you tell a credential from a certificate?
 
 Five checks, all of which can be made before you spend anything.
@@ -52,7 +54,7 @@ Is there an examination, is it proctored, and is the pass mark stated? An assess
 
 Can a third party verify the certificate from an issuer's record, using a reference, without contacting you? A PDF is not a credential, and the practical test is whether an employer can [check a credential record independently](https://projectcontrolsinstitute.org/verify.html) before they ring you.
 
-Who issues it, and are they independent of the trainer who taught you? Marking your own homework is common in this market, and [an honest comparison of providers in one crowded market](https://pciglobal.ai/project-controls-course-india) shows how quickly the distinction gets blurred.
+Who issues it, and are they independent of the trainer who taught you? Marking your own homework is common in this market, so ask whether the body setting the examination is the same organisation that sold you the preparation for it.
 
 What happens on failure, and what does a re-sit cost? A provider without a documented answer has not built an examination.
 
@@ -84,15 +86,7 @@ Rules. Whether a quantity is measured net or gross, what is deemed included in a
 
 Consequence. Whether a cost genuinely depicts progress, what to accrue at cut-off and how a variation should be valued are judgements with money attached, and they are the reason quantity surveying is a profession rather than a task.
 
-## What an online course should still make you calculate
-
-Cash, at least once, because it is the number that closes contractors.
-
-The cash conversion cycle is days of unbilled work in progress, plus days to collect, minus days taken to pay suppliers. Take 28 days of work in progress, 74 days to collect and 52 days taken to pay: 28 + 74 − 52 = **50 days** of working capital the business funds.
-
-On £24.0m of annual turnover, one day of receivables is 24.0 ÷ 365 = **£65,800**. Valuing a week earlier every month is worth more, in cash, than most of the arguments the commercial team is having.
-
-An engineer is examined on progress measurement and almost never on cut-off. An accountant is examined on when revenue may be recognised and almost never on a variation account. A quantity surveyor stands on that boundary, and an online credential is a fast way to be examined on the side your career has not tested.
+That third one is also the part an online credential can genuinely test, because it is examined on documents rather than on site. It is worth choosing a syllabus on that basis: the side of the job your working life has never put you in front of is the side an examination can still reach.
 
 ## How does PCI examine this?
 
@@ -124,4 +118,4 @@ Examined knowledge is rarely wasted, but chartered bodies set their own entry ro
 
 ---
 
-*Linking note: the links are now in the body. One cross-estate link only — "check a credential record independently" sits on the verification check, which is the question the whole piece turns on; the credentialfinder.org/verify address originally proposed does not exist, and the Institute's verification page is the real destination. Two same-domain links: "the four global quantity surveying routes compared" follows the sentence on what chartered routes assess, and "an honest comparison of providers in one crowded market" follows the independence check. The IFRS 15 link proposed earlier was dropped rather than retargeted: it would have been a second link to the same domain from one piece, and this guide only touches revenue recognition in passing. Reciprocal: the global quantity surveying routes guide should link back here with the anchor "what an online quantity surveying credential actually gives you".*
+*Linking note: three links, all inside sentences in the body. One cross-estate link — "check a credential record independently" sits on the verification check, which is the question the whole piece turns on. It points at the Institute's verification page by deliberate estate policy: verification is credentialfinder.org's declared territory, but no verification page exists there, so the hub is the single verification destination for all five domains and every piece in the run points at the same address. Two same-domain links: "the four global quantity surveying routes compared" follows the sentence on what chartered routes assess and what no online product substitutes for; "how the courses in one crowded market actually differ" follows the local-rules paragraph, where the reader has to choose between providers inside one market. The cash conversion cycle is worked on the routes guide, not here, so the two pages do not present the same block to a reader or a model.*

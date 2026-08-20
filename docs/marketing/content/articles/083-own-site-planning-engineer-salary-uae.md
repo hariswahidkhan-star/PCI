@@ -85,9 +85,9 @@ Then subtract what the package does not cover but your life requires: school fee
 | Sector | Fit-out, low-rise residential | Aviation, rail, power and water, oil and gas, data centres |
 | Contract exposure | Statusing one package | Owning the programme against a FIDIC-based form, with claims exposure |
 | Reporting audience | An internal manager | A client's board, a lender or an audit |
-| Nationality-linked banding | Common in parts of the market | Reduced where the employer pays for scope |
+| Nationality-linked banding | Candidates report still meeting it in parts of the market | Reduced where the employer pays for scope |
 
-That last row is uncomfortable and real. Parts of this market still price by passport rather than by capability, and the practical defence is evidence: a credential somebody else can verify, and a scope statement that names what you owned.
+That last row is uncomfortable, and it is reported by candidates rather than published by any employer or measured in any dataset PCI holds. Where you meet it, the practical defence is evidence: a credential somebody else can verify, and a scope statement that names what you owned.
 
 Which employers sit at which end of that first row, and which sectors are actually hiring, is set out in [how the UAE market for planners is structured](https://pciworld.org/planning-engineer-jobs-in-uae).
 
@@ -107,11 +107,11 @@ Take the median of your verified points, not the mean. One senior outlier will o
 
 ## What UAE employers actually test at interview
 
-Tool depth gets your CV opened. Primavera P6 is close to mandatory on the contractor and consultant side, and increasingly the enterprise version rather than the standalone. Where to acquire it locally, and what the classroom and online options in the Emirates actually cost, is a regional question answered in [the training options actually available in the UAE](https://pciglobal.ai/project-controls-training-uae).
+Tool depth gets your CV opened. Primavera P6 is close to mandatory on the contractor and consultant side, and increasingly the enterprise version rather than the standalone. Where you learned it matters far less than being able to show a programme you built in it and say why the logic runs the way it does.
 
 What decides the offer is different. Expect to be asked how you built a baseline that a client accepted, how you handled a delay event and what records supported it, and what your progress figure did to the payment application.
 
-The candidates who struggle are the ones who can drive the software and cannot defend the number it produced. That gap is the whole reason PCI examines finance and delivery together rather than separately, and it is worth more here than anywhere because the contract forms are claim-intensive.
+The candidates who struggle are the ones who can drive the software and cannot defend the number it produced. That gap is the whole reason PCI examines finance and delivery together rather than separately, and [what a credential covering both halves of the job examines](https://projectcontrolsinstitute.org/finance-and-project-management-certification) sets out what is actually tested on each side. It is worth more here than in most markets, because the contract forms are claim-intensive and the argument always ends up being about money.
 
 ## Frequently asked questions
 
@@ -132,4 +132,4 @@ Put both on the same basis: annual guaranteed cash, plus the value of anything y
 
 ---
 
-*Linking note: the links are now in the body. Three same-domain links — "the worksheet that turns any offer into one comparable figure" answers the reader who needs a comparable basis before the gratuity arithmetic means anything; "how the UAE market for planners is structured" follows the employer-type row; "the five scope bands project controls pay follows" sits in the answer that tells you to compare scope rather than headline. One cross-estate link only, and it is the rare satellite-to-satellite case: local training routes are regional territory, not the hub's, so "the training options actually available in the UAE" sits on the sentence about acquiring P6 depth in this market. Anchors here deliberately differ from the ones the planning engineer salary worksheet uses for the same pages. Reciprocal: the Dubai courses piece should link back here with the anchor "what a UAE package is actually worth over five years".*
+*Linking note: four links, all inside sentences in the body. Three same-domain links — "the worksheet that turns any offer into one comparable figure" answers the reader who needs a comparable basis before the gratuity arithmetic means anything; "how the UAE market for planners is structured" follows the employer-type row; "the five scope bands project controls pay follows" sits in the answer that tells you to compare scope rather than headline. One cross-estate link, and it goes to the hub: "what a credential covering both halves of the job examines" sits on the sentence naming the gap between driving the software and defending the number. The regional training link this piece previously carried was removed rather than moved. It was the only cross-estate link here and it ran sideways to another satellite, which inverts the flow the estate is built on, and the sentence it sat in makes its point without it. Anchors here deliberately differ from the ones the planning engineer salary worksheet uses for the same pages.*

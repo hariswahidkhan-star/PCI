@@ -110,13 +110,13 @@ The gap is in what each profession is *examined* on, and therefore in what each 
 
 | Subject | Accountancy syllabus | Engineering and PM syllabus | Who actually owns it on a project |
 |---|---|---|---|
-| Cut-off and revenue recognition | Core | Absent | Finance, using the project's own numbers |
-| Provisions and onerous contracts | Core | Absent | Finance, triggered by the project's forecast |
+| Cut-off and revenue recognition | Core | Rarely | Finance, using the project's own numbers |
+| Provisions and onerous contracts | Core | Rarely | Finance, triggered by the project's forecast |
 | Contract assets and liabilities | Core | Rarely | Finance, driven by billing against progress |
-| Critical path, float and logic | Absent | Core | Planning |
-| Rules of credit and progress measurement | Absent | Core | Project controls |
+| Critical path, float and logic | Rarely | Core | Planning |
+| Rules of credit and progress measurement | Rarely | Core | Project controls |
 | Estimate at completion | Consumed, not produced | Produced, not interpreted | Nobody, which is the entire point |
-| Governed use of machine output | Emerging | Emerging | Unassigned in most organisations |
+| Governed use of machine output | Emerging | Emerging | Rarely assigned to a named role |
 
 Read the estimate at completion row twice. One profession produces that number. The other consumes it, unchanged, in a statement that will be audited. Neither is examined on the handover between them, so the handover is where the money goes, and the person who signs the report carries a risk that no syllabus prepared them for.
 
@@ -138,14 +138,14 @@ The Project Controls Institute exists because of the row in that table marked "n
 |---|---|---|---|
 | Domains | 13 | 16 | 16 |
 | Knowledge areas | 61 | 61 | 63 |
-| Centre of gravity | Measurement: schedule, progress, earned value, quantitative risk | Money: recognition, forecasting, working capital, project finance | Delivery: contract, scope, stakeholders, integrated execution |
+| Centre of gravity | The crossing: progress and earned value read against cut-off, recognition and the ledger | Money: recognition, forecasting, working capital, project finance | Delivery: contract, scope, stakeholders, integrated execution |
 | What it makes legible | Measurement, to finance | Financial consequence, to delivery | The contract and the plan, to each other |
 
 Underneath them sit 113 mandatory PCI Standards carrying 532 process requirements. Those are certification requirements established by the Institute. They are not law, and nothing PCI publishes is legal, tax or accounting advice.
 
-The Bodies of Knowledge are built in proportions of 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI. That describes the Body of Knowledge. It does not describe the examination. No examination weighting is published, because the syllabus is settled while the exam blueprint is still an open decision, and if you ever see a PCI exam weighting quoted, it did not come from us.
+The PCL-AI Body of Knowledge is built in proportions of 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI. That describes the Body of Knowledge. It does not describe the examination. No examination weighting is published, because the syllabus is settled while the exam blueprint is still an open decision, and if you ever see a PCI exam weighting quoted, it did not come from us.
 
-An article built on arithmetic ought to say how its own arithmetic is checked. There are 15,613 machine calculation checks running against PFL-AI and PML-AI, all passing. PCL-AI has no equivalent suite yet. Saying so costs us the cleaner sentence and is the reason the number is worth anything.
+An article built on arithmetic ought to say how its own arithmetic is checked. There are 15,613 machine calculation checks running against PFL-AI and PML-AI, all passing. PCL-AI has no equivalent suite. Saying so costs us the cleaner sentence and is the reason the number is worth anything.
 
 Here is the rest of what we are not going to say, since every other certification article you have read this year said some of it.
 
@@ -183,4 +183,4 @@ No, and it is not built to. Where statutory or chartered status is required for 
 
 ---
 
-*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [What an AI policy for project controls has to settle in writing](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "who decided the model was allowed to produce this figure", raised in the AI section. [Read the PCL-AI Body of Knowledge in full](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what would examining both sides actually cover", raised by the ask. [A like-for-like comparison of what the main controls certifications examine](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers "how is this different from the credential I already hold", raised in the same paragraph. No pciworld.org or pciglobal.ai link: this piece raises no career and no regional question, and a link with no question behind it is the footprint we are avoiding. The canonical carries the hub relationship, so the closing "first published" line stays unlinked. In comments, point anyone arguing about cut-off dates at [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) and anyone who wants the full month worked through at [the earned value worked example](https://projectcontrolsinstitute.org/earned-value-worked-example).*
+*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [What an AI policy for project controls has to settle in writing](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "who decided the model was allowed to produce this figure", raised in the AI section. [Read the PCL-AI Body of Knowledge in full](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what would examining both sides actually cover", raised by the ask. [A like-for-like comparison of what the main controls certifications examine](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers "how is this different from the credential I already hold", raised in the same paragraph. No pciworld.org or pciglobal.ai link: this piece raises no career and no regional question, and a link with no question behind it is the footprint we are avoiding. The canonical carries the hub relationship, so the closing "first published" line stays unlinked. Responses carry no URLs either, for the same reason the "first published" line does not: a reader arguing about cut-off dates is told in words that the hub publishes a month-end close page, and a reader who wants the full month is told a worked earned value example sits there too. Pasting those two addresses under the story would take one hub link to three, which is the density §2 rules out wherever the links sit.*

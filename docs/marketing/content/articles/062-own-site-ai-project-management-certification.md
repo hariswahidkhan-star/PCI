@@ -4,7 +4,7 @@ type:          comparison
 title:         AI project management certification: how to compare
 meta:          Four different things are sold as an AI project management certification. What each one proves, how each is assessed, and the questions to ask before paying.
 primary_kw:    AI project management certification
-secondary_kw:  PML-AI, scenario-based examination, IFRS 15 five-step model, certification fees
+secondary_kw:  PML-AI, scenario-based examination, proctored examination, certification fees
 pillar:        AI in project controls
 credential:    PML-AI
 target_domain: pciai.org
@@ -62,43 +62,35 @@ The mistake is treating them as interchangeable evidence. Only one column is ass
 
 The gap between a course quiz and a professional examination is easiest to see in a single question. Here is the kind of item that separates them.
 
-*A contract has a transaction price of £40,000,000 and an expected total cost of £32,000,000. Costs incurred to date are £12,000,000. An AI progress tool, reading site imagery, reports the works are 45% physically complete. The commercial manager asks you to recognise revenue on that basis. What do you do?*
+*A contract is priced at £30,000,000 and carries liquidated damages of £25,000 per calendar day, capped at 5% of the contract price. An AI planning assistant reports that the completion forecast has slipped 40 days, and prices an acceleration package at £1,100,000 that would recover 30 of them. The board asks you to authorise it. What do you do?*
 
-Cost-to-cost progress is 12,000,000 ÷ 32,000,000 = **37.5%**, giving revenue of 0.375 × 40,000,000 = **£15,000,000**. The AI figure of 45% would give 0.45 × 40,000,000 = **£18,000,000**.
+Start with the damages. The cap is 5% × 30,000,000 = **£1,500,000**, which at £25,000 a day is 60 days of delay. A 40-day slip therefore sits inside the cap and costs 40 × 25,000 = **£1,000,000**. Recovering 30 days removes 30 × 25,000 = **£750,000** of that.
 
-That is £3,000,000 of revenue resting on which measure of progress the entity actually applies. A recall question asks you to define percentage complete. A scenario question asks you which number you would sign, and why.
+On damages alone the package loses money: £1,100,000 spent to avoid £750,000. Add site overheads running at £18,000 a day and 30 days of prolongation avoided is a further £540,000, so the package now saves £1,290,000 for £1,100,000 and is worth authorising by £190,000.
 
-The five-step sequence behind that judgement, in PCI's own words rather than reproduced from the standard:
+Both sums are correct and they point opposite ways, which is the point of the item. What decides it is not arithmetic: whether the 40 days are excusable, whether the employer has any entitlement to levy damages at all, and whether the slipped path is the one that governs completion.
 
-1. **Identify the contract** — an agreement creating enforceable rights and obligations, where collecting the consideration is probable.
+A recall question asks you to define liquidated damages. A scenario question asks you which of those two sums you would put in front of a board, and what you would need to check before you did.
 
-2. **Identify the performance obligations** — the distinct promises within it. On many construction contracts the works form a single obligation; on some they do not.
+The same shape of judgement runs on the finance side of a project, where an AI-measured progress percentage meets the rules for recognising revenue; [the five-step revenue sequence worked against a construction contract](https://pciai.org/ai-in-construction-project-management) sets that out in full.
 
-3. **Determine the transaction price** — including variable amounts such as incentives, claims and liquidated damages, constrained so that a significant reversal of revenue is not likely.
-
-4. **Allocate the price** to the obligations identified.
-
-5. **Recognise revenue as each obligation is satisfied** — over time where the criteria are met, using a measure that faithfully depicts progress towards complete satisfaction.
-
-The AI-generated 45% is an *output* measure of physical work. The 37.5% is an *input* measure. Both can be legitimate; mixing them mid-contract is not, and the person who spots that in ten seconds is the person a certification should be identifying.
-
-Nothing here is accounting advice. It is a description of how the mechanism works, which is what an examination has to test.
+Nothing here is legal or accounting advice. It is a description of how the mechanism works, which is what an examination has to test.
 
 ## What PCI examines, and what it costs
 
 PCI certifies delivery leadership through the PCI Project Management Leader – AI (PML-AI): 16 domains and 63 knowledge areas. The controls credential, the PCI AI Project Controls Leader (PCL-AI), holds 13 domains and 61 knowledge areas, and [what an AI project controls credential should examine](https://pciai.org/ai-project-controls-certification) sets out that side in full. The finance credential, the PCI AI Project Finance Leader (PFL-AI), holds 16 domains and 61 knowledge areas.
 
-Each Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. AI is examined inside the other two blocks as well, because that is where it turns up in practice.
+The PCL-AI Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. Those are the proportions of the syllabus rather than of the examination, and AI runs through the finance and delivery material too, because that is where it turns up in practice.
 
-The supporting material includes 92 sector case studies across the three volumes (26 + 33 + 33), and 113 mandatory PCI Standards carrying 532 process requirements. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
+Each Body of Knowledge is published in full and free to read before anyone pays, which is the test a curriculum summarised in three bullet points on a sales page fails. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
 
 Fees are published rather than quoted on request. The PCL-AI certification examination is listed at USD 500 with a 30% discount currently applied, bringing it to USD 350.
 
-Student membership is USD 99 a year with a 50% discount currently applied, bringing it to USD 49.50, and a membership-plus-examination bundle is listed at USD 399.50. Fees change; the figure that binds is the one at checkout.
+Student membership is USD 99 for a three-year term with a 50% discount currently applied, bringing it to USD 49.50, and a membership-plus-examination bundle is listed at USD 399.50. Fees change; the figure that binds is the one at checkout.
 
-PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation. Its processes are designed around the ISO/IEC 17024 framework, which is a design choice, not a claim of accreditation.
+PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation. Its scheme is developed with reference to the ISO/IEC 17024 principles for personnel certification, and accreditation is being pursued rather than claimed — which is exactly the distinction to read literally on anyone's page, including this one.
 
-## Which one should you actually buy?
+## Which of the four kinds should you buy?
 
 If you operate one scheduling or estimating product all day, take the vendor badge and stop there. It pays for itself in the first month and nobody expects it to mean more.
 
@@ -106,7 +98,7 @@ If you are early in a project career and want to be credible about AI in intervi
 
 If you already hold a project management credential and your employer funds continuing education, the add-on module is the cheapest way to stay current — but it is maintenance, not a new claim.
 
-If you want a line that a client, a board or a tribunal will take seriously, you need an independently examined credential with a published syllabus, an experience requirement and a proctored scenario-based examination. That is the only one of the four that transfers between employers and sectors, and [an honest comparison of the main project controls credentials](https://credentialfinder.org/best-project-controls-certification) is the place to start narrowing the shortlist.
+If you want a line that a client, a board or a tribunal will take seriously, you need an independently examined credential with a published syllabus, an experience requirement and a proctored scenario-based examination. That is the only one of the four that transfers between employers and sectors. Which named credential to sit is a different question from which kind to buy, and [how the established project controls credentials compare on syllabus, assessment and cost](https://credentialfinder.org/best-project-controls-certification) is where that shortlist gets built.
 
 ## Frequently asked questions
 
@@ -127,4 +119,4 @@ No, and it should not pretend to. A credential examines whether you can govern t
 
 ---
 
-*Internal links: now placed in the body. Same-domain: "where AI actually turns up in a controls function" sits in the bolted-on question, which raises what a reworked syllabus should cover; "what an AI project controls credential should examine" sits where the controls-side credential is named alongside the delivery one. One cross-estate link only, and to a satellite rather than the hub for a stated reason: comparison is credentialfinder.org's territory, so "an honest comparison of the main project controls credentials" closes the buying section where a reader is choosing between named credentials. The five-step list was split into separate items so each step stands alone for extraction. Reciprocal: the AI project controls certification guide should point back here when it separates the products sold under similar names.*
+*Internal links, all on pciai.org: "where AI actually turns up in a controls function" sits in the bolted-on question, which raises what a reworked syllabus should cover; "what an AI project controls credential should examine" sits where the controls-side credential is named alongside the delivery one; "the five-step revenue sequence worked against a construction contract" sits after the worked item, where the finance half of the same judgement is raised and is treated at length on that page rather than here. One cross-estate link, to a satellite rather than the hub for a stated reason: comparison of named credentials is credentialfinder.org's territory, so "how the established project controls credentials compare on syllabus, assessment and cost" closes the buying section, where a reader moves from choosing a kind to choosing a credential.*

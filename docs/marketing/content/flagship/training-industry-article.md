@@ -3,9 +3,9 @@ platform:      Training Industry (trainingindustry.com) — contributed article 
 type:          article
 title:         The capability gap project controls training leaves open
 standfirst:    Two curricula, both sound, meeting at a number neither examines. Here is how to find that seam on your capability map, and the calculation that shows a project team why it matters.
-meta:          Project controls training rarely fails inside the course. The capability gap sits on the join between two curricula, where one number has two authors.
-primary_kw:    project controls training
-secondary_kw:  capability gap, training needs analysis, competency framework, cost performance index
+meta:          The capability gap project controls training leaves open sits on the join between two curricula, where one number has two authors and neither examines it.
+primary_kw:    capability gap project controls training *
+secondary_kw:  training needs analysis, competency framework, curriculum map, cost performance index
 pillar:        Certification and capability
 credential:    suite (PCL-AI lead)
 target_domain: projectcontrolsinstitute.org
@@ -48,8 +48,19 @@ notes: |
   HOOK B (contrast first) per _STORY.md §2, which names it for articles. Not blended with A or C. The
   contrast is stated in the curricula rather than the examinations, because that is the reader's frame,
   and the examination version follows in the same breath. The title question is answered inside the
-  first 52 words, before any preamble, and the answer sentence names project controls training itself
-  rather than leaving the term to the paragraph after it.
+  first 52 words, before any preamble, and the answer sentence names the capability gap itself rather
+  than leaving the term to the paragraph after it.
+  PRIMARY KEYWORD IS OFF-PLAN (marked *), DELIBERATELY. The piece first ran on "project controls
+  training", which is the primary keyword of the hub pillar own-site 004. This byline carries no
+  canonical and trainingindustry.com has more authority than the hub, so targeting that term would
+  have put a trade publication above PCI's own pillar for PCI's own phrase, and it would have done it
+  on a buying query this article does not serve: a searcher for "project controls training" wants
+  routes, formats and costs, and this piece argues that the map deciding which courses exist is blind
+  to one seam. "Capability gap project controls training" is the phrase the article actually owns; it
+  sits in the H1, the opening sentence and the meta description, and nowhere else on purpose. It is
+  not forced into an H2: a five-word long tail bolted onto a section heading reads as a keyword string
+  to the exact reader this is written for, and the three-fixes section already names what a training
+  plan for the seam contains. The hub pillar keeps the buying query.
   NUMBERS AUDIT: 2,200,000 / 1,850,000 / 240,000 / 2,090,000 / 1.19 / 1.05 from the worked example, every
   division shown, no currency, no sector, no client, no date, and no claim about how often it happens.
   Register figures used: 13/61, 16/61 and 16/63 across the three credentials; 113 mandatory PCI Standards
@@ -74,9 +85,9 @@ notes: |
 
 *Two curricula, both sound, meeting at a number neither examines. Here is how to find that seam on your capability map, and the calculation that shows a project team why it matters.*
 
-A finance curriculum rarely teaches float. A delivery curriculum rarely teaches cut-off. Both are taught well. The gap project controls training leaves open is not inside either course: it sits on the join between them, where a single number is assembled from two sources and nobody has been examined on the handover.
+A finance curriculum rarely teaches float. A delivery curriculum rarely teaches cut-off. Both are taught well. The capability gap project controls training leaves open is not inside either course: it sits on the join between them, where a single number is assembled from two sources and nobody has been examined on the handover.
 
-That is why a well-reviewed course changes so little. The course was not weak. The map that decided which courses exist was drawn from the organisation chart, and no chart has a box for a seam.
+That is why a course can review well and change little. The course was not weak. The map that decided which courses exist was drawn from the organisation chart, and no chart has a box for a seam.
 
 ## What the gap looks like in one calculation
 
@@ -178,4 +189,4 @@ So read [the PCL-AI Body of Knowledge, domain by domain](https://projectcontrols
 
 ---
 
-*Internal links: three, one per domain, each sitting in a body sentence that raises the question its target answers. [How to check what a credential actually examines](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers "so how do I verify that claim about any of them, including yours", raised at the moment the reader is told to read syllabuses rather than promises. [What an AI policy for project reporting has to decide](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "what is the policy supposed to say", raised by the sentence it sits in. [The PCL-AI Body of Knowledge, domain by domain](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub carries the single ask and closes the piece. All three anchors are unique to this asset and differ from the Project Times, Medium and own-site versions pointing at the same three pages. No pciworld.org and no pciglobal.ai link: no career and no regional question is raised here. Once this is live, the own-site pillar should cite it once with the anchor "why a training needs analysis misses the seam", and the launch LinkedIn post should point at the Training Industry URL rather than the hub, so the earned citation is the thing being amplified.*
+*Linking note: three links ship, all of them in the body, one per domain, each sitting in a sentence that raises the question its target answers. The third of the three fixes points at credentialfinder.org/best-project-controls-certification, anchored "a like-for-like comparison of what the main controls credentials examine"; the sentence around it says in plain words that PCI publishes that comparison and that PCI is in it, and sends the reader to each awarding body for the answers, because a buyer told to read syllabuses rather than promises has to know whose register they are reading. The machine-output section points at pciai.org/ai-policy-for-project-controls, anchored "what an AI policy for project reporting has to decide", which answers "what is the policy supposed to say". The close points at projectcontrolsinstitute.org/body-of-knowledge, anchored "the PCL-AI Body of Knowledge, domain by domain", and carries the single ask. All three anchors are unique to this asset and differ from the Project Times, Medium and own-site versions pointing at the same three pages. The URLs are set out here in plain text: this note used to render all three as live markdown, so a three-link article audited as a six-link one, and a note is an instruction to whoever files the manuscript rather than a set of placements. No pciworld.org and no pciglobal.ai link: no career and no regional question is raised here. Nothing reciprocal is asked for — the hub linking back to a trade byline that links to the hub is manufactured symmetry, and _LINK_ARCHITECTURE.md §3 exists to prevent it. The launch LinkedIn post should point at the Training Industry URL rather than at the hub, so the trade placement is the thing being amplified.*

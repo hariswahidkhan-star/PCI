@@ -23,7 +23,7 @@ Estimate at completion (EAC) is the forecast total cost of the scope in question
 
 ## Step one: fix the inputs before you forecast anything
 
-A forecast is only as good as the four numbers under it, all measured to the same cut-off, and [the method these four numbers come from](https://projectcontrolsinstitute.org/earned-value-management) defines each one precisely.
+A forecast is only as good as the four numbers under it — BAC, PV, EV and AC — and all four have to be measured to the same cut-off. Where each of them comes from is the prior question, and [how PV, EV, AC and BAC are each built](https://projectcontrolsinstitute.org/earned-value-management) answers it; this guide assumes them.
 
 Our example is a rail systems package. BAC is €24.0m over 30 months, and we are reporting at the end of month 14.
 
@@ -54,11 +54,11 @@ Write the cause down in one sentence before you calculate. If you cannot write i
 | 3. Remaining work at CPI and SPI | EAC = AC + (BAC − EV) ÷ (CPI × SPI) | **€31.3m** | −€7.3m | Schedule recovery will keep costing money |
 | 4. Bottom-up re-estimate | EAC = AC + a fresh ETC of €15.9m | **€28.3m** | −€4.3m | The team can re-estimate the remaining scope honestly |
 
-The arithmetic, so it can be checked. Method 1: 12.4 + 13.8 = 26.2. Method 2: 24.0 ÷ 0.823 = 29.18. Method 3: CPI × SPI = 0.823 × 0.887 = 0.730, then 13.8 ÷ 0.730 = 18.91, plus 12.4 = 31.31.
+The arithmetic, so it can be checked. The indices are shown to three decimals above and carried to four here, which is what the divisions actually use. Method 1: 12.4 + 13.8 = 26.2. Method 2: 24.0 ÷ 0.8226 = 29.18. Method 3: CPI × SPI = 0.8226 × 0.8870 = 0.7296, then 13.8 ÷ 0.7296 = 18.91, plus 12.4 = 31.31.
 
 A spread of €26.2m to €31.3m is €5.1m wide, which is 21% of the budget. That range is not a defect in the method. It is the method showing you how much of the forecast is assumption rather than measurement.
 
-There is a fifth construction in common use: weight CPI and SPI rather than multiplying them, typically 0.8 × CPI + 0.2 × SPI as the denominator. Here that gives 0.836, so 13.8 ÷ 0.836 = 16.52, and EAC = **€28.9m**. It is a documented judgement rule, not a law, and it belongs in the cost control procedure rather than in a spreadsheet nobody has seen.
+There is a fifth construction in common use: weight CPI and SPI rather than multiplying them, typically 0.8 × CPI + 0.2 × SPI as the denominator. Here that gives 0.8355, so 13.8 ÷ 0.8355 = 16.52, and EAC = **€28.9m**. The weights are a convention some cost control procedures adopt, not a rule with authority behind it. If you use them, write them into the procedure so the choice is visible and can be argued with, rather than into a spreadsheet nobody has seen.
 
 ## Step four: choose one, and sanity-check it with TCPI
 
@@ -72,7 +72,7 @@ Against a delivered CPI of 0.823, that is 1.190 ÷ 0.823 = **1.45**, a 45% impro
 
 Run TCPI against your chosen EAC as well: 13.8 ÷ (29.2 − 12.4) = 13.8 ÷ 16.8 = 0.821, which is your CPI back again. That is the arithmetic being circular, not a confirmation, so never present it as one.
 
-There is a long-standing rule of thumb from defence programme practice that cumulative CPI rarely improves much once a project is past roughly a fifth complete. Treat it as a prompt to check your own portfolio, not as a published finding.
+If you want to know whether recovery of that size has ever happened where you work, the check is available to you: take a set of completed packages, find their cumulative CPI at the same point of completion, and compare it with the CPI they finished on. That is evidence about your own portfolio, which is the only kind worth arguing a forecast with.
 
 ## Step five: carry the forecast into the accounts
 
@@ -139,4 +139,4 @@ It can assemble the inputs, flag control accounts whose behaviour has changed, a
 
 ---
 
-*Internal linking note: three same-domain links now sit in the body. "The method these four numbers come from" points at the earned value pillar, placed on the sentence that makes the whole forecast depend on four inputs measured to one cut-off. "A worked month-end that produces these inputs" points at the worked example, placed after the accrual check in step one, where a reader is being told to verify inputs the piece has simply handed them. "Where forecasting meets financial reporting" points at the finance and project management certification page, placed at the €1.34m revenue swing, which is the exact point where a controls decision becomes an accounting one. No cross-estate link is carried; the accounting overlap is hub territory by design. A GEO fix was also made: the five-step revenue model was one 140-word block and is now five separate blocks, each able to be lifted on its own. Reciprocal: the worked example and the reporting thresholds guide should link back here with an anchor naming this as the forecast-method choice.*
+*Internal linking note: three same-domain links now sit in the body. "How PV, EV, AC and BAC are each built" points at the earned value pillar, placed on the sentence that makes the whole forecast depend on four inputs measured to one cut-off, because a reader who cannot build those four cannot use anything below it. "A worked month-end that produces these inputs" points at the worked example, placed after the accrual check in step one, where a reader is being told to verify inputs the piece has simply handed them. "Where forecasting meets financial reporting" points at the finance and project management certification page, placed at the €1.34m revenue swing, which is the exact point where a controls decision becomes an accounting one. No cross-estate link is carried; the accounting overlap is hub territory by design. A GEO fix was also made: the five-step revenue model was one 140-word block and is now five separate blocks, each able to be lifted on its own. Reciprocal: the worked example and the reporting thresholds guide should link back here with an anchor naming this as the forecast-method choice.*

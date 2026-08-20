@@ -68,7 +68,7 @@ The 50/50 rule earns half the budget for turning up.
 
 Short activities are where 0/100 is honest, because the reporting lag is smaller than the distortion. On a 20-day activity it produces the sawtooth performance curve that makes senior readers stop believing the chart.
 
-## The setting that moves the plan itself
+## What does the earned value calculation basis change?
 
 Setting 3 is the one that catches experienced people. Left on budgeted values with planned dates, planned value is fixed by the baseline and the comparison stays honest.
 
@@ -76,7 +76,7 @@ Switch it to at-completion values with current dates and the plan re-forms aroun
 
 Elapsed current duration at the data date is 7 of 24, so planned value = 430,000 × (7 ÷ 24) = **£125,417**. Against earned value of £120,000 on physical progress, SPI = 120,000 ÷ 125,417 = **0.957**.
 
-The activity is three days late and a sixth over budget, and schedule performance now reads within 5% of plan. Nothing improved. The yardstick moved with the work, which is exactly what an earned value measurement exists to prevent.
+The activity is three days late and 7.5% over budget, and schedule performance now reads within 5% of plan. Nothing improved. The yardstick moved with the work, which is exactly what an earned value measurement exists to prevent.
 
 ## Which baseline is P6 actually reading?
 
@@ -86,7 +86,7 @@ If those two point at different snapshots, the variance columns on the report an
 
 Check the assignment before every reporting cycle, and record the baseline name and date in the report header. A baseline that was re-taken mid-period explains more surprising CPI movements than any site event.
 
-## The performance factor, and the forecast it produces
+## Which ETC technique should the performance factor use?
 
 Setting 5 chooses how P6 turns remaining budget into an estimate to complete. The options map directly onto [the recognised EAC methods under another name](https://projectcontrolsinstitute.org/four-eac-formulas).
 
@@ -131,4 +131,4 @@ For cumulative reporting, no. For period-by-period performance, yes, because wit
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this piece is not a republish of a PCI site page.*
 
-*Linking note — the links now in the body: "the recognised EAC methods under another name" points at projectcontrolsinstitute.org/four-eac-formulas from the paragraph on setting 5, because that sentence raises which forecasting method a P6 performance factor quietly commits you to. That is the only cross-estate link here — nothing else in the piece raises a question another domain answers better, and a second link to the same domain would be a pattern rather than a reference. Reciprocal: the four EAC formulas guide could point back here where it notes that a scheduling tool picks a performance factor by default.*
+*Linking note — the links now in the body: "the recognised EAC methods under another name" points at projectcontrolsinstitute.org/four-eac-formulas from the paragraph on setting 5, because that sentence raises which forecasting method a P6 performance factor quietly commits you to. That is the only cross-estate link here — nothing else in the piece raises a question another domain answers better, and a second link to the same domain would be a pattern rather than a reference. No reciprocal link is asked for: a hub page pointing back at PCI's own newsletter copy is the manufactured symmetry the link architecture exists to prevent.*

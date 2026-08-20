@@ -62,8 +62,9 @@ Add a concurrent contractor-caused delay of **6 days** in the same window and th
 
 Both credentials expect you to explain what an index means, and this is the one most often quoted wrongly.
 
-A programme has a budget at completion of **£12.0m**. At month 8, planned value is **£5.60m** and earned value is **£5.04m**.
+At month 8 on a programme, planned value is **£5.60m** and earned value is **£5.04m**.
 
+Schedule variance = EV − PV = 5.04 − 5.60 = **−£0.56m**.
 Schedule performance index = EV ÷ PV = 5.04 ÷ 5.60 = **0.90**.
 
 That index is measured in money, and it drifts back towards 1.00 as a project completes, because earned value must eventually equal planned value even on a late job. Reported alone at month 20, it hides the problem it is meant to reveal.

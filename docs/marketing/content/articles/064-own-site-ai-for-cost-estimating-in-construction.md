@@ -48,7 +48,9 @@ AI does not replace an estimating method. It sits inside one, which is why "we u
 | Bottom-up unit rate | Quantities priced at resource rates and built up | Full take-off, current rates, productivity | Tender and control estimates | Slow, and confident-looking because it is detailed |
 | Model-assisted hybrid | Bottom-up build, machine-checked against history | All of the above plus clean outturn data | Bid review and challenge | The check is treated as approval |
 
-Estimate class matters more than method. The screening number produced at concept and the control estimate produced at award answer different questions, and the classes defined in AACE International's recommended practices are the usual reference — named here and described in our own words, not reproduced.
+Estimate class matters more than method. A class is a label for how much of the design was actually fixed when the number was produced, and therefore how wide the number's honest range is.
+
+A concept figure built from a rate per square metre on a scheme that is still a sketch has a range wide enough to change a funding decision. A control estimate built from a full take-off at award has a narrow one, because the scope it prices is largely settled. Publishing the first as though it were the second is how a project acquires a budget it was never given. AACE International's recommended practices are the usual published reference for the class definitions themselves; they are named here and described in our own words rather than reproduced.
 
 ## Measuring whether the tool is any good on your data
 
@@ -58,15 +60,17 @@ Take five completed packages, estimate against outturn:
 
 | Package | Estimate | Outturn | Difference | Error against outturn |
 |---|---|---|---|---|
-| A | £2,400,000 | £2,760,000 | −£360,000 | 13.0% |
-| B | £5,000,000 | £5,150,000 | −£150,000 | 2.9% |
-| C | £3,200,000 | £3,040,000 | +£160,000 | 5.3% |
-| D | £8,600,000 | £9,460,000 | −£860,000 | 9.1% |
-| E | £1,500,000 | £1,725,000 | −£225,000 | 13.0% |
+| A | £2,400,000 | £2,760,000 | −£360,000 | 13.04% |
+| B | £5,000,000 | £5,150,000 | −£150,000 | 2.91% |
+| C | £3,200,000 | £3,040,000 | +£160,000 | 5.26% |
+| D | £8,600,000 | £9,460,000 | −£860,000 | 9.09% |
+| E | £1,500,000 | £1,725,000 | −£225,000 | 13.04% |
 
-**Mean absolute percentage error (MAPE)** is the average of those percentages regardless of sign: (13.0 + 2.9 + 5.3 + 9.1 + 13.0) ÷ 5 = **8.7%**. That is the spread you should expect on a new job of the same type.
+The percentages are the difference over the outturn, carried to two decimals so the averages below reconcile with the column rather than with a rounded version of it.
 
-**Bias** is the same average with the signs kept: (−13.0 − 2.9 + 5.3 − 9.1 − 13.0) ÷ 5 = **−6.6%**. Four of five estimates came in under, and the average miss is systematically low.
+**Mean absolute percentage error (MAPE)** is the average of those percentages regardless of sign: (13.04 + 2.91 + 5.26 + 9.09 + 13.04) ÷ 5 = 43.34 ÷ 5 = **8.7%**. That is the spread you should expect on a new job of the same type.
+
+**Bias** is the same average with the signs kept: (−13.04 − 2.91 + 5.26 − 9.09 − 13.04) ÷ 5 = −32.82 ÷ 5 = **−6.6%**. Four of five estimates came in under, and the average miss is systematically low.
 
 Those two numbers say different things. MAPE says how wide your uncertainty is; bias says which way you are wrong, and bias is the one that costs money because it does not average out across a portfolio.
 
@@ -108,7 +112,7 @@ And commercial position. What a job should cost and what you should bid are diff
 
 PCI certifies the finance side of project work through the PCI AI Project Finance Leader (PFL-AI), which holds 16 domains and 61 knowledge areas. The controls credential, the PCI AI Project Controls Leader (PCL-AI), holds 13 domains and 61 knowledge areas, and the delivery credential, the PCI Project Management Leader – AI (PML-AI), holds 16 domains and 63 knowledge areas.
 
-Each Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI, so the handover shown above — estimate to expected cost to recognised revenue — is examined as one competence rather than two. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite. Across the three volumes there are 92 sector case studies (26 + 33 + 33).
+The PCL-AI Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. Those are proportions of the syllabus, not of the examination, and they are why the handover from an estimate, to an expected total cost, to a recognised revenue figure sits inside one credential rather than falling between two. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite. Across the three volumes there are 92 sector case studies (26 + 33 + 33).
 
 PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 

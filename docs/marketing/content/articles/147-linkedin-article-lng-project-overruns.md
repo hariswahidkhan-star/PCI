@@ -7,7 +7,7 @@ primary_kw:    LNG project overruns
 secondary_kw:  cost per tonne of capacity, interest during construction, earned value, onerous contract
 pillar:        Project controls fundamentals
 credential:    PFL-AI
-target_domain: pciglobal.ai
+target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article + FAQPage
 word_count:    1751
@@ -18,8 +18,6 @@ ab_id:         AB-03333
 # LNG project overruns: the causes and the arithmetic
 
 LNG project overruns are usually reported as a rise in a headline dollar total, which is the least informative way to read them. Capacity, train count, scope boundary and price base all move between the first published figure and the outturn. Cost per tonne of capacity is the only comparison that survives.
-
-Written for LinkedIn as an original. It sits under the Institute's project controls fundamentals pillar.
 
 ## Why do LNG project overruns look so large in headlines?
 
@@ -63,7 +61,7 @@ This is why lenders' technical advisers care about the programme in a way that o
 
 It costs the margin that year's production would have earned, and that number usually dwarfs the construction variance that caused it.
 
-Take a **4.5 Mtpa** train. Using the common industry approximation of about **52 MMBtu per tonne**, a year of output is 4.5m × 52 = **234 million MMBtu**.
+Take a **4.5 Mtpa** train. Using a rule of thumb of about **52 MMBtu per tonne** — used here to get the order of magnitude, not as a figure to quote — a year of output is 4.5m × 52 = **234 million MMBtu**.
 
 At an illustrative netback of **US$4 per MMBtu**, deferred gross margin is 234m × 4 = **US$936m**. Against a construction variance of, say, US$300m, the delay consequence is three times the cost consequence.
 
@@ -97,7 +95,7 @@ Where the expected costs of finishing a contract exceed the economic benefits st
 
 Working capital moves at the same time. Unbilled work and retention grow while payables stay on their normal terms, so a project can be forecasting an acceptable margin and still be the reason the group draws on its revolving facility.
 
-The PCI AI Project Finance Leader (PFL-AI) credential covers 16 domains and 61 knowledge areas and examines exactly this crossover, and the PFL-AI and PCI Project Management Leader – AI (PML-AI) Bodies of Knowledge together carry 15,613 machine calculation checks, all passing, so the arithmetic behind the examinable material has been verified rather than asserted.
+Those three movements — recognised revenue, an onerous contract provision and working capital — land in the same reporting period, and they are usually owned by three different people. That crossover is what the PCI AI Project Finance Leader (PFL-AI) credential examines, across 16 domains and 61 knowledge areas.
 
 ## Which causes can still be influenced after FID?
 
@@ -134,4 +132,4 @@ Yes. The contractor's earned value measures the contractor's scope against the c
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Linking note: one cross-estate link now sits in the body, in the section on interest during construction. The arithmetic there assumes an even drawdown, which raises the question of what a real drawdown curve does to the financing number, and the hub's cash flow forecasting guide answers it. The note originally proposed a second hub link to the earned value pillar; it was dropped, since only one link per domain is allowed and this piece works the CPI and SPI arithmetic itself. The proposed pciglobal.ai link to UAE training was dropped as well, for a different reason: nothing in the article raises a question a regional training page answers, and a link placed to reach a regional domain is the pattern this run avoids. A reciprocal link back to this piece would fit on the cash flow forecasting page, where interest during construction on a financed asset is mentioned but not worked.*
+*Linking note: one cross-estate link now sits in the body, in the section on interest during construction. The arithmetic there assumes an even drawdown, which raises the question of what a real drawdown curve does to the financing number, and the hub's cash flow forecasting guide answers it. The note originally proposed a second hub link to the earned value pillar; it was dropped, since only one link per domain is allowed and this piece works the CPI and SPI arithmetic itself. The proposed pciglobal.ai link to UAE training was dropped as well, for a different reason: nothing in the article raises a question a regional training page answers, and a link placed to reach a regional domain is the pattern this run avoids. That drop settled the target domain too. The piece was filed against pciglobal.ai, but it carries no basin, market or local content framing — it works cost per tonne, interest during construction and a two-train CPI and SPI split, which is earned value and cost control and therefore hub territory. It has been retargeted to projectcontrolsinstitute.org rather than have regional framing bolted on to justify the original filing.*

@@ -1,11 +1,11 @@
 ---
 platform:      Project Times (projecttimes.com) — contributed practitioner article, byline piece
 type:          article
-title:         "Project controls vs project management: who owns the number?"
+title:         "The accrual for work not yet invoiced: who owns it?"
 standfirst:    Earned value is produced by the project. Actual cost is produced by the ledger. Here are the four questions to ask before you sign what comes out of the division.
-meta:          "Project controls vs project management: earned value comes from the project, actual cost from the ledger, and the accrual between them decides your CPI."
-primary_kw:    project controls vs project management
-secondary_kw:  cost performance index, month-end cut-off, accrual for work not yet invoiced, estimate at completion
+meta:          "Earned value comes from the project and actual cost from the ledger. The accrual for work not yet invoiced sits between them, and it decides your CPI."
+primary_kw:    accrual for work not yet invoiced *
+secondary_kw:  cost performance index, month-end cut-off, estimate at completion, cost ledger cut-off date
 pillar:        Cost control and estimating
 when_to_post:  "Launch week + 1, and on the trade press's clock rather than a posting time. Project Times takes contributed articles through an editorial queue, so read its current contributor guidelines before promising anyone a date, confirm the house length and any exclusivity or prior-publication condition, and submit to the editor with the author biography and headshot attached. Allow for editorial review and for a request to cut or retitle. Do not announce it anywhere, and do not schedule the social assets that point at it, until the piece is live and you have the real URL. Sequence it after the own-site pillar has indexed: a trade byline works hardest when the reader who searches the author's name afterwards finds the Institute's own page already ranking."
 word_count:    1,286 (headline through the end of the author biography, including the standfirst and table cells, excluding front matter and the linking note)
@@ -36,8 +36,17 @@ notes: |
   which are more extractable than a FAQ and native to the page. The FAQ block lives on the own-site
   pillar, where it belongs.
   HOOK C (consequence first) per _STORY.md §2, which names it for readers cold to PCI. Not blended.
-  The title question is answered inside the first 55 words, before any preamble, and the answer
+  The title question is answered inside the first 60 words, before any preamble, and the answer
   sentence carries the primary keyword itself rather than a paraphrase of it.
+  PRIMARY KEYWORD IS OFF-PLAN (marked *), AND THAT IS THE POINT. The piece originally ran on "project
+  controls vs project management", which is the primary keyword of own-site 047 and of the Medium
+  republication 124 that carries a canonical back to it. This byline carries no canonical, and
+  projecttimes.com has more authority than the hub, so targeting that term would have put a trade
+  publication above PCI's own pillar for PCI's own phrase. "Accrual for work not yet invoiced" is the
+  question this article actually answers and no piece in the run targets it. The exact phrase sits in
+  the title, the H1, the opening sentence and the meta description, and nowhere else on purpose. The
+  headline moved with it: the old one promised a comparison of two remits that the body never makes,
+  and a headline that promises what the piece does not deliver is a bounce, not a ranking.
   NUMBERS AUDIT: 2,200,000 / 1,850,000 / 240,000 / 2,090,000 / 1.19 / 1.05 from the worked example
   with every division shown. 240,000 ÷ 1,850,000 = 0.13 is arithmetic on those same figures, not new
   data. The forecast sentence states the direction explicitly — correcting the index raises the
@@ -64,13 +73,13 @@ notes: |
   The author block is a placeholder because the byline is a person, not the Institute.
 ---
 
-# Project controls vs project management: who owns the number?
+# The accrual for work not yet invoiced: who owns it?
 
 *Earned value is produced by the project. Actual cost is produced by the ledger. Here are the four questions to ask before you sign what comes out of the division.*
 
-Fourteen CPI points went missing in an accrual, not a schedule. Project controls produced the earned value. Finance produced the cost. Nobody produced the accrual that reconciles them, and the project manager signed the result. Project controls vs project management is not a reporting line. It is a number with two authors and one signature.
+Fourteen CPI points went missing in an accrual, not a schedule. The accrual for work not yet invoiced has no default owner: project controls produces the earned value, finance produces the invoiced cost, and nobody produces the entry that reconciles them at the cut-off. The project manager signs the result. It is one number with two authors and one signature.
 
-## What fourteen points looks like
+## The arithmetic: 1.19 becomes 1.05
 
 The figures below are arithmetic. There is no client, no sector and no currency, and no claim about how often it happens.
 
@@ -98,9 +107,9 @@ The schedule performance index and schedule variance contain no cost term. They 
 
 A clean schedule report alongside a flattering cost report is not two signals agreeing. It is one signal and one silence, and the silence reads like agreement on a summary slide.
 
-## The same missing entry moves revenue the other way
+## A missing accrual understates reported revenue
 
-Where progress for revenue is measured by an input method — cost incurred against total expected cost — the omission runs in the opposite direction. Understate incurred cost and you understate measured progress, and therefore the revenue recognised for the period.
+Where progress for revenue is measured by an input method — cost incurred against total expected cost — a missing accrual flatters the cost report and depresses the revenue figure at the same time. Understate incurred cost and you understate measured progress, and therefore the revenue recognised for the period.
 
 So one month can report better cost performance and less revenue than the work earned, from the same missing entry. Each figure is locally plausible. Only a reconciliation of the two shows the contradiction, and nothing in either report asks for one. This is a description of how the two calculations behave, not accounting advice.
 
@@ -151,4 +160,4 @@ Whichever you find, you will know something about your own reporting that the re
 
 ---
 
-*Internal links: three, one per domain, each in a body sentence that raises the question its target answers. [Written down before the tool is switched on rather than after a board paper goes out](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "so what is the policy supposed to say", raised at the end of the AI section. [A like-for-like reading of what the main controls credentials actually test](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers "how do I check that claim about any of them, including yours", raised by the sentence it sits in. [The 13 domains and 61 knowledge areas of the PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub sits in the author block, where a trade reader looks for the author's own material. All three anchors are unique to this asset. No pciworld.org and no pciglobal.ai link: no career and no regional question is raised here, and a link with no question behind it is the footprint we avoid. Once this is live, the own-site pillar should cite it once with the anchor "the four questions, published in Project Times", which is the earned trade citation the estate is short of — and the launch LinkedIn post should point at the Project Times URL, not at the hub, so the citation is the thing being amplified.*
+*Linking note: three links ship, all of them in the body, one per domain, each in a sentence that raises the question its target answers. The AI section's closing clause points at pciai.org/ai-policy-for-project-controls, which answers "so what is the policy supposed to say", anchored "written down before the tool is switched on rather than after a board paper goes out". The syllabus paragraph points at credentialfinder.org/best-project-controls-certification, anchored "a like-for-like reading of what the main controls credentials actually test", and the sentence around it names PCI as that page's publisher and sends the reader to each awarding body to confirm the entries, because a reader auditing PCI is entitled to know who wrote the register. The author block points at projectcontrolsinstitute.org/body-of-knowledge, anchored "the 13 domains and 61 knowledge areas of the PCL-AI Body of Knowledge", which is where a trade reader looks for the author's own material. All three anchors are unique to this asset. The URLs are written here in plain text: this note used to render all three as live markdown, so a three-link article audited as a six-link one, and a note is an instruction to whoever files the manuscript rather than a set of placements. No pciworld.org and no pciglobal.ai link: no career and no regional question is raised here, and a link with no question behind it is the footprint we avoid. Nothing reciprocal is asked for. The hub pointing back at a trade byline that points at the hub is the manufactured symmetry _LINK_ARCHITECTURE.md §3 exists to prevent; if an editor at Project Times cites the piece, that citation is worth more than any link the estate can place. The launch LinkedIn post should point at the Project Times URL rather than at the hub, so the trade placement is the thing being amplified.*

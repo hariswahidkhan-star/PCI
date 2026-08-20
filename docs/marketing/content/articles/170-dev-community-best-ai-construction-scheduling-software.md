@@ -1,10 +1,10 @@
 ---
 platform:      DEV Community
 type:          comparison
-title:         Best AI construction scheduling software: a test rig
-meta:          There is no single best AI construction scheduling software. The five jobs these tools do, and a scoring harness that ranks them on your own schedules.
-primary_kw:    best AI construction scheduling software
-secondary_kw:  precision recall F1, schedule quality checking, critical path method, PCL-AI
+title:         How to evaluate AI construction scheduling software
+meta:          How to evaluate AI construction scheduling software on your own files: the five jobs these tools do, and a precision and recall harness for scoring them.
+primary_kw:    evaluate AI construction scheduling software
+secondary_kw:  best AI construction scheduling software, precision recall F1, schedule quality checking, PCL-AI
 pillar:        AI in project controls
 credential:    PCL-AI
 target_domain: pciai.org
@@ -15,15 +15,15 @@ hashtags:      #ai #testing #python #architecture
 ab_id:         AB-00047
 ---
 
-# Best AI construction scheduling software: a test rig
+# How to evaluate AI construction scheduling software
 
-There is no single best AI construction scheduling software, because these products do five different jobs: generating a schedule from historical logic, checking schedule quality, quantifying risk, capturing progress from site data, and drafting narrative. Pick by the job you need, then score the product on your own files.
+To evaluate AI construction scheduling software, start with the job you need done, then score the product on that job using your own files. These tools do five different jobs — generating a schedule from historical logic, checking schedule quality, quantifying risk, capturing progress from site data, and drafting narrative — so there is no single best one.
 
 This post publishes no product league table. PCI has not tested these products, and a ranking that cannot be evidenced is worth less than none, so what follows is the harness for producing your own.
 
-## Best AI construction scheduling software: the five jobs compared
+## How to evaluate AI construction scheduling software: the five jobs
 
-Most disappointment with these tools comes from buying one job and expecting another. The categories behave differently, need different data, and fail differently, and [what each one actually does on a live programme](https://pciai.org/ai-for-construction-scheduling) is worth reading before a demo.
+Most disappointment with these tools comes from buying one job and expecting another. The categories need different data and fail differently, and [what each one actually does on a live programme](https://pciai.org/ai-for-construction-scheduling) sets out where those differences bite.
 
 | Category | What it does | Data it needs | How it fails | Two-week test |
 |---|---|---|---|---|
@@ -137,16 +137,14 @@ Keep the last three updates and the as-built. That is the test set for every pro
 
 ## How PCI examines this
 
-PCI certifies the controls discipline through the PCI AI Project Controls Leader (PCL-AI), which holds 13 domains and 61 knowledge areas. Its Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI, so measured error rates, stated definitions and provenance for machine-assisted numbers are examined as competence rather than treated as a tooling preference.
-
-The companion credentials are the PCI AI Project Finance Leader (PFL-AI), with 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI), with 16 domains and 63 knowledge areas. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
+The PCI AI Project Controls Leader (PCL-AI) examines measured error rates, stated definitions and the provenance of machine-assisted numbers as competence, rather than treating them as a tooling preference.
 
 PCI is an independent certifying body, claims no accreditation, endorsement, affiliation or equivalence with any other organisation, and does not endorse any software product.
 
 ## Frequently asked questions
 
 **What is the best AI construction scheduling software?**
-The one that does the job you actually need on the data you actually have. Decide which of the five categories — generation, quality checking, risk, progress capture, narrative — costs you most today, then score two or three products against your own past updates using precision, recall and F1 on a frozen issue definition.
+For most contractors it is a schedule-quality checker, because that is the category with the clearest measurable return: it runs on the file you already have and its output can be scored. Beyond that, decide which of the five categories costs you most today, then score two or three products on your own past updates using precision, recall and F1 against a frozen issue definition.
 
 **Can AI build a construction programme from scratch?**
 It can draft one from comparable past schedules, which is a real head start on a repeat building type. It cannot know this site's access constraints, crane strategy or client sequencing preferences, so treat the draft as a first pass to argue with rather than a baseline.
@@ -167,4 +165,4 @@ Not inherently. A simulation is only as good as the ranges and correlations fed 
 
 *First published on pciai.org; the `canonical_url` on this post points there. DEV prohibits promotional-first posts, so this carries the method and the harness rather than a product pitch.*
 
-*Linking note — the links now in the body: "what each one actually does on a live programme" points at pciai.org/ai-for-construction-scheduling from the five-jobs section, because saying the categories behave differently raises what each does in practice; "how duration ranges and correlations get set and defended" points at projectcontrolsinstitute.org/quantitative-schedule-risk-analysis from the paragraph on generated schedules and simulations, because "ranges and correlations you can defend" raises how that defence is built. Two links, one per domain, and no product links of any kind. Reciprocal: the quantitative schedule risk analysis guide could cite this scoring harness where it warns that precision in an output flatters weak inputs.*
+*Linking note — the links now in the body: "what each one actually does on a live programme" points at pciai.org/ai-for-construction-scheduling from the five-jobs section, because saying the categories behave differently raises what each does in practice; "how duration ranges and correlations get set and defended" points at projectcontrolsinstitute.org/quantitative-schedule-risk-analysis from the paragraph on generated schedules and simulations, because "ranges and correlations you can defend" raises how that defence is built. Two links, one per domain, and no product links of any kind. No reciprocal link is asked for. The title and primary keyword were changed from "best AI construction scheduling software" to the evaluation intent this post actually serves, because the piece names no product and the own-site original it is canonicalised to holds the "best" query.*

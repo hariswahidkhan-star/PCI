@@ -76,7 +76,7 @@ notes: |
 
 *The Overlap is a monthly letter about the places where project finance and project delivery report the same month differently. It arrives in the week after most month-ends close, while the answer still matters.*
 
-Accountancy exams rarely test float. Engineering exams rarely test cut-off. Projects need both. The gap between them has a name: work done not yet invoiced, sitting in neither system on the day the cost report is signed.
+Accountancy exams rarely test float. Engineering exams rarely test cut-off. Projects need both. The gap between them has a name: work done not yet invoiced, sitting in neither system on the day the cost report is signed. It is worth fourteen points of cost performance index: 1.19 becomes 1.05.
 
 I have wanted to write that down properly for a long time, and email turned out to be the only place to do it. Long enough to show the working, short enough that you might actually check it.
 
@@ -106,7 +106,7 @@ Earned value counted the work, because the work happened. The ledger did not, be
 
 The error is accounting. The damage is delivery. Neither training alone catches it.
 
-## Why the room was full of competent people
+## Why capable people reproduce this every month
 
 A chartered accountant is examined on when revenue may be recognised and what a provision has to satisfy. Almost never on a critical path or an earning rule.
 
@@ -174,13 +174,13 @@ I do not know, and neither does anyone who quotes you a figure. There is no rese
 
 Nothing yet. Those are the Body of Knowledge's proportions — 40 per cent finance and reporting, 40 project management, 20 governed AI — and they describe the syllabus rather than the paper. The exam blueprint is still an open decision. Anyone quoting you an examination weighting, for this credential or any other, is reading from a marketing document rather than a published one.
 
-## Before then
+## Two things to do before issue two
 
 Two things, and the first one is free.
 
 Take your last month-end and find the work that was done and not yet invoiced. Then check whether the number in your cost report knew about it. If it did, you have a good process and I would like to hear how you run it.
 
-Then read [the 13 domains and 61 knowledge areas](https://projectcontrolsinstitute.org/body-of-knowledge) of the PCI AI Project Controls Leader against what you actually needed to know that month. Not against a job description. Against the month. If you already hold a letter or two and want to know what this adds, the honest comparison is [set side by side on what each one examines](https://credentialfinder.org/best-project-controls-certification), never on who awards it.
+Then read [the 13 domains and 61 knowledge areas](https://projectcontrolsinstitute.org/body-of-knowledge) of the PCI AI Project Controls Leader against what you actually needed to know that month. Not against a job description. Against the month. If you already hold a letter or two and want to know what this adds, the comparison worth making is on what each one examines rather than on the reputation attached to it. PCI publishes one, [set side by side on what each credential examines, ours included](https://credentialfinder.org/best-project-controls-certification) — we wrote it, so read it as a starting list of questions and take the answers from each awarding body direct.
 
 That is issue one. If you want issue two, subscribe below and it will find you in about a month.
 
@@ -190,4 +190,4 @@ And if the arithmetic here has ever cost you a quarter, hit reply and tell me wh
 
 ---
 
-*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [What a model may propose and what it may never decide by itself](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "where does the model's authority stop", raised by the governed-AI clause. That anchor previously pointed at an AI-governance slug on pciai.org that does not exist; the policy page is the one that carries the argument. [The 13 domains and 61 knowledge areas](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what would examining both sides actually cover", and carries the ask. [Set side by side on what each one examines](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers the reader who already holds a credential and wants to know what this adds. No pciworld.org and no pciglobal.ai link: this letter raises no career and no regional question, and a link with no question behind it is the footprint _LINK_ARCHITECTURE.md exists to avoid. Anchors differ from those used by the LinkedIn newsletter issue, which points at the same Body of Knowledge page. In replies, send anyone arguing about cut-off dates to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) and anyone wanting the full month worked through to [the earned value worked example](https://projectcontrolsinstitute.org/earned-value-worked-example).*
+*Linking note: three links ship, all of them in the letter, one per domain, each sitting in a sentence that raises the question the target answers. The governed-AI clause points at pciai.org/ai-policy-for-project-controls, anchored "what a model may propose and what it may never decide by itself", which answers "where does the model's authority stop". That anchor previously pointed at an AI-governance slug on pciai.org that does not exist; the policy page is the one that carries the argument. The ask points at projectcontrolsinstitute.org/body-of-knowledge, anchored "the 13 domains and 61 knowledge areas", which answers "what would examining both sides actually cover". The closing paragraph points at credentialfinder.org/best-project-controls-certification, anchored "set side by side on what each credential examines, ours included", for the reader who already holds a credential and wants to know what this adds; the sentence names PCI as that page's publisher and sends the reader to each awarding body for the answers, because a letter that spends four rules on scoping its own numbers cannot then route a reader's check on PCI through a page PCI wrote without saying so. The URLs are written here in plain text. This note used to carry live markdown, including two further hub links beyond the one in the body, so a three-link letter audited as a five-link one against a one-link-per-domain rule; a note is an instruction to whoever sends the issue, not a set of placements. Reply material, one link per reply and never before the answer: for anyone arguing about cut-off dates, projectcontrolsinstitute.org/month-end-close-for-projects; for anyone wanting the full month worked through, projectcontrolsinstitute.org/earned-value-worked-example. No pciworld.org and no pciglobal.ai link: this letter raises no career and no regional question, and a link with no question behind it is the footprint _LINK_ARCHITECTURE.md exists to avoid. Anchors differ from those used by the LinkedIn newsletter issue, which points at the same Body of Knowledge page. Nothing reciprocal is asked for.*

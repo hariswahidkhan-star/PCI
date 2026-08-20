@@ -17,9 +17,9 @@ ab_id:         —
 
 # PMO certification: what it covers and where it stops
 
-A PMO certification examines how a project management office is set up and run: governance, portfolio prioritisation, methodology, assurance and reporting. It stops at the arithmetic. Most syllabuses do not examine earned value calculation in depth, forecast defence, revenue recognition or schedule risk mathematics — which is where the numbers a PMO reports are actually made.
+A PMO certification examines how a project management office is set up and run: governance, portfolio prioritisation, methodology, assurance and reporting. Where it stops is the arithmetic, and that is worth checking in the published syllabus before you enrol: whether earned value calculation, forecast defence, revenue recognition and schedule risk mathematics are examined in depth, because that is where the numbers a PMO reports are actually made.
 
-That is a scope statement, not a criticism. The gap only matters when someone assumes the certificate covers it.
+That is a scope question, not a criticism. The gap only matters when someone assumes the certificate covers it.
 
 ## What does a PMO certification examine?
 
@@ -47,7 +47,7 @@ A supportive PMO with a controlling mandate produces friction and no assurance. 
 
 ## Where a PMO certification stops
 
-Five things a PMO syllabus generally does not examine to any depth.
+Five things to look for by name in a PMO syllabus, rather than assume are in it.
 
 Earned value calculation and its failure modes, beyond definitions. Estimate at completion, including which of the four standard methods applies and what each assumes. Schedule network analysis: float, driving path, constraints and out-of-sequence progress.
 
@@ -75,10 +75,10 @@ A PMO that cannot ask where the percentage came from will report the first numbe
 |---|---|---|---|---|
 | Examines | Governance, portfolio, methodology, assurance, reporting | Estimating, scheduling, earned value, cost control, risk | Recognition, measurement, disclosure, audit | Delivery and governance together with the finance and reporting consequences |
 | Assumes you already know | How the underlying numbers are produced | The organisational context the numbers land in | The operational detail behind the transaction | Neither side is assumed |
-| Cannot tell you | Whether a reported forecast is credible | Whether the portfolio should have funded this at all | How progress was measured | — |
+| Cannot tell you | Whether a reported forecast is credible | Whether the portfolio should have funded this at all | How progress was measured | Whether the holder has ever delivered: it examines knowledge against a syllabus on one date |
 | Suits | PMO leads, portfolio analysts, assurance roles | Planners, cost engineers, controls leads | Finance business partners on capital work | Delivery leaders accountable for the reported position |
 
-The pattern in that table is the point. Each of the first three is a competent answer to part of the problem, and each assumes somebody else has covered the rest. The second column is [what a project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification), and it is the column most PMO holders assume they already have.
+The pattern in that table is the point. Each of the first three is a competent answer to part of the problem, and each assumes somebody else has covered the rest. The fourth carries the limit every examination carries, including this Institute's: it tests knowledge on a date, not a delivery record. The second column is [what a project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification), and it is the column most PMO holders assume they already have.
 
 ## Does a PMO certification make you a project controls professional?
 
@@ -102,9 +102,9 @@ The last question is the most revealing. A credential whose marketing implies it
 
 ## What PCI examines instead
 
-The PCI Project Management Leader – AI (PML-AI) examines 16 domains across 63 knowledge areas, covering delivery, governance and the reporting consequences of both in one syllabus.
+The PCI Project Management Leader – AI (PML-AI) examines 16 domains across 63 knowledge areas.
 
-The Body of Knowledge runs in a 40 / 40 / 20 proportion across finance and reporting, project management, and governed AI. The 40 per cent devoted to finance and reporting is the deliberate answer to the £2m example above: the person reading the return should be able to interrogate how the earned value was measured and what it does to the reported position.
+The Body of Knowledge runs in a 40 / 40 / 20 proportion across finance and reporting, project management, and governed AI. The 40 per cent devoted to finance and reporting is the deliberate answer to the £2m forecast swing that turns on the earning rule: the person reading the return should be able to interrogate how the earned value was measured and what it does to the reported position.
 
 The calculation content is checked mechanically. Across PFL-AI and PML-AI, 15,613 machine calculation checks run over the worked material and all of them pass; PCL-AI has no equivalent suite, so the figure covers those two credentials only.
 

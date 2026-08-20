@@ -66,7 +66,7 @@ Two estimates matter around that gate. The sanction estimate supports the invest
 
 ## Front-end loading: why definition maturity governs the outcome
 
-Front-end loading is the deliberate investment of time and money in defining a project before committing to build it. It is the largest single lever available to a capital project, and it is available only before sanction.
+Front-end loading is the deliberate investment of time and money in defining a project before committing to build it. Its leverage is in the timing, because it is available only before sanction.
 
 The logic is arithmetic rather than philosophical. Design changes are cheap while they are drawings, expensive once they are purchase orders, and punitive once they are steel in the air.
 
@@ -100,7 +100,9 @@ A twelve-month delay has removed **£4.47m of value — 43% of the entire busine
 
 That is the number to put in front of anyone treating an eight-week float loss as a scheduling matter. Time on a capital project is the business case, and float is being spent whether or not anybody is tracking it.
 
-It also explains why acceleration is often rational even when it looks expensive. Spending £2m to recover six months on this project protects more value than it consumes.
+It also explains why acceleration can be rational even when it looks expensive, though the margin is usually thinner than the headline suggests. Recover six months of that delay and the present value of the inflows goes from £55.92m to 60.39 ÷ 1.08⁰·⁵ = **£58.11m**, a gain of **£2.19m**.
+
+Spend £2m to buy those six months and the project is **£0.19m** better off. Worth doing, and worth showing the working, because a case that close is decided by the accuracy of the acceleration estimate rather than by the principle.
 
 ## The control system a capital project needs
 
@@ -118,9 +120,13 @@ A capital project is a temporary organisation spending permanent money, so its c
 
 At some point the money spent stops being project cost and becomes an asset on the balance sheet. That transition is governed by the accounting standards, and [how those reporting standards land on a project's cost report](https://projectcontrolsinstitute.org/ifrs-for-project-controls) decides what evidence project controls has to supply.
 
-Directly attributable costs of bringing the asset to the location and condition needed for its intended use may be capitalised. Site preparation, installation, testing and attributable professional fees qualify; general administration, training and the cost of an idle period do not.
+Two of the international accounting standards do most of that governing. They are named here and described in our own words rather than reproduced, and an entity's own accounting policies decide how each one is applied.
 
-Borrowing costs directly attributable to constructing a qualifying asset are capitalised while it is being readied, and capitalisation stops when the asset is substantially complete. Interest during an extended suspension is not capitalised.
+**IAS 16** covers property, plant and equipment. The broad idea is that costs go into the asset only where they were incurred to get that asset built and working where it is meant to work. On a construction package that usually takes in site preparation, installation, testing and the professional fees attached to the work itself, and usually leaves out general administration, training and the cost of a period when nothing was happening.
+
+**IAS 23** covers borrowing costs. Where an asset takes a long time to get ready — the standard has its own defined term for assets of that kind — the interest on money borrowed to build it can be treated as part of the asset's cost while construction is under way, and that treatment ends once the asset is substantially complete. Interest running during a long suspension is not treated that way.
+
+Nothing PCI publishes is legal, tax or accounting advice, and the treatment depends on the entity's accounting policies.
 
 Depreciation begins when the asset is available for use, not when the ribbon is cut. A three-month commissioning delay therefore moves a depreciation charge into a different financial year, which is why the finance team asks about commissioning dates far earlier than the delivery team expects.
 
@@ -155,7 +161,7 @@ The PCI Project Management Leader – AI (PML-AI) covers **16 domains across 63 
 
 The curriculum carries both sides because a capital project is simultaneously an engineering object and a balance sheet object. The people who can only see one of the two are the reason the two versions of the truth diverge.
 
-Across the three volumes the material is grounded in **92 sector case studies** (26 + 33 + 33). The calculation content behind the PCI AI Project Finance Leader (PFL-AI) and PML-AI is verified by **15,613 machine calculation checks, all passing**; the PCI AI Project Controls Leader (PCL-AI) has no equivalent suite.
+PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
 ## Frequently asked questions
 

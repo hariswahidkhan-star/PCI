@@ -70,7 +70,7 @@ Determine the transaction price, including variable consideration and the limit 
 
 Step five is where a valuation stops being a payment application and becomes revenue. Under a cost-to-cost input method, progress is the ratio of costs incurred that genuinely depict progress to the total costs expected, and costs that do not depict progress — significant uninstalled materials, rectification of defective work — are excluded from the measure.
 
-Use the figures above. Costs incurred are £8.9m and total expected costs are £22.0m, so the measure is 8.9 ÷ 22.0 = **40.5%**. On a transaction price of £24.0m, revenue recognised to date is 0.405 × 24.0 = **£9.7m**.
+Costs incurred are £8.9m and total expected costs are £22.0m, so the measure is 8.9 ÷ 22.0 = **40.5%**. On a transaction price of £24.0m, revenue recognised to date is 0.405 × 24.0 = **£9.7m**.
 
 Gross amounts billed are £9.0m. Revenue exceeds billing by 9.7 − 9.0 = **£0.7m**, which sits on the balance sheet as a contract asset rather than a receivable, because the entity's right to that consideration is not yet unconditional.
 
@@ -93,6 +93,10 @@ At £24.0m a year, one day of receivables is 24.0 ÷ 365 = **£65,800**. Taking 
 A surveyor who shortens the cycle by valuing earlier and closing variations faster is worth more than one who wins the argument two months later.
 
 ## Which route should you choose?
+
+Answer one question before the others: which market's rules will judge your work? Measurement conventions, contract forms, payment legislation and the standing of any given title are set nationally, so a route that is decisive in one country can be close to invisible in the next.
+
+Pick the market first, then the route. A chartered title earned in the market you are leaving is worth less to a hiring employer than an examined syllabus they can read in the market you are entering, and the reverse is true if you are staying put.
 
 If you want a protected title and a long career in one market, take the chartered route in that market and start logging experience now. Nothing else substitutes for it.
 
@@ -127,4 +131,4 @@ Take-off is already partly automated. What does not automate is deciding what is
 
 ---
 
-*Linking note: the links are now in the body. One cross-estate link only — "how the five-step model applies to a construction contract" sits in the ledger section, where the piece asks what a valuation becomes once it reaches the accounts and does not answer that in full. Three same-domain links: "how to judge a course before you pay" follows the warning about providers selling preparation; "what an online quantity surveying credential actually gives you" follows the route-choice paragraph for readers who already hold the experience; "what actually counts in the UK market" sits in the portability answer, where the piece says recognition is local without saying what local looks like. The cost engineer certification link proposed earlier was dropped rather than retargeted: it would have been a second link to the same domain from one piece. Reciprocal: the online quantity surveying guide should link back here with the anchor "the four global quantity surveying routes compared".*
+*Linking note: the links are now in the body. One cross-estate link only — "how the five-step model applies to a construction contract" sits in the ledger section, where the piece asks what a valuation becomes once it reaches the accounts and does not answer that in full. Three same-domain links: "how to judge a course before you pay" follows the warning about providers selling preparation; "what an online quantity surveying credential actually gives you" follows the route-choice paragraph for readers who already hold the experience; "what actually counts in the UK market" sits in the portability answer, where the piece says recognition is local without saying what local looks like. This page carries the cash conversion cycle arithmetic for the pair: the online guide states the cash point and links here rather than repeating the worked block, so the two pages do not compete on one subject.*

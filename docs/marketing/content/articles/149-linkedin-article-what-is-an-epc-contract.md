@@ -19,8 +19,6 @@ ab_id:         AB-00288
 
 An EPC contract is one agreement under which a single contractor takes on engineering, procurement and construction, and hands over a facility that works. It is usually lump-sum and turnkey, so the contractor carries most of the cost and schedule risk. That changes what the programme is for.
 
-Written for LinkedIn as an original. It sits under the Institute's project controls fundamentals pillar.
-
 ## What is an EPC contract, exactly?
 
 It is a single-point-responsibility contract. The owner buys a completed, tested facility rather than a set of services, and one party is answerable for the design, the equipment and the build.
@@ -75,13 +73,13 @@ Payment follows either milestones or measured progress. Milestones are cleaner t
 
 ## How does an EPC contract become revenue? The IFRS 15 five-step model in plain terms
 
-Long-term contract revenue is recognised under a five-step model. In PCI's own words, and without reproducing the standard's text:
+Long-term contract revenue is recognised under the five-step model set out in IFRS 15.
 
 **Step one — identify the contract.** There has to be an enforceable agreement with a customer, with commercial substance and collectability that is probable.
 
 **Step two — identify the performance obligations.** These are the distinct promises inside the contract. A turnkey plant is often a single obligation, because the goods and services are heavily integrated into one combined output.
 
-**Step three — determine the transaction price.** This includes variable amounts such as claims, incentives and liquidated damages, and those amounts are constrained: they are only included to the extent a significant reversal of revenue is not expected.
+**Step three — determine the transaction price.** This includes variable amounts such as claims, incentives and liquidated damages. You count a claim or an incentive only as far as you are confident it will not have to be reversed later, which is what keeps an optimistic claim value out of this period's revenue.
 
 **Step four — allocate the price to the obligations.** Where there is only one obligation, the whole price sits with it. Where there are several, allocation follows standalone selling prices.
 
@@ -103,7 +101,9 @@ On annual revenue of **£480m**, a day is 480 ÷ 365 = **£1.32m**, so 45 days t
 
 Retention makes it worse. At **5%** of a **£180m** contract, **£9m** sits with the customer until completion and often half of it until the defects period ends, which can be a year after the last person leaves site.
 
-An engineer is examined on progress measurement and float, and almost never on a contract asset or a retention release. An accountant is examined on when revenue may be recognised, and almost never on rules of credit. EPC contracts fail commercially in exactly that gap, which is why the PCI Project Management Leader – AI (PML-AI) credential covers both sides, across 16 domains and 63 knowledge areas. Its Body of Knowledge devotes 40 per cent to finance and reporting, 40 to project management and 20 to governed AI.
+Rules of credit and the contract asset are the same event seen from two desks. The planner who agreed the weightings rarely knows they moved reported revenue; the accountant who booked the revenue rarely knows the weightings existed, and neither profession's examinations cover the other's side.
+
+EPC contracts fail commercially in that gap, which is why the PCI Project Management Leader – AI (PML-AI) credential covers both sides, across 16 domains and 63 knowledge areas. Its Body of Knowledge devotes 40 per cent to finance and reporting, 40 to project management and 20 to governed AI.
 
 ## Frequently asked questions
 
@@ -128,4 +128,4 @@ It can be, and convertible arrangements are common: reimbursable during early en
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Linking note: one cross-estate link now sits in the body, in the section on what the planner owes the contract. That paragraph tells the reader to keep every version of the programme retrievable, which raises the question of what a delay analysis will later do with them, and the hub's comparison of delay analysis techniques answers it. The note originally proposed two further hub links, to IFRS 15 for construction and to cash flow forecasting; both were dropped because a piece may carry only one link to any one domain, and this article already works the five-step model and the cash conversion cycle in its own words. Nothing here raises a question the AI, careers, regional or comparison domains answer, so no second cross-estate link was forced. A reciprocal link back to this piece would fit on the delay analysis page, where the contractual programme obligations under an EPC form deserve a pointer.*
+*Linking note: one cross-estate link now sits in the body, in the section on what the planner owes the contract. That paragraph tells the reader to keep every version of the programme retrievable, which raises the question of what a delay analysis will later do with them, and the hub's comparison of delay analysis techniques answers it. The note originally proposed two further hub links, to IFRS 15 for construction and to cash flow forecasting; both were dropped because a piece may carry only one link to any one domain, and this article already works the five-step model and the cash conversion cycle in its own words. Nothing here raises a question the AI, careers, regional or comparison domains answer, so no second cross-estate link was forced.*

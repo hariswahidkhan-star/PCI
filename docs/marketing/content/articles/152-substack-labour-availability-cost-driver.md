@@ -7,7 +7,7 @@ primary_kw:    construction labour cost driver
 secondary_kw:  productivity factor, overtime efficiency, cash conversion cycle, resource levelling
 pillar:        Cost control and estimating
 credential:    PFL-AI
-target_domain: pciglobal.ai
+target_domain: projectcontrolsinstitute.org
 canonical:     original
 schema:        Article + FAQPage
 word_count:    1,623
@@ -17,11 +17,11 @@ ab_id:         AB-00305
 
 # Construction labour cost driver: how to price scarcity
 
-Labour availability hurts more than any other input because scarcity does two things at once: it raises the rate you pay and lowers the output you get per paid hour. The second effect is usually about twice the size of the first, which is why labour availability keeps being named the number-one construction labour cost driver in contractor surveys.
+Labour availability is the construction labour cost driver you cannot hedge, and it costs you twice: scarcity raises the rate you pay and lowers the output you get for each paid hour. The rate rise appears in any re-price. The productivity loss appears only if you are measuring your own hours against installed quantities.
 
-*Written first for this newsletter. The figures below are a worked example built from assumptions, not published market data. PCI publishes no ranking of cost drivers of its own; the ranking belongs to the survey that produced it, and you should cite that survey rather than this piece.*
+*Written first for this newsletter. The figures below are a worked example built from assumptions, not published market data.*
 
-## Why is labour availability the top construction labour cost driver?
+## Why is labour scarcity the construction labour cost driver you cannot hedge?
 
 Because it is the one input that cannot be bought forward. Steel can be ordered early and stored; a fitter cannot be bought in March and kept in a container until October.
 
@@ -52,7 +52,7 @@ Now split it, because the split is what tells you where to act.
 | Productivity only | 512,400 × £34.00 | £17.42m | £3.14m |
 | Both | 512,400 × £37.40 | £19.16m | £4.88m |
 
-The productivity effect is 2.2 times the rate effect, and the remaining £0.31m is the cross term where the two multiply. Teams negotiate hard on the rate and accept the productivity factor as weather. It is the wrong way round.
+On these assumptions the productivity effect is 2.2 times the rate effect, and the remaining £0.31m is the cross term where the two multiply. Your own factor decides the ratio on your own job; the point is that the split exists and can be worked out. Teams negotiate hard on the rate and accept the productivity factor as weather. It is the wrong way round.
 
 The productivity factor has to come from your own measured hours against installed quantities, not from a published table. A factor you cannot trace to a timesheet is a plug.
 
@@ -102,7 +102,7 @@ Re-resource the programme before you re-price it. If the crew you can actually r
 
 Price retention as a cost line. Travel, accommodation, completion bonuses and rotation cycles are cheaper than recruiting the same trade twice at the new market rate, and they are far cheaper than the productivity loss of a crew that never reaches a learning curve.
 
-Then re-forecast, and say plainly which part of the movement is rate and which part is productivity. A forecast that reports only the total invites a negotiation about the rate, which is the smaller half.
+Then re-forecast, and say plainly which part of the movement is rate and which part is productivity. A forecast that reports only the total invites a negotiation about the rate, which on the numbers above was the smaller half of the problem.
 
 ## Frequently asked questions
 
