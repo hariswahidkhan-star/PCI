@@ -70,7 +70,7 @@ Renewal compounds quietly. If your cycle requires 30 professional development un
 | Your situation | Worth it? | Why |
 |---|---|---|
 | You schedule in a PMI-standardised organisation | Yes | The credential speaks the language your governance already uses |
-| You work in Gulf or international EPC | Often not first | Those job advertisements name AACE credentials far more often |
+| You work in Gulf or international EPC | Often not first | Count the acronyms in six live advertisements; AACE credentials are the ones you will meet |
 | You are moving from site engineering into planning | Yes, once eligible | It forces the vocabulary you will be assessed on in interviews |
 | You do delay and claims work | Not the strongest fit | Practical, forensic assessment suits that work better |
 | You already hold PMP and schedule full time | Maybe | It is depth in your actual subject, and a second renewal obligation |
@@ -84,11 +84,9 @@ It does not prove you can produce a defensible programme under pressure, because
 
 It also does not touch what your programme does to the money, and that gap is larger than the one between the two scheduling credentials.
 
-Take a package budgeted at **£2.40m** for 20 units, with 8 installed and 5 of those tested. A units-installed rule earns 8 ÷ 20 × 2.40 = **£0.96m**. A 50/40/10 rule across install, test and handover earns (0.40 × 0.50) + (0.25 × 0.40) = 0.30, so 0.30 × 2.40 = **£0.72m**.
+The join is the earning rule: the convention that decides how much of a package's budget a given piece of physical work has earned this month. It is usually written before anyone turns up on site, rarely reviewed afterwards, and capable of moving a package's earned value by six figures without a single day of programme changing.
 
-The same site on the same day is worth **£240,000** more or less depending on a rule written before anyone turned up. That number becomes earned value, sets the cost performance index, and eventually shapes what a finance function may recognise.
-
-An engineer is examined on float. An accountant is examined on recognition and provisions. The earning rule sits between them and is examined by almost nobody, which is why it keeps producing forecasts that have to be restated.
+That rule sits past the end of a scheduling syllabus and before the start of an accounting one, so almost nobody is examined on it. Which is why it keeps producing forecasts that have to be restated, and why the float arithmetic at the top of this page is only half of what a controls role gets asked to defend.
 
 ## Is PMI-SP worth it compared with AACE PSP?
 
@@ -108,13 +106,13 @@ Precision = 156 ÷ 260 = **0.600**. Recall = 156 ÷ 200 = **0.780**. F1 = (2 × 
 
 Two flags in five are noise and a fifth of the real defects never surfaced. A planner who can state that before trusting the output is more valuable after the tools arrive than before, and no credential that ignores the subject prepares you for it.
 
-## Where PCI fits, stated plainly
+## Is a PCI credential worth it, on the same test?
 
-The Project Controls Institute is an independent certifying body with three AI-era credentials: the PCI AI Project Controls Leader (PCL-AI) with 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) with 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) with 16 domains and 63 knowledge areas.
+Put the Institute through the table above rather than taking its own word for it. A PCI credential is worth it to someone whose gap is the join this page keeps returning to: the PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) at 16 and 61, and the PCI Project Management Leader – AI (PML-AI) at 16 and 63, each proportioned 40% finance and reporting, 40% project management and 20% governed AI.
 
-Each Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI, sitting on 113 mandatory PCI Standards carrying 532 process requirements and 92 sector case studies across the three volumes (26 + 33 + 33).
+It is not worth it if the requisition in front of you names PMI or AACE and nobody in your hiring chain has heard of the Institute. That is the same answer this page gives about PMI-SP in a market that asks for PSP, and it does not change because the credential is ours.
 
-PCI is not accredited by ANAB, UKAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is designed with reference to ISO/IEC 17024 principles, including a criterion-referenced cut score and separation between preparation and the certification decision. PCI claims no recognition, endorsement, affiliation or partnership with PMI, AACE or any other body, and publishes no pass rates, salary figures or holder numbers.
+What you can check is the syllabus, the cut-score policy and the separation of preparation from the certification decision. What you cannot check is a track record: PCI is not accredited by ANAB, UKAS or any other ISO/IEC 17024 accreditation body, does not claim to be, claims no recognition or partnership with PMI or AACE, and publishes no pass rates, salary figures or holder numbers.
 
 ## Frequently asked questions
 
@@ -125,7 +123,7 @@ It is recognised as a scheduling credential wherever PMI is known, which is most
 No. They are separate credentials with separate eligibility routes, and PMI-SP is the more specific one for a planner. Holding PMP first is common because employers ask for it, not because the sequence is required. Each carries its own renewal cycle, so two credentials means two obligations.
 
 **How long does preparation take?**
-Plan around eighty hours across five or six months, which is roughly three hours a week and survives a live project. Sit a timed mock in week one, then study only the domains it exposes, which is the shape [a PMI-SP preparation schedule](https://credentialfinder.org/pmi-sp-exam-prep) takes when it is built around a live job. Candidates who read the syllabus front to back usually spend longer and score no better.
+Plan around eighty hours across five or six months, which is roughly three hours a week and survives a live project. Sit a timed mock in week one, then study only the domains it exposes, which is the shape [a PMI-SP preparation schedule](https://credentialfinder.org/pmi-sp-exam-prep) takes when it is built around a live job. Reading the syllabus end to end is the slow route to the same coverage, and it hides which domains were weak.
 
 **What happens if I let it lapse?**
 You lose the credential and, with it, the right to use the marks. Reinstatement rules and any suspension period are published by PMI, and they change, so check before assuming a lapse is recoverable. A lapsed credential on a CV also dates your last serious study, which is worse than never having held it.

@@ -25,8 +25,8 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     original (the listing is a registration page, not an article; it carries no canonical and needs none, and it must not be republished as a blog post on any of the five domains)
 schema:        Event + FAQPage
-primary_kw:    earned value management training
-secondary_kw:  cost performance index, project accounting cut-off, accrual for work not yet invoiced, EAC methods
+primary_kw:    month-end accrual training *
+secondary_kw:  cost performance index, project accounting cut-off, earned value, EAC methods
 notes: |
   THE ONE DECISION THIS ASSET TURNS ON. _STORY.md §5 forbids asking for a booking, a registration, a
   place, a cohort or a date, because nothing may imply an exam sitting exists to buy. This asset is a
@@ -50,6 +50,14 @@ notes: |
   search by subject, so its title leads with the searched phrase and keeps the numbers behind the
   colon. Same hook, same session, different entry point. Do not use the BrightTALK variant on the
   other two: on a shared link it reads like a course brochure.
+  PRIMARY KEYWORD IS OFF-PLAN (marked *) AND IT IS NOW ACTUALLY USED. The listing first carried
+  "earned value management training", which is the primary keyword of the hub guide own-site 020, so
+  two assets on the estate were chasing one term — the collision _LINK_ARCHITECTURE.md §6 check 3
+  forbids. Worse, the phrase appeared in no title, in neither summary, in none of the 1,092 words and
+  in no FAQ answer; it sat in the BrightTALK keywords box alone, and a listing cannot rank for a
+  phrase it never says. "Month-end accrual training" is what this hour is, no piece in the run targets
+  it, and it now leads the BrightTALK title, sits in the "who this hour is for" section and heads the
+  BrightTALK keyword string. The hub guide keeps the earned value management training query.
   WHAT IS ABSENT, DELIBERATELY. No examination weighting anywhere, in any field, in any reminder. The
   40/40/20 proportions appear once, in the same sentence as the words Body of Knowledge, nowhere near
   the word exam. 15,613 appears once, in the organiser block, in a sentence naming PFL-AI and PML-AI
@@ -124,7 +132,7 @@ The title is read more times than any other line in the asset. All three platfor
 | # | Title | Chars | What it is for |
 |---|---|---|---|
 | **1** | **Your CPI Reads 1.19. The Accrual Says 1.05.** | **43** | **The pick, for Eventbrite and Luma.** Two numbers, no promise, and it reads as a finding rather than an invitation. |
-| **2** | **Earned Value and the Month-End Accrual: 1.19 or 1.05?** | **53** | **The pick for BrightTALK.** Leads with the phrase a practitioner types into a directory search, keeps the numbers as the reason to click. |
+| **2** | **Month-End Accrual Training: Earned Value at 1.19 or 1.05** | **56** | **The pick for BrightTALK.** Leads with the phrase a practitioner types into a directory search, keeps the numbers as the reason to click. |
 | 3 | The Accrual That Moved CPI From 1.19 to 1.05 | 44 | Names the mechanism. Stronger for an audience that already knows what CPI stands for, weaker in search. |
 | 4 | Why Your Cost Performance Index Is Wrong at Month-End | 52 | Pure search, widest reach, and the weakest of the four: no number, so nothing to be curious about. |
 | 5 | Fourteen CPI Points, One Missing Accrual | 40 | Pairs with a numeric cover image. Reads as bait on its own. |
@@ -205,7 +213,7 @@ No software is needed and there is nothing to install. Bring the last cost repor
 
 ### Who this hour is for
 
-Planners, cost engineers, project accountants, quantity surveyors, commercial managers, PMO leads and finance business partners on capital projects. If you sign a cost forecast, review one or have to argue with one, the session is aimed at you.
+Planners, cost engineers, project accountants, quantity surveyors, commercial managers, PMO leads and finance business partners on capital projects. If you sign a cost forecast, review one or have to argue with one, the session is aimed at you. It is month-end accrual training in the only form that transfers: one report, worked by hand, then your own report afterwards.
 
 It is not for anyone hoping to watch a tool demonstrated: no product appears in it.
 
@@ -278,7 +286,7 @@ The PCI Standards are certification requirements established by the Institute. T
 | **Duration** | 60 minutes | 60 minutes | 60 minutes |
 | **Price** | Free | Free | Free |
 | **Capacity** | Set it if you must, but hide it. A visible number is scarcity language by another route | Leave the cap off and the waitlist off | n/a |
-| **Tags / keywords** | earned value management, project controls, cost engineering, project accounting, EVM, CPI, month-end reporting, capital projects | n/a | earned value management; cost performance index; accruals; accounting cut-off; EAC; project controls; cost engineering; project accounting; capital projects; earned value management training |
+| **Tags / keywords** | earned value management, project controls, cost engineering, project accounting, EVM, CPI, month-end reporting, capital projects | n/a | month-end accrual training; earned value management; cost performance index; accruals; accounting cut-off; EAC; project controls; cost engineering; project accounting; capital projects |
 | **Presenter** | Organiser block plus the bio | Host block plus the bio | Presenter panel, bio and headshot |
 | **FAQ** | Its own FAQ section, one question per row | Inside the description, as written | Inside the abstract, as written |
 | **Cover image** | 2160 × 1080 | 16:9 | Current channel spec |

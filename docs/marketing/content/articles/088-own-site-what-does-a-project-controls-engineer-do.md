@@ -66,14 +66,16 @@ Percent complete is EV ÷ BAC = 6.6 ÷ 16.0 = **41.25%**. Percent spent is AC ÷
 
 Then the forecast, by each of the four estimate at completion methods.
 
-| EAC method | Calculation on these inputs | Result | What it assumes |
+| EAC method | Calculation on these inputs | Result | What you are signing up to when you use it |
 |---|---|---:|---|
-| AC + (BAC − EV) | 7.4 + (16.0 − 6.6) | **£16.80m** | The overspend was a one-off; remaining work runs at plan |
-| BAC ÷ CPI | 16.0 ÷ 0.892 | **£17.94m** | Efficiency to date is the best predictor of efficiency to come |
-| AC + (BAC − EV) ÷ (CPI × SPI) | 7.4 + 9.4 ÷ 0.818 | **£18.90m** | Schedule pressure keeps driving cost, and both continue |
-| AC + bottom-up estimate to complete | 7.4 + a re-estimate of the remaining scope | Whatever the re-estimate says | The people doing the work have re-priced it; the only method that can honestly come in lower |
+| AC + (BAC − EV) | 7.4 + (16.0 − 6.6) | **£16.80m** | That the £0.8m already lost has a named cause, and that the cause is closed |
+| BAC ÷ CPI | 16.0 ÷ 0.892 | **£17.94m** | That whatever produced 0.892 is still in the job and nobody has fixed it |
+| AC + (BAC − EV) ÷ (CPI × SPI) | 7.4 + 9.4 ÷ 0.818 | **£18.90m** | That being late is itself costing money, through time-related cost or acceleration |
+| AC + bottom-up estimate to complete | 7.4 + a re-estimate of the remaining scope | Whatever the re-estimate says | That the remaining scope has been priced again by the people who will build it |
 
-The spread is £16.80m to £18.90m — **£2.10m** on one dataset, produced entirely by which assumption is signed. The project controls engineer's job is to name the assumption in the same sentence as the number, every time.
+The spread is £16.80m to £18.90m — **£2.10m** on one dataset, produced entirely by which of those four statements you are willing to make. Only the last one can honestly come in below the others, and only because somebody re-priced the work instead of re-applying a ratio.
+
+The project controls engineer's job is to name the assumption in the same sentence as the number, every time.
 
 To-complete performance index: TCPI = (BAC − EV) ÷ (BAC − AC) = 9.4 ÷ 8.6 = **1.093**. The remaining work has to run 9% better than plan against the 0.892 achieved so far, which is the honest test of any recovery narrative.
 
@@ -93,7 +95,9 @@ Cash conversion cycle = 62 + 28 − 45 = **45 days**.
 
 At an annual turnover of £24m, a day of turnover is 24,000,000 ÷ 365 = **£65,753**. Forty-five days is therefore **£2.96m** of working capital the business funds before the project pays for itself.
 
-Getting certification ten days earlier — usually a document and evidence problem rather than a commercial one — releases 10 × 65,753 = **£658,000** of cash without changing the profit by a penny. That is a project controls output, and it is the one finance directors remember.
+Getting certification ten days earlier — usually a document and evidence problem rather than a commercial one — releases 10 × 65,753 = **£658,000** of cash without changing the profit by a penny.
+
+That makes the certification date worth chasing. Find out who signs it, what evidence they need before they will, and ask for both a fortnight before cut-off rather than on the day the valuation is due.
 
 ## Project controls engineer, planner, cost engineer, project manager
 
@@ -141,4 +145,4 @@ A cost engineer owns the money: estimate, commitments, accruals, actuals and the
 
 ---
 
-*Linking note: this piece carried four links to one domain, so three were removed. The one kept is "the project month-end close", which sits on the sentence saying cut-off discipline separates a controls function from a spreadsheet without saying how the cut-off is run. The four EAC formulas and cash flow links went because the article works both calculations in full itself, and the what-is-project-controls link was a pointer at the end of the credential section rather than an answer to anything the piece asks. Three same-domain links replace them: "how people arrive at a first planning job" under the four-roles table, "what each of those bands owns" in the where-does-it-lead answer, and "the interview questions that test those three things" in the qualifications answer. The opening was also rewritten so the title's question is answered in the first sentence. Reciprocal: the project controls interview questions piece should link back here with the anchor "the day a project controls engineer actually has".*
+*Linking note: four links, all inside sentences in the body. One cross-estate link — "the project month-end close" sits on the sentence saying cut-off discipline separates a controls function from a spreadsheet, which the piece does not go on to explain. Three same-domain links: "how people arrive at a first planning job" under the four-roles table; "what each of those bands owns" in the where-does-it-lead answer; "the interview questions that test those three things" in the qualifications answer. This page is where pciworld.org works the four estimate at completion methods in full, against what each one commits the signer to. The senior career-path piece states the spread and links here rather than repeating the table, so the domain carries one full treatment of the subject rather than several near-copies.*

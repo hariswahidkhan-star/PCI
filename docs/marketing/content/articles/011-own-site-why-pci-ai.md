@@ -87,11 +87,11 @@ Here is the part the engineering qualifications do not cover and the finance qua
 
 Under a cost-to-cost input measure, progress is costs incurred divided by total expected costs — in other words, AC divided by EAC. That single ratio drives revenue on a fixed-price contract.
 
-Take method 1 first. Progress is 24.0 / 50.4 = 47.6%, so cumulative revenue is 0.476 × 60 = **£28.6m**, and reported margin is 28.6 − 24.0 = **£4.6m**.
+Take method 1 first. Progress is 24.0 / 50.4 = 47.62%, so cumulative revenue is 0.4762 × 60 = **£28.57m**, and reported margin is 28.57 − 24.00 = **£4.57m**.
 
-Now take method 3. Progress is 24.0 / 56.6 = 42.4%, cumulative revenue is 0.424 × 60 = **£25.4m**, and reported margin is 25.4 − 24.0 = **£1.4m**.
+Now take method 3. Progress is 24.0 / 56.6 = 42.40%, cumulative revenue is 0.4240 × 60 = **£25.44m**, and reported margin is 25.44 − 24.00 = **£1.44m**.
 
-The same project, the same costs incurred, the same invoices issued. **Reported margin differs by £3.1m according to which EAC method the cost engineer used.**
+The same project, the same costs incurred, the same invoices issued. **Reported margin differs by £3.13m according to which EAC method the cost engineer used.**
 
 Push the EAC past £60m and the effect changes character entirely. The contract becomes onerous, and the whole expected loss is recognised at once rather than spread across the remaining work.
 
@@ -176,8 +176,8 @@ Both, in fact. Governed AI is a domain in its own right in each Body of Knowledg
 PCL-AI covers 13 domains across 61 knowledge areas. PFL-AI covers 16 domains across 61 knowledge areas. PML-AI covers 16 domains across 63 knowledge areas. All three follow the same 40/40/20 proportions of finance and reporting, project management and governed AI in their Bodies of Knowledge.
 
 **Which one should I take first?**
-Take the one matching what you are accountable for now, not where you would like to be. The three are designed to be read across, so the second is substantially easier than the first, and starting with material you use daily makes the crossing into the other discipline concrete rather than theoretical.
+Take the one matching what you are accountable for now, not where you would like to be. The three share the same Body of Knowledge proportions, so a second credential covers ground you have already met, and starting with material you use daily makes the crossing into the other discipline concrete rather than theoretical.
 
 ---
 
-*Internal linking note: three same-domain links are now in the body. [What project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification) sits under the market table, where the reader is told to read each body's requirements and asks what an examination can evidence. [What the Institute is and how it is governed](https://projectcontrolsinstitute.org/project-controls-institute) sits under the honest-status table, where the legal form and accreditation position raise the question of who stands behind the scheme. [The PCL-AI credential in detail](https://projectcontrolsinstitute.org/pcl-ai-certification) sits in the accountability section, at the paragraph that names PCL-AI. The link to the finance and project management certification piece was dropped to hold the two-to-three internal cap, and because that piece covers the same overlap this one already argues at length. Reciprocal link worth making: the online certification, certification cost and AI project controls certification pieces should point here with the anchor "why the PCI credentials exist".*
+*Internal linking note: three same-domain links are now in the body. [What project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification) sits under the market table, where the reader is told to read each body's requirements and asks what an examination can evidence. [What the Institute is and how it is governed](https://projectcontrolsinstitute.org/project-controls-institute) sits under the honest-status table, where the legal form and accreditation position raise the question of who stands behind the scheme. [The PCL-AI credential in detail](https://projectcontrolsinstitute.org/pcl-ai-certification) sits in the accountability section, at the paragraph that names PCL-AI. The link to the finance and project management certification piece was dropped to hold the two-to-three internal cap; the flow between the two runs the other way, with that page pointing here for the rationale argument this one owns. Where the online certification, certification cost and AI project controls certification pieces raise the question this page answers, each should reach it on its own anchor — "why an AI-era credential exists at all", "what the three credentials examine that others do not" and "the handover no existing syllabus covers" respectively — never on a shared one.*

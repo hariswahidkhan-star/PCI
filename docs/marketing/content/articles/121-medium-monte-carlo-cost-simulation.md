@@ -65,12 +65,14 @@ Ranging captures how a line behaves when the work goes normally. It does not cap
 
 Model those separately, each with its own probability and impact range, drawn from [the register the ranges came from](https://projectcontrolsinstitute.org/risk-register-that-gets-used) rather than invented at the modelling stage.
 
-| Risk event | Probability | Impact (mean) | Expected value |
-|---|---:|---:|---:|
-| Ground conditions worse than the boreholes indicated | 35% | £2.20m | £0.770m |
-| Permit delay of 6–14 weeks at £0.11m a week | 25% | £1.027m | £0.257m |
-| Long-lead vendor fails and the package is re-let | 10% | £3.50m | £0.350m |
-| **Total expected value** | | | **£1.377m** |
+| Risk event | Probability | Impact O / M / P | Impact (PERT mean) | Expected value |
+|---|---:|---:|---:|---:|
+| Ground conditions worse than the boreholes indicated | 35% | £1.20m / £2.00m / £4.00m | £2.20m | £0.770m |
+| Permit delay of 6 / 9 / 14 weeks at £0.11m a week | 25% | £0.66m / £0.99m / £1.54m | £1.027m | £0.257m |
+| Long-lead vendor fails and the package is re-let | 10% | £2.00m / £3.50m / £5.00m | £3.50m | £0.350m |
+| **Total expected value** | | | | **£1.377m** |
+
+Each impact is the PERT mean of its own range, on the same (O + 4M + P) / 6 the estimate lines use. The permit row is (0.66 + 4 × 0.99 + 1.54) / 6 = **£1.027m**, which is 9.33 weeks at £0.11m.
 
 That expected-value total is the most misused number in risk management. This project will never spend £0.770m on ground conditions. It spends nothing, 65% of the time, or somewhere between £1.20m and £4.00m.
 
@@ -105,11 +107,15 @@ More iterations buy precision and never accuracy. A poor model run 100,000 times
 
 Combining the ranged estimate with the three discrete risks gives a mean of 50.90 + 1.38 = **£52.28m**.
 
-Adding the variance of the risk events (2.483) to the independent base variance (3.813) gives 6.296, so σ = **£2.51m**.
+Each discrete risk adds p(1 − p)I² of variance, taking the impact at its mean: 0.35 × 0.65 × 2.20² = 1.1011, 0.25 × 0.75 × 1.027² = 0.1978, and 0.10 × 0.90 × 3.50² = 1.1025. Those three come to 2.4014, or **2.401**.
 
-The P80 is 52.28 + (0.84 × 2.51) = **£54.39m**. Against the £48.50m base estimate, contingency is **£5.89m**, or **12.1%**.
+Adding that to the independent base variance of 3.813 gives 6.214, so σ = √6.214 = **£2.49m**.
 
-Two caveats belong next to that figure. The normal approximation used here is a demonstration shortcut — a real simulation preserves the lumpy shape that a 10% chance of a £3.50m event creates, and the true P80 sits around that lump rather than on a smooth curve. And the answer still rests on the correlation judgement above, which is a judgement rather than a calculation.
+The P80 is 52.28 + (0.84 × 2.49) = **£54.37m**. Against the £48.50m base estimate, contingency is **£5.87m**, or **12.1%**.
+
+Two caveats belong next to that figure. The arithmetic here is a demonstration shortcut: a normal approximation, with each risk impact taken at its mean rather than sampled across its range. A real simulation preserves the lumpy shape that a 10% chance of a £3.50m event creates, and the true P80 sits around that lump rather than on a smooth curve.
+
+The second caveat is the correlation judgement above. The answer still rests on it, and it is a judgement rather than a calculation.
 
 ## The tornado is the output that changes behaviour
 
@@ -131,7 +137,7 @@ Then track drawdown as a curve against time. If contingency is falling faster th
 
 Contingency is capital held against a probability. It appears in the funding requirement, in the cash profile, and eventually in reported margin.
 
-The £5.89m above has to be financed. The delay days inside it arrive as time-related cost, extended overheads and later certification, which means later cash.
+The £5.87m above has to be financed. The delay days inside it arrive as time-related cost, extended overheads and later certification, which means later cash.
 
 A chartered accountant is examined on provisions and cut-off, almost never on a P80. An engineer is examined on ranges and float, almost never on what a contingency release does to a reported result. This number sits in both places, which is why it is where projects lose money quietly.
 

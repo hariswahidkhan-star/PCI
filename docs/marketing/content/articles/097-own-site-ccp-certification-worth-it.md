@@ -52,7 +52,7 @@ The last row is the one most cost engineers are actually in, and it is worth the
 
 ## What does it cost, all in?
 
-Five lines, not one: membership, application, the examination sitting, any retake, and recertification each cycle. Read them off AACE's fee page on the day you decide, split by member and non-member, then see [how those five lines add up across a career](https://credentialfinder.org/aace-certification-cost).
+Five lines, not one: membership, application, the examination sitting, any retake, and recertification each cycle. Read them off AACE's fee page on the day you decide, split by member and non-member, then see [what each of those five lines buys](https://credentialfinder.org/aace-certification-cost) before you add them up.
 
 Then price the part that never appears on an invoice. Eighty hours at a self-valuation of USD 40 an hour is **USD 3,200**, which is several times any sitting fee. At six hours a week it is thirteen to fourteen weeks of evenings.
 
@@ -85,7 +85,7 @@ Cash conversion cycle = 88.2 + 42.1 − 63.2 = **67.1 days**.
 
 Daily cost of sales is 52 ÷ 365 = **£142,466**, so the business funds 67.1 × 142,466 = **£9.56m** of working capital before it earns a penny of margin. The mixed bases here — revenue for receivables, cost of sales for the rest — are the conventional simplification, and worth stating rather than hiding.
 
-Now let payment applications slip by a fortnight because the measure was late. Days sales outstanding becomes 103.2, the cycle becomes 82.1 days, and the funding requirement becomes 82.1 × 142,466 = **£11.70m**. That is **£2.14m** more cash tied up, costing roughly **£150,000 a year** at 7%.
+Now let payment applications slip by fifteen days because the measure was late. Days sales outstanding becomes 103.2, the cycle becomes 82.1 days, and the funding requirement becomes 82.1 × 142,466 = **£11.70m**. That is **£2.14m** more cash tied up, costing roughly **£150,000 a year** at 7%.
 
 Nothing on site changed. A cost engineer who submitted an application fifteen days late cost the business more than the entire certification programme for the department, and no cost examination asks about it.
 

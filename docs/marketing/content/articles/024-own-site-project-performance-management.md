@@ -68,35 +68,15 @@ This is why a performance report that tracks a frozen list of critical activitie
 
 Two habits corrupt the measure. Constraints applied to hold a date, which manufacture float that does not exist, and negative lags used to compress a sequence nobody intends to work that way.
 
-## Measuring the measurement: precision, recall and F1
+## What to demand of an early-warning model
 
-Once an early-warning model sits on top of these metrics, whether it is a rule set or something trained, it becomes a thing that must itself be measured. Whether such a model is worth having at all is a separate question, and [what AI can and cannot be trusted with in project controls](https://pciai.org/ai-in-project-controls) is where it is argued out.
+Once a model sits on top of these metrics, whether it is a rule set or something trained, it becomes a thing that must itself be measured. Whether such a model is worth having at all is a separate question, and [what AI can and cannot be trusted with in project controls](https://pciai.org/ai-in-project-controls) is where that argument, and the scoring arithmetic behind it, is set out.
 
-Take a portfolio of 180 control accounts. The model flags accounts it expects to finish more than 5% over budget. At completion we can score it.
+Ask for three things before you believe any flag rate. Precision: of the accounts it flagged, how many really overran. Recall: of the accounts that really overran, how many it flagged. And the confusion matrix both are calculated from, on completed accounts rather than open ones.
 
-| | Actually overran | Did not overrun | Total |
-|---|---:|---:|---:|
-| **Flagged** | 33 | 11 | 44 |
-| **Not flagged** | 12 | 124 | 136 |
-| **Total** | 45 | 135 | 180 |
+Never accept accuracy as the headline. On a portfolio where a quarter of accounts overrun, a model that flags nothing at all is right three times in four, and a number that cannot fail is not a measurement.
 
-**Precision** is how many flags were right: 33 ÷ 44 = **0.750**. Three in four alerts were real.
-
-**Recall** is how many real overruns were caught: 33 ÷ 45 = **0.733**. One in four was missed.
-
-**F1** is the harmonic mean of the two, which punishes a model that is strong on one and weak on the other. F1 = 2 × (0.750 × 0.733) ÷ (0.750 + 0.733) = 1.100 ÷ 1.483 = **0.742**.
-
-Now the trap. Accuracy here is (33 + 124) ÷ 180 = **0.872**, which sounds excellent. A model that flagged nothing at all would score 135 ÷ 180 = **0.750** while being entirely useless, because only a quarter of the population overran.
-
-Never accept accuracy as the headline on an imbalanced problem. Ask for precision, recall and the confusion matrix, or you are being shown a number that cannot fail.
-
-## Setting the threshold is a business decision
-
-Loosen the model so it flags 70 accounts and it catches 41 of the 45 overruns. Recall rises to 41 ÷ 45 = **0.911**, precision falls to 41 ÷ 70 = **0.586**, and F1 becomes 2 × (0.586 × 0.911) ÷ 1.497 = **0.713**.
-
-F1 went down while recall went up. Which setting is better depends entirely on what a miss costs against what a false alarm costs.
-
-On a capital programme a missed overrun is usually far more expensive than an unnecessary review, so a bias towards recall is defensible. It is only defensible if you also fund the people to work through 70 investigations a month, because unstaffed alerts get ignored within two cycles, and an ignored alert has worse consequences than no alert at all.
+Where the alert threshold sits is a business decision rather than a modelling one. Loosening it catches more of the real overruns and raises the number of false alarms, which is defensible on a capital programme, because a missed overrun costs more than an unnecessary review. It is only defensible if the reviews are staffed. Unstaffed alerts are ignored within two cycles, and an ignored alert is worse than no alert at all.
 
 ## From metric to decision: write it down as four columns
 
@@ -111,15 +91,15 @@ The artefact that makes this real is short. For each metric: the trigger value, 
 
 Thresholds are set at baseline and not adjusted at month-end. A threshold moved to avoid writing a report is a governance failure, and it is visible in the audit trail whether or not anyone looks.
 
-Choosing the trigger values themselves is the harder half of that table, and [setting variance thresholds that trigger action](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) works through the percentage and absolute gates.
+Choosing the trigger values themselves is the harder half of that table. [How a percentage gate and an absolute gate are sized together](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) works through it account by account, including why a percentage on its own floods a small account and misses a large one.
 
 ## The number that has to reconcile
 
 One discipline separates a performance report that survives scrutiny from one that does not. The cost position on the report has to reconcile to the ledger, every period, with the differences named.
 
-Accruals, retention, materials on site and unapproved variations account for almost all of it. Where the reconciliation is not produced, the delivery side and the finance side gradually describe different projects, and the divergence is usually found during an audit rather than during a month-end.
+Accruals, retention, materials on site and unapproved variations account for almost all of it. Where the reconciliation is not produced, the two records drift apart a little each period until neither side trusts the other's number, and the gap is normally found in an audit rather than at a month-end.
 
-That crossing point is why the [PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) sets project accounting and finance alongside the delivery disciplines across its 13 domains and 61 knowledge areas, in the proportions 40 / 40 / 20 with governed AI.
+That crossing point is why project accounting and finance sit next to the delivery disciplines in the Body of Knowledge behind the PCI AI Project Controls Leader (PCL-AI), rather than in a chapter of their own: [how its 13 domains and 61 knowledge areas are divided](https://projectcontrolsinstitute.org/body-of-knowledge) puts them in a 40 / 40 / 20 proportion with governed AI.
 
 ## Frequently asked questions
 
@@ -140,4 +120,4 @@ The metrics do not change. What changes is that you now have a second thing to m
 
 ---
 
-*Internal linking note: three same-domain links now sit in the body. The Body of Knowledge link was already in place at the reconciliation section, where the finance and delivery overlap is named. Two were added: "the measurement system these indices come from" points at the earned value pillar, placed where CPI, SPI and actual cost are called lagging by construction and a reader may not yet know how they are built; and "setting variance thresholds that trigger action" points at the reporting thresholds guide, placed under the metric-trigger-owner table, which sets trigger values without explaining how to choose them. One cross-estate link is carried: "what AI can and cannot be trusted with in project controls" to pciai.org, placed where an early-warning model first appears, because whether to run one at all is that domain's subject rather than the hub's. Reciprocal: the reporting thresholds guide should link back here with an anchor about turning measurement into decisions.*
+*Internal linking note: three same-domain links now sit in the body. "How its 13 domains and 61 knowledge areas are divided" points at the Body of Knowledge from the reconciliation section, where the finance and delivery overlap is named. Two were added: "the measurement system these indices come from" points at the earned value pillar, placed where CPI, SPI and actual cost are called lagging by construction and a reader may not yet know how they are built; and "how a percentage gate and an absolute gate are sized together" points at the reporting thresholds guide, placed under the metric-trigger-owner table, which sets trigger values without explaining how to choose them. That anchor is deliberately about the sizing mechanics, since the cheat sheet already points at the same page on the question of when a variance should trigger action. One cross-estate link is carried: "what AI can and cannot be trusted with in project controls" to pciai.org, placed where an early-warning model first appears, because whether to run one at all is that domain's subject rather than the hub's. Reciprocal: the reporting thresholds guide should link back here with an anchor about turning measurement into decisions.*

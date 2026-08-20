@@ -17,13 +17,13 @@ ab_id:         AB-00043
 
 # Will AI replace project managers? What actually changes
 
-No. The honest version of *will AI replace project managers* is that automation takes the reporting, collation and drafting work, which is most of the visible week and none of the value. What remains is deciding which forecast the business acts on, which risks get funded, and who is told what — decisions that carry consequences a tool cannot hold.
+Will AI replace project managers? No. Automation takes the reporting, collation and drafting work, which is most of the visible week and none of the value. What remains is deciding which forecast the business acts on, which risks get funded, and who is told what — decisions that carry consequences a tool cannot hold.
 
 The question underneath it is whether the accountable part of the role is large enough to survive without the administrative part around it. The forecast is the clearest test, so start there.
 
 ## Four forecasts from one dataset
 
-At month 9 of 24, a package has a budget at completion of $18.0m. Planned value is $7.2m, earned value is $6.3m and actual cost is $7.5m.
+At month 9 of 24, an illustrative package has a budget at completion of $18.0m. Planned value is $7.2m, earned value is $6.3m and actual cost is $7.5m. The figures are set to show the arithmetic; they are not taken from a real contract.
 
 Cost variance is 6.3 − 7.5 = **−$1.2m**. Schedule variance is 6.3 − 7.2 = **−$0.9m**. The cost performance index is 6.3 ÷ 7.5 = **0.840** and the schedule performance index is 6.3 ÷ 7.2 = **0.875**.
 
@@ -124,4 +124,4 @@ By evidence rather than assertion: a forecast you changed and can explain, a cla
 
 ---
 
-*Internal links: this answer should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [AI project management certification](https://pciai.org/ai-project-management-certification) with the anchor "examined on AI-era delivery judgement", and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "which estimate at completion to publish, and why". Quora rule: the one in-body link sits after the question is fully answered, never in the opening.*
+*Internal links: the body now carries one link, to https://pciai.org/ai-project-management-certification, anchored on the credential's full name. It sits in the closing section on governed use of AI, on the sentence about knowing what a model saw and what it scores against — the question that raises is where that combination is examined, which is that page's subject. It is placed after the answer is complete, never in the opening. Two further links were proposed and are not placed: the AI in project controls pillar would be a second link to the same domain in one answer, and the hub's four EAC formulas page covers ground this answer already works through in its own table. Quora links are nofollow, so treat this as qualified traffic rather than link equity. Reciprocal: none — no PCI page should link out to a Quora answer.*

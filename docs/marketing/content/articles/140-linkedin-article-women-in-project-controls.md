@@ -33,9 +33,9 @@ Any figure you see for the profession's gender composition has therefore been as
 
 Project controls is the function that plans a project's time and cost, measures what has actually happened, forecasts where it will end, and reports that position to whoever has to decide something. Planners, schedulers, cost engineers, cost controllers, estimators and controls analysts all sit inside it.
 
-Almost nobody arrives with a project controls degree, because there is no standard one. People move across from site engineering, quantity surveying, accounting, construction management, procurement or data analysis, usually after two to five years in that first discipline.
+Almost nobody arrives with a project controls degree, because there is no standard one. People move across from site engineering, quantity surveying, accounting, construction management, procurement or data analysis, usually after a few years in that first discipline.
 
-Two routes dominate. The first is internal: an engineer or surveyor picks up the programme or the cost report on a live job and keeps it, and the title follows the work a year later. The second is an advertised analyst role, where the employer expects tool literacy and teaches the discipline on the job.
+Two routes are common. The first is internal: an engineer or surveyor picks up the programme or the cost report on a live job and keeps it, and the title follows the work a year later. The second is an advertised analyst role, where the employer expects tool literacy and teaches the discipline on the job.
 
 Communities form around tools, sectors and regional practitioner groups rather than around one professional association, which is part of why nobody has ever run a census. That is worth knowing before you go looking for the profession's numbers, and it is why the rest of this piece measures a function rather than a field.
 

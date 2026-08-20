@@ -99,17 +99,15 @@ An engineer is examined on float and progress measurement. A chartered accountan
 
 ## Where PCI fits
 
-The PCI AI Project Controls Leader (PCL-AI) covers 13 domains and 61 knowledge areas. Its companions are the PCI AI Project Finance Leader (PFL-AI), with 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI), with 16 domains and 63 knowledge areas.
+The handover named in the section above — the earning rule that turns a statused programme into earned value — is what the Project Controls Institute built a syllabus around. The PCI AI Project Controls Leader (PCL-AI) covers 13 domains and 61 knowledge areas and treats the programme, the cost report and the reporting consequence as one subject rather than three, with the Body of Knowledge proportioned 40% finance and reporting, 40% project management and 20% governed AI.
 
-Every Body of Knowledge holds the same proportions: 40% finance and reporting, 40% project management, 20% governed AI. Behind them sit 113 mandatory PCI Standards carrying 532 process requirements and 92 sector case studies across the three volumes (26 + 33 + 33).
+Entry is around three years of professional experience in any field, counted full-time-equivalent. The examination is scenario-based multiple choice with a single best answer, sat under remote proctoring, and the cut score is criterion-referenced rather than set against a cohort.
 
-Entry is around three years of professional experience in any field, counted full-time-equivalent, with no degree requirement. The examination is scenario-based multiple choice with a single best answer, sat under remote proctoring, and the fee opens a 12-month scheduling window from payment.
-
-PCI is not accredited by ANAB, UKAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is designed with reference to ISO/IEC 17024 principles, including a criterion-referenced cut score. PCI claims no recognition, endorsement, affiliation or partnership with PMI, AACE or any other body, and publishes no pass rates or holder numbers.
+Judge it the way this page has told you to judge PMI-SP and PSP: on what the assessment makes you produce, and on who decides the outcome. On the third axis it is the weakest name here — not accredited by ANAB, UKAS or any other ISO/IEC 17024 accreditation body, not claiming to be, claiming no recognition or partnership with PMI or AACE, and publishing no pass rates or holder numbers.
 
 ## How to choose in ten minutes
 
-Search live job advertisements for the roles you want in your region and count which of the two acronyms appears. In Gulf and international EPC work PSP is named far more often; in PMI-standardised organisations PMI-SP is.
+Search live job advertisements for the roles you want in your region and count which of the two acronyms appears. PSP is the acronym you will meet in Gulf and international EPC advertisements; PMI-SP is the one a PMI-standardised organisation puts on a requisition. Your own count settles which market you are actually in.
 
 Then ask what you need to prove. If your weakness is vocabulary and framework alignment, PMI-SP's objective paper matches it. If your weakness is producing defensible analysis under time pressure, PSP's practical exercises are the better training, and the harder paper; [the PSP's scope, fees and practical component](https://credentialfinder.org/aace-psp-certification-guide) set out what that commitment involves.
 
@@ -118,7 +116,7 @@ Finally, ask which renewal you will actually keep up. A lapsed credential is wor
 ## Frequently asked questions
 
 **Is PSP harder than PMI-SP?**
-Most candidates who have taken both describe PSP as the heavier paper, largely because of the practical exercises and the breadth of AACE's total cost management framing. PMI-SP is demanding in a different way, since its items are written against PMI's vocabulary and a fluent site planner can lose marks by answering from experience rather than from the framework.
+PSP adds practical exercises, so it asks for production as well as recognition, and AACE's total cost management framing widens the ground it covers. PMI-SP is demanding in a different way, since its items are written against PMI's vocabulary and a fluent site planner can lose marks by answering from experience rather than from the framework.
 
 **Can I hold both?**
 Yes, though the overlap is large and the second one adds less than candidates hope. A better second credential is usually one that covers a different subject, such as cost engineering or the finance boundary, rather than a second view of scheduling. Both carry independent renewal obligations that run for as long as you hold them.

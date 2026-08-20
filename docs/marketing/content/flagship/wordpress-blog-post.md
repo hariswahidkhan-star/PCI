@@ -127,7 +127,7 @@ What it cannot do is see a cost that was never recorded. There is no field for a
 
 That narrows the governance question. Not whether the tool calculates correctly, but which figures a model may originate, which it may only restate, and whose name is on the output when it reaches a board pack. Settle that before the tool is switched on, alongside [how to measure whether a model's cost estimate is any good](https://pciai.org/ai-for-cost-estimating-in-construction), because a forecast nobody has scored is an opinion with a decimal point.
 
-## What examines both sides?
+## Which certification examines both finance and delivery?
 
 The Project Controls Institute exists to examine the crossing. Three credentials, each with its own Body of Knowledge and its own examination. The PCI AI Project Controls Leader (PCL-AI) examines 13 domains and 61 knowledge areas. The PCI AI Project Finance Leader (PFL-AI) examines 16 domains and 61 knowledge areas. The PCI Project Management Leader – AI (PML-AI) examines 16 domains and 63 knowledge areas.
 

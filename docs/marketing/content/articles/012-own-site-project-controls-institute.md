@@ -37,9 +37,7 @@ Each Body of Knowledge is built to the same proportions: 40% finance and reporti
 
 A chartered accountant is examined on when revenue may be recognised. An engineer is examined on float and progress measurement. Neither examination covers the point where one output becomes the other's input.
 
-Consider a fixed-price contract of £100m with a forecast cost of £80m and £40m spent. Under a cost-to-cost measure, progress is 40 / 80 = 50%, so cumulative revenue is £50m and reported margin is £10m.
-
-Now the cost engineer revises the forecast to £90m. Progress becomes 40 / 90 = 44.4%, revenue becomes £44.4m, and **reported margin falls from £10m to £4.4m** — a £5.6m movement caused by a forecast, not by a transaction.
+A revised estimate at completion is the clearest case. It changes nothing about the work, the cash or the invoices, and it still moves the profit the business reports that period, because the percentage complete that drives revenue is calculated from the forecast.
 
 Very few of the people who move that number have ever been examined on what it does. That is the gap the Institute was formed to close, and it is why its credentials examine both sides rather than one. [The gap the PCI credentials were built to close](https://projectcontrolsinstitute.org/why-pci-ai) is argued in full against what the existing qualifications already examine.
 
@@ -128,4 +126,4 @@ No. PCI sets the standard, publishes the Bodies of Knowledge, owns the examinati
 
 ---
 
-*Internal linking note: three same-domain links are now in the body. [The gap the PCI credentials were built to close](https://projectcontrolsinstitute.org/why-pci-ai) sits after the £5.6m illustration, where the reader asks why an institute was formed for this. [Where PCI's official preparation sits](https://projectcontrolsinstitute.org/certuvo) sits in the separation-of-preparation section, at the first mention of Certuvo. [What sitting PCL-AI involves](https://projectcontrolsinstitute.org/pcl-ai-certification) answers the FAQ on choosing a credential. The link to the certification pillar was dropped to hold the two-to-three internal cap; the why-PCI-AI link already carries the comparison a reader needs at this point. Reciprocal link worth making: the PCL-AI guide and the certification pillar should point here with the anchor "the certifying body and how it is governed".*
+*Internal linking note: three same-domain links are now in the body. [The gap the PCI credentials were built to close](https://projectcontrolsinstitute.org/why-pci-ai) sits after the estimate-at-completion example, where the reader asks why an institute was formed for this; the worked pounds behind that example stay on the IFRS pillar, which owns them. [Where PCI's official preparation sits](https://projectcontrolsinstitute.org/certuvo) sits in the separation-of-preparation section, at the first mention of Certuvo. [What sitting PCL-AI involves](https://projectcontrolsinstitute.org/pcl-ai-certification) answers the FAQ on choosing a credential. The link to the certification pillar was dropped to hold the two-to-three internal cap; the why-PCI-AI link already carries the comparison a reader needs at this point. Reciprocal link worth making: the PCL-AI guide and the certification pillar should point here with the anchor "the certifying body and how it is governed".*

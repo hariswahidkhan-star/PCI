@@ -19,7 +19,7 @@ ab_id:         AB-00042
 
 Will AI replace planning engineers? No. A model can compute a critical path, screen a network for defects and draft the narrative, because those are arithmetic and pattern work. It cannot decide whether the logic matches how the work will be built, and it cannot sign a completion date. The hours shrink; the accountability does not.
 
-I have run planning teams through two tool generations, and the question is usually a proxy for a different one: which parts of my week are about to disappear, and is what remains enough of a job. Here is the honest split, with the arithmetic.
+The question is usually a proxy for a different one: which parts of my week are about to disappear, and is what remains enough of a job. Here is the honest split, with the arithmetic.
 
 ## What can a model actually compute in a schedule?
 
@@ -60,7 +60,7 @@ Third, the float belongs to somebody. Most contracts say who may consume it and 
 
 Score it the way you would score any classifier, because vendors quote accuracy and accuracy is the least useful figure available.
 
-A checker runs over a live programme and raises 240 flags. A planner works through all 240 and confirms 168 are genuine defects: open ends, hard constraints, negative lags, out-of-sequence logic. An independent manual audit of the same file finds 210 genuine defects in total.
+Take an illustrative run, with figures chosen to show the arithmetic rather than to benchmark any product. A checker goes over a live programme and raises 240 flags. A planner works through all 240 and confirms 168 are genuine defects: open ends, hard constraints, negative lags, out-of-sequence logic. A full manual audit of the same file finds 210 genuine defects in total.
 
 **Precision** = true flags ÷ all flags = 168 ÷ 240 = **0.700**. Seven in ten alerts are real, so three in ten waste review time.
 
@@ -123,4 +123,4 @@ This is the genuine problem, and it deserves a straight answer rather than reass
 
 ---
 
-*Internal links: this answer should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [AI project controls certification](https://pciai.org/ai-project-controls-certification) with the anchor "examined on AI-era project controls judgement", and to [total float and who owns it](https://projectcontrolsinstitute.org/total-float) with the anchor "who owns the float under your contract". Quora rule: no link above the fold — the single in-body link sits in the closing section, after the question is fully answered.*
+*Internal links: the body now carries one link, to https://pciai.org/ai-project-controls-certification, anchored on the credential's full name. It sits in the closing section on the finance handshake, on the sentence saying a planner's percentage becomes revenue — the question that raises is where that overlap is examined, and that page is what sets it out. Two further links were proposed and are not placed: the AI in project controls pillar would be a second link to the same domain in one answer, and the hub's total float page answers a contract question this answer settles in a sentence. Quora links are nofollow, so treat this as qualified traffic rather than link equity. Reciprocal: none — no PCI page should link out to a Quora answer.*

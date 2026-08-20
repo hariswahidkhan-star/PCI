@@ -60,7 +60,11 @@ Now the judgement. If B slips four days it changes nothing, because it consumes 
 
 Every one of those statements depends on D genuinely requiring B. If that link is there because someone assumed the piling rig would still be occupying the erection area, and the rig has since been rescheduled, the whole answer is wrong and no tool will tell you.
 
-One constraint changes it again, and only if it bites. Put a finish-no-later-than date of day 33 on D — a commercial date somebody typed in, not a logic one — and the backward pass restarts from 33 instead of 38. D's late finish is 33 and its late start 25. B must now finish by 25, so its late start is 25 − 15 = 10, the same as its early start, and **B's five days of float are gone**. A, C and D come back at minus five days. Set the same constraint at day 38 and nothing moves at all, because that is the date the logic already produced. Before believing any float figure, find the constraints and check which of them is earlier than the calculated finish.
+One constraint changes it again, and only if it bites. Put a finish-no-later-than date of day 33 on D — a commercial date somebody typed in, not a logic one — and the backward pass restarts from 33 instead of 38.
+
+D's late finish becomes 33 and its late start 25. B must now finish by 25, so its late start is 25 − 15 = 10, the same as its early start: **B's five days of float are gone**, and the A, C, D path reports minus five days.
+
+Set the same constraint at day 38 and nothing moves at all, because 38 is the date the logic already produced. That is the check worth doing before believing any float figure: find the constraints, and see which of them sits earlier than the calculated finish.
 
 ## What breaks when the schedule is generated rather than built?
 

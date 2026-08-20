@@ -2,7 +2,7 @@
 platform:      Own site — pciai.org
 type:          how-to
 title:         Prompt engineering for project professionals explained
-meta:          Prompt engineering for project professionals: the five parts of a usable prompt, four patterns that work, and how to test one on a golden set.
+meta:          Prompt engineering for project professionals: the five parts of a usable prompt, five patterns that work, and how to test one on a golden set.
 primary_kw:    prompt engineering for project professionals
 secondary_kw:  governed AI, golden set evaluation, variance commentary, AI in project controls
 pillar:        AI in project controls
@@ -17,9 +17,9 @@ ab_id:         AB-00150
 
 # Prompt engineering for project professionals explained
 
-Prompt engineering for project professionals means writing an instruction that carries five things: the role and standard to apply, the data itself, the task with its boundary, the output format, and the check that proves the answer right. A prompt missing the fifth is not a control, it is a guess with good grammar.
+Ask a model to "summarise the cost position" and it will write a fluent paragraph, invent a cause for the variance and give you no way to tell which part it made up. Prompt engineering for project professionals is the work that prevents that: naming the standard, supplying the figures, fixing the task boundary and the output shape, and demanding a line that lists every input used.
 
-The rest of this page is the five parts, four patterns worth keeping, and how to test a prompt before it touches a report.
+A prompt without that last line is not a control, it is a guess with good grammar. The rest of this page is the five parts of a usable prompt, five patterns worth keeping, and how to test one before it touches a report.
 
 ## What is prompt engineering for project professionals?
 
@@ -43,7 +43,7 @@ The verification hook is the part most people skip. It costs one sentence and it
 
 ## Which prompt patterns are worth keeping?
 
-Four cover almost all project work. Each has a distinct failure mode, and knowing the failure mode is most of the skill.
+Five cover almost all project work. Each has a distinct failure mode, and knowing the failure mode is most of the skill.
 
 | Pattern | Use it for | Characteristic failure | Control |
 |---|---|---|---|
@@ -51,8 +51,9 @@ Four cover almost all project work. Each has a distinct failure mode, and knowin
 | Classification | Sorting transactions, risks or correspondence into named categories | Category drift: it invents a class you did not define | Give a closed list and require "unclassified" as an allowed answer |
 | Calculation check | Confirming that a stated figure follows from stated inputs | Arithmetic that looks right and is not | Compute in the tool; ask the model to reconcile, not to calculate |
 | Drafting | Turning your numbers into house-format commentary | Confident causal claims nobody made | Supply the cause; forbid the model from proposing one |
+| Adversarial review | Stress-testing a finished paragraph or position before it is issued | Generic challenges that would fit any document | Supply the underlying data and ask what a sceptical auditor would question first |
 
-Adversarial review is a variant of drafting worth naming separately. Give the model the finished paragraph and ask what a sceptical auditor would challenge first. It is good at that, because it is a language task rather than a numerical one. Pointed at a programme file instead of a paragraph, the same four patterns become [a protocol for reviewing a schedule export with a language model](https://pciai.org/llm-schedule-review).
+Adversarial review is the cheapest of the five and the one most often skipped. A model is good at it because it is a language task rather than a numerical one, and it costs a single follow-up message. Pointed at a programme file instead of a paragraph, the same patterns become [a protocol for reviewing a schedule export with a language model](https://pciai.org/llm-schedule-review).
 
 ## A worked prompt: variance commentary that survives review
 
@@ -68,7 +69,7 @@ The prompt then reads, in substance:
 
 Each clause earns its place. The figures are supplied so nothing is inferred. The cause is supplied so nothing is invented. The final line is the verification hook, and it is what a reviewer checks first.
 
-What comes back is a paragraph that took ninety seconds instead of forty minutes, with an input list you can tick against the source. What does not come back is a claim about why the façade needed rework, because you forbade it. Scaling that from one paragraph to a whole monthly pack is [drafting project reporting without losing the audit trail](https://pciai.org/generative-ai-project-reporting).
+What comes back is a paragraph in the house format with an input list under it, which a reviewer ticks against the source rather than re-deriving. What does not come back is a claim about why the façade needed rework, because you forbade it. Scaling that from one paragraph to a whole monthly pack is [drafting project reporting without losing the audit trail](https://pciai.org/generative-ai-project-reporting).
 
 ## Why should the model not do the arithmetic?
 
@@ -108,7 +109,7 @@ Four categories, and they are worth writing into a team policy rather than leavi
 
 ## How does PCI examine prompting?
 
-Prompting sits inside the governed AI portion of the Body of Knowledge, which is proportioned 40/40/20 across finance and reporting, project management, and governed AI across the three credentials. It is one skill inside [the wider governed-AI picture in project controls](https://pciai.org/ai-in-project-controls), not a discipline of its own.
+Prompting sits inside the governed AI portion of the PCL-AI Body of Knowledge, whose 40/40/20 proportions run finance and reporting, project management, then governed AI. Those proportions describe the syllabus, not the examination. Prompting is one skill inside [the wider governed-AI picture in project controls](https://pciai.org/ai-in-project-controls), not a discipline of its own.
 
 The AI domain covers concepts, data, prompting, tooling, applied workflows, governance and capability. The examinable skill is not clever wording. It is whether a candidate can specify a task precisely, verify the output and say who owns the result.
 
