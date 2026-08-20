@@ -1,10 +1,24 @@
 #!/usr/bin/env python3
 """Audit the trailing internal-linking NOTES, not the bodies.
 
-link_audit.py checks what is published. This checks what the note tells a publisher to add,
-which is a different and equally real exposure: a note proposing three links to one domain
-becomes three links to one domain the moment someone follows it. The bodies can be perfectly
-clean while the instructions attached to them are not.
+link_audit.py checks what is published. This checks the note attached to it, which was a real
+exposure while the notes were INSTRUCTIONS: a note telling a publisher to add three links to one
+domain becomes three links to one domain the moment someone follows it, and the body audit
+cannot see it coming.
+
+SCOPE, and it narrowed once the remediation run finished. The notes are now mostly RECORDS —
+they say what was placed, what was dropped and why, and where the canonical points. A record
+mentions URLs it is not proposing, and no reliable rule separates "link to this" from "we
+dropped this" or "the canonical points here" in prose. Counting mentions therefore over-reports
+badly: blogger-post.md places exactly one link per domain, exactly as its note describes, and a
+mention-count still called it three links to the hub.
+
+So the counting checks are advisory and print under ADVISORY. The one finding this script makes
+that is always true is the broken URL: a note naming a page that does not exist is wrong whether
+it is proposing that link, describing it, or reserving it for a reply. That prints as an issue.
+
+Whether a note's instructions are actually compliant is an editorial question, and it belongs to
+a reader who can tell an instruction from a record. That is what the judging pass is for.
 """
 import json, re, sys
 from pathlib import Path
@@ -85,14 +99,14 @@ def audit(path):
                 broken.append(u)
 
     cross = {d: v for d, v in per.items() if d != host}
-    issues = []
+    issues, advisory = [], []
     if len(per) == 5:
-        issues.append("note proposes links to all five domains")
+        advisory.append("note mentions all five domains")
     for d, v in cross.items():
         if len(v) > 1:
-            issues.append(f"note proposes {len(v)} links to {d}")
+            advisory.append(f"note mentions {len(v)} URLs on {d}")
     if sum(len(v) for v in cross.values()) > 3:
-        issues.append(f"note proposes {sum(len(v) for v in cross.values())} cross-estate links (max 3)")
+        advisory.append(f"note mentions {sum(len(v) for v in cross.values())} cross-estate URLs")
     for b in sorted(set(broken)):
         issues.append(f"note proposes BROKEN {b}")
     for d, v in per.items():
@@ -104,7 +118,7 @@ def audit(path):
                     issues.append(f"note proposes BROKEN {u}")
     return {"file": str(path.relative_to(ROOT)), "host": host,
             "proposed": {d: sorted(v) for d, v in per.items()},
-            "conditional": sorted(conditional), "issues": issues}
+            "conditional": sorted(conditional), "issues": issues, "advisory": advisory}
 
 
 def main():
@@ -117,9 +131,16 @@ def main():
             if r:
                 rows.append(r)
     bad = [r for r in rows if r["issues"]]
-    print(f"notes found {len(rows)} | clean {len(rows)-len(bad)} | issues {len(bad)}")
+    adv = [r for r in rows if r["advisory"] and not r["issues"]]
+    print(f"notes found {len(rows)} | issues {len(bad)} | advisory {len(adv)}")
     for r in bad:
         print(f"  {r['file']}: {'; '.join(r['issues'])}")
+    print(f"\n  ADVISORY (mention counts, not violations — a note that records a dropped link"
+          f"\n  mentions its URL; only a reader can tell an instruction from a record):")
+    for r in adv[:10]:
+        print(f"    {r['file']}: {'; '.join(r['advisory'])}")
+    if len(adv) > 10:
+        print(f"    ... and {len(adv)-10} more")
     (ROOT / "_tools" / "note_audit.json").write_text(json.dumps(rows, indent=1))
     return 1 if bad else 0
 

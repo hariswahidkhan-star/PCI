@@ -49,4 +49,4 @@ State the driver, the sample, the normalisation basis and the range. A parametri
 
 *Every figure above is illustrative arithmetic, not project data. PCI publishes certification requirements; nothing here is legal, tax or accounting advice.*
 
-*Internal links (first comment and profile featured section): [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "building the budget from the estimate", and [AI for cost estimating in construction](https://projectcontrolsinstitute.org/ai-for-cost-estimating-in-construction) with the anchor "what a model adds to a cost estimating relationship".*
+*Internal links (first comment and profile featured section): [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "building the budget from the estimate", and [AI for cost estimating in construction](https://pciai.org/ai-for-cost-estimating-in-construction) with the anchor "what a model adds to a cost estimating relationship".*
