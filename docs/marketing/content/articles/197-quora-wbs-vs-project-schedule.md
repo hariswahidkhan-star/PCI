@@ -69,7 +69,7 @@ Take work package 1.2.3, cable trenches, budget £900,000. The planner writes fi
 
 The arithmetic, so it can be checked. The longest path is A + B + C + D = 20 + 15 + 10 + 12 = **57 days**, and that path is critical. The alternative route through E runs 20 + 8 + 10 + 12 = 50 days, so E has 57 − 50 = **7 days of total float**.
 
-Those early and late dates come from a forward and a backward pass through the logic, which is [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method) and is work no WBS can do.
+Those early and late dates come from a forward and a backward pass through the logic. That pass is [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method), and no WBS can do it.
 
 The WBS element has now acquired a duration of 57 days, but it acquired it from the schedule. Change the logic and the same scope, the same budget and the same owner produce a different answer.
 

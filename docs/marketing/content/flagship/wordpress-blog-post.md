@@ -38,7 +38,7 @@ notes: |
   paid tier does. Budget for the paid tier, or publish this on the hub's own blog instead.
   Hook B (contrast first), per _STORY.md §2, which names articles as its home. It sits on line three
   rather than line one because AEO requires the title question answered inside the first 60 words,
-  and the answer here is 55. The LinkedIn article also runs on B, but the two never meet: that piece
+  and the answer here is the first two words. The LinkedIn article also runs on B, but the two never meet: that piece
   enters through the cut-off date, this one through the forecast, and no reader arrives at both from
   the same search.
   New ground, not a third retelling. The Medium story owns the accrual and the syllabus table; the

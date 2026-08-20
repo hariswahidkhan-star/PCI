@@ -98,6 +98,6 @@ Freezing scope at a definition level that supports the estimate class you are sa
 
 ---
 
-*Disclosure: I write for the Project Controls Institute. One link, at the end, and the arithmetic above stands without it: [cost control methods that catch overruns early](https://pciglobal.ai/cost-control-in-construction).*
+*Disclosure: I write for the Project Controls Institute. One link, at the end, and the arithmetic above stands without it: [cost control methods that catch overruns early](https://projectcontrolsinstitute.org/cost-control-in-construction).*
 
 *Internal links: the in-post link uses the anchor "cost control methods that catch overruns early". Comment replies should use [the four EAC formulas and when each applies](https://projectcontrolsinstitute.org/four-eac-formulas) and [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with those anchors.*

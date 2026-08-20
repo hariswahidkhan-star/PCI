@@ -17,7 +17,7 @@ ab_id:         —
 
 # Project controls certification UK: what actually counts
 
-Project controls certification UK employers accept comes in five forms, and they are sold at similar prices: a regulated qualification, a chartered designation, a vendor certificate, a course certificate and an independent certification. Only three are assessed against a published standard by a body that can take the award back. That difference, not the fee, is what a UK employer checks.
+Project controls certification UK employers accept comes in five forms, all sold under the same word: a regulated qualification, a chartered designation, a vendor certificate, a course certificate and an independent certification. Only three are assessed against a published standard by a body that can take the award back. That difference, not the fee, is what a UK employer checks.
 
 ## What counts as a project controls certification UK employers recognise
 

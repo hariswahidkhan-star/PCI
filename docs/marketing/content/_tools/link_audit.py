@@ -21,7 +21,10 @@ HUB = "projectcontrolsinstitute.org"
 
 FM_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
 FENCE_RE = re.compile(r"^```.*?^```", re.S | re.M)
-NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal link|Internal-link|Linking note)", re.I | re.M)
+# The trailing publisher note goes by several labels, and more of them once the agents rewrote it:
+# "Internal links (first comment)...", "**Linking note.**", "Internal links, as placed in the body".
+# Missing a variant makes that file's instruction sheet read as body links, and the file is then
+NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal[- ]?links?|Internal linking note|Linking note|Links?\s*[:(.,])", re.I | re.M)
 MD_LINK = re.compile(r"\[([^\]]*)\]\(\s*(https?://[^\s)]+)\s*\)")
 BARE_URL = re.compile(r"(?<![\(\]/\w])(?:https?://)?((?:[a-z0-9-]+\.)*(?:%s))(/[^\s,;)\"'<>]*)?"
                       % "|".join(d.replace(".", r"\.") for d in DOMAINS))
@@ -96,6 +99,14 @@ def audit(path):
     republished = canon.startswith("canonical")
     ls = links_in(body)
 
+    # A declared exemption, with its reason recorded in the front matter. directory-boilerplate.md
+    # is the case that forced it: it is a field-value reference sheet listing which URL belongs in
+    # a directory's Website field, its "learn more" field and its verification field. Those are
+    # three different forms, never three links on one page, so the per-domain cap does not describe
+    # it. Exempt files are reported separately rather than counted clean, so the exemption stays
+    # visible and has to keep earning itself.
+    exempt = fm_get(fm, "link_audit_exempt")
+
     internal = [l for l in ls if host and l[0] == host]
     external = [l for l in ls if not (host and l[0] == host)]
     # A canonical republication mirrors its original, so links back to the origin domain are
@@ -133,8 +144,10 @@ def audit(path):
             if u not in VALID and u + "/" not in VALID:
                 issues.append(f"BROKEN LINK {u}")
 
+    if exempt:
+        issues = []
     return {
-        "file": str(path.relative_to(ROOT)), "words": len(body.split()),
+        "file": str(path.relative_to(ROOT)), "words": len(body.split()), "exempt": exempt,
         "platform": fm_get(fm, "platform")[:40], "host": host, "canonical": canon[:60],
         "n_internal": len(internal), "n_mirrored": len(mirrored), "n_cross": len(cross),
         "cross_domains": sorted(per_cross), "all_domains": sorted({l[0] for l in ls}),
@@ -151,9 +164,12 @@ def main():
                 continue
             rows.append(audit(f))
     bad = [r for r in rows if r["issues"]]
-    print(f"audited {len(rows)} | clean {len(rows)-len(bad)} | issues {len(bad)}")
+    ex = [r for r in rows if r.get("exempt")]
+    print(f"audited {len(rows)} | clean {len(rows)-len(bad)-len(ex)} | issues {len(bad)} | exempt {len(ex)}")
     for r in bad:
         print(f"  {r['file']}: {'; '.join(r['issues'])}")
+    for r in ex:
+        print(f"  EXEMPT {r['file']}: {r['exempt']}")
 
     reach = {}
     for r in rows:

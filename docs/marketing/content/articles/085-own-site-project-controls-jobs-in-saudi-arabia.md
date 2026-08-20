@@ -17,7 +17,7 @@ ab_id:         AB-00119
 
 # Project controls jobs in Saudi Arabia: the giga-projects
 
-Project controls jobs in Saudi Arabia sit overwhelmingly on the giga-programmes, and what those programmes are buying is consolidation: one cost position and one schedule position across dozens of contractors reporting in different formats on different cycles. They hire for it because programme-scale delivery fails at the seams between contracts rather than inside them.
+Project controls jobs in Saudi Arabia are about consolidation rather than execution: one cost position and one schedule position across dozens of contractors reporting in different formats on different cycles. The giga-programmes hire for it because programme-scale delivery fails at the seams between contracts rather than inside them.
 
 That is a different job from project controls on a single contract, and it is the reason experienced planners and cost engineers arrive and still find the first six months hard.
 

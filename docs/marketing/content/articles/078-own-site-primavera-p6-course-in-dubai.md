@@ -91,15 +91,15 @@ Ask for the certificate wording in advance. "Attended" and "assessed" are differ
 
 Ask who the trainer is and what they have planned. A trainer who has never defended a programme in a client review will teach you the buttons and none of the judgement.
 
-Ask about the licensing authority for the training provider, the total price including any applicable tax, and the cost of a re-sit or a repeat attendance.
+Ask about the licensing authority for the training provider, the total price including any applicable tax, and the cost of a re-sit or a repeat attendance. [The wider controls training options in Dubai](https://pciglobal.ai/project-controls-courses-dubai) answer the same questions for cost, risk and reporting courses.
 
 ## How does PCI examine scheduling?
 
-PCI does not sell software training and does not certify tool operation. The PCI AI Project Controls Leader (PCL-AI) credential has 13 domains and 61 knowledge areas and examines scheduling as part of a controls role that also carries cost, risk, change and reporting.
+PCI does not sell software training and does not certify tool operation; [what a Primavera P6 certification covers](https://projectcontrolsinstitute.org/primavera-p6-certification), and what it stops short of, is set out separately. The PCI AI Project Controls Leader (PCL-AI) credential has 13 domains and 61 knowledge areas and examines scheduling as part of a controls role that also carries cost, risk, change and reporting.
 
 The Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. Behind the syllabus sit 113 mandatory PCI Standards carrying 532 process requirements, and 92 sector case studies across the three volumes (26 + 33 + 33). The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
 
-The sensible combination for a planner in the UAE is both: tool training for the software, an examined credential for the method. PCI is an independent certifying body, examinations are delivered online under proctoring, and nothing here is legal, tax or accounting advice.
+The sensible combination for a planner in the UAE is both: tool training for the software, an examined credential for the method, and [the examined routes available across the UAE](https://pciglobal.ai/project-controls-training-uae) cover that second half. PCI is an independent certifying body, examinations are delivered online under proctoring, and nothing here is legal, tax or accounting advice.
 
 ## Frequently asked questions
 
@@ -120,4 +120,4 @@ Whether your schedule is honest. Earning rules, progress measurement, the differ
 
 ---
 
-*Internal links: this guide should link to [Primavera P6 certification](https://projectcontrolsinstitute.org/primavera-p6-certification) with the anchor "what a Primavera P6 certification does and does not prove", to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with the anchor "how to build a schedule that survives a review", and to [project controls courses in Dubai](https://pciglobal.ai/project-controls-courses-in-dubai) with the anchor "the wider controls training options in Dubai".*
+*Internal links: placed in the body. Two on pciglobal.ai — project controls courses in Dubai, at the end of the provider checklist, where the same questions apply to cost and reporting courses; and project controls training UAE, at the sentence recommending tool training plus an examined credential, since that is where a reader asks where the second half comes from. The original note gave the Dubai target as /project-controls-courses-in-dubai, which does not exist; the live slug is /project-controls-courses-dubai and that is what is in the body. One cross-estate link, to the hub's Primavera P6 certification page, at the line saying PCI does not certify tool operation, which is the sentence that raises what a P6 certification does prove. The second hub link proposed, to building a realistic schedule in P6, was dropped to hold one link per cross-estate domain; it is the better reciprocal, because that page's out-of-sequence section raises the retained logic question worked here.*

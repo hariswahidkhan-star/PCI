@@ -33,7 +33,7 @@ Reporting: what a client-auditable monthly report contains and who signs each fi
 
 ## What does the Qatari market ask for?
 
-Large programmes in energy, utilities, transport and buildings, delivered by international joint ventures under FIDIC-family contracts. That combination sets the expectations.
+Large programmes in energy, utilities, transport and buildings, delivered by international joint ventures under FIDIC-family contracts. That combination sets the expectations, and planners who move between Gulf programmes meet it again: [the routes into planning work in Saudi Arabia](https://pciglobal.ai/planning-engineer-course-in-saudi-arabia) are screened against the same interface reviews.
 
 Employers want Primavera P6 as a working tool rather than a line on a CV, monthly reporting a client's own controls team will pick apart, and a delay position supported by records made at the time. Contracts written in one legal tradition and administered by teams from several others put a premium on people who document properly.
 
@@ -49,7 +49,7 @@ The hiring reality is that a candidate with an examined credential and site expo
 | University or CPD short course | Weeks to months | Coursework, sometimes an exam | Academic exposure | Structured theory, career change |
 | Independent certifying body | Self-paced study | Proctored examination against a published syllabus | You were examined and passed | Portable, verifiable evidence |
 
-The column that matters when you are being shortlisted is the fourth one. A recruiter reads the certificate as a claim; a controls manager reads it as a question about what you were tested on.
+The column that matters when you are being shortlisted is the fourth one. A recruiter reads the certificate as a claim; a controls manager reads it as a question about what you were tested on. [The same four-way test applied to the Dubai market](https://pciglobal.ai/project-controls-courses-dubai) reaches the same answer, which is a reasonable check on whether this is local advice or general advice.
 
 ## Can you do the arithmetic without the tool?
 
@@ -72,7 +72,7 @@ The indices are CPI = 40.0 ÷ 45.0 = **0.889** and SPI = 40.0 ÷ 44.0 = **0.909*
 
 Work the middle two. BAC ÷ CPI is 120.0 ÷ 0.8889 = **QAR 135.0m**. The composite is 45.0 + 80.0 ÷ (0.8889 × 0.9091) = 45.0 + 80.0 ÷ 0.8081 = **QAR 144.0m**.
 
-Identical inputs, a **QAR 19.0m** spread between the first and third method. The forecast is not a calculation, it is a judgement about which assumption holds, and the calculation follows from it.
+Identical inputs, a **QAR 19.0m** spread between the first and third method. The forecast is not a calculation, it is a judgement about which assumption holds, and the calculation follows from it. [How the four estimate-at-completion methods differ](https://projectcontrolsinstitute.org/four-eac-formulas) covers where each one is defensible and where it is not.
 
 The to-complete performance index is the honesty check: (BAC − EV) ÷ (BAC − AC) = 80.0 ÷ 75.0 = **1.067**. A team running at 0.889 is being asked to run at 1.067 for every remaining riyal. If nobody can name what changes to make that happen, the first method is not a forecast, it is a hope.
 
@@ -125,8 +125,8 @@ Project management owns the delivery decision; project controls produces the mea
 Recognition varies by employer, and no certifying body can promise it. What travels is a credential with a published syllabus, a real examination and independent verification, because a controls manager can see exactly what you were tested on. Ask the employer, not the training provider.
 
 **Does the course need to teach AI tools?**
-It needs to teach governed use of them. Models draft narrative well and source numbers badly, so the useful content is about provenance: fixed inputs, a stated cut-off, computed figures supplied to the model, and a named reviewer. A course selling AI as a forecasting oracle is teaching a risk, not a skill.
+It needs to teach governed use of them. Models draft narrative well and source numbers badly, so the useful content is about provenance: fixed inputs, a stated cut-off, computed figures supplied to the model, and a named reviewer. [Keeping the audit trail behind an AI-drafted report](https://pciai.org/generative-ai-project-reporting) shows what a course should be teaching here. A course selling AI as a forecasting oracle is teaching a risk, not a skill.
 
 ---
 
-*Internal links: this guide should link to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "how the four estimate-at-completion methods differ", to [project controls certification](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "what a project controls certification examines", and to [project controls courses in Dubai](https://pciglobal.ai/project-controls-courses-in-dubai) with the anchor "the same comparison for the UAE market".*
+*Internal links: placed in the body. Two on pciglobal.ai — the planning engineer course in Saudi Arabia, where the market section describes interface reviews planners meet across the Gulf; and project controls courses in Dubai, after the course-type table, as the check on whether the four-way test is local or general. The original note gave that second target as /project-controls-courses-in-dubai, which does not exist; the live slug is /project-controls-courses-dubai and that is what is in the body. Two cross-estate links, one per domain: the hub's four EAC formulas page, after the QAR 19.0m spread, because that is the sentence that asks which assumption is defensible; and pciai.org's generative AI reporting how-to in the FAQ on AI tools, which is a satellite-to-satellite link made deliberately, because provenance in AI-assisted reporting is that domain's subject and not this one's. The hub certification link was dropped to keep one link per cross-estate domain. Reciprocal: the Dubai guide links back here as the neighbouring Gulf comparison.*

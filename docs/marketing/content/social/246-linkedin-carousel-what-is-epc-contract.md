@@ -68,10 +68,12 @@ Fix the requirements before you fix the price. The PCI Project Management Leader
 
 #ProjectControls #ProjectManagement #CostEngineering #Scheduling
 
-**First comment:** The longer explainer on EPC contracts, including what planners control and what they only observe: https://projectcontrolsinstitute.org/what-is-an-epc-contract
+**First comment:** Where the delivery model gets chosen, and what a planner controls once it is: https://projectcontrolsinstitute.org/capital-project-management-process
 
 ---
 
 *PCI publishes certification requirements; nothing here is legal advice.*
 
-*Internal links (first comment and follow-up comment): [what is an EPC contract](https://projectcontrolsinstitute.org/what-is-an-epc-contract) with that anchor, [the capital project management process](https://projectcontrolsinstitute.org/capital-project-management-process) with the anchor "where the delivery model is chosen", and [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "how milestone payments hit the cash curve".*
+*Internal links: one, in the first comment — [the capital project management process](https://projectcontrolsinstitute.org/capital-project-management-process) with the anchor "where the delivery model is chosen". This carousel explains EPC and the note used to point at an EPC explainer page, which does not exist on any of the five domains; the delivery-model page is the nearest thing that genuinely answers what a reader of these slides asks next. Project cash flow forecasting is the right reply if a comment turns to how milestone payments hit the cash curve — in that thread, once, not as a second link here.*
+
+*Worth authoring: this carousel and the FIDIC Red/Yellow one both want an EPC contract explainer on the hub and both had to be pointed elsewhere. That is a real gap in the pillar, not a linking problem.*

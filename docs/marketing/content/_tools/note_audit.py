@@ -13,7 +13,10 @@ ROOT = Path(__file__).resolve().parent.parent
 DOMAINS = ["projectcontrolsinstitute.org", "pciai.org", "pciglobal.ai",
            "pciworld.org", "credentialfinder.org"]
 FM_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
-NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal link|Internal-link|Linking note)", re.I | re.M)
+# The trailing publisher note goes by several labels. It was headed "Links:" in a handful of
+# flagship files, which this pattern did not match, so their instruction sheets were read as
+# body links and the files were reported as over-linked when they were not.
+NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal[- ]?links?|Internal linking note|Linking note|Links?\s*[:(.,])", re.I | re.M)
 URL_RE = re.compile(r"https?://[^\s)\"'`<>]+")
 
 try:

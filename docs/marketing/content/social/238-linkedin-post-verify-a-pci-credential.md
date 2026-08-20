@@ -42,10 +42,10 @@ Read the designation carefully too. PCI AI Project Controls Leader (PCL-AI) cove
 
 #ProjectControls #ProjectManagement #PMO
 
-**First comment:** The public register, and what each verification state means for a hiring decision: https://credentialfinder.org/verify
+**First comment:** The public register, and what each verification state means for a hiring decision: https://projectcontrolsinstitute.org/verify
 
 ---
 
 *PCI publishes certification requirements; nothing here is legal, tax or accounting advice.*
 
-*Internal links (first comment and profile featured section): [verify a PCI credential](https://credentialfinder.org/verify) with the anchor "check a credential record independently", and [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "what the PCL-AI credential covers".*
+*Internal links: one, in the first comment — [verify a PCI credential](https://projectcontrolsinstitute.org/verify) with the anchor "check a credential record independently", because the post's whole argument is that a claim should be checkable and that page is where it gets checked. It was written against a credentialfinder.org verification page that does not exist; the hub's register is the real one, so the link points there. The PCL-AI syllabus link that used to sit in the profile featured section is dropped rather than moved into the comment: it would be a second link to the same domain, which is the density the architecture treats as a tell, and the post raises no question the syllabus answers. If a comment asks what the credential actually examines, that is the reply to answer it in, once.*

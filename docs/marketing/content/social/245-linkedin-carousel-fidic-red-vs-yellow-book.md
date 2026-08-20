@@ -74,10 +74,10 @@ Particular conditions amend all of the above on every real project, so read them
 
 #ProjectControls #ProjectManagement #CostEngineering #ProjectFinance
 
-**First comment:** What an EPC contract is, and how the delivery model changes what a planner controls: https://projectcontrolsinstitute.org/what-is-an-epc-contract
+**First comment:** How the delivery model is chosen, and what it changes about the work a planner controls: https://projectcontrolsinstitute.org/capital-project-management-process
 
 ---
 
 *PCI publishes certification requirements; nothing here is legal advice. Take legal advice from lawyers.*
 
-*Internal links (first comment and follow-up comment): [what is an EPC contract](https://projectcontrolsinstitute.org/what-is-an-epc-contract) with that anchor, [cost control in construction](https://projectcontrolsinstitute.org/cost-control-in-construction) with the anchor "how measured work reaches the cost report", and [what is project controls](https://projectcontrolsinstitute.org/what-is-project-controls) with the anchor "where contract administration sits in project controls".*
+*Internal links: one, in the first comment — [the capital project management process](https://projectcontrolsinstitute.org/capital-project-management-process) with the anchor "where the delivery model is chosen", which is the question the Red/Yellow split actually raises. The note previously named an EPC contract explainer; no such page exists anywhere in the estate, and rather than point at a URL that would 404 the link moved to the page that answers the same question. The cost-control and project-controls pages are both worth a reply if a comment turns to how measured work reaches the cost report, but they are not second and third links on this post: one domain, one link.*

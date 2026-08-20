@@ -13,6 +13,7 @@ hashtags:      None, on any listing, ever. A hashtag in a Crunchbase or Google B
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    suite — PCL-AI, PFL-AI and PML-AI, with PCL-AI named alone in the shorter versions
 target_domain: projectcontrolsinstitute.org
+link_audit_exempt: not one page — a field-value sheet naming which URL goes in a directory's Website field, its "learn more" field and its verification field. No single listing carries more than two.
 canonical:     original — the hub's About page is the canonical text; every listing is a shortened copy of it and none may say anything the About page does not
 schema:        Organization (each live profile URL is added to the sameAs array on all five domains)
 ab_id:         n/a — flagship launch asset, not an Article Bank brief

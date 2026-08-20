@@ -17,7 +17,7 @@ ab_id:         AB-00269
 
 # What is the 100% rule in a work breakdown structure?
 
-The 100% rule WBS decomposition must satisfy is this: a work breakdown structure must contain 100% of the project's scope and nothing beyond it. At every level, the child elements must add up to exactly their parent. Work that is not in the WBS is not in the project: it has no budget, no owner and no way to earn value.
+A work breakdown structure must contain 100% of the project's scope and nothing beyond it — that is the 100% rule WBS decomposition must satisfy. At every level, the child elements must add up to exactly their parent. Work that is not in the WBS is not in the project: it has no budget, no owner and no way to earn value.
 
 The rule runs in two directions at once. Vertically, the split must be complete and non-overlapping. Horizontally, the top of the structure must equal the scope the project committed to deliver.
 

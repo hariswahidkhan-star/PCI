@@ -17,7 +17,7 @@ ab_id:         —
 
 # Project controls certification USA: what actually counts
 
-No state licence to practise project controls exists, so the project controls certification USA employers trust is worth exactly what the body behind it assessed. They screen on two things instead: whether you were examined against a published standard, and whether you can run an earned value forecast that survives a government review.
+No state licence to practise project controls exists in the United States, so the project controls certification USA employers trust is worth exactly what the body behind it assessed. American employers screen on two things instead: whether you were examined against a published standard, and whether you can run an earned value forecast that survives a government review.
 
 ## The project controls certification USA employers actually ask for
 
@@ -113,7 +113,7 @@ No. There is no state licence to practise project controls, unlike professional 
 It depends entirely on the role. Cost and estimating roles look towards the AACE International family, scheduling roles towards technical scheduling credentials, and delivery roles towards project management credentials; for cost work that crosses borders, [how quantity surveying credentials compare across markets](https://pciglobal.ai/quantity-surveyor-certification) belongs on the same shortlist. Rather than chasing a ranking, read three job specifications for the role you actually want and count which credentials appear. That list is more reliable than any comparison article.
 
 **Does an international certification work in the US?**
-Yes, where it can be verified and its syllabus is public. American recruiters are used to credentials issued elsewhere and judge them on assessment quality, not on the issuing country, which is the same test [British employers apply to an overseas credential](https://pciglobal.ai/project-controls-certification-uk). A credential with an independent examination, a published Body of Knowledge and a checkable credential ID is legible anywhere. Immigration status and clearance eligibility are separate questions that no certification affects.
+Yes, where it can be verified and its syllabus is public. American recruiters are used to credentials issued elsewhere and judge them on assessment quality, not on the issuing country. [The test British employers apply to an overseas credential](https://pciglobal.ai/project-controls-certification-uk) is the same one. A credential with an independent examination, a published Body of Knowledge and a checkable credential ID is legible anywhere. Immigration status and clearance eligibility are separate questions that no certification affects.
 
 **How much does project controls certification cost in the USA?**
 Published fees change, so treat any figure you read as stale. Budget for four components instead: membership or enrolment, the examination fee, optional preparation, and recurring recertification. Then compare shortlisted options over nine years rather than at checkout, because entry price and total cost of ownership frequently rank in opposite orders.

@@ -17,7 +17,7 @@ ab_id:         —
 
 # What does a project controls engineer do?
 
-What does a project controls engineer do? Keep the cost and schedule baseline honest, measure what has actually been built rather than what has been spent, and turn that into a forecast someone can act on. The day is progress data in the morning, variance analysis by midday, and a defence of one number in the afternoon.
+What does a project controls engineer do? Keeps the cost and schedule baseline honest, measures what has actually been built rather than what has been spent, and turns that into a forecast someone can act on. The day is progress data in the morning, variance analysis by midday, and a defence of one number in the afternoon.
 
 The role exists because a project generates two versions of the truth — the site's and the ledger's — and somebody has to reconcile them before the board sees either.
 
@@ -131,14 +131,14 @@ No. A project manager decides and delivers; a project controls engineer measures
 Primavera P6 or Microsoft Project on the schedule side, an ERP cost module such as SAP or Oracle on the cost side, and a spreadsheet for everything the systems will not do. Learn the method underneath rather than the menus, because the method transfers between employers and the menus do not.
 
 **Where does the role lead?**
-Usually to project controls lead, then manager, then head of function; sideways moves into commercial management, risk or finance business partnering are common because the vocabulary transfers. The step that matters is from producing the number to answering for it.
+Usually to project controls lead, then manager, then head of function; sideways moves into commercial management, risk or finance business partnering are common because the vocabulary transfers. The step that matters is from producing the number to answering for it, and [what each of those bands owns](https://pciworld.org/project-controls-salary) shows where that step sits.
 
 **What qualifications does a project controls engineer need?**
-An engineering, construction or quantity surveying degree is the common entry route, but it is not the only one, and employers weight demonstrated competence more heavily than the subject of the degree. What is tested at interview is whether you can derive an earned value position, defend a forecast method and explain how progress was measured. A certification helps where it examines those things rather than attendance.
+An engineering, construction or quantity surveying degree is the common entry route, but it is not the only one, and employers weight demonstrated competence more heavily than the subject of the degree. What is tested at interview is whether you can derive an earned value position, defend a forecast method and explain how progress was measured; [the interview questions that test those three things](https://pciworld.org/project-controls-interview-questions) are worth reading before you sit one. A certification helps where it examines those things rather than attendance.
 
 **How is a project controls engineer different from a cost engineer?**
 A cost engineer owns the money: estimate, commitments, accruals, actuals and the cost forecast. A project controls engineer owns the integration of cost with the schedule, the risk position and the reporting that follows, so the cost role sits inside the controls function on larger projects. On smaller ones the same person does both, which is where cut-off errors between the two datasets tend to start.
 
 ---
 
-*Internal links: link to [the project month-end close](https://projectcontrolsinstitute.org/month-end-close-for-projects), [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas), [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) and [what project controls covers](https://projectcontrolsinstitute.org/what-is-project-controls), each with that anchor; the project controls interview questions and how to become a planning engineer pieces should link back here with the anchor "what does a project controls engineer do".*
+*Linking note: this piece carried four links to one domain, so three were removed. The one kept is "the project month-end close", which sits on the sentence saying cut-off discipline separates a controls function from a spreadsheet without saying how the cut-off is run. The four EAC formulas and cash flow links went because the article works both calculations in full itself, and the what-is-project-controls link was a pointer at the end of the credential section rather than an answer to anything the piece asks. Three same-domain links replace them: "how people arrive at a first planning job" under the four-roles table, "what each of those bands owns" in the where-does-it-lead answer, and "the interview questions that test those three things" in the qualifications answer. The opening was also rewritten so the title's question is answered in the first sentence. Reciprocal: the project controls interview questions piece should link back here with the anchor "the day a project controls engineer actually has".*

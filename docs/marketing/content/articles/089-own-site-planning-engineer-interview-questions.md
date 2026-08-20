@@ -19,7 +19,7 @@ ab_id:         —
 
 Planning engineer interview questions fall into four groups: network logic and float, statusing and progress measurement, delay and risk, and how the programme reaches the cost report. Twenty of the ones that genuinely come up are below, each with the answer an interviewer is listening for and the arithmetic where it matters.
 
-Nobody is testing whether you can recite a definition. They are testing whether you have ever had to defend a date.
+Nobody is testing whether you can recite a definition. They are testing whether you have ever had to defend a date. Where the seat is a broader controls one rather than a pure planning role, [the interview questions a controls seat opens with](https://pciworld.org/project-controls-interview-questions) cover the cost and reporting half on the same basis.
 
 | Group | Questions | What is really being tested |
 |---|---|---|
@@ -105,7 +105,7 @@ Sign anything. As a reviewer it is genuinely useful for flagging open ends, odd 
 
 **20. Tell me about a programme you got wrong.** Answer it properly. Name the call, why it was wrong, what it cost and what you changed in your method afterwards.
 
-Interviewers ask this to find out whether you have ever taken a position, because a planner who has never been wrong in public has never truly committed to a date. A polished non-answer does more damage here than the mistake ever did.
+Interviewers ask this to find out whether you have ever taken a position, because a planner who has never been wrong in public has never truly committed to a date. A polished non-answer does more damage here than the mistake ever did, and the same willingness is the gate on [the step from planning engineer to senior](https://pciworld.org/senior-planning-engineer-career-path).
 
 ## Where a credential fits
 
@@ -113,15 +113,13 @@ Questions 17 to 19 are where most planning candidates lose ground, and they are 
 
 PCI examines that boundary deliberately. The PCI AI Project Controls Leader (PCL-AI) credential covers 13 domains and 61 knowledge areas, with a Body of Knowledge proportioned **40 / 40 / 20** across finance and reporting, project management and governed AI, and resting on **113 mandatory PCI Standards carrying 532 process requirements**.
 
-For the deeper treatment of the float questions above, see [what total float really means](https://projectcontrolsinstitute.org/total-float); for the risk questions, [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis).
-
 ## Frequently asked questions
 
 **How technical is a planning engineer interview?**
 More technical than most candidates expect and less than they fear. Expect to be asked to define float and to explain a real programme you built, usually with the interviewer probing one answer until you either show depth or run out. Preparation that consists of memorised definitions falls apart at the second follow-up question.
 
 **Will I be given a practical test?**
-Often, on capital projects. The common formats are a short network to analyse by hand, a schedule file with deliberate defects to find, or a written narrative from a set of variances. Practise the hand calculation, because it is the one people skip and the one that exposes reliance on the software fastest.
+Often, on capital projects. The common formats are a short network to analyse by hand, a schedule file with deliberate defects to find, or a written narrative from a set of variances. Practise the hand calculation, because it is the one people skip and the one that exposes reliance on the software fastest; there is [a full critical path worked by hand](https://pciworld.org/how-to-become-a-planning-engineer) to rehearse against.
 
 **How much Primavera P6 do I need to show?**
 Enough to build, status and report without help, and enough to say what the tool can hide — a constraint doing the work of logic, an actual start dated in the future, a calendar stretching a five-day activity across nine. If P6 dominates your market, working through [a Primavera P6 practice test](https://projectcontrolsinstitute.org/primavera-p6-practice-test) beforehand is a better use of an evening than rereading a manual.
@@ -134,4 +132,4 @@ Say so, then say what you would do and what you would need to find out. Intervie
 
 ---
 
-*Internal links: link to [what total float really means](https://projectcontrolsinstitute.org/total-float), [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) and [a Primavera P6 practice test](https://projectcontrolsinstitute.org/primavera-p6-practice-test), each with that anchor; the how to become a planning engineer and project controls interview questions pieces should link back here with the anchor "planning engineer interview questions".*
+*Linking note: this piece carried three links to one domain, so two were removed. The one kept is "a Primavera P6 practice test", which sits inside the answer about how much P6 to show and is the only one of the three that was already in a sentence rather than in a pointer block at the end of a section. The total float and schedule risk links went with that block: both questions are answered in the body here, at question 2 and question 14. Three same-domain links replace them: "the interview questions a controls seat opens with" in the opening, "a full critical path worked by hand" in the practical-test answer, and "the step from planning engineer to senior" after question 20. Reciprocal: the senior planning engineer career path piece should link back here with the anchor "the twenty planning questions that come up most".*
