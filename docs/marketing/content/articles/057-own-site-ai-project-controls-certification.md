@@ -50,12 +50,13 @@ PCI publishes its fees in US dollars, paid as a single one-time payment, with no
 | Line | Published fee | Note |
 |---|---|---|
 | PCL-AI certification examination | USD 500, currently discounted 30% to **USD 350** | Separate from membership |
-| Student membership / registration | USD 99 a year, currently discounted 50% to **USD 49.50** | Portal, learning pathway, member resources |
+| Student membership / registration | USD 99 for a three-year term, currently discounted 50% to **USD 49.50** | Portal, learning pathway, member resources |
 | Membership + exam bundle | **USD 399.50** | The two discounted figures added: 49.50 + 350 |
-| Recertification / renewal | **USD 99** per three-year cycle | Keeps membership and access active |
+| Membership renewal | **USD 99** per three-year term | Keeps membership and portal access active |
+| Credential recertification | Fee confirmed when it falls due | A separate three-yearly requirement, related to membership renewal but distinct from it |
 | Exam retake | To be confirmed | Displayed before any retake booking is completed |
 
-The arithmetic over six years, on those published figures, is the bundle at 399.50 plus one renewal at 99 at the start of the second three-year cycle: **USD 498.50**. Set that against [the full cost of a project controls certification, renewals included](https://projectcontrolsinstitute.org/project-controls-certification-cost) before deciding which route is cheaper across a career. Preparation is on top of that and is the line most people underestimate, because it is measured in hours rather than dollars.
+The arithmetic over six years, on those published figures, is the bundle at 399.50 plus one membership renewal at 99 at the start of the second three-year term: **USD 498.50** for membership and examination. Recertification of the credential carries its own fee, confirmed when it falls due, so it is not in that total. Set the figure against [the full cost of a project controls certification, renewals included](https://projectcontrolsinstitute.org/project-controls-certification-cost) before deciding which route is cheaper across a career. Preparation is on top of that and is the line most people underestimate, because it is measured in hours rather than dollars.
 
 Two honest caveats. Exam payment buys registration access, not a credential — certification is awarded only after eligibility, assessment and verification. And membership is not itself a certification, which is a distinction some bodies blur and this one should not.
 

@@ -19,8 +19,6 @@ ab_id:         AB-00184
 
 A Must Finish By date in P6 is a project-level constraint that replaces the calculated late finish with a date you impose. The forward pass is untouched, so the work does not get shorter. The backward pass runs from your date instead, and every path that cannot meet it shows negative float.
 
-Written for LinkedIn as an original. It sits under the Institute's planning and scheduling pillar.
-
 ## What does a Must Finish By date in P6 actually change?
 
 It changes one number in the calculation: the late finish the backward pass starts from. Nothing else about the network moves.
@@ -43,7 +41,7 @@ The backward pass now starts at 254 instead of 268. Total float on the driving p
 | Mechanical and electrical | 6 | −8 | Also late against the imposed date |
 | External works | 25 | 11 | Still has genuine slack |
 
-The ranking survives. What does not survive is the convention that zero float means critical, because after the constraint nothing sits at zero and three activities in that table are negative for two different reasons.
+The ranking survives. What does not survive is the convention that zero float means critical, because after the constraint nothing sits at zero and two of the three paths now show negative float, both only because the anchor moved fourteen days.
 
 ## What happens if the date is later than the calculated finish?
 
@@ -121,4 +119,4 @@ Use a deadline or expected finish field where the tool offers one, which reports
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Linking note: one cross-estate link now sits in the body, in the section on what breaks when the whole network is negative. The piece tells the reader to re-run the risk model on an unconstrained copy, which raises the question of how such a model is built, and the hub's quantitative schedule risk analysis guide answers it. The note originally proposed two further hub links, to total float and the critical path method. Both were dropped: only one link per domain per piece is allowed, and this article works the float arithmetic and both passes itself, so those links would have pointed at answers the reader had just been given. Nothing here raises a question the other four domains answer, so no second cross-estate link was forced in. A reciprocal link back to this piece would fit on the total float page, where negative float and imposed constraints come up.*
+*Linking note: one cross-estate link now sits in the body, in the section on what breaks when the whole network is negative. The piece tells the reader to re-run the risk model on an unconstrained copy, which raises the question of how such a model is built, and the hub's quantitative schedule risk analysis guide answers it. The note originally proposed two further hub links, to total float and the critical path method. Both were dropped: only one link per domain per piece is allowed, and this article works the float arithmetic and both passes itself, so those links would have pointed at answers the reader had just been given. Nothing here raises a question the other four domains answer, so no second cross-estate link was forced in.*

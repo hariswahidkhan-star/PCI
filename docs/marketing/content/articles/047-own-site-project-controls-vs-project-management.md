@@ -33,7 +33,7 @@ One role owns the outcome. The other owns the number the outcome is judged by.
 | Fails like this | Optimism that hardens into commitments the plan never supported | An accurate report that lands two weeks after the decision was taken |
 | Skills that dominate | Contract, negotiation, sequencing, people | Estimating, scheduling, earned value, cost accounting, statistics |
 
-The row that matters most is the last-but-one. The two roles fail in opposite directions, which is precisely why capital projects run them as separate functions.
+The "fails like this" row matters most. The two roles fail in opposite directions, which is precisely why capital projects run them as separate functions.
 
 ## What does project controls actually produce?
 
@@ -97,7 +97,7 @@ The move from controls into management is common and works well, because a contr
 
 Here is the gap this comparison usually misses. Project management syllabuses examine planning, stakeholders and scope. Project controls training examines schedule, cost and earned value. Neither, traditionally, examines what happens when the number leaves the project.
 
-A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy, and almost never on a critical path or an earning rule. An engineer is examined on float and progress measurement, and almost never on cut-off or a contract asset.
+Take the £3,780,000 of earned value from the month-end above. The person who produced it was examined on network analysis, rules of credit and progress measurement. The person who reports it in the accounts was examined on cut-off, contract assets and the point at which revenue may be booked. Nobody was examined on the handover.
 
 That earned value figure of £3,780,000 is also the input to a measure of progress used to recognise revenue over time. If the earning rules are loose, the accounting is loose, and the audit conversation lands on a controls method that was never designed to be defended in those terms.
 
@@ -105,9 +105,9 @@ That earned value figure of £3,780,000 is also the input to a measure of progre
 
 The PCI AI Project Controls Leader (PCL-AI) examines 13 domains across 61 knowledge areas, covering the measurement side and the reporting consequences together.
 
-The PCI Project Management Leader – AI (PML-AI) examines 16 domains across 63 knowledge areas, weighted towards delivery, contract and governance.
+The PCI Project Management Leader – AI (PML-AI) examines 16 domains across 63 knowledge areas.
 
-Both Bodies of Knowledge run in a 40 / 40 / 20 proportion across finance and reporting, project management, and governed AI, which is the deliberate answer to the gap described above.
+Both Bodies of Knowledge run in a 40 / 40 / 20 proportion across finance and reporting, project management, and governed AI, which is the deliberate answer to the gap between what delivery syllabuses examine and what finance syllabuses examine.
 
 ## Frequently asked questions
 
