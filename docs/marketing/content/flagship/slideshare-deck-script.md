@@ -112,7 +112,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 1 — Cover
+## Slide 1 — Cover
 
 **Eyebrow:** EARNED VALUE · A WORKED EXAMPLE
 
@@ -129,7 +129,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 2 — The index measured the ledger, not the job
+## Slide 2 — The index measured the ledger, not the job
 
 **Body:**
 
@@ -137,7 +137,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 3 — The arithmetic
+## Slide 3 — The arithmetic
 
 **Body:** the whole slide is this table and the line under it. Nothing else goes on this slide.
 
@@ -154,7 +154,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 4 — 1.19 and 1.05 are both arithmetically correct
+## Slide 4 — 1.19 and 1.05 are both arithmetically correct
 
 **Body:**
 
@@ -162,7 +162,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 5 — Nobody was careless
+## Slide 5 — Nobody was careless
 
 **Body:**
 
@@ -170,7 +170,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 6 — Why the gap survives good people
+## Slide 6 — Why the gap survives good people
 
 **Body:**
 
@@ -178,7 +178,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 7 — The missing thing has a name
+## Slide 7 — The missing thing has a name
 
 **Body:**
 
@@ -190,7 +190,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 8 — Five questions for your next month-end
+## Slide 8 — Five questions for your next month-end
 
 **Body:**
 
@@ -202,7 +202,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 9 — A cut-off gap reaches the forecast
+## Slide 9 — A cut-off gap reaches the forecast
 
 **Body:**
 
@@ -217,7 +217,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 10 — A cut-off gap reaches reported revenue
+## Slide 10 — A cut-off gap reaches reported revenue
 
 **Body:**
 
@@ -225,7 +225,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 11 — CPI is not cash
+## Slide 11 — CPI is not cash
 
 **Body:**
 
@@ -233,7 +233,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 12 — An AI forecast inherits the ledger it was given
+## Slide 12 — An AI forecast inherits the ledger it was given
 
 **Body:**
 
@@ -245,7 +245,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 13 — Which decisions stay human
+## Slide 13 — Which decisions stay human
 
 **Body:**
 
@@ -255,7 +255,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 14 — What a credential ought to examine
+## Slide 14 — What a credential ought to examine
 
 **Body:**
 
@@ -263,7 +263,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 15 — Three credentials, three shapes
+## Slide 15 — Three credentials, three shapes
 
 | Code | Full name | Domains | Knowledge areas |
 |---|---|---|---|
@@ -277,7 +277,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 16 — What the three credentials sit on
+## Slide 16 — What the three credentials sit on
 
 **Body:**
 
@@ -285,7 +285,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 17 — The arithmetic is checked by machine
+## Slide 17 — The arithmetic is checked by machine
 
 **Body:**
 
@@ -293,7 +293,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 18 — What the Body of Knowledge is made of
+## Slide 18 — What the Body of Knowledge is made of
 
 **Body:**
 
@@ -303,7 +303,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 19 — What this deck does not claim
+## Slide 19 — What this deck does not claim
 
 **Body:**
 
@@ -323,7 +323,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 ---
 
-### Slide 20 — Read the syllabus yourself
+## Slide 20 — Read the syllabus yourself
 
 **Body:**
 

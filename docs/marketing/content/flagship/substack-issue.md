@@ -57,7 +57,7 @@ notes: |
   break it.
 ---
 
-### Subject line options (pick one; A/B the top two)
+## Subject line options (pick one; A/B the top two)
 
 - Your CPI reads 1.19. The missing accrual says 1.05.
 - Fourteen CPI points went missing in an accrual
@@ -65,7 +65,7 @@ notes: |
 - 1.19 or 1.05: which number reaches the board?
 - Issue one: the number two systems disagreed about
 
-### Preview text options (Substack shows roughly 100 characters after the subject)
+## Preview text options (Substack shows roughly 100 characters after the subject)
 
 - Same month, same job, both numbers defensible. Here is the arithmetic in full.
 - A letter about the places project finance and project delivery report the same month differently.
