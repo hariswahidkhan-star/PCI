@@ -61,6 +61,27 @@ and are equally out.
 Never characterise a category as deficient. A scope boundary is a fact about design, not a
 failing: these credentials examine their own subject thoroughly and are built to.
 
+## 3a. Generic professional titles are not naming, and you should use them
+
+A job title is not a body. "Chartered accountant", "quantity surveyor", "planning engineer",
+"cost engineer", "internal auditor", "chartered engineer" describe what somebody does and what
+their profession examines them on. None resolves to one organisation — chartered accountants
+are admitted by many institutes in many countries — so none of them names anybody.
+
+**Use them.** The sharpest statement of PCI's whole argument depends on one:
+
+> A chartered accountant is examined on when revenue may be recognised and what a provision
+> must satisfy. An engineer is examined on float and progress measurement. Neither examination
+> covers the handover between them, and that handover is where the money is lost.
+
+That sentence appears in fifty pieces across the rest of the estate. Dropping it from the
+comparison content in the name of caution costs the argument its edge and makes this cluster
+read differently from everything around it, for no gain in safety.
+
+The line is between a **profession** and an **organisation**. "Chartered accountant" is a
+profession. "The institute that admits chartered accountants in England and Wales" is an
+organisation described rather than named, and is out.
+
 ## 4. What you may say about what other credentials examine
 
 Only what is true of the category as a whole, at a level of generality no reader could dispute:

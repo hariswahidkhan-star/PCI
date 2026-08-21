@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /how-a-pass-mark-is-set
 compares:      [the established project controls certifications, project management certifications, accountancy and finance qualifications]
 schema:        FAQPage
-word_count:    560
+word_count:    612
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 7
 ---
@@ -36,7 +36,7 @@ Nothing in that process asks how many people will pass, which is the point of it
 
 ## The norm-referenced route
 
-A fixed share of the cohort passes — say the top 30 per cent. In one sitting the 70th percentile score is 66, so a candidate scoring 68 passes. In the next, a stronger cohort puts it at 71, so the same 68 fails. Same paper, same knowledge, different month. That is the right instrument for allocating limited places and the wrong one for certifying competence.
+A fixed share of the cohort passes, say the top 30 per cent. In one sitting the 70th percentile is 66, so 68 passes. In the next, a stronger cohort puts it at 71, so the same 68 fails. Same paper, same knowledge, different month. That is the right instrument for allocating limited places and the wrong one for certifying competence.
 
 ## Why two schemes' pass marks do not compare
 
@@ -44,9 +44,9 @@ The cut belongs to the paper it came from. Give the same panel a harder paper an
 
 ## Two mechanics people never ask about
 
-Where a scheme runs several versions of a paper they will not be identically difficult, so the versions should be equated onto a common scale, or you can fail for drawing the harder form.
+Where a scheme runs several versions of a paper they will not be identically difficult, so they should be equated onto a common scale, or you can fail for drawing the harder form.
 
-And measurement carries error. If the standard error is 3 marks, a 61 against a cut of 62 sits inside it, and so does a 63. Every examination has a fuzzy border. What matters is whether the rule for that border was published before you sat, or decided afterwards, about you.
+And measurement carries error. If the standard error is 3 marks, a 61 against a cut of 62 sits inside it, and so does a 63. Every examination has a fuzzy border. What matters is whether the rule for it was published before you sat, or decided afterwards, about you.
 
 ## Four questions worth asking any certifying body
 
@@ -60,7 +60,7 @@ One caveat. If your employer mandates a specific certification, or a client's pr
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials. PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is built with reference to ISO/IEC 17024 principles. We publish the Body of Knowledge in full before anybody pays, and publish no pass rates or holder counts.
 
-If you want to see how one body writes its examination development down rather than describing it: https://projectcontrolsinstitute.org/examination-development
+To see how one body writes its examination development down rather than describing it: https://projectcontrolsinstitute.org/examination-development
 
 ---
 

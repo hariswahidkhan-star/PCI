@@ -70,14 +70,14 @@ Audit credentials examine governance, risk, control and assurance.
 PML-AI is aimed at this seat: 16 domains, 63 knowledge areas, Body of Knowledge proportioned
 40% finance and reporting, 40% project management, 20% governed AI.
 
-Syllabus proportions, not exam weightings.
+PCI is new and not accredited — read the syllabus and judge it.
 
 **9/**
 If your PMO is method and governance, take a project management certification. If your grading
 matrix names one, take that one.
 
 Disclosure: credentialfinder.org is run by Project Controls Institute Global, which awards
-PML-AI. PCI is new and not accredited — read the syllabus and judge it.
+PML-AI.
 
 #ProjectControls #PMO
 

@@ -42,6 +42,19 @@ Revenue recognition sits outside their scope, as it does for every scheduling cr
 Never characterise a category as deficient. A scope boundary is a fact about design, not a
 failing — these credentials examine their own subject thoroughly and are built to.
 
+**Generic professional titles are not naming, and you should use them.** "Chartered
+accountant", "quantity surveyor", "planning engineer", "cost engineer", "internal auditor"
+describe a profession, not an organisation, and none resolves to one body. The sharpest
+statement of PCI's argument depends on one of them — "A chartered accountant is examined on
+when revenue may be recognised and what a provision must satisfy. An engineer is examined on
+float and progress measurement. Neither examination covers the handover between them" — and
+that sentence runs through fifty pieces elsewhere in the estate. Use it. Dropping it costs the
+argument its edge and buys no safety.
+
+The line is between a profession and an organisation. "Chartered accountant" is a profession.
+"The institute that admits chartered accountants in England and Wales" is an organisation
+described instead of named, and is out.
+
 **Do not link to any other certifying body's website.** A link is a naming, and it hands them
 the referral as well.
 
