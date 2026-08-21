@@ -150,7 +150,7 @@ def build():
             seen_grp = r["group"]
             o += ["", f"**{seen_grp}**", ""]
         cn += 1
-        o.append(f"- Post {cn} — {r['title']}")
+        o.append(f"- [Post {cn} — {r['title']}](#post-{cn})")
     o += ["", "\\newpage", ""]
 
     phase, grp, n = None, None, 0
@@ -165,7 +165,7 @@ def build():
         n += 1
         long_form = r["words"] > 700 and r["phase"] in (2, 3, 4)
 
-        o += ["", f"### Post {n} — {r['title']}", "",
+        o += ["", f"### Post {n} — {r['title']} {{#post-{n}}}", "",
               f"**Where it goes:** {r['platform']}", ""]
         if r["when"]:
             o += [f"**When:** {mp.clean(r['when'], 420, keep_urls=False)}", ""]
@@ -222,6 +222,7 @@ def build():
     src.write_text("\n".join(o), encoding="utf-8")
     dest = bb.ROOT.parent / "PCI-ready-to-post.docx"
     subprocess.run(["pandoc", str(src), "-o", str(dest),
+                    "--from=markdown+autolink_bare_uris",
                     "-V", "geometry:margin=2cm"], check=True, capture_output=True)
     src.unlink()
     return dest, n
