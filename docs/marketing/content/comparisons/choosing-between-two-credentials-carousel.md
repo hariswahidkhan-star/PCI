@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /choosing-between-two-credentials (credentialfinder.org original) — built for the carousel, not a copy
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, project management certifications, chartered routes in surveying and engineering]
 schema:        Article
-word_count:    880
+word_count:    945
 hashtags:      #ProjectControls #ProjectManagement #PMO
 ab_id:         n/a — comparison plan batch 11
 ---
