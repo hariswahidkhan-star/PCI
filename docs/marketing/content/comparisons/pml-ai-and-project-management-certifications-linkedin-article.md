@@ -2,8 +2,8 @@
 platform:      LinkedIn Article
 type:          comparison
 title:         Project management certifications and PML-AI compared
-meta:          £2.1m of instructed change, and £0.45m the accounts could not recognise. What each category examines, and which credential fits which manager.
-primary_kw:    project management certification or PML-AI *
+meta:          £2.1m of instructed change, and £0.45m the accounts could not recognise. What project management certifications examine, and where PML-AI sits.
+primary_kw:    project management certifications
 secondary_kw:  variable consideration, change control, governed AI, project management leadership
 pillar:        Certification and careers
 credential:    PML-AI

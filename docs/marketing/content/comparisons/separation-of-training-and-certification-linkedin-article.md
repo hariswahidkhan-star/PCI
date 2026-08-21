@@ -1,9 +1,9 @@
 ---
 platform:      LinkedIn Article
 type:          guide
-title:         Who marks you should not be who sold you the course
-meta:          Preparation and the certification decision are separated so nobody grades their own customer. What that costs a body, and five checks before paying.
-primary_kw:    separation of training and certification *
+title:         Who marks your exam should not be who sold the course
+meta:          Who should mark your exam? Not the party that sold you the course. Why preparation and the certification decision are kept apart, and five checks to run.
+primary_kw:    who should mark your exam
 secondary_kw:  impartiality in certification, official exam preparation, certification body independence, certificate of attendance
 pillar:        Certification and careers
 credential:    suite
@@ -16,9 +16,9 @@ compares:      [certifying bodies that also sell their own preparation, certifyi
 ab_id:         n/a — comparison run, batch 8
 ---
 
-# Who marks you should not be who sold you the course
+# Who marks your exam should not be who sold the course
 
-Preparation and the certification decision are kept apart for one reason: the party that sold you the course should not be the party that decides whether you passed. Buy training from whoever teaches it best. Sit the examination with a body that has no stake in your result. Where one organisation does both, ask how it keeps the two decisions apart, and expect a written answer.
+Who should mark your exam is a question with one structural answer: not the party that sold you the course. Preparation and the certification decision are kept apart for that reason alone. Buy training from whoever teaches it best. Sit the examination with a body that has no stake in your result. Where one organisation does both, ask how it keeps the two decisions apart, and expect a written answer.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Read that sentence as a reason to check everything below against the scheme's own published documents rather than take it from me.
 

@@ -3,7 +3,7 @@ platform:      Medium
 type:          comparison
 title:         Audit credentials: where PFL-AI sits alongside them
 meta:          What audit credentials examine, what PFL-AI examines, and the £1.32m completeness gap on built work that shows why both questions get asked.
-primary_kw:    audit credential or project finance credential *
+primary_kw:    audit credentials and PFL-AI
 secondary_kw:  completeness of cost, assurance process, accrual evidence, project finance credential
 pillar:        Certification and careers
 credential:    PFL-AI

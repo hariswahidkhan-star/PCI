@@ -2,8 +2,8 @@
 platform:      LinkedIn Article
 type:          comparison
 title:         Audit credentials and PFL-AI: two different questions
-meta:          Assurance asks whether a control operated and left evidence. Project finance asks whether the measure is right. Where each credential category sits.
-primary_kw:    audit credential or project finance credential *
+meta:          Assurance asks whether a control operated and left evidence. Project finance asks whether the measure is right. Where audit credentials and PFL-AI each sit.
+primary_kw:    audit credentials and PFL-AI
 secondary_kw:  accrual evidence, control operation, assurance process, project finance credential
 pillar:        Certification and careers
 credential:    PFL-AI

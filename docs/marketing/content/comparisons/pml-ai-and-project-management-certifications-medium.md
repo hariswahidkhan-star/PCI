@@ -2,8 +2,8 @@
 platform:      Medium
 type:          comparison
 title:         Project management certifications: where PML-AI sits
-meta:          A six-week slip cost £1.08m and removed £0.63m of margin already reported. What each category of credential examines, and which fits your week.
-primary_kw:    project management certification or PML-AI *
+meta:          A six-week slip cost £1.08m and removed £0.63m of already reported margin. What project management certifications examine, and what PML-AI adds to them.
+primary_kw:    project management certifications
 secondary_kw:  estimate at completion, reported margin, governed AI, project management leadership
 pillar:        Certification and careers
 credential:    PML-AI
