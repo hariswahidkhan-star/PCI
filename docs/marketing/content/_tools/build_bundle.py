@@ -85,7 +85,7 @@ def slug(s):
 
 def load():
     files = []
-    for d in ("articles", "social", "flagship"):
+    for d in ("articles", "social", "flagship", "comparisons"):
         for f in sorted((ROOT / d).glob("*.md")):
             if f.name.startswith("_") or f.name == "INDEX.md":
                 continue

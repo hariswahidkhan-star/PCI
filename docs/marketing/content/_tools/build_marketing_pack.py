@@ -33,6 +33,14 @@ BORDER = Border(left=thin, right=thin, top=thin, bottom=thin)
 def phase_of(r):
     """Which wave a piece belongs to, from the publish-then-republish dependency."""
     p = r["platform"].lower()
+    if r["path"].parts[-2] == "comparisons":
+        # Its own wave. The comparison cluster has its own rules — no external body named
+        # anywhere, ownership disclosed, accreditation stated in every piece — and a team
+        # should be able to run it as a block rather than meet it interleaved through the
+        # launch. Within the wave, the own-site pages still go before their republications.
+        if p.startswith("own site"):
+            return 6, "Comparisons — publish on credentialfinder.org first"
+        return 7, "Comparisons — platform variants"
     if r["path"].parts[-2] == "flagship":
         return 1, "Launch — flagship assets"
     if p.startswith("own site"):
