@@ -33,7 +33,10 @@ FENCE_RE = re.compile(r"^```.*?^```", re.S | re.M)
 # its colon. So the list is explicit, and adding to it is the maintenance cost.
 NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal[- ]?links?|Estate[- ]?links?|Internal linking note|Linking note|Links?\s*[:(.,])", re.I | re.M)
 MD_LINK = re.compile(r"\[([^\]]*)\]\(\s*(https?://[^\s)]+)\s*\)")
-BARE_URL = re.compile(r"(?<![\(\]/\w])(?:https?://)?((?:[a-z0-9-]+\.)*(?:%s))(/[^\s,;)\"'<>]*)?"
+# A trailing *, _ or ` is a markdown delimiter closing a span, not part of the address. Letting
+# the path swallow one turned every URL at the end of an italic run into a broken link — 16 of
+# them, all correctly written.
+BARE_URL = re.compile(r"(?<![\(\]/\w])(?:https?://)?((?:[a-z0-9-]+\.)*(?:%s))(/[^\s,;)\"'<>*_`]*)?"
                       % "|".join(d.replace(".", r"\.") for d in DOMAINS))
 WEAK = {"click here", "here", "read more", "this link", "learn more", "this page", "link"}
 
@@ -77,6 +80,24 @@ def domain_of(url):
     return next((d for d in DOMAINS if u == d or u.endswith("." + d)), None)
 
 
+def canonical_origin(canon):
+    """The domain a republication points home to.
+
+    The canonical field is prose, not a URL — "canonical -> https://credentialfinder.org/x"
+    or "canonical -> /x (credentialfinder.org original)". Passing the whole string to
+    domain_of returns nothing, so every Medium republication was scored as though it had no
+    origin, and the internal links it inherits from its own original were counted as
+    cross-estate placements. The piece looked over its cap while being exactly right.
+    """
+    m = re.search(r"https?://[^\s)]+", canon)
+    if m:
+        return domain_of(m.group(0))
+    for d in DOMAINS:                      # relative form names the domain in prose
+        if d in canon:
+            return d
+    return None
+
+
 def links_in(body):
     out, spans = [], []
     for m in MD_LINK.finditer(body):
@@ -118,7 +139,7 @@ def audit(path):
     external = [l for l in ls if not (host and l[0] == host)]
     # A canonical republication mirrors its original, so links back to the origin domain are
     # that original's internal links travelling with it, not cross-estate placements.
-    origin = domain_of(canon) if republished else None
+    origin = canonical_origin(canon) if republished else None
     mirrored = [l for l in external if origin and l[0] == origin]
     cross = [l for l in external if l not in mirrored]
 

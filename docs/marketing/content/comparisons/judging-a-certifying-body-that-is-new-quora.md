@@ -24,13 +24,13 @@ You judge a new certifying body on the three things it can put in front of you t
 
 **Ask how the pass standard is set.** There are two families. One fixes the line against a written description of a competent candidate. The other passes a fixed share of each cohort, which means your result depends partly on whoever sat that month. Both are respectable instruments; only one is built for deciding whether a person meets a standard. A body should be able to tell you which it uses without hesitating.
 
-**Ask who sells the preparation.** Find out who writes the questions, who sets the standard, who marks, and whether any of them earns money from the training. Where preparation and the certification decision sit in the same hands, the incentive runs the wrong way. This is structural rather than a comment on anybody's honesty, and the remedy is structural: separation, written down and published.
+**Ask who sells the preparation.** Find out who writes the questions, who sets the standard, who marks, and whether any of them earns money from the training. Where preparation and the certification decision sit in the same hands, the incentive runs the wrong way. The remedy is structural rather than a matter of good intentions: separation, written down and published.
 
 **Read the appeal policy before you need it.** Four things belong in it: the grounds, the timescale, the named decision-maker, and confirmation that the decision-maker was not part of the original decision. It is a short document, and a body that has thought carefully about the day a candidate disputes a result has thought about the thing that will eventually test it.
 
 **Test verification yourself.** A credential is worth what a stranger can confirm in half a minute, years later, without your involvement. Find a holder, use the public record, and see what comes back. If confirming a result requires an email to somebody's inbox, that is what a future employer will get.
 
-**Then read for absence.** In its first years a body has no pass rates, no holder population and no salary data, because there is nothing to compute them from. A new organisation arriving with a full set of impressive numbers has told you either that it is older than it appears or that the figures are decoration. Equally, "globally recognised" is a claim about other people's behaviour that nobody can evidence in year one.
+**Then read for absence.** In its first years a body has no pass rates, no holder population and no salary data, because there is nothing to compute them from. A new organisation arriving with a full set of impressive numbers has told you either that it is older than it appears or that the figures are decoration.
 
 One check goes against every new body, including the one I work for. An older organisation has heard appeals, revised a syllabus under pressure and survived a bad cohort. A new one has not, and cannot claim to have. Only elapsed time fixes that, and it belongs in your decision.
 

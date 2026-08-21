@@ -77,7 +77,7 @@ None of that is a criticism of a course. It is a purchase-order question: are yo
 
 A credential that never expires is making a claim about the future that nobody can support: that what you demonstrated once still holds a decade later, in a discipline whose tooling has changed underneath it.
 
-A renewal requirement is the body admitting that competence decays and asking you to show it has not. It is also a recurring obligation you take on, so read what it demands before you sit anything. That is a question in its own right, which is why [what a renewal cycle is actually for](https://credentialfinder.org/recertification-and-what-it-is-for) is separate from what the examination covers.
+A renewal requirement is the body admitting that competence decays and asking you to show it has not. It is also a recurring obligation you take on, so read what it demands before you sit anything, because it is a question in its own right and separate from what the examination covers.
 
 ## What PCI publishes, and what it does not claim
 
@@ -108,4 +108,4 @@ It counts for what its published syllabus and its assessment can demonstrate, no
 
 *Illustrative arithmetic, not project data. PCI publishes certification requirements; nothing here is legal, tax or accounting advice. No other awarding organisation, qualification or credential is named, and no external certifying body is linked.*
 
-*Internal links: two to the origin domain, each at the point the text raises the question it answers — the preparation-and-decision separation where the piece asks who marks the paper, anchored "holding preparation apart from the certification decision"; and the renewal-cycle page where it asks what an expiry date is for. One cross-estate link, to the hub's forecasting methods, at the worked example, anchored "the four accepted forecasting methods and what each one assumes", because the reader has just seen two of the four. Medium's canonical points home to the credentialfinder.org original.*
+*Internal links: one to the origin domain, the preparation-and-decision separation page, anchored "holding preparation apart from the certification decision", placed where the piece asks who marks the paper. One cross-estate link, to the hub's forecasting methods, at the worked example, anchored "the four accepted forecasting methods and what each one assumes", because the reader has just seen two of the four. A second origin-domain link, to the renewal-cycle page, was considered and left out: this is an off-estate republish whose canonical already points home, and two links to one domain in one article is the density to avoid. Medium's canonical points to the credentialfinder.org original.*

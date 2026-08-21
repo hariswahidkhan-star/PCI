@@ -75,7 +75,7 @@ Disclosure: credentialfinder.org is run by PCI Global, which awards it. New, not
 
 ---
 
-*First reply: https://credentialfinder.org/choosing-a-credential-as-auditor*
+*First reply: https://credentialfinder.org/choosing-a-credential-as-auditor — the auditor guide.*
 
 *Internal-linking note: one link, in the first reply, to the auditor guide on credentialfinder.org
 — it answers the scope question post 6 raises. No link or name for any other awarding

@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> credentialfinder.org/choosing-a-credential-as-scheduler
 schema:        Article
-word_count:    n/a — 1,690 characters
+word_count:    n/a — 1,872 characters
 hashtags:      #ProjectControls #EarnedValue #Scheduling #ProjectFinance
 ab_id:         none — comparison plan, batch 14
 compares:      [cost and scheduling credentials, the established project controls certifications, product certifications for scheduling software]
@@ -54,7 +54,7 @@ PCI is new and not accredited — read the syllabus and judge it. It is publishe
 
 ---
 
-*First comment: https://credentialfinder.org/choosing-a-credential-as-scheduler*
+*First comment: https://credentialfinder.org/choosing-a-credential-as-scheduler — the scheduler guide.*
 
 *Internal-linking note: one link only, in the first comment, to the scheduler guide on
 credentialfinder.org — it answers the question the post raises about which category examines the

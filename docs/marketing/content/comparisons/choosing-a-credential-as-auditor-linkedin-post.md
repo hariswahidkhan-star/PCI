@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> credentialfinder.org/choosing-a-credential-as-auditor
 schema:        Article
-word_count:    n/a — 1,720 characters
+word_count:    n/a — 1,892 characters
 hashtags:      #InternalAudit #ProjectControls #ProjectFinance #RiskManagement
 ab_id:         none — comparison plan, batch 14
 compares:      [audit credentials, accountancy and finance qualifications, the established project controls certifications]
@@ -22,7 +22,7 @@ compares:      [audit credentials, accountancy and finance qualifications, the e
 
 ---
 
-You sample 30 progress claims on a capital project. Four have no measurement record behind them.
+You sample 30 progress claims on a capital project. Four have no measurement record.
 
 4 ÷ 30 = 13.3%.
 
@@ -42,7 +42,7 @@ Four artefacts. That is the whole gap, and it is smaller than a second professio
 
 Where a project credential is the wrong answer: if you audit information systems, the one built for that subject is right; if your firm's progression names a certification, take it.
 
-The narrow case is regular capital project work where the findings that matter are numbers. PFL-AI covers that boundary: 16 domains, 61 knowledge areas.
+The narrow case is capital project work where the findings that matter are numbers. PFL-AI covers that boundary: 16 domains, 61 knowledge areas.
 
 Disclosure: credentialfinder.org is operated by Project Controls Institute Global, which awards it.
 
@@ -52,7 +52,7 @@ PCI is new and not accredited — read the syllabus and judge it. It is publishe
 
 ---
 
-*First comment: https://credentialfinder.org/choosing-a-credential-as-auditor*
+*First comment: https://credentialfinder.org/choosing-a-credential-as-auditor — the auditor guide.*
 
 *Internal-linking note: one link only, in the first comment, to the auditor guide on
 credentialfinder.org — it answers the question the post raises about what sits in the gap between

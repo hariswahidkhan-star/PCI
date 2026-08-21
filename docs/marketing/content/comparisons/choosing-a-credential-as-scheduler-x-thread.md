@@ -85,7 +85,7 @@ PCI is new and not accredited — read the syllabus, free and in full.
 
 ---
 
-*First reply: https://credentialfinder.org/choosing-a-credential-as-scheduler*
+*First reply: https://credentialfinder.org/choosing-a-credential-as-scheduler — the scheduler guide.*
 
 *Internal-linking note: one link, in the first reply, to the scheduler guide on
 credentialfinder.org — it answers the scope question post 5 raises. No link or name for any

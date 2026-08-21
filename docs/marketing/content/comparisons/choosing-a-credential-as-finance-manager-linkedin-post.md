@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> credentialfinder.org/choosing-a-credential-as-finance-manager
 schema:        Article
-word_count:    n/a — 1,700 characters
+word_count:    n/a — 1,885 characters
 hashtags:      #ProjectFinance #ProjectControls #CostEngineering #PMO
 ab_id:         none — comparison plan, batch 14
 compares:      [accountancy and finance qualifications, cost and scheduling credentials, audit credentials]
@@ -50,7 +50,7 @@ PCI is new and not accredited — read the syllabus and judge it. It is publishe
 
 ---
 
-*First comment: https://credentialfinder.org/choosing-a-credential-as-finance-manager*
+*First comment: https://credentialfinder.org/choosing-a-credential-as-finance-manager — the finance lead guide.*
 
 *Internal-linking note: one link only, in the first comment, to the finance lead's guide on
 credentialfinder.org — it answers the question the post raises about which category examines the

@@ -81,7 +81,7 @@ PCI is new and not accredited — read the syllabus, free and in full.
 
 ---
 
-*First reply: https://credentialfinder.org/choosing-a-credential-as-finance-manager*
+*First reply: https://credentialfinder.org/choosing-a-credential-as-finance-manager — the finance lead guide.*
 
 *Internal-linking note: one link, in the first reply, to the finance lead's guide on
 credentialfinder.org — it answers the scope question post 5 raises. No link or name for any other

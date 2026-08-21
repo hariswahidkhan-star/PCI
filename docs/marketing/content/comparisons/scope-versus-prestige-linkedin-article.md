@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          guide
 title:         Scope or prestige: which axis should decide your choice
-meta:          Recognition gets you the shortlist. Scope decides whether the examination covers what you sign. How to measure both, and which wins when they conflict.
+meta:          Scope or prestige: recognition gets you the shortlist, scope decides whether the examination covers what you sign. How to measure both, and which wins.
 primary_kw:    scope or prestige *
 secondary_kw:  choosing a credential on scope, recognition of a certification, what a credential examines, cut-off between cost and accounts
 pillar:        Certification and careers
