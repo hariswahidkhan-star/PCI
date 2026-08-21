@@ -11,18 +11,18 @@ target_domain: credentialfinder.org
 canonical:     derived from /how-a-pass-mark-is-set (credentialfinder.org original) — written for the feed, not a copy
 compares:      [the established project controls certifications, project management certifications, accountancy and finance qualifications]
 schema:        Article
-word_count:    416
+word_count:    421
 hashtags:      #ProjectControls #ProjectManagement #PMO #CostEngineering
 ab_id:         n/a — comparison plan batch 7
 ---
 
 # A pass mark on its own tells you nothing. Here is why
 
-**Post body (1,881 characters):**
+**Post body (1,886 characters):**
 
 A pass mark on its own tells you nothing. Seventy per cent of what?
 
-A cut score means something only alongside the difficulty of the paper and the method used to choose it. Two methods are common.
+A cut score means something only alongside the difficulty of the paper and the method used to choose it.
 
 Norm-referenced. A fixed share of the cohort passes, say the top 30%. In one sitting the 70th percentile score is 66, so 68 passes. In the next, a stronger cohort puts it at 71, so the same 68 fails. Same knowledge, different month. That number measures the room.
 
@@ -32,14 +32,16 @@ So a cut of 62 on a hard paper can be a higher standard than 70 on an easy one, 
 
 Then there is measurement error. Suppose the standard error is 3 marks. A 61 against a cut of 62 sits inside it. The question is not whether the border is fuzzy, because it always is. It is whether the rule for the border was published before you sat, or decided afterwards, about you.
 
-Four questions worth asking any certifying body:
+Four questions to ask any certifying body:
 
 Was the cut set before or after the results were seen?
-Is it re-set when the paper changes materially?
-Where several versions of a paper exist, are they equated?
-Who sat on the standard-setting panel, and were they independent of whoever sells the preparation?
+Is it re-set when the paper changes?
+Where several versions exist, are they equated?
+Who sat on the panel, and were they independent of whoever sells the preparation?
 
-Ours, plainly: PCI publishes its Body of Knowledge in full and no pass rates. The 40/40/20 proportions describe the Body of Knowledge, not an examination weighting. credentialfinder.org is operated by Project Controls Institute Global, which awards PCL-AI, PFL-AI and PML-AI. PCI is new and not accredited. Read the syllabus and judge it.
+Ours, plainly: PCI publishes its Body of Knowledge in full and no pass rates. 40/40/20 describes the Body of Knowledge, not an exam weighting. credentialfinder.org is operated by Project Controls Institute Global, which awards PCL-AI, PFL-AI and PML-AI. PCI is new and not accredited. Read the syllabus and judge it.
+
+And if your employer mandates a certification, none of this decides it. Take the mandated one.
 
 #ProjectControls #ProjectManagement #PMO #CostEngineering
 

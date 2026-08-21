@@ -71,9 +71,22 @@ def check(path):
     NOT_ARTICLE = ("carousel", "post", "thread", "caption", "pin", "script", "boilerplate",
                    "pitch", "release", "listing", "record", "abstract", "deck", "intro",
                    "answer", "response", "story", "issue", "outline", "email", "profile")
-    is_article = (typ in {"pillar", "guide", "how-to", "data-study", "glossary", "qa-list",
-                          "comparison", "listicle", "explainer", "case-study", "faq", "article"}
-                  or (len(words) > 700 and not any(n in typ.lower() for n in NOT_ARTICLE)))
+    # Platform decides this before type does. A Quora answer is typed qa-list or qa-answer,
+    # which are legitimate article types for an own-site Q&A page — but on Quora the spec is
+    # 300-600 words with no FAQ block, so judging one against the article rules flags correct
+    # work and pushes a writer to break the platform spec to satisfy a checker.
+    plat_lower = fm_get(fm, "platform").lower()
+    NOT_ARTICLE_PLATFORM = ("quora", "reddit", "stack exchange", "x /", "x (", "threads",
+                            "bluesky", "telegram", "whatsapp", "discord", "instagram",
+                            "pinterest", "tiktok", "youtube", "eng-tips", "planning planet",
+                            "linkedin post", "linkedin company", "linkedin personal",
+                            "facebook", "slideshare")
+    if plat_lower.startswith(NOT_ARTICLE_PLATFORM):
+        is_article = False
+    else:
+        is_article = (typ in {"pillar", "guide", "how-to", "data-study", "glossary", "qa-list",
+                              "comparison", "listicle", "explainer", "case-study", "faq", "article"}
+                      or (len(words) > 700 and not any(n in typ.lower() for n in NOT_ARTICLE)))
 
     title, meta = fm_get(fm, "title"), fm_get(fm, "meta")
     kw = fm_get(fm, "primary_kw").rstrip(" *").strip().lower()
@@ -89,8 +102,15 @@ def check(path):
         p = p.strip()
         if not p or p.startswith(("#", "|", ">", "-", "---")):
             continue
-        if p.startswith("*") and p.endswith("*") and "\n" not in p:
-            continue            # the publisher's italic standfirst, not the article
+        # Skip the publisher's standfirst — an italic block telling somebody how to post the
+        # piece. The earlier test required it to be a single line, which missed every Medium
+        # file, where the instruction wraps and carries a canonical URL. Judged on content
+        # instead: an italic block that talks to the publisher is not the article's opening.
+        if p.startswith("*") and p.rstrip().endswith("*"):
+            continue
+        if re.match(r"^[*_]*(Republished|Republish|Paste|Post |Upload|Set the|Canonical|"
+                    r"Cross-post|Publish )", p, re.I):
+            continue
         lead = " ".join(p.split()[:60])
         break
 

@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /how-a-pass-mark-is-set (credentialfinder.org original) — written for X, not a copy
 compares:      [the established project controls certifications, project management certifications, accountancy and finance qualifications]
 schema:        Article
-word_count:    524
+word_count:    535
 hashtags:      #ProjectControls
 ab_id:         n/a — comparison plan batch 7
 ---
@@ -48,8 +48,10 @@ The question is not whether the border is fuzzy. It is whether the rule for the 
 **Post 7/9 — two more to ask** (184 characters)
 Two more worth asking. Is the cut re-set when the paper changes? And where several versions of a paper exist, are they equated, so a candidate is not failed by drawing the harder form?
 
-**Post 8/9 — the tell** (170 characters)
+**Post 8/9 — the tell** (241 characters)
 A body that moves the cut after seeing results, with no published rule, is managing its pass rate rather than its standard. Ask when the cut was set, not only what it is.
+
+And if your employer mandates a certification, take the mandated one.
 
 **Post 9/9 — our own answer** (267 characters)
 PCI publishes its Body of Knowledge in full and publishes no pass rates. 40/40/20 describes the Body of Knowledge, not an exam weighting.
