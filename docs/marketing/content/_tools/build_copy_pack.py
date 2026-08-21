@@ -111,6 +111,48 @@ def build():
          "**Do not add links.** Each post carries the one link it is meant to carry. Adding "
          "more can cost all five PCI websites their standing at once.", "", "\\newpage", ""]
 
+    # A hand-built contents page. Pandoc's own table of contents lists the section and platform
+    # headings and none of the 577 posts, which tells a reader the shape of the document and
+    # nothing about what is in it. This lists every post under the wave it belongs to, grouped
+    # by platform, so somebody can find their week's work without scrolling the body.
+    WAVE_NOTE = {
+        "Launch — flagship assets":
+            "The launch set. Run these first, in the order given; several name their own timing.",
+        "Own site — publish and let it index":
+            "PCI's own pages. These must go live and be indexed BEFORE anything that "
+            "canonicalises to them, or a platform with more authority ranks for our article.",
+        "Off-site originals":
+            "Written for someone else's platform and never published on ours. No canonical, so "
+            "these must not duplicate an own-site page.",
+        "Republish with canonical (only after its origin has indexed)":
+            "Copies of own-site pages, each carrying a canonical home. Do not post any of these "
+            "until its origin has been live and indexed for at least two weeks.",
+        "Social amplification":
+            "Short-form. Run alongside everything above, once the page each points at exists.",
+        "Comparisons — publish on credentialfinder.org first":
+            "The comparison cluster's own pages. Same rule as the other own-site work: live and "
+            "indexed before their platform variants go anywhere.",
+        "Comparisons — platform variants":
+            "The comparison cluster across every platform. Each derives from a page in the wave "
+            "above and waits for it.",
+    }
+
+    o += ["# Contents", ""]
+    seen_phase, seen_grp, cn = None, None, 0
+    for r in files:
+        if r["phase_name"] != seen_phase:
+            seen_phase = r["phase_name"]
+            n_in = sum(1 for x in files if x["phase_name"] == seen_phase)
+            o += ["", f"## {seen_phase}  ({n_in} posts)", "",
+                  WAVE_NOTE.get(seen_phase, ""), ""]
+            seen_grp = None
+        if r["group"] != seen_grp:
+            seen_grp = r["group"]
+            o += ["", f"**{seen_grp}**", ""]
+        cn += 1
+        o.append(f"- Post {cn} — {r['title']}")
+    o += ["", "\\newpage", ""]
+
     phase, grp, n = None, None, 0
     for r in files:
         if r["phase_name"] != phase:
@@ -179,7 +221,7 @@ def build():
     src = bb.ROOT.parent / "_copy.md"
     src.write_text("\n".join(o), encoding="utf-8")
     dest = bb.ROOT.parent / "PCI-ready-to-post.docx"
-    subprocess.run(["pandoc", str(src), "-o", str(dest), "--toc", "--toc-depth=2",
+    subprocess.run(["pandoc", str(src), "-o", str(dest),
                     "-V", "geometry:margin=2cm"], check=True, capture_output=True)
     src.unlink()
     return dest, n
