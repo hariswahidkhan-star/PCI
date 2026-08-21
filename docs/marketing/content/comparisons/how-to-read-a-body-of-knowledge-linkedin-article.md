@@ -1,8 +1,8 @@
 ---
 platform:      LinkedIn Article
 type:          guide
-title:         Ninety minutes with a Body of Knowledge before you pay
-meta:          Seven passes through a published syllabus, in ninety minutes, before any money moves. Read the last domain first, count the verbs, trace a topic you know.
+title:         Ninety minutes reading a Body of Knowledge before you pay
+meta:          Seven passes through a published Body of Knowledge, in ninety minutes, before any money moves. Read the last domain first and count the verbs.
 primary_kw:    how to read a body of knowledge *
 secondary_kw:  choosing a certification, syllabus verbs, earning rules, published syllabus
 pillar:        Certification and careers
@@ -16,9 +16,9 @@ ab_id:         n/a
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, project management certifications, product certifications for scheduling software]
 ---
 
-# Ninety minutes with a Body of Knowledge before you pay
+# Ninety minutes reading a Body of Knowledge before you pay
 
-Ninety minutes with a published syllabus is the cheapest piece of due diligence in this field, and most candidates skip it. Seven passes, in a fixed order, will tell you whether a credential examines the work you actually do. Read the last domain first, count the verbs, find one number, find the exclusions, then trace a topic you already know all the way through.
+Ninety minutes reading a published Body of Knowledge is the cheapest piece of due diligence in this field, and most candidates skip it. Seven passes, in a fixed order, will tell you whether a credential examines the work you actually do. Read the last domain first, count the verbs, find one number, find the exclusions, then trace a topic you already know all the way through.
 
 Everything below works on any published Body of Knowledge, in any category. It needs no subject expertise beyond the areas you already work in.
 
@@ -50,7 +50,20 @@ If nothing in the document produces a number, nothing in the examination will ei
 
 A serious syllabus says what it does not cover. It is the hardest paragraph to write and the most useful one to read.
 
-A document with no exclusions has not finished thinking about scope, and the gap becomes your problem in the month a question lands on the boundary. Every category draws a boundary somewhere: cost and scheduling credentials examine estimating, cost control, planning and schedule analysis; accountancy and finance qualifications examine recognition, measurement, disclosure and financial control; product certifications for scheduling software examine operating the tool rather than the discipline behind it. Those are design decisions, made deliberately, and each category examines its own subject thoroughly. What you need to know is where the line sits, because your job may not respect it.
+A document with no exclusions has not finished thinking about scope, and the gap becomes your problem in the month a question lands on the boundary.
+
+Every category draws its boundary somewhere, and each examines its own subject thoroughly inside it. These are design decisions, made deliberately.
+
+| Category of credential | What the syllabus sets out to examine | Where the boundary usually sits |
+|---|---|---|
+| Cost and scheduling credentials | Estimating, cost control, planning and schedule analysis | At the cost report, before the accounting treatment of it |
+| The established project controls certifications | Measurement, progress, forecasting and the control of delivery | At the output of the control cycle |
+| Accountancy and finance qualifications | Recognition, measurement, disclosure and financial control | At the delivery data, which arrives from a source they do not examine |
+| Audit credentials | Governance, risk, control and the assurance process | At whether a control operated, not whether the number is right |
+| Project management certifications | Managing projects across people, process and the business environment | At the delivery decision, before its reported consequence |
+| Product certifications for scheduling software | Operating the package competently | At the tool, rather than the discipline behind it |
+
+What you need from a Body of Knowledge is a written version of the last column. Read where the line sits, because your job may not respect it.
 
 ## Pass five, twenty minutes: trace one topic you already know
 
@@ -111,7 +124,7 @@ No relationship at all. Length usually tracks how many topics a scheme wanted to
 Passes one to four and six to seven, yes — they read structure, not content. Pass five needs a topic you can already argue about, so use the areas where you have run the work. If none of the syllabus is familiar, that is worth noticing before you commit a year to it.
 
 **What should I do with what I find?**
-Write down three questions and send them to the body; there is a standing list in [questions to ask a certifying body](https://credentialfinder.org/questions-to-ask-a-certifying-body). How the questions are answered, and how fast, tells you more about a certifying body than the document did, and it is the same test whether the body is fifty years old or two.
+Write down the three things you could not settle from the document, and send them to the body as questions. How they are answered, and how fast, tells you more about a certifying body than the document did, and it is the same test whether the body is fifty years old or two.
 
 ---
 
@@ -119,4 +132,4 @@ Write down three questions and send them to the body; there is a standing list i
 
 *PCI publishes certification requirements; nothing here is legal, tax or accounting advice.*
 
-*Internal links: two on credentialfinder.org and one cross-estate. [What makes a credential examinable](https://credentialfinder.org/what-makes-a-credential-examinable) sits at the end of pass two, where a reader who has just counted verbs asks what a markable outcome looks like. [Questions to ask a certifying body](https://credentialfinder.org/questions-to-ask-a-certifying-body) sits in the last FAQ answer, which raises exactly that. The single cross-estate link is [the published Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge), placed on the sentence claiming it is published in full. No link to any awarding organisation.*
+*Internal links: one per cross-estate domain, two in all, because this is a LinkedIn Article and credentialfinder.org is cross-estate from here. [What makes a credential examinable](https://credentialfinder.org/what-makes-a-credential-examinable) sits at the end of pass two, where a reader who has just counted verbs asks what a markable outcome looks like — the strongest placement in the piece, so it is the one that stays. The second link is [the published Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge), placed on the sentence claiming it is published in full. No link to any awarding organisation.*

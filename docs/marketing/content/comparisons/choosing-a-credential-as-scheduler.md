@@ -54,6 +54,8 @@ Nothing physical differs between those two months. A rule chosen at baseline, of
 
 Now carry it one step further. The index feeds a forecast, the forecast is the denominator in a percentage complete, and the percentage complete becomes recognised revenue. A template decision has reached a set of accounts.
 
+Nobody on that chain was examined on the whole of it. A planning engineer is examined on float and progress measurement. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. Neither examination covers the handover in the middle, and that handover is the move you are making.
+
 ## What each category examines, in its own terms
 
 Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis. If you are staying on the programme side, that is your subject and it is examined in depth.

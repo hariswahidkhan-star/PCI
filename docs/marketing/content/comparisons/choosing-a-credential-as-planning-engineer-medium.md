@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         Choosing a credential as a planning engineer, by scope
-meta:          Which credential fits a planner depends on what you sign. Programme only, or the numbers the programme moves? Float priced, and categories compared on scope.
+meta:          Which credential fits a planning engineer depends on what you sign. Programme only, or the numbers the programme moves? Float priced, categories compared.
 primary_kw:    credential for a planning engineer *
 secondary_kw:  what a scheduling credential examines, float and prolongation, planning engineer certification choice, scope of a syllabus
 pillar:        Planning and scheduling
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 11
 
 # Choosing a credential as a planning engineer
 
-If your signature stops at the programme, a credential examining schedule development, maintenance and analysis is the right purchase and the shortest route to evidence. If your programme drives a cost report, an entitlement position or a forecast somebody books, the examination you want has to cross that boundary. Sort the choice by what you sign, not by your job title.
+If your signature as a planning engineer stops at the programme, a credential examining schedule development, maintenance and analysis is the right purchase and the shortest route to evidence. If your programme drives a cost report, an entitlement position or a forecast somebody books, the examination you want has to cross that boundary. Sort the choice by what you sign, not by your job title.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Treat the reasoning as checkable and the recommendation as interested.
 

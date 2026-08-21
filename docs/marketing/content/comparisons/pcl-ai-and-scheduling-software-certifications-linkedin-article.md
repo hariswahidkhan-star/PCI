@@ -2,8 +2,8 @@
 platform:      LinkedIn Article
 type:          comparison
 title:         What a scheduling tool certificate proves, and what not
-meta:          A product certification proves you can drive the planning package. Which field earns value, and whether the file matches the contract, is another subject.
-primary_kw:    scheduling software certification vs project controls certification *
+meta:          A scheduling tool certificate proves you can drive the planning package. Which field earns value, and whether the file matches the contract, is separate.
+primary_kw:    what a scheduling tool certificate proves
 secondary_kw:  rules of credit, total float, project scheduler certification, earned value
 pillar:        Certification and careers
 credential:    PCL-AI
@@ -18,7 +18,7 @@ ab_id:         n/a (comparison run)
 
 # What a scheduling tool certificate proves, and what not
 
-A product certification for scheduling software proves you can operate the package: build the network, set the calendars, load the resources, cut a baseline, produce the reports. If a role needs that on Monday, it is the right thing to hold and nothing else substitutes for it. What the file means, and whether its numbers survive month end, is a different subject with its own syllabus.
+A scheduling tool certificate proves you can operate the package: build the network, set the calendars, load the resources, cut a baseline, produce the reports. If a role needs that on Monday, it is the right thing to hold and nothing else substitutes for it. What the file means, and whether its numbers survive month end, is a different subject with its own syllabus.
 
 Both subjects are real. Confusing them is what puts a planner in a meeting defending a number the software produced exactly as instructed.
 

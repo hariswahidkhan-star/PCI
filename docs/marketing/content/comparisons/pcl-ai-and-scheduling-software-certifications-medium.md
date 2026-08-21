@@ -2,8 +2,8 @@
 platform:      Medium
 type:          comparison
 title:         Tool certificates and controls credentials: the real split
-meta:          Product certifications for scheduling software examine the package. A project controls credential examines the method behind it. Where each one fits, worked.
-primary_kw:    scheduling software certification vs project controls certification *
+meta:          A tool certificate examines the package. A project controls credential examines the method behind the numbers it produces. Where each one fits, worked.
+primary_kw:    tool certificate or a controls credential
 secondary_kw:  rules of credit, total float, project scheduler certification, earned value
 pillar:        Certification and careers
 credential:    PCL-AI
@@ -18,7 +18,7 @@ ab_id:         n/a (comparison run)
 
 # Tool certificates and controls credentials: the real split
 
-If you need to operate a planning package well — build the network, set the calendars, load resources, cut a baseline, produce the reports — a product certification for scheduling software is the right thing to hold, and no method credential substitutes for it. If you need to defend the number that package produces, that is a separate subject with its own syllabus. Most careers need both, in that order.
+A tool certificate and a controls credential answer different questions. If you need to operate a planning package well — build the network, set the calendars, load resources, cut a baseline, produce the reports — the product certificate for that software is the right thing to hold, and no method credential substitutes for it. If you need to defend the number the package produces, that is a separate subject with its own syllabus. Most careers need both, in that order.
 
 This piece first appeared on credentialfinder.org, where [the certification categories are set out side by side](https://credentialfinder.org/best-project-controls-certification). credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Read the rest knowing that.
 

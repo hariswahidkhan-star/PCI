@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          guide
 title:         How to verify a credential properly: a four-step check
-meta:          Verification answers one question: does this person hold what they claim, today, in good standing. Four steps, five kinds of evidence, and the limits.
+meta:          To verify a credential you answer one question: does this person hold what they claim, today, in good standing. Four steps, and what each cannot prove.
 primary_kw:    how to verify a credential *
 secondary_kw:  credential verification, certificate of attendance, recertification, public register
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, project management certificatio
 
 # How to verify a credential properly: a four-step check
 
-Verification answers one question and no others: does this person hold what they say they hold, today, in good standing. Four steps get you there. Ask for the exact title and the holder's reference in writing, look it up on the awarding body's own register with an address you typed yourself, read the status and the dates rather than the existence, and confirm the body is the one you think it is.
+Verifying a credential answers one question and no others: does this person hold what they say they hold, today, in good standing. Four steps get you there. Ask for the exact title and the holder's reference in writing, look it up on the awarding body's own register with an address you typed yourself, read the status and the dates rather than the existence, and confirm the body is the one you think it is.
 
 Everything else people call verification is a document somebody handed you.
 
@@ -101,7 +101,7 @@ It is reasonable evidence when it comes from an address on the body's own domain
 Ask why, and treat the answer as information about the body rather than about the candidate. Some smaller schemes verify on written request for good reasons, including data protection choices made in the candidate's favour. What should concern you is a body that cannot confirm status at all, because then nobody can tell you whether the credential is still live.
 
 **Does an expired credential mean the person cannot do the work?**
-No, and it is worth separating the two. Someone may have let a credential lapse while doing the work at a high standard for a decade. What an expiry does mean is that the body no longer stands behind the holder, so any assurance you were taking from the credential has ended. Assess the person on their record instead, and be clear that is what you are doing. What a renewal cycle is actually for is set out in [recertification and what it is for](https://credentialfinder.org/recertification-and-what-it-is-for).
+No, and it is worth separating the two. Someone may have let a credential lapse while doing the work at a high standard for a decade. What an expiry does mean is that the body no longer stands behind the holder, so any assurance you were taking from the credential has ended. Assess the person on their record instead, and be clear that is what you are doing. A renewal cycle keeps that assurance current; it does not retest a career.
 
 **How much of this applies to a small in-house hiring decision?**
 The whole of steps one to three, and they take about four minutes. The reason to do them on a routine hire is not suspicion — it is that the four minutes are cheapest before the offer, and a verification done after a start date is an awkward conversation you can simply avoid having.
@@ -115,4 +115,4 @@ Treat it as a claim in a nicer typeface. Some networks display credentials issue
 
 *PCI publishes certification requirements; nothing here is legal, tax or accounting advice.*
 
-*Internal links: two on credentialfinder.org and one cross-estate. [Credential or certificate of attendance](https://credentialfinder.org/credential-or-certificate-of-attendance) sits in step four, on the sentence that first raises the distinction. [Recertification and what it is for](https://credentialfinder.org/recertification-and-what-it-is-for) sits under the expiry FAQ, which asks exactly that. The single cross-estate link is [the PCI verification page](https://projectcontrolsinstitute.org/verify), placed on the disclosure paragraph so the caveat and the link arrive together. No link to any other awarding body's register.*
+*Internal links: one per cross-estate domain, two in all, because this is a LinkedIn Article and credentialfinder.org is cross-estate from here. [Credential or certificate of attendance](https://credentialfinder.org/credential-or-certificate-of-attendance) sits in step four, on the sentence that first raises the distinction — a named failure mode inside the procedure itself, so it is the one that stays. The second link is [the PCI verification page](https://projectcontrolsinstitute.org/verify), placed on the disclosure paragraph so the caveat and the link arrive together. No link to any other awarding body's register.*

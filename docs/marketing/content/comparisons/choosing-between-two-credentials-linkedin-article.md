@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          guide
 title:         How to choose between two credentials, done properly
-meta:          There is no honest league table, because the weights belong to whoever signs the work. Six rows, a category table and the preparation hours worked in weeks.
+meta:          No league table can choose between two credentials for you: the weights belong to whoever signs the work. Six rows, and preparation hours worked in weeks.
 primary_kw:    choosing between two credentials *
 secondary_kw:  comparing two syllabuses, preparation hours, what a credential examines, credential decision grid
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 11
 
 # How to choose between two credentials, done properly
 
-Put both through the same six questions: what each examines, what each assumes you already know, who decides the result, what it costs in hours rather than fees, what changes on the day you hold it, and what happens if you fail. Score the answers against the decisions you personally sign. If they still tie, choose for the job you will hold in two years.
+Choosing between two credentials means putting both through the same six questions: what each examines, what each assumes you already know, who decides the result, what it costs in hours rather than fees, what changes on the day you hold it, and what happens if you fail. Score the answers against the decisions you personally sign. If they still tie, choose for the job you will hold in two years.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials mentioned below. A ranking of credentials published by a body that awards three of them would be worth nothing, so what follows is a method, with the weights left where they belong.
 

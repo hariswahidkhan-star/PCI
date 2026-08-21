@@ -56,6 +56,21 @@ Recut both to the 30th. 950 metres in the ground, £950k earned against £950k s
 Nothing on that site changed. The overrun was a calendar difference between two functions who
 each did their own job correctly.
 
+## The two scopes, side by side
+
+Both categories are examined properly inside their own boundary. The table is about where the
+boundary sits, not about which credential is harder or better regarded.
+
+| Scope axis | Cost and scheduling credentials | PCL-AI |
+|---|---|---|
+| Estimating method and estimate classes | The core subject, examined in depth | Examined as an input to the control cycle |
+| Schedule development and analysis | The core subject, examined in depth | Examined as an input to the control cycle |
+| Progress measurement and the rule of credit | Examined | Examined, including who owns the rule and what happens when it changes |
+| Forecasting and defending an estimate at completion | Examined | Examined |
+| The cut-off between a control cycle and a reporting cycle | Outside the category's scope by design | Examined |
+| Accruals, recognition and the reported result | Outside the category's scope by design | Examined |
+| Governed use of AI inside the control cycle | Outside the category's scope by design | Examined |
+
 ## Why no credential in the cost and scheduling category answers this
 
 Because it is not their subject, and it was never meant to be.
@@ -161,7 +176,7 @@ number.
 Then read the syllabus of whichever credential you are considering, ours included, and ask
 whether it examines the thing you just found.
 
-The full category comparison, with the scope table, sits on credentialfinder.org:
+The full category comparison, with the worked month behind it, sits on credentialfinder.org:
 [where PCL-AI sits against cost and scheduling
 credentials](https://credentialfinder.org/pcl-ai-and-cost-and-scheduling-credentials). The
 domain-by-domain syllabus is on

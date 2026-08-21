@@ -71,7 +71,9 @@ Same site, same work, same month. **£0.50m** of reported margin turns on a piec
 
 There is a second-order effect worth seeing. With costs to date of **£2.7m** and a cost-to-cost measure, progress before the change was 2.7 ÷ 5.4 = **50%**. After the change it is 2.7 ÷ 5.85 = **46.2%**, so revenue recognised falls even though more work has been done. Adding scope dilutes measured progress until the price catches up.
 
-A project management syllabus examines change control, and examines it properly: raise it, price it, get it approved, baseline it. What it does not set out to examine is why an unsigned instruction moves reported margin by half a million pounds. Nobody is asking it to. The question is only who on your project is examined on that, and the honest answer on most jobs is nobody. If your interest is the AI half rather than the money half, [how to compare a certification that claims to cover AI](https://pciai.org/ai-project-management-certification) sets out what to look for.
+A project management syllabus examines change control, and examines it properly: raise it, price it, get it approved, baseline it. What it does not set out to examine is why an unsigned instruction moves reported margin by half a million pounds. Nobody is asking it to.
+
+The question is only who on your project is examined on that, and the honest answer on most jobs is nobody. If your interest is the AI half rather than the money half, [how to compare a certification that claims to cover AI](https://pciai.org/ai-project-management-certification) sets out what to look for.
 
 ## The half-hour test that settles it
 

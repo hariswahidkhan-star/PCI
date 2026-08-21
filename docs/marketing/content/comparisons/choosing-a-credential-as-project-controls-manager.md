@@ -92,10 +92,10 @@ Challenges about method — earning rules, measurement, the estimate's build —
 ## Frequently asked questions
 
 **I already hold a controls credential. Is a second one duplication?**
-It is if the second examines the same subject at a similar depth, which is a common and expensive mistake. It is not if it examines the boundary your role has moved onto. Count the decisions you sign that your current credential did not examine, and let that count decide.
+It is if the second examines the same subject at a similar depth, which is a common and expensive mistake. It is not if it examines the boundary your role has moved onto. Count the decisions you sign that your current credential did not examine, and let that count decide. A grid for holding two syllabuses side by side without ranking them is in [choosing between two credentials](https://credentialfinder.org/choosing-between-two-credentials).
 
 **How much finance does a controls manager actually need?**
-The handshake, not the profession: what a percentage complete becomes, when an expected loss must be recognised in full, what an accrual is for, what a contract asset is. That is a small body of material with a high return, and it is the part your signature reaches.
+The handshake, not the profession: what a percentage complete becomes, when an expected loss must be recognised in full, what an accrual is for, what a contract asset is. That is a small body of material with a high return, and it is the part your signature reaches. Which of those items sits on whose side of the line, and who is left owning the join, is worked through in [the finance and delivery overlap](https://credentialfinder.org/the-finance-and-delivery-overlap).
 
 **Does moving into management change the credential I need?**
 It changes who challenges you. Managing a controls team is examined by very little; defending the team's output is examined by a good deal. The route into the role, and what the step actually demands, is set out in [how to become a project controls manager](https://projectcontrolsinstitute.org/how-to-become-a-project-controls-manager).
@@ -108,4 +108,4 @@ Then that is the project to do before any credential. Write them, get them agree
 
 ---
 
-*Linking note: one same-domain link sits at the decision step, where a reader who has classified their forecast challenges needs the category-level comparison for the reporting-boundary case. One cross-estate link goes to the hub's route into the controls manager role, placed in the FAQ where the question is what changes on the step up. Two links, two domains, both answering a question the surrounding sentence raises. No awarding body is named, described identifiably or linked.*
+*Linking note: three same-domain links sit at the questions they answer — the category-level comparison at the decision step, where a reader who has classified their forecast challenges needs the reporting-boundary case; the two-credential grid in the FAQ that asks whether a second credential duplicates the first; and the overlap page in the FAQ that asks how much finance the role actually needs. One cross-estate link goes to the hub's route into the controls manager role, placed in the FAQ where the question is what changes on the step up. Two domains. No awarding body is named, described identifiably or linked.*

@@ -63,6 +63,8 @@ Cost and scheduling credentials examine estimating, cost control, planning and s
 
 Each is examining what it set out to examine. The three-way join between a valuation, a forecast and a recognised number belongs to none of them by design.
 
+A quantity surveyor is assessed on measurement, pricing and entitlement. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. Neither route covers the handover between them, and the unagreed £0.4m above spends a whole reporting period inside that handover.
+
 ## Where PCI fits for this role
 
 The PCI AI Project Finance Leader (PFL-AI) is the one aimed at this boundary, with 16 domains and 61 knowledge areas. The PCI AI Project Controls Leader (PCL-AI), at 13 domains and 61 knowledge areas, sits closer to the forecast rows.

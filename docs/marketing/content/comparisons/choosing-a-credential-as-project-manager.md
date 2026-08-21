@@ -96,6 +96,11 @@ A project manager who owns the numbers is the person who has to explain that swi
 it needs both vocabularies at once: what earned value is measuring, and what the ledger is
 recognising.
 
+Those two vocabularies belong to two professions. A chartered accountant is examined on when
+revenue may be recognised and what a provision must satisfy. An engineer is examined on float
+and progress measurement. Neither examination covers the handover between them, and the £460k
+above moved entirely inside it.
+
 ## The accreditation position, stated plainly
 
 PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any other

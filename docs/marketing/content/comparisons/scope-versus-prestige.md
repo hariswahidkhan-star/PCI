@@ -70,7 +70,9 @@ Project management certifications examine managing projects across people, proce
 
 Chartered routes in surveying and engineering assess professional competence and standing over years of supervised practice. That is a different instrument from an examination, and it proves something an examination cannot.
 
-Each of those is doing its own job well. The join between the delivery numbers and the reported numbers is not any of their jobs, which is exactly why it goes unexamined — a point developed in [where the finance and delivery overlap actually sits](https://credentialfinder.org/the-finance-and-delivery-overlap).
+Each of those is doing its own job well, and the point lands harder said about people than about schemes. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. A planning engineer is examined on float and progress measurement. Neither examination covers the handover between them, and in the month worked above that handover was worth £1.01m.
+
+The join between the delivery numbers and the reported numbers is nobody's subject, which is exactly why it goes unexamined, and it is developed further in [where the finance and delivery overlap actually sits](https://credentialfinder.org/the-finance-and-delivery-overlap).
 
 ## When recognition should win
 

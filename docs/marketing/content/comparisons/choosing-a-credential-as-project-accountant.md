@@ -65,6 +65,8 @@ Audit credentials examine governance, risk, control and the assurance process. T
 
 None of the three is deficient. They were designed to examine different things, and a project accountant lives where the first meets the second.
 
+A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy, which is most of the first column in the table above. A planning engineer is examined on float and progress measurement, which is where the third column comes from. Neither examination covers the handover between them, and that handover is the £0.63m.
+
 ## The five questions worth being able to ask
 
 A project accountant who can ask these is worth more than one who can only book what arrives.

@@ -50,7 +50,7 @@ The other eleven = (84.0 − 6.0) ÷ (88.0 − 9.0) = 78.0 ÷ 79.0 = **0.987**.
 
 Eleven projects are running to plan, one is in serious difficulty, and the portfolio number describes neither. If the board asks a single question about that £4.0m gap, "the portfolio is at 0.955" is not an answer to it.
 
-Defending the aggregate means being able to decompose it in the room: which components move it, how each was measured, and what earning rule produced them. That is a controls competence rather than a governance one, and no template produces it.
+Defending the aggregate means being able to decompose it in the room: which components move it, how each was measured, and what earning rule produced them. That is a controls competence rather than a governance one, and no template produces it. Half the questions arrive from the reporting side, because a percentage complete does not stop being a percentage complete once finance has it, and [where the finance and delivery join actually sits](https://credentialfinder.org/the-finance-and-delivery-overlap) maps that boundary.
 
 ## What each category examines, in its own terms
 
@@ -81,7 +81,7 @@ The 20% covering governed AI is the part that maps to the last row of the table 
 
 ## When a project management certification is the right answer
 
-If your PMO is a method and governance function — standards, templates, gate discipline, reporting cadence, benefits tracking — a project management certification examines that work and will be read instantly by every executive you deal with. That combination is hard to beat and it is why the category is where most PMO leads start.
+If your PMO is a method and governance function — standards, templates, gate discipline, reporting cadence, benefits tracking — a project management certification examines that work and will be read instantly by every executive you deal with. That combination is hard to beat and it is why the category is where most PMO leads start. What PCI's own management credential examines that the category does not, and where the two simply overlap, is set out in [PML-AI against project management certifications](https://credentialfinder.org/pml-ai-and-project-management-certifications).
 
 If your organisation's grading matrix names a certification for the band you want, take the named one. That decision was made before you got there.
 
@@ -112,4 +112,4 @@ Yes, and it is the commonest reason an aggregate misleads. Different rules produ
 
 ---
 
-*Linking note: one same-domain link sits where a reader has just built a list of numbers they cannot reconstruct and needs to test a syllabus against it. Two cross-estate links each answer a question raised in the sentence they sit in: the AI domain's policy template at the point the PMO is told it is signing something nothing examines, and the hub's PMO credential guide in the FAQ where the reader asks what that category covers. Three domains, one link each, no awarding body named or linked.*
+*Linking note: three same-domain links sit where the piece raises what each answers — the overlap page where the reader is told that half the challenge to an aggregate arrives from the reporting side, the PML-AI category comparison where the piece concedes that a project management certification is often the right purchase, and the syllabus guide where a reader has just built a list of numbers they cannot reconstruct and needs to test a syllabus against it. Two cross-estate links each answer a question raised in the sentence they sit in: the AI domain's policy template at the point the PMO is told it is signing something nothing examines, and the hub's PMO credential guide in the FAQ where the reader asks what that category covers. Three domains, no awarding body named or linked.*

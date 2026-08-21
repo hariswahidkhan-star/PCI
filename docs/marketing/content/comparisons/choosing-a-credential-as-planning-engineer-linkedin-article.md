@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          guide
 title:         What a planning engineer should look for in a credential
-meta:          Sort the choice by what you sign, not your job title. Float priced at £8,500 a day, the chain into reported margin, and the category each line belongs to.
+meta:          Which credential fits a planning engineer follows what you sign, not your title. Float priced at £8,500 a day, and the chain into reported margin.
 primary_kw:    credential for a planning engineer *
 secondary_kw:  what a scheduling credential examines, float and prolongation, planning engineer certification choice, scope of a syllabus
 pillar:        Planning and scheduling
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 11
 
 # What a planning engineer should look for in a credential
 
-If your signature stops at the programme, a credential examining schedule development, maintenance and analysis covers your job and is the shortest route to evidence. If your dates and progress drive a cost report, an entitlement position or a forecast somebody books, the examination you want has to cross that boundary. Sort it by what you sign.
+If your signature as a planning engineer stops at the programme, a credential examining schedule development, maintenance and analysis covers your job and is the shortest route to evidence. If your dates and progress drive a cost report, an entitlement position or a forecast somebody books, the examination you want has to cross that boundary. Sort it by what you sign.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials mentioned below. Treat the reasoning as checkable and the recommendation as interested, which is the only sensible way to read anybody's comparison, including this one.
 

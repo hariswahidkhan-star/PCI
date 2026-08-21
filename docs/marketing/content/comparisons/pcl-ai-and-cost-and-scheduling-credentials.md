@@ -45,7 +45,7 @@ What sits outside the category by design is the accounting treatment your number
 
 The PCI AI Project Controls Leader (PCL-AI) has 13 domains and 61 knowledge areas. Its Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI. Those are the proportions of the syllabus, not an examination weighting; the exam blueprint is a separate, open decision and PCI does not publish weightings it has not settled.
 
-The reason for that shape is narrow and specific. A control professional produces the forecast. A finance function books it. Almost nobody is examined on the handshake, and the handshake is where the money goes.
+The reason for that shape is narrow and specific. A cost engineer is examined on estimating, progress measurement and the build of a forecast. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. Neither examination covers the handover between them, and that handover is where the money is lost.
 
 The AI fifth is there for the same reason. Once a model is drafting a progress narrative or proposing a duration, somebody has to be examinable on what a model may not decide, what evidence has to survive, and how a machine-assisted number is defended in a review.
 

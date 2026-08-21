@@ -85,6 +85,8 @@ Revenue = 0.370 × 6.00 = **£2.22m**
 
 Every figure is right. The gap between revenue recognised and the amount certified, about **£0.08m**, is a contract asset: work recognised but not yet billable. The retention of **£0.1125m** is not a cost saving; it is money earned and withheld, which belongs in the cash forecast rather than the cost report.
 
+A quantity surveyor is assessed on measurement, valuation and the terms of the contract. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. Neither assessment covers the handover between them, and the £0.08m contract asset above lives entirely inside that handover.
+
 A chartered route assesses whether a professional can be trusted to handle that month responsibly, and it is a good instrument for that. What it does not do is fix a syllabus in which all three numbers, and the relationship between them, are examined content. That is what an examined scope adds, and it is the only claim being made here.
 
 Regional routes into surveying practice differ considerably, and [how those routes compare by market](https://pciglobal.ai/quantity-surveyor-certification) is worth reading before assuming the path in your country resembles anyone else's.

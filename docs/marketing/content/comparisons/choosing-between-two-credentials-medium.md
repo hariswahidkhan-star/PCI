@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         Choosing between two credentials, without a ranking
-meta:          Two credentials, one budget and no league table. Six rows, the decisions you sign, and the preparation hours worked out in weeks rather than fees.
+meta:          Choosing between two credentials, on one budget and with no league table. Six rows, the decisions you sign, and the hours worked out in weeks not fees.
 primary_kw:    choosing between two credentials *
 secondary_kw:  comparing two syllabuses, preparation hours, credential decision grid, what a credential examines
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 11
 
 # Choosing between two credentials, without a ranking
 
-Run both through the same six questions: what each examines, what each assumes you already know, who decides whether you passed, what it costs in hours rather than fees, what changes on the day you hold it, and what happens if you fail. Score the answers against the decisions you personally sign. If they still tie, take the one whose scope matches the work you will be doing in two years.
+Choosing between two credentials starts by running both through the same six questions: what each examines, what each assumes you already know, who decides whether you passed, what it costs in hours rather than fees, what changes on the day you hold it, and what happens if you fail. Score the answers against the decisions you personally sign. If they still tie, take the one whose scope matches the work you will be doing in two years.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. A page that ranked credentials for you, published by a body that awards three of them, would be worth nothing. This one gives you the method instead, and leaves the weights where they belong.
 

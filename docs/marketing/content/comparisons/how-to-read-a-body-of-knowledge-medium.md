@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         How to read a Body of Knowledge before you pay for it
-meta:          A published syllabus is a prospectus you can check before any money moves. Seven passes, ninety minutes, and the earning-rule sum that decides it.
+meta:          A published Body of Knowledge is a prospectus you can read before any money moves. Seven passes, ninety minutes, and the earning-rule sum that decides it.
 primary_kw:    how to read a body of knowledge *
 secondary_kw:  published syllabus, choosing a certification, earning rules, scheme documents
 pillar:        Certification and careers

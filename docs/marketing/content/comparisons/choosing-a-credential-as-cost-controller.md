@@ -63,7 +63,7 @@ Accountancy and finance qualifications examine recognition, measurement, disclos
 
 The established project controls certifications examine measurement, progress, forecasting and the control of delivery. For a cost controller in an integrated controls function, that is the widest single frame around the day job.
 
-Each is examining its own subject well. The accrual sitting between them is examined by neither category as a matter of course.
+Each is examining its own subject well. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. A cost engineer is examined on progress measurement and the build of an estimate. Neither examination covers the accrual that sits between them, and that accrual is the £1.0m worked above.
 
 ## Where PCI fits for this role
 

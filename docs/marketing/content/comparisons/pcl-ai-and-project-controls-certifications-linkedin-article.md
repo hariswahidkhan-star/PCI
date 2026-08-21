@@ -3,7 +3,7 @@ platform:      LinkedIn Article
 type:          guide
 title:         Where PCL-AI sits against project controls certifications
 meta:          The established project controls certifications examine measurement, progress and forecasting. Here is the boundary, and what PCL-AI adds beyond it.
-primary_kw:    the established project controls certifications
+primary_kw:    project controls certifications
 secondary_kw:  forecast at completion, rules of credit, control cycle scope, PCL-AI
 pillar:        Certification and careers
 credential:    PCL-AI

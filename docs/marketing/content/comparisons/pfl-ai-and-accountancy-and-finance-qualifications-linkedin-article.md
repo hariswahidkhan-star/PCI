@@ -3,7 +3,7 @@ platform:      LinkedIn Article
 type:          guide
 title:         Where PFL-AI sits against accountancy qualifications
 meta:          Accountancy and finance qualifications examine recognition, measurement and disclosure. Here is the boundary they are built around, and what PFL-AI examines.
-primary_kw:    accountancy and finance qualifications
+primary_kw:    accountancy qualifications and PFL-AI
 secondary_kw:  measuring progress, uninstalled materials, reported margin, PFL-AI
 pillar:        Finance for project professionals
 credential:    PFL-AI
@@ -72,6 +72,21 @@ team as a number in a spreadsheet with nobody's judgement attached.
 Neither category sets out to examine the join, and the join is where the money goes. That is
 not a criticism of either. A scope boundary is a design decision: these qualifications examine
 their own subject far better than a hybrid ever could, and they are built to.
+
+## The two scopes, side by side
+
+Each column is examined thoroughly inside its own boundary. The table is about where the
+boundary falls, not about which examination is harder or better regarded.
+
+| Scope axis | Accountancy and finance qualifications | PFL-AI |
+|---|---|---|
+| Recognition, measurement and disclosure | The core subject, examined in depth | Examined for one contract at a time |
+| Financial control across an entity | The core subject, examined in depth | Outside the scope, and left there deliberately |
+| Statutory accounts, tax and the right to sign | Examined, and the route to practice runs through them | Outside the scope entirely |
+| Where the delivery data came from | Assumed to arrive competently from a source the syllabus does not examine | Examined: measurement, the earning rule, what the site actually did |
+| Cut-off, commitments, accruals and retentions on a contract | Examined as accounting mechanics | Examined from both sides of the handover |
+| A forecast at completion becoming a provision | Examined as a measurement question | Examined, including the evidence behind the forecast |
+| Governed use of AI inside the reporting chain | Emerging in newer syllabuses | 20% of the published Body of Knowledge |
 
 ## What PFL-AI examines
 
@@ -156,6 +171,36 @@ does the progress percentage match what the site would say if you walked it toda
 If the answers differ, work out the margin effect. On a £10m contract with £8m of cost, every
 £400k of misplaced cost moves reported margin by around £100k. That is the size of the thing
 neither category was built to examine on its own.
+
+## Questions people ask about this
+
+**I am already part-qualified in accountancy. Should I stop and take this instead?**
+No. Finish the qualification you started, because a part-qualification is worth much less than a
+completed one and the sunk study time is real. PFL-AI answers a different question and will still
+be there afterwards. Sequence beats substitution almost every time.
+
+**Does PFL-AI let me sign accounts?**
+No. It confers no right to sign, certify or audit anything, and nothing PCI publishes is legal,
+tax or accounting advice. It examines how project delivery data becomes reported financial
+information. The right to sign belongs to the professions that hold it, and this scheme does not
+argue with that.
+
+**My employer wants somebody who can challenge the progress percentage. Which do I take?**
+That job sits on the join, so read the domain list before deciding. If the argument you keep
+having is about cut-off, an accrual or a forecast that moved, the scope matches. If the argument
+is about the accounting treatment of an entity, an accountancy or finance qualification is the
+closer fit.
+
+**How do I test the syllabus without spending anything?**
+Read it. All three Bodies of Knowledge are published in full before anyone pays. Take last
+month's revenue calculation on one contract, find the cost-to-date figure that drove it, and look
+for the domains that examine where that figure came from. If they are not there, do not buy it.
+
+**Is an unaccredited credential a risk for a finance role?**
+It is an unknown you have to close yourself. Read the syllabus, check how the pass standard is
+set, check that preparation and the certification decision are separated, and ask what happens if
+you fail. If a rule in front of you requires accreditation, that rule settles it and this scheme
+cannot meet it today.
 
 The full category comparison sits on credentialfinder.org:
 [where PFL-AI sits against accountancy and finance

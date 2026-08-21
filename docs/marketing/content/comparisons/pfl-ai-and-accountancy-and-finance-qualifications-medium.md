@@ -3,7 +3,7 @@ platform:      Medium
 type:          comparison
 title:         Accountancy and finance qualifications: where PFL-AI sits
 meta:          What accountancy and finance qualifications examine, what PFL-AI examines, and the join between them worked through in one month of arithmetic.
-primary_kw:    accountancy qualification or project finance credential *
+primary_kw:    accountancy and finance qualifications
 secondary_kw:  project finance credential, revenue recognition, estimate at completion, onerous contract
 pillar:        Certification and careers
 credential:    PFL-AI

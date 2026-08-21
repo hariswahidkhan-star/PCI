@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          guide
 title:         The cost controller's credential question, answered
-meta:          A £0.45m accrual swings outturn by £1.0m and keeps moving after the cost report. How far past that report you sign decides which credential fits.
+meta:          A £0.45m accrual swings outturn by £1.0m and keeps moving after the cost report. How far past it you sign decides the credential a cost controller needs.
 primary_kw:    credential for a cost controller *
 secondary_kw:  accruals and cost performance, cut-off discipline, what a cost credential examines, forecast to reported result
 pillar:        Cost control and estimating
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 11
 
 # The cost controller's credential question, answered
 
-If your work ends at a cost report a commercial team interprets, a credential examining estimating and cost control covers your subject. If your forecast becomes the denominator in somebody's revenue calculation, the examination you want has to go past the cost report, because that is where your errors land. The choice follows your signature, not your title.
+If your work as a cost controller ends at a cost report a commercial team interprets, a credential examining estimating and cost control covers your subject. If your forecast becomes the denominator in somebody's revenue calculation, the examination you want has to go past the cost report, because that is where your errors land. The choice follows your signature, not your title.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials mentioned below. Read the argument as checkable and the recommendation as interested — and check it against whatever syllabus you already hold.
 

@@ -54,7 +54,9 @@ Margin recognised = 9.18 − 9.0 = **£0.18m**.
 
 The same month, the same site, the same work in the ground. Reported margin drops by **£0.57m** because a number owned by delivery moved. And if the estimate reaches **£26.6m**, the contract is expected to lose **£0.6m**, and that loss is recognised as soon as it is known rather than spread across the remaining months.
 
-Nobody in that sequence has done anything wrong. What has happened is that a delivery judgement became a reported result through a mechanism neither professional was examined on. The hub sets out the mechanics of measuring progress on a contract in [how measured progress drives recognised revenue](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
+Nobody in that sequence has done anything wrong. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. An engineer is examined on float and progress measurement. Neither examination covers the handover between them, and that handover is where the money is lost. Here it cost £0.57m of reported margin in a month when nothing on site changed.
+
+The hub sets out the mechanics of measuring progress on a contract in [how measured progress drives recognised revenue](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
 
 ## The four artefacts that live in the join
 

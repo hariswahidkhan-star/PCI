@@ -3,7 +3,7 @@ platform:      Medium
 type:          guide
 title:         Project controls certifications: where PCL-AI sits
 meta:          What the established project controls certifications examine, where that scope ends by design, and the reporting handover PCL-AI sets out to examine.
-primary_kw:    the established project controls certifications
+primary_kw:    project controls certifications
 secondary_kw:  estimate at completion, rules of credit, control cycle scope, PCL-AI
 pillar:        Certification and careers
 credential:    PCL-AI

@@ -78,10 +78,11 @@ intent.
 
 ## Where the overlap sits, and why it matters early
 
-Project controls credentials examine the delivery side thoroughly, and are built to. Accountancy
-and finance qualifications examine when revenue may be recognised and what a provision must
-satisfy. Neither category sets out to examine the join between them, and the join is where the
-money goes.
+Project controls credentials examine the delivery side thoroughly, and are built to. Say the
+rest in terms of people rather than schemes. A chartered accountant is examined on when revenue
+may be recognised and what a provision must satisfy. An engineer is examined on float and
+progress measurement. Neither examination covers the handover between them, and that handover is
+where the money is lost.
 
 You will meet that join in your first month-end. The planner's data date and the ledger cut-off
 are different days, someone has to reconcile the two, and it is usually the most junior person
@@ -107,12 +108,16 @@ you chose ours.
 ## How to decide, in order
 
 1. **Ask what your employer funds.** Take that, if the category is anywhere near your work.
+
 2. **Ask what your desk actually is.** Planning and estimating point to the cost and scheduling
    category. A mixed controls seat points to the established project controls certifications.
    Running the whole project points to a project management certification.
+
 3. **Ask whether you need accreditation now.** If yes, go where accreditation already exists.
+
 4. **Ask whether you can read the whole syllabus first.** If a body will not show you the
    syllabus before payment, that is information about the body.
+
 5. **Consider waiting.** Six months of real month-ends will make any of these exams easier and
    your answers better.
 

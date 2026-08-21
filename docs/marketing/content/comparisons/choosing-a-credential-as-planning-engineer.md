@@ -49,6 +49,8 @@ Project management certifications examine managing projects across people, proce
 
 None of these is deficient. Each publishes a boundary, examines its own subject and leaves the rest to somebody with a different examination.
 
+The boundary is clearest stated as two people. A planning engineer is examined on float, logic and progress measurement. A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. Neither examination covers the handover between them, and rows four to six of the table above are all handover.
+
 ## The arithmetic a planner is rarely examined on
 
 Float looks free until it is priced.

@@ -75,7 +75,11 @@ An **£0.87m** movement in reported revenue, and a swing from profit to loss, wi
 
 The third row is the sharp one. Once expected costs exceed the contract price, the contract is loss-making, and the whole expected loss is recognised as soon as it is known rather than spread across the remaining months. Whether that trigger has been crossed is decided by a forecast produced on site.
 
-The recognition model is examined thoroughly by accountancy qualifications and is not in doubt. The forecast is examined thoroughly by project controls credentials and is not in doubt either. Whether the two people are looking at the same version of the number, on the same cut-off, under the same earning rule, is the thing nobody is examined on. That is the gap PFL-AI is built for. The hub works the same mechanics from the other end, in [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting).
+The recognition model is examined thoroughly by accountancy qualifications and is not in doubt. The forecast is examined thoroughly by project controls credentials and is not in doubt either.
+
+A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. A cost engineer is examined on how the forecast underneath it was built. Neither examination covers the handover between them, and on this contract the handover is the whole £0.87m.
+
+Whether the two are looking at the same version of the number, on the same cut-off, under the same earning rule, is the thing nobody is examined on. That is the gap PFL-AI is built for. The hub works the same mechanics from the other end, in [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting).
 
 ## The words the two sides use differently
 
