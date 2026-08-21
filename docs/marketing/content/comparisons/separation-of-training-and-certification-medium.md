@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/separation-of-training-and-certification
 schema:        Article
-word_count:    1,234
+word_count:    1,324
 hashtags:      Medium tags — Project Management, Construction, Certification, Careers, Engineering
 compares:      [certifying bodies that also sell their own preparation, certifying bodies that separate preparation from the award, training providers issuing certificates of attendance]
 ab_id:         n/a — comparison run, batch 8

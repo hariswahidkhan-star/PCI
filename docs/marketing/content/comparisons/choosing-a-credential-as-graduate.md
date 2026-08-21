@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        FAQPage
-word_count:    1360
+word_count:    1447
 hashtags:      none
 ab_id:         none — comparison plan, batch 3
 compares:      [cost and scheduling credentials, project management certifications, the established project controls certifications, chartered routes in surveying and engineering]

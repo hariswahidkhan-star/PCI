@@ -92,8 +92,22 @@ def kw_present(kw, text):
 
 def paragraphs(body):
     stripped = re.sub(r"^\|.*$", "", body, flags=re.M)          # tables
-    stripped = re.sub(r"^\s*[-*>#].*$", "", stripped, flags=re.M)  # lists, quotes, headings
-    return [p.strip() for p in re.split(r"\n\s*\n", stripped) if len(p.split()) > 12]
+    # Numbered list items were missing from this, so a five-item ordered list read as one
+    # 114-word paragraph and tripped the GEO length rule. A list is already the extractable
+    # form the rule is trying to produce, so counting it as prose pushes a writer to break up
+    # something that was right.
+    stripped = re.sub(r"^\s*(?:[-*>#]|\d+[.)])\s.*$", "", stripped, flags=re.M)  # lists, quotes, headings
+    out = []
+    for p in re.split(r"\n\s*\n", stripped):
+        p = p.strip()
+        # An FAQ entry is a bolded question followed by its answer, with no blank line
+        # between them. The GEO length rule is about prose blocks, and the question is a
+        # heading doing a heading's job — counting it against the answer pushed a compliant
+        # 80-word answer over the limit on the strength of its own question.
+        p = re.sub(r"\A\*\*[^*\n]+\?\*\*\s*\n", "", p)
+        if len(p.split()) > 12:
+            out.append(p)
+    return out
 
 
 def check(path):

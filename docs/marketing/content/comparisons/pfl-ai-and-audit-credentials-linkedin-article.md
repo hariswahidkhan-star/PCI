@@ -11,7 +11,7 @@ compares:      [audit credentials]
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,328
+word_count:    1,369
 hashtags:      #ProjectControls #ProjectFinance #InternalAudit #CostEngineering #Governance
 ab_id:         n/a (comparison cluster)
 ---

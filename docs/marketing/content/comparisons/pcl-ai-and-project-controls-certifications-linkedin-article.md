@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: credentialfinder.org
 canonical:     original — LinkedIn Articles carry no canonical, so this is written as a new piece
 schema:        Article
-word_count:    1240
+word_count:    1273
 hashtags:      #ProjectControls #EarnedValue #PMO
 ab_id:         none — comparison plan, batch 3
 compares:      [the established project controls certifications]

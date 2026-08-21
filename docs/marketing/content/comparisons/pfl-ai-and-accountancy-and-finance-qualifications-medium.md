@@ -11,7 +11,7 @@ compares:      [accountancy and finance qualifications]
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/pfl-ai-and-accountancy-and-finance-qualifications
 schema:        Article + FAQPage
-word_count:    1,386
+word_count:    1,426
 hashtags:      #ProjectControls #ProjectFinance #ConstructionAccounting #CostEngineering #RevenueRecognition
 ab_id:         n/a (comparison cluster)
 ---

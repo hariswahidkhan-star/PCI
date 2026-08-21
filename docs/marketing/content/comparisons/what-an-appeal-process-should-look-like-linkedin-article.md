@@ -2,15 +2,15 @@
 platform:      LinkedIn Article
 type:          guide
 title:         What a certifying body owes you when you appeal a result
-meta:          A working appeals process is published, time-bound both ways, heard by someone who did not decide, and written up with reasons. How to check before you pay.
-primary_kw:    certification appeal process *
+meta:          A working appeals process is published, time-bound both ways, heard by someone who did not decide the result, and written up. How to check before you pay.
+primary_kw:    how to appeal a result
 secondary_kw:  appeal an exam result, credential appeals policy, held results, complaints route, integrity review
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — LinkedIn Articles carry no canonical, so this is written from scratch and shares no paragraph with the credentialfinder.org version
 schema:        Article
-word_count:    1,389
+word_count:    1,461
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #CPD
 compares:      [accredited certification schemes with an external escalation route, independent schemes with internal-only appeals, training providers issuing certificates of attendance]
 ab_id:         n/a — comparison run, batch 8
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison run, batch 8
 
 # What a certifying body owes you when you appeal a result
 
-A working appeal is a request to reconsider a decision, heard by somebody who did not make it, inside a window that binds the body as well as the candidate, and answered in writing with reasons. If a scheme cannot show you that in a published policy before you apply, you are being asked to trust a promise rather than a process.
+A working appeal is a request to reconsider a result, heard by somebody who did not decide it, inside a window that binds the body as well as the candidate, and answered in writing with reasons. If a scheme cannot show you that in a published policy before you apply, you are being asked to trust a promise rather than a process.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. The checks below are the ones to run on PCI as well, and PCI's own weak point is stated further down rather than left out.
 

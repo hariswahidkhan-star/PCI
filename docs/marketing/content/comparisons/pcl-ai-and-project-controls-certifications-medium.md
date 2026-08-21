@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/pcl-ai-and-project-controls-certifications
 schema:        Article
-word_count:    1370
+word_count:    1417
 hashtags:      none
 ab_id:         none — comparison plan, batch 3
 compares:      [the established project controls certifications]

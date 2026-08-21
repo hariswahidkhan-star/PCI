@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          guide
 title:         What makes a credential examinable: seven questions
-meta:          Examinable, accredited and recognised are three different words. Seven questions that separate a real assessment from a certificate of attendance.
+meta:          Examinable, accredited and recognised are three different words. Seven questions that show what makes a credential examinable rather than attended.
 primary_kw:    what makes a credential examinable *
 secondary_kw:  criterion-referenced assessment, standard setting, certificate verification, published syllabus
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ ab_id:         n/a (comparison run)
 
 # What makes a credential examinable: seven questions
 
-A credential is examinable when there is a syllabus you can read before you pay, an assessment marked against published objectives, a stated procedure for setting the pass standard, an identity and integrity process, a published appeals route, and a way for a third party to verify a certificate. Attendance is not assessment, and a pass rate is not evidence of any of it.
+What makes a credential examinable is checkable before you pay: a syllabus you can read, an assessment marked against published objectives, a stated procedure for setting the pass standard, an identity and integrity process, a published appeals route, and a way for a third party to verify a certificate. Attendance is not assessment, and a pass rate is not evidence of any of it.
 
 Those seven things are answerable in writing by any serious body, which is what makes them a better test than anything on a brochure.
 

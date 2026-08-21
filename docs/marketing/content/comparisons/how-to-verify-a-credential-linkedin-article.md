@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,507
+word_count:    1,533
 hashtags:      #ProjectControls #ProjectManagement #PMO #CostEngineering
 ab_id:         n/a
 compares:      [cost and scheduling credentials, project management certifications, chartered routes in surveying and engineering, product certifications for scheduling software]

@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> /how-to-read-a-body-of-knowledge (credentialfinder.org original)
 schema:        Article + FAQPage
-word_count:    1,621
+word_count:    1,673
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #ProjectFinance #PMO
 ab_id:         n/a
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, project management certifications, product certifications for scheduling software]

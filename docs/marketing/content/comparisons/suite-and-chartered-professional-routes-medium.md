@@ -2,15 +2,15 @@
 platform:      Medium
 type:          comparison
 title:         Chartered routes and examined credentials, compared
-meta:          A peer-assessed portfolio and an examined syllabus answer different questions. Which one your role asks for, with the three-number month that shows the join.
-primary_kw:    chartered standing vs examined credential *
+meta:          Chartered routes assess practised competence over years. An examined credential asks a narrower question on the day. Which one your role actually needs.
+primary_kw:    chartered routes and examined credentials
 secondary_kw:  professional review, competence framework, contract asset, retention
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> credentialfinder.org/suite-and-chartered-professional-routes
 schema:        Article + FAQPage
-word_count:    1,683
+word_count:    1,722
 hashtags:      #ProjectControls #QuantitySurveying #ProjectFinance #CostEngineering #ProjectManagement
 compares:      [chartered routes in surveying and engineering]
 ab_id:         n/a (comparison run)

@@ -2,15 +2,15 @@
 platform:      Medium
 type:          guide
 title:         What makes a credential examinable: the four tests
-meta:          A credential is examinable when each syllabus line names a task two markers would score alike. Four tests, one line rewritten, and their limits.
-primary_kw:    examinable certification syllabus *
+meta:          What makes a credential examinable: each syllabus line names a task two markers would score alike. Four tests, one line rewritten, and their limits.
+primary_kw:    what makes a credential examinable
 secondary_kw:  learning outcomes, syllabus verbs, criterion-referenced marking, choosing a credential
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> /what-makes-a-credential-examinable (credentialfinder.org original)
 schema:        Article + FAQPage
-word_count:    1,712
+word_count:    1,748
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #ProjectFinance
 ab_id:         n/a
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, audit credentials, project management certifications, product certifications for scheduling software]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, the established project control
 
 # What makes a credential examinable: four tests
 
-A credential is examinable when every line of its syllabus names something a candidate must be able to do, on an object specific enough that the marker knows what data came with the question, at a stated depth. Two competent markers should reach the same score on the same answer. If they cannot, the line is a reading list entry, not a syllabus entry.
+What makes a credential examinable is this: every line of its syllabus names something a candidate must be able to do, on an object specific enough that the marker knows what data came with the question, at a stated depth. Two competent markers should reach the same score on the same answer. If they cannot, the line is a reading list entry, not a syllabus entry.
 
 That is the whole test, and it is checkable by anybody, on any document, in an afternoon.
 
@@ -88,13 +88,19 @@ They do not tell you difficulty. A syllabus can be immaculately examinable and c
 
 They do not tell you standing, market value or whether a particular employer will accept the credential. Those are separate questions and this test says nothing about them.
 
-They do not rank categories. Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis. Accountancy and finance qualifications examine recognition, measurement, disclosure and financial control. Audit credentials examine governance, risk, control and the assurance process. Project management certifications examine managing projects across people, process and the business environment. Product certifications for scheduling software examine operating a specific tool. Each publishes outcomes in its own subject and each examines that subject thoroughly, because that is what it was built to do. A scope boundary is a design decision, not a shortcoming.
+They do not rank categories. Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis. Accountancy and finance qualifications examine recognition, measurement, disclosure and financial control.
+
+Audit credentials examine governance, risk, control and the assurance process. Project management certifications examine managing projects across people, process and the business environment. Product certifications for scheduling software examine operating a specific tool.
+
+Each publishes outcomes in its own subject and each examines that subject thoroughly, because that is what it was built to do. A scope boundary is a design decision, not a shortcoming.
 
 What the tests do tell you is what a credential is undertaking to make you able to do, in words precise enough that you can hold the body to them afterwards.
 
 ## Where PCI stands on its own test
 
-PCI publishes [the Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) in full before anyone pays: 13 domains and 61 knowledge areas for PCL-AI, 16 and 61 for PFL-AI, 16 and 63 for PML-AI, with 92 sector case studies across the three volumes. The scheme holds itself to 113 mandatory PCI Standards carrying 532 process requirements. The Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management and governed AI — those are the book's proportions, and they are not an examination weighting, because the examination blueprint is not settled and PCI will not publish one it has not decided.
+PCI publishes [the Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) in full before anyone pays: 13 domains and 61 knowledge areas for PCL-AI, 16 and 61 for PFL-AI, 16 and 63 for PML-AI, with 92 sector case studies across the three volumes. The scheme holds itself to 113 mandatory PCI Standards carrying 532 process requirements.
+
+The Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management and governed AI. Those are the book's proportions, and they are not an examination weighting, because the examination blueprint is not settled and PCI will not publish one it has not decided.
 
 That last sentence is the sort of thing this piece is asking you to look for in anybody's documentation, including PCI's.
 

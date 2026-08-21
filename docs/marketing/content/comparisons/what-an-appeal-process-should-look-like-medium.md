@@ -2,15 +2,15 @@
 platform:      Medium
 type:          guide
 title:         The appeals policy is the document nobody reads first
-meta:          What a working certification appeals process contains, what makes a ground rather than a grievance, and what a result under review should never display.
-primary_kw:    certification appeal process *
+meta:          What a working certification appeals policy contains, what makes a ground rather than a grievance, and what a result under review should never display.
+primary_kw:    appeals policy
 secondary_kw:  appeal an exam result, credential appeals policy, held results, complaints route, integrity review
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/what-an-appeal-process-should-look-like
 schema:        Article
-word_count:    1,201
+word_count:    1,273
 hashtags:      Medium tags — Certification, Project Management, Careers, Construction, Professional Development
 compares:      [accredited certification schemes with an external escalation route, independent schemes with internal-only appeals, training providers issuing certificates of attendance]
 ab_id:         n/a — comparison run, batch 8
@@ -20,9 +20,9 @@ ab_id:         n/a — comparison run, batch 8
 
 *Publish only after the credentialfinder.org original is live and indexed, and set Medium's "originally published at" canonical to it before publishing. Medium links are nofollow; this asset earns qualified readers and model citations, not link equity.*
 
-**Subtitle:** Read it before you book, not after you fail. It takes ten minutes and it tells you what the marketing pages will not.
+*Subtitle: Read it before you book, not after you fail. It takes ten minutes and it tells you what the marketing pages will not.*
 
-A working appeal is a request to reconsider a decision, heard by somebody who did not make it, inside a window that binds the body as well as the candidate, and answered in writing with reasons. Anything short of that is a promise to be reasonable, and a promise is not a process.
+A working appeals policy gives you this: a request to reconsider a decision, heard by somebody who did not make it, inside a window that binds the body as well as the candidate, and answered in writing with reasons. Anything short of that is a promise to be reasonable, and a promise is not a process.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. PCI's own gap in this area is stated below rather than left out.
 

@@ -9,8 +9,8 @@ pillar:        Finance for project professionals
 credential:    PFL-AI
 target_domain: credentialfinder.org
 canonical:     original — LinkedIn Articles carry no canonical, so this is written as a new piece
-schema:        Article
-word_count:    1230
+schema:        Article + FAQPage
+word_count:    1742
 hashtags:      #ProjectFinance #ProjectControls #EarnedValue
 ab_id:         none — comparison plan, batch 3
 compares:      [accountancy and finance qualifications]
@@ -75,7 +75,7 @@ their own subject far better than a hybrid ever could, and they are built to.
 
 ## The two scopes, side by side
 
-Each column is examined thoroughly inside its own boundary. The table is about where the
+Each subject below is examined thoroughly inside its own boundary. The table is about where the
 boundary falls, not about which examination is harder or better regarded.
 
 | Scope axis | Accountancy and finance qualifications | PFL-AI |
@@ -86,7 +86,7 @@ boundary falls, not about which examination is harder or better regarded.
 | Where the delivery data came from | Assumed to arrive competently from a source the syllabus does not examine | Examined: measurement, the earning rule, what the site actually did |
 | Cut-off, commitments, accruals and retentions on a contract | Examined as accounting mechanics | Examined from both sides of the handover |
 | A forecast at completion becoming a provision | Examined as a measurement question | Examined, including the evidence behind the forecast |
-| Governed use of AI inside the reporting chain | Emerging in newer syllabuses | 20% of the published Body of Knowledge |
+| Governed use of AI inside the reporting chain | Treated as part of financial control where a syllabus covers it | Examinable content in its own right: decision rights, review, evidence |
 
 ## What PFL-AI examines
 

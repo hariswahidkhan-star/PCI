@@ -11,7 +11,7 @@ compares:      [audit credentials]
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/pfl-ai-and-audit-credentials
 schema:        Article + FAQPage
-word_count:    1,309
+word_count:    1,350
 hashtags:      #ProjectControls #InternalAudit #ProjectFinance #CostEngineering #Governance
 ab_id:         n/a (comparison cluster)
 ---

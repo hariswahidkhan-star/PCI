@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: credentialfinder.org
 canonical:     canonical -> credentialfinder.org/pcl-ai-and-scheduling-software-certifications
 schema:        Article + FAQPage
-word_count:    1,769
+word_count:    1,819
 hashtags:      #ProjectControls #Scheduling #EarnedValue #CostEngineering #ProjectManagement
 compares:      [product certifications for scheduling software]
 ab_id:         n/a (comparison run)

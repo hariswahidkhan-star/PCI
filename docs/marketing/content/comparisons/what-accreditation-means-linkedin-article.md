@@ -2,15 +2,15 @@
 platform:      LinkedIn Article
 type:          guide
 title:         Accreditation certifies the process, not the syllabus
-meta:          Accreditation inspects how a certifying body works and is silent on scope by design. Seven things an assessor checks, and one month it would never see.
-primary_kw:    what accreditation means *
+meta:          Accreditation certifies how a certifying body works and is silent on scope by design. Seven things an assessor checks, and one month it would never see.
+primary_kw:    what accreditation certifies
 secondary_kw:  ISO/IEC 17024, unaccredited certification, scope of a credential, unpriced variation
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,429
+word_count:    1,587
 hashtags:      #ProjectControls #ProjectFinance #CostEngineering #PMO #ProjectManagement
 ab_id:         n/a
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials, project management certifications]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, accountancy and finance qualifi
 
 # Accreditation certifies the process, not the syllabus
 
-"Is it accredited?" is a good question with a narrow answer. Accreditation means a third party has assessed how a certifying body operates — impartiality, examination development, the pass standard, the certification decision, appeals, records — against a published standard, on a repeating cycle. It is an inspection of the machinery. It is silent, deliberately, on whether the syllabus covers the work you do.
+"Is it accredited?" is a good question with a narrow answer. Accreditation certifies how a certifying body operates — impartiality, examination development, the pass standard, the certification decision, appeals, records — assessed by a third party against a published standard, on a repeating cycle. It is an inspection of the machinery, and it is silent, deliberately, on whether the syllabus covers the work you do.
 
 The question most candidates meant to ask is the second one. This piece separates them.
 
@@ -71,6 +71,17 @@ Carry the unpriced change inside the reported figures and the cost performance i
 Meanwhile the same £1.2m has a second life. Revenue on an unpriced variation is recognised only to the extent it is highly probable there will be no significant reversal. Until that test is met, the month carries £1.2m of cost against no matching revenue, and the margin the board sees moves for a reason that has nothing to do with productivity.
 
 Cost and scheduling credentials examine the estimating and the control of that spend, thoroughly, because that is their subject. Accountancy and finance qualifications examine the recognition test, thoroughly, for the same reason. Each does its own side properly and by design. The reconciliation between them belongs to neither, and it is a monthly event on most large contracts.
+
+Each category below examines its own subject thoroughly, and the boundary each draws is a design
+decision rather than an oversight. What accreditation cannot tell you is which of those boundaries
+your own month sits on.
+
+| Category of credential | What the category examines | The scope question accreditation leaves to you |
+|---|---|---|
+| Cost and scheduling credentials | Estimating, cost control, planning and schedule analysis | Whether the syllabus follows the number past the cost report |
+| Accountancy and finance qualifications | Recognition, measurement, disclosure and financial control | Whether it examines where the delivery data came from |
+| Audit credentials | Governance, risk, control and the assurance process | Whether it examines the number itself, or the control around it |
+| Project management certifications | Managing projects across people, process and the business environment | Whether it examines what a delivery decision does to a reported figure |
 
 No accreditation assessment would find that gap, because finding it is not what accreditation is for. Why the join is where the money goes is set out in [the finance and delivery overlap](https://credentialfinder.org/the-finance-and-delivery-overlap).
 

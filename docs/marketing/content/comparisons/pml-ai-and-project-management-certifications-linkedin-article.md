@@ -11,7 +11,7 @@ compares:      [project management certifications]
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,357
+word_count:    1,397
 hashtags:      #ProjectManagement #ProjectControls #ProjectFinance #AIGovernance #PMO
 ab_id:         n/a (comparison cluster)
 ---

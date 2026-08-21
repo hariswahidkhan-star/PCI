@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: credentialfinder.org
 canonical:     original — LinkedIn Articles carry no canonical, so this is written as a new piece
 schema:        Article
-word_count:    1290
+word_count:    1480
 hashtags:      #ProjectControls #CostEngineering #EarnedValue #ProjectFinance
 ab_id:         none — comparison plan, batch 3
 compares:      [cost and scheduling credentials]
@@ -58,7 +58,7 @@ each did their own job correctly.
 
 ## The two scopes, side by side
 
-Both categories are examined properly inside their own boundary. The table is about where the
+Each subject below is examined thoroughly inside its own boundary. The table is about where the
 boundary sits, not about which credential is harder or better regarded.
 
 | Scope axis | Cost and scheduling credentials | PCL-AI |

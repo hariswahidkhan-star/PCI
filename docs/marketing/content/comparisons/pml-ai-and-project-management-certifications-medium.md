@@ -11,7 +11,7 @@ compares:      [project management certifications]
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/pml-ai-and-project-management-certifications
 schema:        Article + FAQPage
-word_count:    1,371
+word_count:    1,411
 hashtags:      #ProjectManagement #ProjectControls #ProjectFinance #AIGovernance #PMO
 ab_id:         n/a (comparison cluster)
 ---

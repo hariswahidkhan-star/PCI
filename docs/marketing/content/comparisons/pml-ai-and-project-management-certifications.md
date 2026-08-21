@@ -10,7 +10,7 @@ credential:    PML-AI
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,770
+word_count:    1,614
 hashtags:      n/a (own site)
 ab_id:         n/a (comparison run)
 compares:      [project management certifications, PML-AI]

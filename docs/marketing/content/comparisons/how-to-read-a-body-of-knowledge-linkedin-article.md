@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,603
+word_count:    1,753
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #PMO #ProjectFinance
 ab_id:         n/a
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, project management certifications, product certifications for scheduling software]

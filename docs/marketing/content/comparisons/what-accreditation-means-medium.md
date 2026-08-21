@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         What accreditation means, and what it does not mean
-meta:          Accreditation assesses how a certifying body works, not what its syllabus covers. Two axes, four quadrants, and a worked month no accreditation would catch.
+meta:          What accreditation means: a check on how a certifying body works, not on what its syllabus covers. Two axes, four quadrants, and a month it would miss.
 primary_kw:    what accreditation means *
 secondary_kw:  ISO/IEC 17024, unaccredited certification, scheme documents, scope of a credential
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, accountancy and finance qualifi
 
 # What accreditation means, and what it does not mean
 
-Accreditation is a third party assessing how a certifying body works — its impartiality, how it writes and reviews examination questions, how it sets a defensible pass standard, who makes the certification decision, how appeals are heard — against a published standard, on a repeating cycle. It says the machinery has been inspected by somebody with no stake in the outcome. It says nothing whatever about whether the syllabus covers your job.
+Accreditation means a third party has assessed how a certifying body works — its impartiality, how it writes and reviews examination questions, how it sets a defensible pass standard, who makes the certification decision, how appeals are heard — against a published standard, on a repeating cycle. It says the machinery has been inspected by somebody with no stake in the outcome. It says nothing whatever about whether the syllabus covers your job.
 
 Those are two different questions, and most candidates collapse them into one. Keeping them apart is the whole of this piece.
 

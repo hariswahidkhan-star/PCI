@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          comparison
 title:         Chartered standing and examined credentials: the split
-meta:          One assesses whether you have practised competently, judged by peers over years. The other examines a published syllabus on the day. Neither replaces it.
+meta:          Chartered standing is assessed by peers over years. An examined credential asks whether you can do the work on a published syllabus, on the day.
 primary_kw:    chartered standing vs examined credential *
 secondary_kw:  professional review, competence framework, contract asset, certified valuation
 pillar:        Certification and careers
