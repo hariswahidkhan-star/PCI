@@ -1,24 +1,57 @@
 # Comparison writing task — read in full before writing
 
-You are writing comparison content for Project Controls Institute Global: pieces that set the
-PCI credentials beside the established certifications a candidate would otherwise choose.
+You are writing comparison content for Project Controls Institute Global: pieces that show a
+candidate where the PCI credentials sit against the kinds of certification they would otherwise
+be choosing between — described by category, never by name.
 
 ## Read these first. They are binding.
 
 - `../_COMPARISON_FRAMEWORK.md` — the rules for this content type. **Every rule in it is
-  absolute.** It exists because comparison content naming PMI, AACE, IIA, ISACA, CFA Institute
-  and IMA is the highest-legal-risk category PCI publishes.
+  absolute.** It exists because comparison content naming established institutions is the
+  highest-risk category PCI could publish, and §1 records why that route was rejected.
 - `../_BRIEF.md` — claims register, SEO/AEO/GEO rules, voice, banned phrasing.
 - `../_LINK_ARCHITECTURE.md` — link discipline.
 
-## The two decisions already taken, which you may not vary
+## THE RULE THAT OVERRIDES EVERYTHING ELSE
+
+**Name no other certifying body, awarding organisation, qualification or credential. Anywhere.**
+
+Not in a title, a heading, a table cell, a body sentence, a meta description, a keyword field,
+a hashtag, an alt text or a link. Not PMI, not AACE, not the accountancy institutes, not the
+audit bodies, not the software vendors. No acronyms either.
+
+Naming by description is also naming: "the main American cost engineering body", "the
+four-letter scheduling credential", "the best-known project management certification" are all
+out, because a reader resolves them to one credential instantly.
+
+Compare **categories**, described by what they examine:
+
+- cost and scheduling credentials
+- the established project controls certifications
+- accountancy and finance qualifications
+- audit credentials
+- project management certifications
+- product certifications for scheduling software
+- chartered routes in surveying and engineering
+
+**Right:** "Scheduling credentials examine schedule development, maintenance and control.
+Revenue recognition sits outside their scope, as it does for every scheduling credential."
+
+**Wrong:** anything with a name or acronym in it.
+
+Never characterise a category as deficient. A scope boundary is a fact about design, not a
+failing — these credentials examine their own subject thoroughly and are built to.
+
+**Do not link to any other certifying body's website.** A link is a naming, and it hands them
+the referral as well.
+
+## The two further decisions already taken, which you may not vary
 
 **1. Every comparison page discloses that PCI operates credentialfinder.org.** In the body,
 early, where a reader sees it. Not in a footer, not in small print. Wording to adapt:
 
 > credentialfinder.org is operated by Project Controls Institute Global, which awards the
-> PCL-AI, PFL-AI and PML-AI credentials described here. We say what each credential examines
-> and link to every body's own page so you can check it yourself.
+> PCL-AI, PFL-AI and PML-AI credentials described here.
 
 **2. Every piece states plainly that PCI is not accredited.** Every piece, not once per
 cluster, because a reader arriving from search may see only that one:
@@ -33,41 +66,45 @@ new and not accredited — read the syllabus and judge it." It still goes in.
 
 ## What you compare on, and what you must never compare on
 
-**Compare on scope.** What each credential publicly states it examines. Which domains. Which
-side of the finance-and-delivery line. What it assumes the candidate already knows.
+**Compare on scope, at category level.** What a kind of credential sets out to examine. Which
+side of the finance-and-delivery line it sits on. What it assumes the candidate already knows.
 
-**Never compare on:** fees · question counts · exam length · domain counts · pass marks · pass
-rates · difficulty · prestige · recognition · employer preference · salary outcomes.
+Say only what is true of the whole category, at a generality no reader could dispute:
 
-Those change, they come mostly from third-party study sites, and a wrong figure about a named
-body is a false statement about that body. Where a reader needs a fee or an exam specific, say
-so and point them at that body's own page.
+- Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis.
+- Accountancy qualifications examine recognition, measurement, disclosure and financial control.
+- Audit credentials examine governance, risk, control and the assurance process.
+- Project management certifications examine managing projects across people, process and the
+  business environment.
 
-**The test for every sentence about another credential:** if challenged, could you point at
-that body's own published page and show them where it says that? If not, cut the sentence.
+**Never publish:** a fee · a question count · an exam length · a domain count · a pass mark · a
+pass rate · a difficulty ranking · a prestige claim · an employer-preference claim · a salary
+outcome. For any category, and for PCI.
 
 ## Never disparage
 
-Describe each external credential as its own holders would recognise. The frame is always
-"here is what this examines", never "here is what this fails to do".
+The frame is always "here is what this kind of credential examines", never "here is what it
+fails to do". A reader who holds one of these credentials should finish your piece feeling
+accurately described, not attacked.
 
-- **Right:** "PMI-SP examines schedule development, maintenance and control. Revenue
-  recognition sits outside its scope, as it does for every scheduling credential."
-- **Wrong:** "PMI-SP ignores the financial side, which is why schedulers miss cost problems."
+Do not reproduce protected text from any syllabus, exam outline or handbook.
 
-The first is checkable and fair. The second is disparagement, and it is weaker — a reader
-holding PMI-SP stops reading.
-
-Do not reproduce protected text from any body's syllabus, exam outline or handbook. Name them,
-describe them in PCI's own words, link to their page.
-
-## Say "take the other one" where it is true
+## Say "this may not be for you" where it is true
 
 A comparison PCI always wins is an advertisement and reads as one. Where a reader's need is
-squarely served by another credential — a pure IT auditor, a candidate whose employer mandates
-PMP, somebody who needs an accredited credential today — say so plainly.
+squarely served by a different kind of credential — somebody auditing IT systems, somebody
+whose employer mandates a specific certification, somebody who needs an accredited credential
+today — say so plainly, at category level.
 
 That single move is what makes everything else in the piece believable.
+
+## Where the authority comes from
+
+Since you cannot lean on another institution's name, the piece has to earn attention on its
+own. Three things do it: a worked example with arithmetic a reader can check in their head;
+the fact that PCI's Body of Knowledge can be read in full before anyone pays anything; and the
+open refusal to claim accreditation, pass rates or salary outcomes. A body that tells you what
+it cannot yet claim is telling you the truth about what it can.
 
 ## The figures you may publish
 
@@ -83,8 +120,8 @@ uplift or holder numbers, for PCI or anyone else.
 
 1. The direct answer in the first 60 words — which credential suits which person, plainly.
 2. The ownership disclosure line.
-3. A comparison table on scope axes only. Tables are the most-cited format there is.
-4. What each credential examines, a short section each, in our words, linking to their page.
+3. A comparison table on scope axes, by category. Tables are the most-cited format there is.
+4. What each category examines, a short section each, in PCI's own words.
 5. Where the overlap sits, with a worked example if it earns its place.
 6. The accreditation statement.
 7. How to decide — honestly including "take the other one" where that is right.
@@ -95,9 +132,7 @@ uplift or holder numbers, for PCI or anyone else.
 
 One link per cross-estate domain, two to three internal links to other credentialfinder.org
 pages, never all five PCI domains in one piece. Only link to pages that exist — check
-`url_map.json` and `valid_urls.json`. External links to the other bodies' own pages are
-expected and correct in this content type; link to the body's own domain, never to a
-third-party study site.
+`url_map.json` and `valid_urls.json`. No external links to other certifying bodies.
 
 ## Platform variants
 
@@ -115,4 +150,4 @@ colleague what it actually covers.
 ## Output
 
 One markdown file per piece in `../comparisons/`, named `<slug>.md`, with the standard front
-matter from `_BRIEF.md` §8 plus `compares: [list of credential acronyms]`. Then the piece.
+matter from `_BRIEF.md` §8 plus `compares: [category labels, never credential names]`. Then the piece.

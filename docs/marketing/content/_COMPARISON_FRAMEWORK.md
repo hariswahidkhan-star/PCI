@@ -1,186 +1,164 @@
 # Comparison content — the binding framework
 
-Read this before writing a single comparison. Every piece that names another certifying body
-works from these rules, and they are not style preferences: comparison content naming PMI,
-AACE, IIA, ISACA, CFA Institute and IMA is the highest-legal-risk category PCI publishes.
+Read this before writing a single comparison. Every rule here is absolute.
 
 ---
 
-## 1. What we are actually claiming, and what we are not
+## 1. The rule that governs everything else: name no other body
 
-**The claim.** A project lives in the overlap between finance and delivery, and no established
-credential examines both sides of it. That is a statement about **scope**, it is checkable
-against published syllabi, and it is true.
+**No comparison content names another certifying body, awarding organisation, qualification or
+credential.** Not PMI, not AACE, not the accountancy institutes, not the audit bodies, not the
+scheduling product vendors. Not in a title, a heading, a table, a body sentence, a meta
+description, a hashtag or an alt text.
 
-**Not the claim.** That PCI is better, harder, more recognised, more valuable, equivalent in
-standing, or a substitute for any other credential. PCI is a new body and is not accredited.
-Any sentence a reader could take as "PCI ranks alongside PMP" is out.
+This was a deliberate decision, taken after the alternative was designed in full and rejected.
 
-The honest version is also the persuasive one. A reader deciding between credentials is not
-persuaded by a new body claiming parity; they are persuaded by a body that states its position
-plainly and then shows them a syllabus they can read before paying anything.
+**Why.** Comparison content naming established institutions cannot be made risk-free, however
+carefully it is framed. Describing another body factually is a defence you would raise, not
+immunity from having to raise it — and a new, unaccredited certifying body publishing hundreds
+of pieces naming the incumbents is a visible posture that invites the letter. There is also a
+practical failure: a competitor's syllabus, fees and exam structure change on their schedule,
+not ours, and every named specific is a future correction PCI has to publish about somebody
+else's credential.
 
-## 2. Compare on scope. Never on fees, difficulty or standing.
+**What this costs, stated honestly.** High-intent comparison queries are real traffic and this
+content will not rank for them. That is the trade, and it was made with the cost understood.
 
-**Compare on:** what each credential publicly states it examines. Which domains. Which side of
-the finance-and-delivery line. What it assumes you already know. Who it is built for.
+## 2. The argument does not need the names
 
-**Never compare on:**
+The claim that gives a candidate a reason to choose PCI is about **scope**, and scope is a
+category property. It is fully expressible without naming anyone:
 
-- **Fees.** They change, they vary by membership and region, and a wrong figure about a named
-  competitor is a false statement about that body. Say "check the current fee on their own
-  page" and link to it.
-- **Question counts, exam length, domain counts, pass marks.** Same reason. These come mostly
-  from third-party study sites and are frequently out of date. If a specific is genuinely
-  needed, attribute it to the body's own published page and say when it was checked.
-- **Pass rates.** Most bodies do not publish them. Neither does PCI.
-- **Difficulty.** "Harder" is not a fact.
-- **Prestige, recognition, market value, employer preference.** No research exists to cite, and
-  asserting it about a competitor is disparagement.
-- **Salary outcomes.** Not for PCI, not for anyone else.
+> Project controls credentials examine the delivery side thoroughly, and are built to.
+> Accountancy qualifications examine when revenue may be recognised and what a provision must
+> satisfy. Neither sets out to examine the join between them, and the join is where the money
+> goes.
 
-**The test:** if a reader challenged the sentence, could you point at the other body's own
-published page and show them where it says that? If not, cut it.
+That is true, it is checkable by any reader against any syllabus they care to open, it cannot
+go stale when somebody else revises a credential, and it names nobody. It is also the stronger
+version, because it does not put PCI in a defensive posture against larger institutions.
 
-## 3. The accreditation statement goes in every piece
+## 3. How to write about the categories
 
-Not once per cluster. Every piece, because a reader landing from search may see only that one.
+Use the category, described by what it examines:
 
-Wording, kept close to what the estate already uses:
+- "cost and scheduling credentials"
+- "the established project controls certifications"
+- "accountancy and finance qualifications"
+- "audit credentials"
+- "project management certifications"
+- "product certifications for scheduling software"
+- "chartered routes in surveying and engineering"
+
+**Right:** "Scheduling credentials examine schedule development, maintenance and control.
+Revenue recognition sits outside their scope, as it does for every scheduling credential."
+
+**Wrong:** anything with a name or an acronym in it, and anything a reader could resolve to one
+specific credential — "the main American cost engineering body", "the four-letter scheduling
+credential", "the best-known project management certification" are all naming by description
+and are equally out.
+
+Never characterise a category as deficient. A scope boundary is a fact about design, not a
+failing: these credentials examine their own subject thoroughly and are built to.
+
+## 4. What you may say about what other credentials examine
+
+Only what is true of the category as a whole, at a level of generality no reader could dispute:
+
+- Cost and scheduling credentials examine estimating, cost control, planning and schedule
+  analysis.
+- Accountancy qualifications examine financial reporting, recognition, measurement and
+  disclosure.
+- Audit credentials examine governance, risk and control, and the assurance process.
+- Project management certifications examine managing projects across people, process and the
+  business environment.
+
+**Never** publish a fee, an exam length, a question count, a domain count, a pass mark, a pass
+rate, a difficulty ranking, a prestige claim, an employer-preference claim or a salary outcome
+— for any category or any credential, PCI's included.
+
+## 5. Accreditation — stated plainly in every piece
+
+Every piece, not once per cluster, because a reader arriving from search may see only that one:
 
 > PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any
 > other ISO/IEC 17024 accreditation body, and does not claim to be. The scheme is built with
 > reference to ISO/IEC 17024 principles. Read the published Body of Knowledge before you decide
 > anything.
 
-Never soften "not accredited" into "working towards recognition" in a way that reads as
-approval already granted. Never place it below the fold or in small print.
+Where a short social piece cannot carry that paragraph, the shortest honest form is "PCI is new
+and not accredited — read the syllabus and judge it." It still goes in.
 
-## 4. Ownership disclosure — every comparison page, without exception
+Never soften "not accredited" into anything that reads as approval already granted.
+
+## 6. Ownership disclosure on every comparison page
 
 Comparisons live on `credentialfinder.org`, which PCI operates. Every page says so, in the
 body, where a reader will see it:
 
-> `credentialfinder.org` is operated by Project Controls Institute Global, which awards the
-> PCL-AI, PFL-AI and PML-AI credentials described here. We say what each credential examines
-> and link to every body's own page so you can check it yourself.
+> credentialfinder.org is operated by Project Controls Institute Global, which awards the
+> PCL-AI, PFL-AI and PML-AI credentials described here.
 
-**Why this is not optional.** Telling a reader to verify a credential independently, and
-sending them to a site the awarding body owns without saying so, is a material non-disclosure.
-Six existing assets did exactly that — two of them saying the destination was better than "any
-provider's own page, this Institute's included" while pointing at a PCI-owned page. That is the
-single worst thing in the content run, and at hundreds of comparison pieces it would define the
-estate.
+Telling a reader to verify a credential independently and sending them to a site the awarding
+body owns, without saying so, is a material non-disclosure. Six assets in the existing run did
+exactly that, two of them calling the destination better than "any provider's own page, this
+Institute's included". Disclosed, the page still works.
 
-Disclosed, the comparison still works. CFA Institute and PMI both publish comparisons of their
-own credentials against others, openly, and rank for them.
+## 7. Say "this may not be for you" where it is true
 
-## 5. Never disparage, and describe every other credential as its holders would recognise
+A comparison PCI always wins is an advertisement and reads as one. Where a reader's need is
+squarely served by a different kind of credential — somebody who audits IT systems, somebody
+whose employer mandates a specific certification, somebody who needs an accredited credential
+today — say so plainly, at category level.
 
-Each external credential is described the way its own body describes it, in our words. The
-frame is always "here is what this examines" and never "here is what this fails to do".
+That single move is what makes everything else believable, and a body with a fifty-year horizon
+can afford to make it.
 
-Where a scope gap is the point — a scheduling credential not examining revenue recognition —
-state it as a fact about design, not a deficiency:
-
-- **Right:** "PMI-SP examines schedule development, maintenance and control. Revenue
-  recognition sits outside its scope, as it does for every scheduling credential."
-- **Wrong:** "PMI-SP ignores the financial side, which is why schedulers miss cost problems."
-
-The first is checkable and fair. The second is disparagement and it is also weaker, because a
-reader who holds PMI-SP stops reading.
-
-Do not reproduce protected text from any body's syllabus, exam content outline, handbook or
-question bank. Name them, describe them in PCI's own words, link to the source.
-
-## 6. Trademark use
-
-Naming another credential to describe it factually is legitimate. Keep it that way:
-
-- Use the correct full name on first mention, then the acronym.
-- Never use another body's logo, mark, colours or branding.
-- Never imply endorsement, affiliation, partnership, approval or authorisation.
-- Never suggest PCI content is official preparation for another body's exam.
-- Do not use another body's name in a PCI page title in a way that suggests the page is theirs.
-
-## 7. The comparison map
-
-Each PCI credential is compared against the credentials a real candidate would weigh it
-against. Nothing is compared for the sake of volume.
-
-### PCL-AI — PCI AI Project Controls Leader (13 domains, 61 knowledge areas)
-
-Against the cost, scheduling and controls credentials: **AACE CCP · AACE PSP · AACE EVP ·
-AACE CEP · AACE DRMP · PMI-SP · PMI-RMP · RICS project management routes · Primavera P6
-product certifications.**
-
-The scope point: these examine the delivery side thoroughly and are built to. Cut-off,
-contract assets, revenue recognition and the accounting treatment of a forecast sit outside
-what they set out to cover.
-
-### PFL-AI — PCI AI Project Finance Leader (16 domains, 61 knowledge areas)
-
-Against the finance, accounting and audit credentials: **CFA · CMA (IMA) · ACCA · CIMA · CPA ·
-CIA (IIA) · CISA (ISACA) · CTP.**
-
-The scope point: these examine financial analysis, control and assurance to a depth PCI does
-not claim to exceed. Float, earning rules, progress measurement and the mechanics of a
-project schedule sit outside what they set out to cover. **CIA and CISA belong here, not
-against PCL-AI** — they are audit credentials, and comparing an audit credential to a
-scheduling credential helps nobody.
-
-### PML-AI — PCI Project Management Leader – AI (16 domains, 63 knowledge areas)
-
-Against the project management credentials: **PMP · CAPM · PRINCE2 · APM PMQ · APM ChPP ·
-IPMA levels · PMI-ACP and agile credentials.**
-
-The scope point: these examine managing projects across people, process and environment.
-Governed use of AI, and the financial consequence of delivery decisions, sit outside what they
-set out to cover.
-
-### The AI dimension, across all three
-
-Every one of these credentials is periodically revised and technology appears in context. The
-honest statement is narrow and defensible: **PCI publishes a syllabus built around governed AI
-— what it may assist with and what it may never decide, approve or certify — and names it as
-20 per cent of the Body of Knowledge.** Do not assert what another body's current syllabus does
-or does not contain on AI unless you have checked their published outline and can cite it.
-
-## 8. The figures PCI may publish in a comparison
+## 8. The figures PCI may publish
 
 Only these, and only as written:
 
 - 13 / 16 / 16 domains and 61 / 61 / 63 knowledge areas across PCL-AI, PFL-AI and PML-AI.
 - 92 sector case studies across the three volumes.
 - 113 mandatory PCI Standards carrying 532 process requirements.
-- 40 / 40 / 20 — the **Body of Knowledge's** proportions, finance and reporting, project
-  management, governed AI. **Never an examination weighting.**
+- 40 / 40 / 20 — the **Body of Knowledge's** proportions. **Never an examination weighting.**
 - 15,613 machine calculation checks — **only** in a sentence that also says it covers PFL-AI
-  and PML-AI. PCL-AI has no equivalent suite.
+  and PML-AI, because PCL-AI has no equivalent suite.
 
-Not publishable: examination weightings, worked-example or question counts, student numbers,
-pass rates, salary uplift, holder numbers.
+Nothing else. No examination weightings, worked-example counts, student numbers, pass rates,
+salary uplift or holder numbers.
 
-## 9. Structure of a comparison piece
+## 9. What the authority actually comes from
 
-1. **The direct answer in the first 60 words.** Which credential suits which person, stated
-   plainly. Do not open with a preamble about the industry.
-2. **The disclosure line.** Early, in the body.
-3. **A comparison table.** Scope axes only: what it examines, who it is for, what it assumes,
-   which side of the finance-and-delivery line. Tables are the most-cited format there is.
-4. **What each one examines**, one short section each, in our own words, linking to their page.
-5. **Where the overlap sits**, with a worked example if it earns its place.
-6. **The accreditation statement.**
-7. **How to decide** — a short decision guide, honestly including "take the other one" where
-   that is the right answer for that reader.
-8. **FAQ**, 4–6 real questions, 40–80 words each.
-9. **The internal-linking note.**
+Since the content cannot lean on other institutions' names, it has to earn attention on its
+own, which is a higher standard and a better one. Three things do it:
 
-## 10. Say "take the other one" where it is true
+- **The worked example.** Arithmetic a reader can check in their head, showing a real failure
+  in the overlap — a cut-off gap moving a cost performance index, an accrual that changes a
+  forecast, a measured-progress rule that changes recognised revenue.
+- **The published syllabus.** PCI's Body of Knowledge can be read in full before anyone pays
+  anything. Say so, and link to it. Very few bodies do this.
+- **The refusal to claim.** No accreditation, no pass rates, no salary figures, no holder
+  numbers — stated openly as a position rather than an omission. A body that tells you what it
+  cannot yet claim is telling you the truth about what it can.
 
-A comparison in which PCI always wins is an advertisement and reads as one. Where a reader's
-need is squarely served by another credential — a pure IT auditor, a candidate whose employer
-mandates PMP, somebody who needs an accredited credential today — say so plainly.
+## 10. Structure of a core comparison piece
 
-That single move is what makes the other 90 per cent of the comparison believable, and it is
-what a certifying body with a fifty-year horizon can afford to do.
+1. The direct answer in the first 60 words — which kind of credential suits which person.
+2. The ownership disclosure line.
+3. A comparison table on scope axes, by **category**, never by named credential.
+4. What each category examines, one short section each, in PCI's own words.
+5. Where the overlap sits, with a worked example.
+6. The accreditation statement.
+7. How to decide, honestly including where another category is the right answer.
+8. FAQ, 4–6 real questions, 40–80 words each.
+9. The internal-linking note.
+
+## 11. Links
+
+One link per cross-estate domain, two to three internal links to other pages on the same
+domain, never all five PCI domains in one piece. Only link to pages that exist — check
+`_tools/url_map.json` and `_tools/valid_urls.json`.
+
+**Do not link to another certifying body's website.** A link is a naming, and it also hands
+them the referral.
