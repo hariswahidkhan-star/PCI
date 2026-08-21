@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         Choosing between two credentials, without a ranking
-meta:          Two credentials, one budget, no league table. Run both through the same five questions, count the rows, and let the tie-break be what you sign.
+meta:          Choosing between two credentials without a league table: run both through five questions, count the decisions you sign, and let scope break the tie.
 primary_kw:    choosing between two credentials
 secondary_kw:  comparing two syllabuses, credential decision grid, preparation hours, what a credential examines
 pillar:        Certification and careers
@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,490
+word_count:    1,571
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, project management certifications, accountancy and finance qualifications]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, project management certificatio
 
 # Choosing between two credentials without a league table
 
-Run both through the same five questions: what each examines, what each assumes you already know, who decides whether you passed, what it will cost you in hours rather than fees, and what changes on the day you hold it. Score them against the decisions you personally sign. If they still tie, take the one whose scope matches the work you will be doing in two years, not the work you did last year.
+Choosing between two credentials starts by running both through the same five questions: what each examines, what each assumes you already know, who decides whether you passed, what it costs you in hours rather than fees, and what changes on the day you hold it. Score them against the decisions you personally sign. If they still tie, take the one whose scope matches the work you will be doing in two years, not the work you did last year.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. A page that

@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         The finance and delivery overlap: who examines it
-meta:          Delivery credentials examine the forecast. Finance qualifications examine the reporting. The join between them is examined by neither, by design.
+title:         The finance and delivery overlap, and who examines it
+meta:          The finance and delivery overlap is where a forecast becomes a reported number. Delivery credentials examine one side, finance qualifications the other.
 primary_kw:    finance and delivery overlap
 secondary_kw:  cost-to-cost progress measurement, forecast to reported margin, cut-off between cost and accounts, earning rules
 pillar:        Cost control and estimating
@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,530
+word_count:    1,490
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, accountancy and finance qualifi
 
 # The finance and delivery overlap, and who examines it
 
-The overlap is the place where a forecast becomes a reported number. Delivery credentials examine how the forecast is built. Accountancy qualifications examine how the reported number must be arrived at. Neither category sets out to examine the join, because the join belongs to both subjects and sits at the centre of neither. That is where the money goes.
+The finance and delivery overlap is the place where a forecast becomes a reported number. Delivery credentials examine how the forecast is built. Accountancy qualifications examine how the reported number must be arrived at. Neither category sets out to examine the join, because the join belongs to both subjects and sits at the centre of neither. That is where the money goes.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. The argument

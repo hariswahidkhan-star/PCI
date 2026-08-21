@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         How a pass mark is set, and why the method matters
-meta:          A defensible pass mark is judged against the items, not chosen in advance. How criterion-referenced standard setting works, with the arithmetic, and what to ask.
+meta:          How a pass mark is set: judged against the items, not chosen in advance. Criterion-referenced standard setting, with the arithmetic, and what to ask.
 primary_kw:    how a pass mark is set
 secondary_kw:  criterion-referenced, cut score, standard setting, borderline candidate
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ compares:      [certification schemes generally]
 
 # How a pass mark is set, and why the method matters
 
-A defensible pass mark is judged against the actual items by people who know the work, and it moves when the paper's difficulty moves. A pass mark chosen before anybody saw the items — the familiar round 70% — is a policy, not a standard. Knowing which one you are sitting changes what your result means.
+A defensible pass mark is judged against the actual items by people who know the work, and it moves when the paper's difficulty moves. A pass mark chosen before anybody saw the items — the familiar round 70% — is a policy, not a standard. Knowing how a pass mark is set changes what your own result means.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. No cut score for any credential appears on this page, PCI's included; every figure below is illustrative arithmetic for a made-up three-item paper.
 
@@ -45,7 +45,7 @@ That description has to be written down and agreed before any item is rated, bec
 
 The panel should be practitioners who do the work the credential covers, not only academics and not only the body's own staff. That is checkable: ask who sat on the panel and what they do for a living.
 
-## The arithmetic, on a three-item paper
+## How a pass mark is set: the arithmetic on a three-item paper
 
 Each judge looks at an item and estimates the proportion of minimally competent candidates who would answer it correctly. The estimates are averaged per item, and the item means are summed to give the cut score for that paper.
 

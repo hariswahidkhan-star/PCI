@@ -2,15 +2,15 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         Choosing a credential as a scheduler moving to controls
-meta:          Moving from scheduling into controls changes what you sign. Earning rules, forecasts and cut-off dates arrive with it. Choose the examination that covers them.
-primary_kw:    credential for a scheduler moving into controls
+meta:          Choosing a credential as a scheduler moving into controls: an earning rule, a forecast and a cut-off date arrive with the move. Compare on scope.
+primary_kw:    credential as a scheduler
 secondary_kw:  earning rules and earned value, progress measurement method, scheduling to controls transition, what a controls certification examines
 pillar:        Planning and scheduling
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,470
+word_count:    1,375
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, the established project controls certifications, product certifications for scheduling software]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, the established project control
 
 # Choosing a credential as a scheduler moving into controls
 
-The move from scheduling into controls adds three things to your signature: an earning rule, a forecast and a cut-off date. Scheduling credentials examine schedule development, maintenance and analysis thoroughly, and they are built to. The three new items sit beyond that boundary, and the credential worth your evenings is the one that examines them.
+Choosing a credential as a scheduler moving into controls means covering the three things the move adds to your signature: an earning rule, a forecast and a cut-off date. Scheduling credentials examine schedule development, maintenance and analysis thoroughly, and they are built to. The three new items sit beyond that boundary, and the credential worth your evenings is the one that examines them.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Read the

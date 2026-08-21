@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Why preparation and the certification decision are separated
-meta:          If the organisation that took your training fee also decides you passed, you bought a course. What separation looks like in practice, and how to check for it.
+title:         Separation of training and certification, and why it exists
+meta:          Separation of training and certification is why a third party can rely on your result. What it looks like in practice, and how to check for it before you pay.
 primary_kw:    separation of training and certification
 secondary_kw:  conflict of interest, certification decision, impartiality, pass guarantee
 pillar:        Certification and careers
@@ -16,9 +16,9 @@ ab_id:         n/a (comparison run)
 compares:      [certification schemes generally]
 ---
 
-# Why preparation and the certification decision are separated
+# Separation of training and certification, and why it exists
 
-If the organisation that took your training fee also decides whether you passed, the certificate is evidence about the course rather than about you. Separation between preparation and the certification decision is what makes a third party willing to rely on the result. It is also the single easiest thing to check before paying.
+If the organisation that took your training fee also decides whether you passed, the certificate is evidence about the course rather than about you. Separation of training and certification is what makes a third party willing to rely on the result. It is also the single easiest thing to check before paying.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. The test below applies to PCI, and the answer is set out plainly further down.
 
@@ -30,7 +30,7 @@ Put both roles in one commercial unit and the incentives point one way. Failing 
 
 This is not an argument against training. Training is where competence is built, and a good course is worth more to most candidates than the examination fee. It is an argument about who signs the decision at the end.
 
-## What separation actually looks like
+## What separation of training and certification looks like
 
 | Signal | Separated | Not separated |
 |---|---|---|

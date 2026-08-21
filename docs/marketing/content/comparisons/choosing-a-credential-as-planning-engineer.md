@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a planning engineer
-meta:          Which credential fits a planning engineer depends on what you sign. Programme only, or the numbers the programme moves? Compare on scope, by category.
-primary_kw:    credential for a planning engineer
+title:         Choosing a credential as a planning engineer, by scope
+meta:          Choosing a credential as a planning engineer starts with what you sign: the programme alone, or the numbers it moves. Compare on scope, by category.
+primary_kw:    credential as a planning engineer
 secondary_kw:  what a scheduling credential examines, float and prolongation, planning engineer certification choice, scope of a syllabus
 pillar:        Planning and scheduling
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,440
+word_count:    1,508
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, the established project controls certifications, project management certifications]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, the established project control
 
 # Choosing a credential as a planning engineer
 
-If your signature stops at the programme, a credential examining schedule development, maintenance and analysis is the right purchase and the shortest route to evidence. If your programme drives a cost report, an entitlement position or a forecast somebody books, the examination you want has to cross that boundary. Sort the choice by what you sign, not by your job title.
+Choosing a credential as a planning engineer turns on one question: where does your signature stop? If it stops at the programme, a credential examining schedule development, maintenance and analysis is the right purchase. If your programme drives a cost report, an entitlement position or a forecast somebody books, the examination you want has to cross that boundary. Sort the choice by what you sign, not by your job title.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Treat the

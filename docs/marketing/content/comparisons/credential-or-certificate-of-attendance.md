@@ -2,15 +2,15 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         Credential or certificate of attendance: how to tell
-meta:          A credential is marked by someone other than your trainer against a published standard. A certificate records attendance. Four questions separate them.
-primary_kw:    certificate of attendance or credential
+meta:          A credential is marked by someone other than your trainer against a published standard. A certificate of attendance records that you turned up. Four checks.
+primary_kw:    certificate of attendance
 secondary_kw:  who marks the assessment, published syllabus, independent certification decision, renewal cycle
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,430
+word_count:    1,451
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [attendance and completion certificates, examined certifications, product certifications for scheduling software]
@@ -79,7 +79,9 @@ A renewal requirement is the body admitting that competence decays and asking yo
 
 ## What PCI publishes, and what it does not claim
 
-The PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI) each have their own Body of Knowledge and their own examination. The three run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas, all of it published, all of it readable before anybody pays. Whether that scope matches your work is a judgement you can make from the syllabus rather than from this page, and the tests in [what makes a credential examinable](https://credentialfinder.org/what-makes-a-credential-examinable) apply to PCI exactly as they apply to anyone else.
+The PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI) each have their own Body of Knowledge and their own examination. The three run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas, all of it published, all of it readable before anybody pays.
+
+Whether that scope matches your work is a judgement you can make from the syllabus rather than from this page, and the tests in [what makes a credential examinable](https://credentialfinder.org/what-makes-a-credential-examinable) apply to PCI exactly as they apply to anyone else.
 
 > **What PCI does not claim.** PCI is a new, independent certifying body. It is not accredited by
 > ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body, and does not claim to be. The

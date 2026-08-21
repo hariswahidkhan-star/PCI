@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         What a certification appeal process should look like
-meta:          A real appeal has grounds, a deadline, a panel independent of the original decision and a published timetable. What to check before you sit, not after you fail.
+meta:          A certification appeal process needs grounds, a deadline, an independent panel and a published timetable. What to check before you sit, not after you fail.
 primary_kw:    certification appeal process
 secondary_kw:  appeal grounds, independent panel, complaints, re-mark
 pillar:        Certification and careers
@@ -18,11 +18,11 @@ compares:      [certification schemes generally]
 
 # What a certification appeal process should look like
 
-A real appeal process names the grounds you may appeal on, a deadline, a panel with no involvement in the original decision, a published timetable and a stated range of outcomes. Read it before you book, because after a result it reads very differently. A body with no appeal policy has told you it does not expect to be wrong.
+A real certification appeal process names the grounds you may appeal on, a deadline, a panel with no involvement in the original decision, a published timetable and a stated range of outcomes. Read it before you book, because after a result it reads very differently. A body with no appeal policy has told you it does not expect to be wrong.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Apply the checklist to PCI's own policy as strictly as to anyone else's.
 
-## Four different things that get called an appeal
+## Four things that get called a certification appeal process
 
 | Route | What it is for | Who should decide | Typical outcome |
 |---|---|---|---|

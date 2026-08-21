@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a cost engineer
-meta:          Estimating and cost control are examined thoroughly by one category. What your estimate becomes once it is approved is examined by another. Compare on scope.
-primary_kw:    credential for a cost engineer
+title:         Choosing a credential as a cost engineer: how to decide
+meta:          Choosing a credential as a cost engineer: estimating is examined thoroughly by one category, and what your estimate becomes is examined by another.
+primary_kw:    credential as a cost engineer
 secondary_kw:  estimate accuracy band, contingency and escalation, what a cost credential examines, approved budget consequences
 pillar:        Cost control and estimating
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,460
+word_count:    1,404
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, the established project control
 
 # Choosing a credential as a cost engineer
 
-Estimating, cost control and the economics of an asset's life are examined thoroughly by one category of credential, and if that is your work, that is the purchase. The reason to look further is narrow and specific: your estimate becomes an approved budget, the budget becomes a forecast, and the forecast becomes a reported number. If you are asked about that chain, you need to have been examined on more than its first link.
+Choosing a credential as a cost engineer is usually straightforward. Estimating, cost control and the economics of an asset's life are examined thoroughly by one category, and if that is your work, that is the purchase. The reason to look further is narrow: your estimate becomes an approved budget, the budget becomes a forecast, and the forecast becomes a reported number. If you are asked about that chain, you need to have been examined on more than its first link.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Declare it,

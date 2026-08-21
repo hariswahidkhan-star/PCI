@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a PMO lead
-meta:          A PMO lead signs the portfolio view. Which credential fits depends on whether you must defend the aggregate numbers or only assemble them.
-primary_kw:    credential for a PMO lead
+title:         Choosing a credential as a PMO lead: how to decide it
+meta:          Choosing a credential as a PMO lead depends on whether you defend the portfolio numbers or only assemble them. Compare the categories on what they examine.
+primary_kw:    credential as a PMO lead
 secondary_kw:  portfolio reporting aggregation, assurance gates, what a project management certification examines, governed use of AI
 pillar:        Project controls fundamentals
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,470
+word_count:    1,461
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [project management certifications, the established project controls certifications, audit credentials]
@@ -18,7 +18,7 @@ compares:      [project management certifications, the established project contr
 
 # Choosing a credential as a PMO lead
 
-If your PMO sets method, runs assurance and reports the portfolio, a project management certification examines most of that and is the natural fit. If you personally defend the aggregate numbers to a board — the portfolio forecast, the contingency position, the reason two projects moved — you need an examination that goes into how those numbers are built, because an aggregate hides the thing that will be asked about.
+Choosing a credential as a PMO lead comes down to one thing: whether you defend the aggregate numbers or only assemble them. If your PMO sets method, runs assurance and reports the portfolio, a project management certification examines most of that. If you personally defend the aggregate numbers to a board — the portfolio forecast, the contingency position, the reason two projects moved — you need an examination that goes into how those numbers are built, because an aggregate hides the thing that will be asked about.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Check the

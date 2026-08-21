@@ -18,11 +18,11 @@ compares:      [certification schemes generally]
 
 # How to verify a credential somebody says they hold
 
-Verification means checking the issuing body's own register, in a session you opened yourself, for four things: that the person is listed, that the record is current, that the credential named is the one claimed, and that the scope matches. A certificate file, a screenshot or a link supplied by the candidate is not verification.
+How to verify a credential: check the issuing body's own register, in a session you opened yourself, for four things. That the person is listed, that the record is current, that the credential named is the one claimed, and that the scope matches. A certificate file, a screenshot or a link supplied by the candidate is not verification.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. A page that tells you to check with the issuing body, published by an issuing body, has an obvious interest. The method below is the one to use on PCI as well as on anybody else.
 
-## The five checks
+## How to verify a credential: the five checks
 
 **One. Go to the issuing body directly.** Type the body's address yourself or find it through a search you ran. Do not follow a link from the CV, the email or the certificate.
 

@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         How to read a Body of Knowledge before you pay for it
-meta:          A Body of Knowledge tells you what a credential will examine. Here is how to read one properly in an hour, and map it against the work you actually do.
+meta:          How to read a Body of Knowledge in an hour: check the verbs, map it against your own month, read the exclusions, and judge the credential on that.
 primary_kw:    how to read a Body of Knowledge
 secondary_kw:  syllabus coverage, domains and knowledge areas, credential fit, exam preparation
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ compares:      [certification schemes generally]
 
 # How to read a Body of Knowledge before you pay for it
 
-Read a Body of Knowledge the way you would read a scope of works: check what is included, what is excluded, what is assumed and what depth is required. An hour with the syllabus tells you more than any comparison page, this one included. If the syllabus is not published before payment, that is already an answer.
+How to read a Body of Knowledge: the way you would read a scope of works. Check what is included, what is excluded, what is assumed and what depth is required. An hour with the syllabus tells you more than any comparison page, this one included. If the syllabus is not published before payment, that is already an answer.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. The method below is meant to be used on PCI's syllabus as hard as on anyone else's.
 
@@ -41,7 +41,7 @@ The nouns tell you the subject. The verbs tell you the depth, and depth is what 
 
 A syllabus whose verbs are mostly in the bottom row is a course outline. That is not a criticism of courses; it is a statement about what the document can support.
 
-## Step three: map it against your actual month
+## Step three in how to read a Body of Knowledge: map it against your month
 
 This is the step almost nobody does, and it is the one that decides fit.
 

@@ -24,7 +24,7 @@ Chartered routes in surveying and engineering assess professional competence and
 
 Categories are described by what they assess. No institution, awarding body or post-nominal is named on this page, and none is linked.
 
-## What chartered routes assess
+## What chartered routes in surveying and engineering assess
 
 Chartered routes in surveying and engineering assess professional competence: whether a candidate can exercise independent judgement responsibly within a discipline, evidenced across years of structured, supervised experience and tested by peers through a written submission and a professional review.
 

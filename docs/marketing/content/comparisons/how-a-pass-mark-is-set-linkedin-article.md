@@ -1,8 +1,8 @@
 ---
 platform:      LinkedIn Article
 type:          guide
-title:         How a pass mark gets set, and what it actually means
-meta:          What happens to your paper after you sit it: panel judgement, the cut score, equating between forms, measurement error, and the decision rule at the border.
+title:         How a pass mark is set, and what that actually means
+meta:          How a pass mark is set: panel judgement, the cut score, equating between forms, measurement error, and the decision rule that must exist at the border.
 primary_kw:    how a pass mark is set *
 secondary_kw:  cut score, standard setting panel, equating, standard error of measurement
 pillar:        Certification and careers
@@ -16,9 +16,9 @@ hashtags:      #ProjectControls #ProjectManagement #PMO #CostEngineering
 ab_id:         n/a — comparison plan batch 7
 ---
 
-# How a pass mark gets set, and what it actually means
+# How a pass mark is set, and what that actually means
 
-A defensible pass mark is set before anybody sits, by a panel judging what a just-competent candidate should be able to do, and it is re-derived whenever the paper changes materially. The percentage that comes out is a property of that paper. It cannot be compared with another scheme's percentage, and on its own it tells a candidate almost nothing.
+How a pass mark is set decides whether your result means anything to anybody else. In a defensible scheme the cut is fixed before anybody sits, by a panel judging what a just-competent candidate should be able to do, and re-derived whenever the paper changes materially. The percentage belongs to that paper, and on its own it tells a candidate almost nothing.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials, so this is written by a body that has to answer the same question about itself. It is answered below rather than avoided.
 

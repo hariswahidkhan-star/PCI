@@ -2,15 +2,15 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         Choosing a credential as an auditor moving to projects
-meta:          Audit credentials examine governance, risk, control and assurance. Auditing capital projects adds the technical inputs those controls are meant to govern.
-primary_kw:    credential for an auditor moving into projects
+meta:          Choosing a credential as an auditor moving into projects: governance and assurance transfer intact, the technical inputs underneath them do not.
+primary_kw:    credential as an auditor
 secondary_kw:  testing progress claims, project assurance scope, what an audit credential examines, evidence for earned value
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,490
+word_count:    1,499
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [audit credentials, accountancy and finance qualifications, the established project controls certifications]
@@ -18,7 +18,7 @@ compares:      [audit credentials, accountancy and finance qualifications, the e
 
 # Choosing a credential as an auditor moving into projects
 
-Audit credentials examine governance, risk, control and the assurance process, and that transfers to capital projects intact. What does not come with it is the technical subject the controls are meant to govern: how progress is measured, how a forecast is built, and which numbers can be tested against evidence rather than against a process. That is the gap worth closing, and it is smaller than a second profession.
+Choosing a credential as an auditor moving into projects is a question about one gap. Audit credentials examine governance, risk, control and the assurance process, and that transfers to capital projects intact. What does not come with it is the technical subject the controls are meant to govern: how progress is measured, how a forecast is built, and which numbers can be tested against evidence rather than against a process. That is the gap worth closing, and it is smaller than a second profession.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. The page argues

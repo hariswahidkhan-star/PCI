@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a controls manager
-meta:          A project controls manager signs the forecast everyone else quotes. Which credential fits depends on who you defend that number to, and how far it travels.
-primary_kw:    credential for a project controls manager
+title:         Choosing a credential as a project controls manager
+meta:          Choosing a credential as a project controls manager: you already hold the discipline, so choose on what you defend and how far your forecast travels.
+primary_kw:    credential as a project controls manager
 secondary_kw:  forecast spread between methods, defending an estimate at completion, integrated controls scope, what a controls certification examines
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,490
+word_count:    1,398
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [the established project controls certifications, cost and scheduling credentials, project management certifications]
@@ -18,7 +18,7 @@ compares:      [the established project controls certifications, cost and schedu
 
 # Choosing a credential as a project controls manager
 
-You already hold the discipline. The question is whether your next credential examines the same ground again or the ground your signature has moved onto: a forecast a finance function books, a contingency position a board challenges, an integrated report that has to survive both. Choose on what you defend, not on what you supervise.
+Choosing a credential as a project controls manager is not a question about the discipline you already hold. It is whether your next credential examines the same ground again or the ground your signature has moved onto: a forecast a finance function books, a contingency position a board challenges, an integrated report that has to survive both. Choose on what you defend, not on what you supervise.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. The reasoning is

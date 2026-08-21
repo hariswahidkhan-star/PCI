@@ -3,7 +3,7 @@ platform:      Own site — credentialfinder.org
 type:          guide
 title:         Ten questions to ask any certifying body before you pay
 meta:          Ten questions to ask any certifying body before you pay, with what a good answer sounds like and what a weak one sounds like. Ask them of us as well.
-primary_kw:    questions to ask a certifying body
+primary_kw:    questions to ask any certifying body
 secondary_kw:  choosing a certification, cut score policy, appeals, certification decision
 pillar:        Certification and careers
 credential:    suite
@@ -18,7 +18,7 @@ compares:      [certification schemes generally]
 
 # Ten questions to ask any certifying body before you pay
 
-Ten questions sort a certification from a course, and every one of them can be asked by email before you spend anything. The pattern to watch for is not a wrong answer. It is an answer that describes benefits when you asked about process.
+Ten questions to ask any certifying body will sort a certification from a course, and every one of them can be asked by email before you spend anything. The pattern to watch for is not a wrong answer. It is an answer that describes benefits when you asked about process.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. PCI's own answers to several of these questions are set out below, including the ones that are not flattering.
 

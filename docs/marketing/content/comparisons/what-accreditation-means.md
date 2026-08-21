@@ -18,11 +18,11 @@ compares:      [certification schemes generally]
 
 # What accreditation means, and what it does not prove
 
-Accreditation is a third party assessing how a certifying body runs its process: impartiality, competence, standard setting, appeals, records. It is assurance about the machinery. It is not a judgement that the syllabus is good, that employers want the credential, or that it suits you. Both halves of that matter when you are deciding.
+Accreditation is a third party assessing how a certifying body runs its process: impartiality, competence, standard setting, appeals, records. It is assurance about the machinery. It is not a judgement that the syllabus is good, that employers want the credential, or that it suits you. Both halves of what accreditation means matter when you are deciding.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. PCI is not accredited, which is a reason to read this page sceptically and a reason it is written carefully.
 
-## What the word actually describes
+## What accreditation means, in the assessor's terms
 
 Personnel certification has an international standard covering how a body should operate: how it separates training from the certification decision, how it manages conflicts of interest, how it sets and reviews a pass mark, how it handles appeals, and what records it keeps.
 

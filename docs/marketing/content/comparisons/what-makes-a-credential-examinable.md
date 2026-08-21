@@ -18,7 +18,7 @@ compares:      [certification schemes generally]
 
 # What makes a credential examinable, and what does not
 
-A credential is examinable when every statement in its syllabus describes something a candidate can be observed doing, within a boundary, with an answer that can be defended against challenge. Statements about awareness, appreciation or importance cannot be examined, only asserted. That single test sorts most of the market in ten minutes.
+A credential is examinable when every statement in its syllabus describes something a candidate can be observed doing, within a boundary, with an answer that can be defended against challenge. Statements about awareness, appreciation or importance cannot be examined, only asserted. That single test is what makes a credential examinable, and it sorts most of the market in ten minutes.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Apply the tests below to PCI's own syllabus first; if they do not survive contact with it, they are not worth applying to anyone else.
 
@@ -37,7 +37,7 @@ Read any line of a syllabus and ask: *could two competent examiners agree on whe
 
 A syllabus of the first kind can still support a good course. It cannot support an examination, because there is nothing to mark.
 
-## The four properties that make a statement examinable
+## What makes a credential examinable: four properties
 
 **Observable.** It names something the candidate does: calculates, selects, identifies, reconciles, justifies. Verbs like "understand" and "appreciate" describe a state nobody can see.
 

@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         How to judge a certifying body that is new
-meta:          A new certifying body has no track record to show you. Judge it on what it publishes, what it separates, and what it refuses to claim. Seven checks.
-primary_kw:    how to judge a new certifying body
+title:         How to judge a certifying body that is new: seven checks
+meta:          How to judge a certifying body with no track record: read what it publishes, what it separates and what it refuses to claim. Seven checks you can run today.
+primary_kw:    how to judge a certifying body
 secondary_kw:  what a certifying body should publish, appeal route, pass standard policy, verification record
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,510
+word_count:    1,569
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [the established project controls certifications, accountancy and finance qualifications, chartered routes in surveying and engineering]
@@ -18,7 +18,7 @@ compares:      [the established project controls certifications, accountancy and
 
 # How to judge a certifying body that is new
 
-A new certifying body cannot show you a track record, because it does not have one. Judge it on the three things it can show you today: what it publishes before you pay, which decisions it has separated from each other, and what it openly refuses to claim. A body that tells you what it cannot yet claim is telling you the truth about what it can.
+How to judge a certifying body with no track record: start from the three things it can show you today — what it publishes before you pay, which decisions it has separated from each other, and what it openly refuses to claim. A body that tells you what it cannot yet claim is telling you the truth about what it can.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here — a body that is
@@ -68,7 +68,9 @@ What a new body can do is design for the questions in advance and publish the de
 
 PCI is new, and that is the first thing to weigh, not the last. Applying the table above to it, honestly:
 
-The syllabus is published in full and free. The PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI) run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas, with 92 sector case studies across the three volumes and 113 mandatory PCI Standards carrying 532 process requirements underneath them. A suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material, and PCL-AI has no equivalent suite. Those are checkable numbers about published documents, not claims about outcomes.
+The syllabus is published in full and free. The PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI) run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas, with 92 sector case studies across the three volumes and 113 mandatory PCI Standards carrying 532 process requirements underneath them.
+
+A suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material, and PCL-AI has no equivalent suite. Those are checkable numbers about published documents, not claims about outcomes.
 
 The separation is designed in: preparation and the certification decision are held apart, which is a structural choice you can interrogate rather than a promise. The appeal route and the renewal cycle are published. The verification record exists and you can test it without an account.
 

@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Recertification: what it is really for, and what to check
-meta:          Recertification exists to keep a credential current and to keep a holder accountable. How to tell a real cycle from an annuity, and what to check before you commit.
+title:         What recertification is for, and what to check first
+meta:          What recertification is for: keeping a credential current and a holder accountable. How to tell a real cycle from an annuity, and what to check first.
 primary_kw:    what recertification is for
 secondary_kw:  continuing professional development, renewal cycle, lapsed credential, currency
 pillar:        Certification and careers
@@ -16,13 +16,13 @@ ab_id:         n/a (comparison run)
 compares:      [certification schemes generally]
 ---
 
-# Recertification: what it is really for, and what to check
+# What recertification is for, and what to check first
 
-Recertification exists for two honest reasons: to confirm that a holder's knowledge is still current, and to keep the holder accountable to the body's code while they use its name. It exists for one dishonest reason too, which is recurring revenue. The difference shows in what the cycle asks you to do.
+What recertification is for comes down to two honest things: confirming that a holder's knowledge is still current, and keeping the holder accountable to the body's code while they use its name. It exists for one dishonest reason too, which is recurring revenue. The difference shows in what the cycle asks you to do.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. PCI operates a recertification cycle, so read this as a page with an interest in the subject.
 
-## What a certification decision actually says
+## What recertification is for, given what a pass date says
 
 Passing an examination establishes competence against a syllabus **on a date**. That is a precise and limited claim, and it is the strongest one an examination can make.
 

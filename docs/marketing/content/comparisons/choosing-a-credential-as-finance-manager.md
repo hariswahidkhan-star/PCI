@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a capital projects finance lead
-meta:          Finance qualifications examine reporting and control. On capital projects the risk arrives upstream, in estimates and progress you did not build. Compare on scope.
-primary_kw:    credential for a finance manager on capital projects
+title:         Choosing a credential as a finance manager on projects
+meta:          Choosing a credential as a finance manager on capital projects: the exposure sits upstream, in estimates and progress you did not build yourself.
+primary_kw:    credential as a finance manager
 secondary_kw:  working capital on projects, retention and payment terms, upstream project inputs, what a finance qualification examines
 pillar:        Cost control and estimating
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,480
+word_count:    1,433
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [accountancy and finance qualifications, cost and scheduling credentials, audit credentials]
@@ -18,7 +18,7 @@ compares:      [accountancy and finance qualifications, cost and scheduling cred
 
 # Choosing a credential as a finance manager on capital projects
 
-Your qualification examines recognition, measurement, disclosure and financial control, and it does that thoroughly. On capital projects the exposure is upstream of all four: an estimate you did not build, progress you cannot see, and a cash position driven by certification dates rather than by invoices. The credential worth considering is one that examines those inputs, not one that re-examines the reporting.
+Choosing a credential as a finance manager on capital projects means looking upstream. Your qualification examines recognition, measurement, disclosure and financial control thoroughly. The exposure sits before all four: an estimate you did not build, progress you cannot see, and a cash position driven by certification dates rather than by invoices. The credential worth considering is one that examines those inputs, not one that re-examines the reporting.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. That is declared
@@ -73,7 +73,9 @@ Each question has a factual answer, none is confrontational, and each one moves 
 
 The PCI AI Project Finance Leader (PFL-AI) is the one built for this seat, at 16 domains and 61 knowledge areas. Each PCI Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI, describing the syllabus rather than an examination weighting.
 
-For somebody already qualified in finance, the 40% covering finance and reporting will read quickly and the 40% covering project management is the reason to open it at all. Across the three volumes there are 92 sector case studies, and a suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material, with no equivalent suite behind PCL-AI. All of it is published before anybody pays, which is the test any new body should be held to and the one set out in [how to judge a certifying body that is new](https://credentialfinder.org/judging-a-certifying-body-that-is-new).
+For somebody already qualified in finance, the 40% covering finance and reporting will read quickly and the 40% covering project management is the reason to open it at all. Across the three volumes there are 92 sector case studies, and a suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material, with no equivalent suite behind PCL-AI.
+
+All of it is published before anybody pays, which is the test any new body should be held to and the one set out in [how to judge a certifying body that is new](https://credentialfinder.org/judging-a-certifying-body-that-is-new).
 
 > **What PCI does not claim.** PCI is a new, independent certifying body. It is not accredited by
 > ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body, and does not claim to be. The

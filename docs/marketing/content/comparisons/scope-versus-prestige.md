@@ -2,15 +2,15 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         Scope or prestige: which should decide your choice
-meta:          Scope decides whether the examination covers what you sign. Recognition decides how fast a stranger reads it. Where they conflict, here is how to choose.
-primary_kw:    scope or prestige when choosing a credential
+meta:          Scope or prestige? Scope decides whether the examination covers what you sign. Recognition decides how fast a stranger reads it. How to weigh the two.
+primary_kw:    scope or prestige
 secondary_kw:  what a credential examines, recognition of a certification, choosing on scope, reading job advertisements
 pillar:        Certification and careers
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,480
+word_count:    1,568
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, project management certifications, chartered routes in surveying and engineering]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, project management certificatio
 
 # Scope or prestige: which should decide your choice
 
-Scope decides whether the examination covers the decisions you are paid to sign. Recognition decides how quickly a stranger reads your CV. Where the two point at the same credential, there is no dilemma. Where they conflict, recognition wins the shortlist and scope wins the job, and which one you need depends on whether your problem is getting interviewed or getting through the year.
+Scope or prestige is the wrong argument until you know which problem you have. Scope decides whether the examination covers the decisions you are paid to sign. Recognition decides how quickly a stranger reads your CV. Where the two point at the same credential, there is no dilemma. Where they conflict, recognition wins the shortlist and scope wins the job, and which one you need depends on whether your problem is getting interviewed or getting through the year.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. That makes this

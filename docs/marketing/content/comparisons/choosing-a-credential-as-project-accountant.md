@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a project accountant
-meta:          A project accountant reports numbers built by somebody else. Which credential fits depends on whether you can interrogate the inputs before you book them.
-primary_kw:    credential for a project accountant
+title:         Choosing a credential as a project accountant, by scope
+meta:          Choosing a credential as a project accountant: the gap is not accounting, it is the delivery inputs you book. Compare the categories on what they examine.
+primary_kw:    credential as a project accountant
 secondary_kw:  cost-to-cost progress, contract asset ageing, interrogating a project forecast, what an accountancy qualification examines
 pillar:        Cost control and estimating
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,480
+word_count:    1,523
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [accountancy and finance qualifications, cost and scheduling credentials, audit credentials]
@@ -18,7 +18,7 @@ compares:      [accountancy and finance qualifications, cost and scheduling cred
 
 # Choosing a credential as a project accountant
 
-If your qualification already covers recognition, measurement and disclosure, the gap is not accounting. It is the delivery side of the inputs: whether the estimate you divide by is current, whether the progress behind it was earned, and whether the accrual is complete. A credential worth your evenings is one that examines those questions rather than repeating what you can already do.
+Choosing a credential as a project accountant starts from what you already hold. If your qualification covers recognition, measurement and disclosure, the gap is not accounting. It is the delivery side of the inputs: whether the estimate you divide by is current, whether the progress behind it was earned, and whether the accrual is complete. A credential worth your evenings is one that examines those questions rather than repeating what you can already do.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. That interest is

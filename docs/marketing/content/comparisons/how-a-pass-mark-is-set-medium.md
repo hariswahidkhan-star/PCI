@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         How a pass mark is set, and why that matters to you
-meta:          How a cut score is derived, why two schemes' percentages never compare, what happens at the border, and the aggregation rule nobody asks until they fail.
+meta:          How a pass mark is set, why two schemes' percentages never compare, what happens at the border, and the aggregation rule nobody asks about until they fail.
 primary_kw:    how a pass mark is set *
 secondary_kw:  cut score, criterion-referenced standard setting, pass rate, compensatory scoring, equating
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 7
 
 # How a pass mark is set, and why that matters to you
 
-A pass mark should be derived before anybody sits, from a panel's judgement about what a just-competent candidate can do, and re-derived whenever the paper changes materially. The percentage that comes out belongs to that paper. It cannot be compared with another scheme's percentage, and quoted alone it tells a candidate almost nothing.
+How a pass mark is set is a question about method rather than about a number. It should be derived before anybody sits, from a panel's judgement about what a just-competent candidate can do, and re-derived whenever the paper changes materially. The percentage belongs to that paper, cannot be compared with another scheme's, and quoted alone tells a candidate almost nothing.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. A body writing about how cut scores should be set is describing a standard it will be held to, so the disclosure belongs at the top rather than in the footer.
 

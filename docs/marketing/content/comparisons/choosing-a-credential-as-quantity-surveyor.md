@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a quantity surveyor
-meta:          Measurement, valuation and entitlement are examined thoroughly by one route. What happens to a valuation after it leaves you is examined by another.
-primary_kw:    credential for a quantity surveyor
+title:         Choosing a credential as a quantity surveyor, by scope
+meta:          Choosing a credential as a quantity surveyor: the chartered route assesses standing, and a different examination covers what a valuation later becomes.
+primary_kw:    credential as a quantity surveyor
 secondary_kw:  valuation and recognised revenue, unagreed variations, chartered route assessment, what a surveying qualification examines
 pillar:        Cost control and estimating
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,470
+word_count:    1,522
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [chartered routes in surveying and engineering, accountancy and finance qualifications, cost and scheduling credentials]
@@ -18,7 +18,7 @@ compares:      [chartered routes in surveying and engineering, accountancy and f
 
 # Choosing a credential as a quantity surveyor
 
-If you want assessed professional standing in surveying, the chartered route assesses exactly that and no examination substitutes for it. If your problem is what happens to a valuation after it leaves your desk — what is recognised, what is constrained, what becomes a provision — that join is examined by a different kind of credential. Decide from which of those two you actually need.
+Choosing a credential as a quantity surveyor splits two ways. If you want assessed professional standing in surveying, the chartered route assesses exactly that and no examination substitutes for it. If your problem is what happens to a valuation after it leaves your desk — what is recognised, what is constrained, what becomes a provision — that join is examined by a different kind of credential. Decide from which of those two you actually need.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Read the

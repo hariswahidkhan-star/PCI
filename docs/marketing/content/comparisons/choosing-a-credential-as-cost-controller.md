@@ -1,16 +1,16 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         Choosing a credential as a cost controller
-meta:          A cost controller signs numbers a finance team books. Which credential fits depends on how far past the cost report your signature travels. Compare on scope.
-primary_kw:    credential for a cost controller
+title:         Choosing a credential as a cost controller, by scope
+meta:          Choosing a credential as a cost controller depends on how far past the cost report your signature travels. Compare the categories on scope, not prestige.
+primary_kw:    credential as a cost controller
 secondary_kw:  accruals and cost performance, what a cost credential examines, forecast to reported result, cut-off discipline
 pillar:        Cost control and estimating
 credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,460
+word_count:    1,482
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, the established project controls certifications]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, accountancy and finance qualifi
 
 # Choosing a credential as a cost controller
 
-A cost controller signs numbers that other people then book. If your work ends at a cost report a commercial team interprets, a credential examining estimating and cost control covers your subject. If your forecast is the denominator in somebody's revenue calculation, you need an examination that goes past the cost report, because that is where your errors land.
+Choosing a credential as a cost controller turns on how far your numbers travel after you sign them. If your work ends at a cost report a commercial team interprets, a credential examining estimating and cost control covers your subject. If your forecast is the denominator in somebody's revenue calculation, you need an examination that goes past the cost report, because that is where your errors land.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. That is a

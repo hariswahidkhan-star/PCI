@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         Ten questions worth asking any certifying body you pay
-meta:          Ten questions worth asking any certifying body, a table of what good and weak answers sound like, the arithmetic behind the one about scope, and our own answers.
+meta:          Ten questions worth asking any certifying body, a table of what good and weak answers sound like, the arithmetic behind the one about scope, and our answers.
 primary_kw:    questions worth asking any certifying body *
 secondary_kw:  choosing a credential, credential scope, pass mark method, recertification, accreditation
 pillar:        Certification and careers

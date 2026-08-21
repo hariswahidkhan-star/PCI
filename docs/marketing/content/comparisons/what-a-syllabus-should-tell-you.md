@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         What a syllabus should tell you before you enrol
-meta:          A syllabus should state what is examined, at what depth, in what proportion and what it assumes you know. Six checks, and what a missing one means.
+title:         What a syllabus should tell you before you enrol on it
+meta:          What a syllabus should tell you before you enrol: the scope, the depth, the proportions, and what it assumes you already know. Six checks that decide it.
 primary_kw:    what a syllabus should tell you
 secondary_kw:  reading a body of knowledge, depth of examination, assumed prior knowledge, syllabus exclusions
 pillar:        Certification and careers
@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,470
+word_count:    1,599
 hashtags:      n/a (own site)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, project management certifications]
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, accountancy and finance qualifi
 
 # What a syllabus should tell you before you enrol
 
-A syllabus should tell you four things: what will be examined, at what depth, in what proportion, and what it assumes you already know. If it gives you a list of topics and none of the other three, you cannot judge whether the examination fits your work, and no amount of marketing copy will close that gap.
+What a syllabus should tell you is four things: what will be examined, at what depth, in what proportion, and what it assumes you already know. A document that lists topics and answers none of the other three cannot tell you whether the examination fits your work, and no amount of marketing copy closes that gap.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute
 > Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. Weigh what
@@ -49,7 +49,9 @@ Cost performance index = 3.80 ÷ 4.20 = **0.905**.
 Forecast if that performance persists = 10.0 ÷ 0.905 = **£11.05m**.
 Forecast if the overrun is behind you = 4.20 + (10.0 − 3.80) = **£10.40m**.
 
-The gap is **£0.65m** on a £10m job, and it comes entirely from an assumption a person chooses. A recall-depth syllabus is satisfied when you can name both methods. A judgement-depth syllabus is satisfied when you can say which one you would defend to a board and what evidence you would bring. Those are different exams and different study plans, and the syllabus is the only place the difference is written down. Working through [a full month of earned value end to end](https://projectcontrolsinstitute.org/earned-value-worked-example) is a fair way to test which depth you are currently at.
+The gap is **£0.65m** on a £10m job, and it comes entirely from an assumption a person chooses. A recall-depth syllabus is satisfied when you can name both methods. A judgement-depth syllabus is satisfied when you can say which one you would defend to a board and what evidence you would bring.
+
+Those are different exams and different study plans, and the syllabus is the only place the difference is written down. Working through [a full month of earned value end to end](https://projectcontrolsinstitute.org/earned-value-worked-example) is a fair way to test which depth you are currently at.
 
 ## Assumed prior knowledge is a gate in disguise
 
@@ -83,7 +85,9 @@ None of that is a shortcoming. Each of those categories is examining its own sub
 
 The PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI) each publish a Body of Knowledge in full, free, before anybody pays anything.
 
-The three run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas. Across the three volumes there are 92 sector case studies, and 113 mandatory PCI Standards carrying 532 process requirements sit underneath them, so the requirement being examined is written down rather than implied. Each Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI — that is the proportion of the syllabus, not an examination weighting, and PCI does not publish an examination weighting because the blueprint is a separate and open decision. A suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material; PCL-AI has no equivalent suite.
+The three run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas. Across the three volumes there are 92 sector case studies, and 113 mandatory PCI Standards carrying 532 process requirements sit underneath them, so the requirement being examined is written down rather than implied.
+
+Each Body of Knowledge is proportioned 40% finance and reporting, 40% project management and 20% governed AI — that is the proportion of the syllabus, not an examination weighting, and PCI does not publish an examination weighting because the blueprint is a separate and open decision. A suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material; PCL-AI has no equivalent suite.
 
 Those are the numbers to check the document against. The method for doing it is the same one you would apply anywhere else, set out in [how to read a Body of Knowledge before you pay](https://credentialfinder.org/how-to-read-a-body-of-knowledge).
 
