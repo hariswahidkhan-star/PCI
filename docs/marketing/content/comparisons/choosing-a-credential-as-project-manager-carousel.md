@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        HowTo
-word_count:    812
+word_count:    572
 hashtags:      #ProjectControls #ProjectManagement #EarnedValue #CostEngineering
 compares:      [project management certifications, cost and scheduling credentials, accountancy and finance qualifications, the established project controls certifications]
 ab_id:         n/a — comparison run, batch 15

@@ -2,7 +2,7 @@
 platform:      X / Threads
 type:          thread
 title:         Scheduler to controls: the three things you now sign
-meta:          An eight-post thread on the earning rule that moves CPI from 1.07 to 0.86, the three items a scheduler starts signing in controls, and which category examines them.
+meta:          An eight-post thread on the earning rule that moves CPI from 1.07 to 0.86, and the three items a scheduler starts signing on the move into controls.
 primary_kw:    credential as a scheduler
 secondary_kw:  earning rules, earned value, cut-off date, PCL-AI
 pillar:        Planning and scheduling

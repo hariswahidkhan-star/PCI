@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article
-word_count:    296
+word_count:    297
 hashtags:      #ProjectControls #ProjectManagement #EarnedValue #PMO
 compares:      [project management certifications, cost and scheduling credentials, accountancy and finance qualifications]
 ab_id:         n/a — comparison run, batch 15
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison run, batch 15
 
 # The £800k swing that nobody on site caused
 
-*LinkedIn text post — 1,730 characters including hashtags. No link in the body; the link goes in the first comment.*
+*LinkedIn text post — 1,871 characters including hashtags. No link in the body; the link goes in the first comment.*
 
 A forecast moved £800k in a week. Nothing happened on site.
 

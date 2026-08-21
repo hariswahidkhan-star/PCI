@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article + FAQPage
-word_count:    1,398
+word_count:    1,437
 hashtags:      #QuantitySurveying #ProjectControls #ProjectFinance #CostEngineering #PMO
 ab_id:         n/a
 compares:      [chartered routes in surveying and engineering, accountancy and finance qualifications, cost and scheduling credentials]

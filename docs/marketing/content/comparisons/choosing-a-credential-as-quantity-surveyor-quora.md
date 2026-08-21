@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        FAQPage
-word_count:    558
+word_count:    581
 hashtags:      n/a (Quora)
 ab_id:         n/a
 compares:      [chartered routes in surveying and engineering, accountancy and finance qualifications, cost and scheduling credentials]

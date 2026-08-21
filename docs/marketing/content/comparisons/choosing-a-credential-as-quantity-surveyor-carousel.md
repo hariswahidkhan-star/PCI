@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        HowTo
-word_count:    742
+word_count:    541
 hashtags:      #QuantitySurveying #ProjectControls #ProjectFinance #CostEngineering
 ab_id:         n/a
 compares:      [chartered routes in surveying and engineering, accountancy and finance qualifications, cost and scheduling credentials]

@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        FAQPage
-word_count:    572
+word_count:    583
 hashtags:      n/a (Quora)
 ab_id:         n/a
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, the established project controls certifications]

@@ -83,7 +83,7 @@ PML-AI.
 
 ---
 
-*First reply: https://credentialfinder.org/choosing-a-credential-as-pmo-lead*
+*First reply:* https://credentialfinder.org/choosing-a-credential-as-pmo-lead
 
 *Linking note: one link, in the first reply, to the PMO lead guide on credentialfinder.org — it
 answers the question post 6 raises about which category examines decomposition. No link to any

@@ -11,7 +11,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — Quora offers no canonical control, so nothing here appears in this wording on any PCI page
 schema:        n/a — Quora controls its own markup
-word_count:    548
+word_count:    497
 hashtags:      none — tag the answer to existing topics: Project Management, Construction Management, Cost Engineering, Professional Certification
 compares:      [project management certifications, cost and scheduling credentials, accountancy and finance qualifications, the established project controls certifications]
 ab_id:         n/a — comparison run, batch 15

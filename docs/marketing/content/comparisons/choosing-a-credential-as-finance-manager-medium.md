@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         A credential for a finance manager on capital projects
-meta:          A credential for a finance manager on capital projects should examine the inputs you did not build: the estimate, the progress figure and the certification calendar.
+meta:          A credential for a finance manager on capital projects should examine the inputs you did not build: the estimate, the progress and the cash calendar.
 primary_kw:    credential for a finance manager on capital projects
 secondary_kw:  working capital on projects, retention and payment terms, upstream project inputs, what a finance qualification examines
 pillar:        Cost control and estimating
@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/choosing-a-credential-as-finance-manager
 schema:        Article + FAQPage
-word_count:    1,290
+word_count:    1,260
 hashtags:      Medium tags — Project Management, Construction, Finance, Certification, Careers
 compares:      [accountancy and finance qualifications, cost and scheduling credentials, audit credentials]
 ab_id:         n/a — comparison run, batch 15

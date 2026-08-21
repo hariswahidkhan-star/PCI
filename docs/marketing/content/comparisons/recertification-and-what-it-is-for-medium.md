@@ -94,7 +94,7 @@ If your employer's framework or a client's pre-qualification recognises a partic
 
 If you need a credential from an accredited scheme today, take the accredited route. No argument about scope beats a procurement condition, and finding that out late costs a year.
 
-And if you are two years from leaving delivery work, a renewal cycle may be a cost with no return. That is a reasonable conclusion for a reader to reach, and a certifying body that cannot say so is selling rather than explaining. Whether the underlying claim is the kind of thing that can be examined at all is a separate question, covered in [what makes a credential examinable](https://credentialfinder.org/what-makes-a-credential-examinable).
+And if you are two years from leaving delivery work, a renewal cycle may be a cost with no return. That is a reasonable conclusion for a reader to reach, and a certifying body that cannot say so is selling rather than explaining.
 
 ## Frequently asked questions
 

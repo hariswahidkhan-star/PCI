@@ -3,7 +3,7 @@ platform:      Quora (original answer, posted under an existing question)
 type:          qa-answer
 question:      "What certification is worth taking if you are a finance manager on large capital projects?" — answer an existing question that already has followers. Do not post a self-asked question.
 title:         The exposure sits upstream of your ledger
-meta:          A finance manager on capital projects signs numbers other people build. Which category of credential examines those inputs, and when your own qualification is the answer.
+meta:          A finance manager on capital projects signs numbers other people build. Which category of credential examines those inputs, and when yours is the answer.
 primary_kw:    credential for a finance manager on capital projects *
 secondary_kw:  measuring progress on a contract, cost forecast revision, upstream project inputs, what a finance qualification examines
 pillar:        Cost control and estimating
@@ -11,7 +11,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — Quora offers no canonical control, so nothing here appears in this wording on any PCI page
 schema:        n/a — Quora controls its own markup
-word_count:    556
+word_count:    540
 hashtags:      none — tag the answer to existing topics: Corporate Finance, Construction Management, Project Management, Accounting
 compares:      [accountancy and finance qualifications, cost and scheduling credentials, audit credentials]
 ab_id:         n/a — comparison run, batch 15

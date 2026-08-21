@@ -26,23 +26,23 @@ You sample 30 progress claims on a capital project. Four have no measurement rec
 
 4 ÷ 30 = 13.3%.
 
-£6.0m of progress was claimed in the period, so 6.0 × 0.133 is roughly £0.80m claimed without evidence underneath it.
+£6.0m of progress was claimed in the period, so 6.0 × 0.133 ≈ £0.80m claimed without evidence behind it.
 
-That is already a defensible finding. Written up as "records were missing", it goes in the appendix and somebody promises a template.
+Written up as "records were missing", that goes in the appendix and somebody promises a template.
 
 Now write it the other way.
 
-Unsupported progress inflates earned value. Inflated earned value raises the cost performance index. A raised index lowers the forecast out-turn. And where progress is measured by costs incurred against total expected costs, a lower forecast raises the percentage complete — and therefore the revenue recognised in the period.
+Unsupported progress inflates earned value. That raises the cost performance index, which lowers the forecast out-turn. And where progress is measured by costs incurred against total expected costs, a lower forecast raises the percentage complete — and the revenue recognised with it.
 
-Same evidence. The finding is now that up to £0.80m of unevidenced progress has flowed through an index into a reported number. It lands in the executive summary instead, and it gets fixed.
+Same evidence. Now the finding is that £0.80m of unevidenced progress has flowed through an index into a reported number, and it lands in the executive summary.
 
-Audit credentials examine governance, risk, control and the assurance process. That is a full profession with its own standards, and it transfers to capital projects intact. What does not come with it is the technical subject the controls are meant to govern: earning rules, cut-off dates, accruals, the forecast at completion.
+Audit credentials examine governance, risk, control and the assurance process — a full profession, and it transfers to projects intact. What does not come with it is the technical subject those controls govern: earning rules, cut-off dates, accruals, the forecast at completion.
 
-Four artefacts. That is the whole gap, and it is much smaller than a second profession.
+Four artefacts. That is the whole gap, and it is smaller than a second profession.
 
-Where a project credential is the wrong answer: if you audit information systems, the credential built for that subject is the right one. If your firm's methodology and progression name a certification, take that one.
+Where a project credential is the wrong answer: if you audit information systems, the one built for that subject is right; if your firm's progression names a certification, take it.
 
-The narrow case is capital project engagements where the findings that matter are about numbers rather than process. PFL-AI covers the reporting boundary at 16 domains and 61 knowledge areas.
+The narrow case is regular capital project work where the findings that matter are numbers. PFL-AI covers that boundary: 16 domains, 61 knowledge areas.
 
 Disclosure: credentialfinder.org is operated by Project Controls Institute Global, which awards it.
 

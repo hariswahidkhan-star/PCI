@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> /choosing-a-credential-as-quantity-surveyor (credentialfinder.org original)
 schema:        Article + FAQPage
-word_count:    1,462
+word_count:    1,434
 hashtags:      #QuantitySurveying #ProjectControls #ProjectFinance #CostEngineering
 ab_id:         n/a
 compares:      [chartered routes in surveying and engineering, accountancy and finance qualifications, cost and scheduling credentials]

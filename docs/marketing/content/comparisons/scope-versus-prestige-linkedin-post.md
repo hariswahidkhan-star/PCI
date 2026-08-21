@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 10
 
 # Recognition gets the interview. Scope gets the year
 
-**Post body (CHARS characters):**
+**Post body (1,827 characters):**
 
 Recognition gets you the interview. Scope decides the year that follows.
 

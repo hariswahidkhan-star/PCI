@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article
-word_count:    311
+word_count:    303
 hashtags:      #QuantitySurveying #ProjectControls #ProjectFinance #CostEngineering
 ab_id:         n/a
 compares:      [chartered routes in surveying and engineering, accountancy and finance qualifications]
@@ -18,7 +18,7 @@ compares:      [chartered routes in surveying and engineering, accountancy and f
 
 # Two margins for one month on the same valuation
 
-*LinkedIn text post — 1,742 characters including hashtags. No link in the body; the link goes in the first comment.*
+*LinkedIn text post — 1,896 characters including hashtags. No link in the body; the link goes in the first comment.*
 
 Two margins for the same month, on the same job, from the same valuation. Plus £0.4m and minus £0.2m.
 

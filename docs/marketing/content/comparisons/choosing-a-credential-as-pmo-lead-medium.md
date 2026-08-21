@@ -18,7 +18,7 @@ compares:      [project management certifications, the established project contr
 
 # The credential for a PMO lead, decided on what you sign
 
-*Republished from credentialfinder.org. Set the Medium canonical to https://credentialfinder.org/choosing-a-credential-as-pmo-lead before publishing.*
+*Republished from credentialfinder.org. Set the Medium canonical to the credentialfinder.org original linked at the foot of this piece before publishing.*
 
 ---
 

@@ -24,7 +24,7 @@ compares:      [cost and scheduling credentials, the established project control
 
 Two earning rules. One month. Same steel in the ground. Two different stories in the pack.
 
-A package worth £1.2m starts in the period and finishes in the next one.
+A package worth £1.2m starts this period and finishes in the next.
 
 Under a 50/50 rule, half its value earns on start.
 Under a 0/100 rule, nothing earns until it is complete.
@@ -36,19 +36,19 @@ Actual cost, either way: £2.8m
 CPI = 3.0 ÷ 2.8 = 1.07 → the job is ahead.
 CPI = 2.4 ÷ 2.8 = 0.86 → the job is behind.
 
-Nothing physical differs between those two months. A rule chosen at baseline, often by whoever set the template up, decided which one the sponsor worries about.
+Nothing physical differs. A rule chosen at baseline, often by whoever set up the template, decided which one the sponsor worries about.
 
-That rule is the first of three things that arrive when a scheduler moves into controls. The other two are the forecast and the cut-off date. Each produces a number somebody outside delivery relies on, and each one starts carrying your name.
+That rule is the first of three things a scheduler takes on in controls. The other two are the forecast and the cut-off date. Each produces a number somebody outside delivery relies on, and each carries your name.
 
 Scheduling credentials examine schedule development, maintenance and analysis, thoroughly and by design. The three new items sit past that boundary — and a boundary is a design decision, not a shortcoming.
 
-Two honest exits before the pitch. If you like the programme work and the move is somebody else's idea, stay: deep schedule analysis is scarce, and it is a career rather than a waypoint. If a client's prequalification or a grading matrix names a certification, take the named one, because a stated requirement does not lose to a scope argument.
+Two honest exits. If you like the programme work and the move is somebody else's idea, stay — deep schedule analysis is scarce and it is a career, not a waypoint. If a prequalification names a certification, take that one; a requirement does not lose to a scope argument.
 
 If you are the one signing the earning rule, choose the syllabus that examines it. PCL-AI runs to 13 domains and 61 knowledge areas across the control cycle and the reporting handover.
 
 Disclosure: credentialfinder.org is operated by Project Controls Institute Global, which awards PCL-AI.
 
-PCI is new and not accredited — read the syllabus and judge it. It is published in full, free, before anyone pays anything.
+PCI is new and not accredited — read the syllabus and judge it. It is published in full, free, before anyone pays.
 
 #ProjectControls #EarnedValue #Scheduling #ProjectFinance
 

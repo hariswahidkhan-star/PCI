@@ -54,7 +54,7 @@ And if your grading matrix names a certification for the band you want, take tha
 
 ---
 
-*First comment: https://credentialfinder.org/choosing-a-credential-as-project-controls-manager*
+*First comment:* https://credentialfinder.org/choosing-a-credential-as-project-controls-manager
 
 *Linking note: the first comment carries the single link, to the controls manager guide on
 credentialfinder.org, which answers the question the forecast spread raises about which category

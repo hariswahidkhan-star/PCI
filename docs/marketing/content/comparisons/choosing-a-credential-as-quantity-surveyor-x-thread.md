@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article
-word_count:    296
+word_count:    208
 hashtags:      #QuantitySurveying #ProjectControls
 ab_id:         n/a
 compares:      [chartered routes in surveying and engineering, accountancy and finance qualifications]
@@ -20,25 +20,25 @@ compares:      [chartered routes in surveying and engineering, accountancy and f
 
 *X / Threads thread — 7 posts, each under 280 characters and each able to stand alone. No link in the thread itself; the link goes in the first reply. X counts any URL as 23 characters.*
 
-**Post 1/7 — the hook** (172 characters)
+**Post 1/7 — the hook** (165 characters)
 Two margins for the same month on the same job. Plus £0.4m and minus £0.2m.
 
 The difference is one instructed change nobody has agreed. Both readings are defensible.
 
-**Post 2/7 — the figures** (163 characters)
+**Post 2/7 — the figures** (158 characters)
 Cumulative valuation of work executed £8.0m, of which £0.6m is an instruction still under negotiation.
 
 Cost incurred to date £7.6m. Nothing disputed on site.
 
-**Post 3/7 — the arithmetic** (198 characters)
+**Post 3/7 — the arithmetic** (177 characters)
 As valued: 8.0 − 7.6 = +£0.4m.
 
 Amounts depending on a negotiation are recognised only when it is highly probable they will not reverse. Constrain the £0.6m: 7.4 − 7.6 = −£0.2m.
 
-**Post 4/7 — whose subject is that** (233 characters)
+**Post 4/7 — whose subject is that** (214 characters)
 Chartered routes in surveying and engineering assess measurement, valuation and entitlement through years of supervised practice. That is the profession's own subject, assessed to a standard built over a long time.
 
-**Post 5/7 — the other side** (211 characters)
+**Post 5/7 — the other side** (209 characters)
 Accountancy and finance qualifications examine recognition, measurement, disclosure and control — the whole downstream subject, far wider than the part touching your valuation.
 
 Each does its own job properly.
