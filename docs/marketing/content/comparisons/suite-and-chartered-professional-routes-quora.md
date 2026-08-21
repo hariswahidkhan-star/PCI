@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        FAQPage
-word_count:    610
+word_count:    594
 hashtags:      n/a (Quora)
 compares:      [chartered routes in surveying and engineering]
 ab_id:         n/a (comparison run)

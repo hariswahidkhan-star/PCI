@@ -77,9 +77,18 @@ Say only what is true of the whole category, at a generality no reader could dis
 - Project management certifications examine managing projects across people, process and the
   business environment.
 
-**Never publish:** a fee · a question count · an exam length · a domain count · a pass mark · a
-pass rate · a difficulty ranking · a prestige claim · an employer-preference claim · a salary
-outcome. For any category, and for PCI.
+**Never publish, about another category or credential:** a fee · a question count · an exam
+length · a domain count · a knowledge-area count · a pass mark · a pass rate · a difficulty
+ranking · a prestige claim · an employer-preference claim · a salary outcome.
+
+**PCI's own counts are different and are permitted** — 13/16/16 domains and 61/61/63 knowledge
+areas are in the figures list below and may be stated descriptively, to say what PCI's own
+syllabus contains. What they may never do is sit *opposite* another category's equivalent, in
+a table row or a sentence, because PCI does not have that other number and implying one is the
+failure this rule exists to prevent.
+
+For PCI itself the bans that hold without exception are: pass rates, salary outcomes, holder
+numbers, student numbers, worked-example counts and examination weightings.
 
 ## Never disparage
 
