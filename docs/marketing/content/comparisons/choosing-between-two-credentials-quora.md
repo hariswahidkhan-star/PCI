@@ -1,7 +1,7 @@
 ---
 platform:      Quora
 type:          qa-list
-title:         How do I choose between two certifications?
+title:         How do I choose between two certifications properly?
 meta:          Everyone recommends a different one because the weights are personal. Six rows, the signed-decision count, and the preparation hours worked out in weeks.
 primary_kw:    how to choose between two certifications *
 secondary_kw:  comparing two syllabuses, preparation hours, credential decision grid, what a certification examines
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /choosing-between-two-credentials
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, project management certifications, chartered routes in surveying and engineering]
 schema:        FAQPage
-word_count:    580
+word_count:    593
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# How do I choose between two certifications?
+# How do I choose between two certifications properly?
 
 By scoring both against the decisions you personally sign, rather than by looking for a ranking. Everybody you ask recommends a different one because they are each answering for their own job, and the answer genuinely changes with the job.
 

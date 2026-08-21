@@ -1,7 +1,7 @@
 ---
 platform:      X / Threads
 type:          thread
-title:         Twenty days of float, priced: a planner's choice
+title:         Twenty days of float, priced: a planning engineer's choice
 meta:          Nine posts for planners choosing a credential: float priced at £8,500 a day, the eight days nobody pays for, and the boundary your examination has to cross.
 primary_kw:    credential for a planning engineer *
 secondary_kw:  what a scheduling credential examines, float and prolongation, planning engineer certification choice
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     derived from /choosing-a-credential-as-planning-engineer (credentialfinder.org original) — written for X, not a copy
 compares:      [cost and scheduling credentials, the established project controls certifications, project management certifications]
 schema:        Article
-word_count:    355
+word_count:    304
 hashtags:      #ProjectControls
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# Twenty days of float, priced: a planner's choice
+# Twenty days of float, priced: a planning engineer's choice
 
 *X / Threads thread — 9 posts, each under 280 characters and each able to stand alone. The link goes in the first reply. Character counts are for production; X counts any URL as 23 characters.*
 
@@ -64,10 +64,10 @@ Programme, logic, status, delay analysis and nothing downstream? A scheduling-fo
 **Post 8/9 — when to stop reasoning** (217 characters)
 Two cases end this early. A client's prequalification or a grading matrix names a certification: take the named one. A procurement rule requires an accredited credential: that settles it, and it settles it against us.
 
-**Post 9/9 — ours, plainly** (235 characters)
+**Post 9/9 — ours, plainly** (258 characters)
 PCI publishes its Bodies of Knowledge in full and free before anybody pays, and publishes no pass rates.
 
-credentialfinder.org is operated by PCI Global. PCI is new and not accredited — read the syllabus and judge it.
+credentialfinder.org is operated by Project Controls Institute Global. PCI is new and not accredited — read the syllabus and judge it.
 
 #ProjectControls
 

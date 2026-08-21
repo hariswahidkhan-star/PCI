@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         What a syllabus should tell you before you sign up
-meta:          A syllabus should state what is examined, at what depth, in what proportion and what it assumes you know. Six checks, and what a missing one means.
+meta:          What a syllabus should tell you: what is examined, at what depth, in what proportion, and what it assumes you know. Six checks, and what a missing one means.
 primary_kw:    what a syllabus should tell you *
 secondary_kw:  reading a body of knowledge, depth of examination, assumed prior knowledge, syllabus exclusions
 pillar:        Certification and careers
@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/what-a-syllabus-should-tell-you
 schema:        Article + FAQPage
-word_count:    1,405
+word_count:    1,471
 hashtags:      Medium tags — Project Management, Certification, Construction, Careers, Engineering
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, project management certifications]
 ab_id:         n/a — comparison plan batch 9

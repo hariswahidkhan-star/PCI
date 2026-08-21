@@ -1,7 +1,7 @@
 ---
 platform:      LinkedIn carousel
 type:          carousel
-title:         Two credentials, six rows, one evening of work
+title:         Two credentials, six rows, and one evening of work
 meta:          Twelve slides on choosing between two credentials without a ranking: the six rows, the signed-decision count, the hours in weeks, and when to stop early.
 primary_kw:    choosing between two credentials *
 secondary_kw:  comparing two syllabuses, preparation hours, credential decision grid, category comparison
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     derived from /choosing-between-two-credentials (credentialfinder.org original) — built for the carousel, not a copy
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, project management certifications, chartered routes in surveying and engineering]
 schema:        Article
-word_count:    945
+word_count:    946
 hashtags:      #ProjectControls #ProjectManagement #PMO
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# Two credentials, six rows, one evening of work
+# Two credentials, six rows, and one evening of work
 
 *LinkedIn document post — 12 slides, 1080 × 1350. No link in the body; the link goes in the first comment.*
 

@@ -65,11 +65,13 @@ Your firm's progression names a credential → take that one.
 You need accreditation today → go where it exists.
 
 **8/**
-The narrow case: project work where the findings that matter are numbers.
+The narrow case: findings that turn on numbers.
 
-PFL-AI covers it — 16 domains, 61 knowledge areas.
+PFL-AI covers it: 16 domains, 61 knowledge areas.
 
-Disclosure: credentialfinder.org is run by PCI Global, which awards it. New, not accredited — read the syllabus.
+Disclosure: credentialfinder.org is run by PCI Global, which awards it.
+
+PCI is new and not accredited — read the syllabus, free and in full.
 
 #InternalAudit #ProjectControls
 

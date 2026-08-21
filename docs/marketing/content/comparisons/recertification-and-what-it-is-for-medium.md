@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/recertification-and-what-it-is-for
 schema:        Article + FAQPage
-word_count:    1,318
+word_count:    1,355
 hashtags:      Medium tags — Project Management, Certification, Careers, Construction, Engineering
 compares:      [credentials with a validity period and recorded CPD, credentials requiring re-examination, credentials awarded once with no expiry]
 ab_id:         n/a — comparison plan batch 9

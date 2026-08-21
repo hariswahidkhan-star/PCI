@@ -2,7 +2,7 @@
 platform:      LinkedIn post
 type:          linkedin-post
 title:         One missing invoice, one million pounds of forecast
-meta:          A £0.45m accrual moves cost performance from 1.048 to 0.978 and outturn by £1.0m. Whether your examination follows that number is the cost controller's choice.
+meta:          A £0.45m accrual moves cost performance from 1.048 to 0.978 and outturn by £1.0m. Whether your examination follows that number is the whole choice.
 primary_kw:    credential for a cost controller *
 secondary_kw:  accruals and cost performance, what a cost credential examines, cut-off discipline, forecast to reported result
 pillar:        Cost control and estimating
@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /choosing-a-credential-as-cost-controller (credentialfinder.org original) — written for the feed, not a copy
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, the established project controls certifications]
 schema:        Article
-word_count:    335
+word_count:    348
 hashtags:      #ProjectControls #CostEngineering #ProjectFinance #PMO
 ab_id:         n/a — comparison plan batch 11
 ---

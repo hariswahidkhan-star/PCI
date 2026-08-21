@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /judging-a-certifying-body-that-is-new
 compares:      [the established project controls certifications, accountancy and finance qualifications, chartered routes in surveying and engineering]
 schema:        FAQPage
-word_count:    560
+word_count:    600
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 10
 ---
@@ -26,7 +26,7 @@ You judge a new certifying body on the three things it can put in front of you t
 
 **Ask who sells the preparation.** Find out who writes the questions, who sets the standard, who marks, and whether any of them earns money from the training. Where preparation and the certification decision sit in the same hands, the incentive runs the wrong way. The remedy is structural rather than a matter of good intentions: separation, written down and published.
 
-**Read the appeal policy before you need it.** Four things belong in it: the grounds, the timescale, the named decision-maker, and confirmation that the decision-maker was not part of the original decision. It is a short document, and a body that has thought carefully about the day a candidate disputes a result has thought about the thing that will eventually test it.
+**Read the appeal policy before you need it.** Four things belong in it: the grounds, the timescale, the named decision-maker, and confirmation that the decision-maker was not part of the original decision. A body that has designed carefully for the day a candidate disputes a result has thought about what will eventually test it.
 
 **Test verification yourself.** A credential is worth what a stranger can confirm in half a minute, years later, without your involvement. Find a holder, use the public record, and see what comes back. If confirming a result requires an email to somebody's inbox, that is what a future employer will get.
 
@@ -34,7 +34,7 @@ You judge a new certifying body on the three things it can put in front of you t
 
 One check goes against every new body, including the one I work for. An older organisation has heard appeals, revised a syllabus under pressure and survived a bad cohort. A new one has not, and cannot claim to have. Only elapsed time fixes that, and it belongs in your decision.
 
-And if a client's prequalification, a framework agreement or your employer's policy requires an accredited credential, none of the above matters yet. Take the accredited route. A procurement condition beats any argument about scope.
+And if a client's prequalification, a framework agreement or your employer's policy requires an accredited credential, none of the above matters yet. Take the accredited route; a procurement condition beats any scope argument.
 
 Disclosure, since I work for a body in this field: credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials. PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is built with reference to ISO/IEC 17024 principles. We publish the Bodies of Knowledge in full before anybody pays, and publish no pass rates, holder numbers or salary figures.
 

@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — LinkedIn Articles carry no canonical, so this is written from scratch and shares no paragraph with the credentialfinder.org version
 schema:        Article
-word_count:    1,455
+word_count:    1,590
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #CPD
 compares:      [attendance and completion certificates, examined certifications, product certifications for scheduling software]
 ab_id:         n/a — comparison plan batch 9

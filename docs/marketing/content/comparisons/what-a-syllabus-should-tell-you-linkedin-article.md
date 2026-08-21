@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — LinkedIn Articles carry no canonical, so this is written from scratch and shares no paragraph with the credentialfinder.org version
 schema:        Article
-word_count:    1,428
+word_count:    1,513
 hashtags:      #ProjectControls #ProjectFinance #CostEngineering #PMO
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, project management certifications]
 ab_id:         n/a — comparison plan batch 9

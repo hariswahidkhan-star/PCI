@@ -1,8 +1,8 @@
 ---
 platform:      Medium
 type:          guide
-title:         Choosing a credential as a planning engineer
-meta:          Which credential fits a planner depends on what you sign. Programme only, or the numbers the programme moves? Float priced, and the categories compared on scope.
+title:         Choosing a credential as a planning engineer, by scope
+meta:          Which credential fits a planner depends on what you sign. Programme only, or the numbers the programme moves? Float priced, and categories compared on scope.
 primary_kw:    credential for a planning engineer *
 secondary_kw:  what a scheduling credential examines, float and prolongation, planning engineer certification choice, scope of a syllabus
 pillar:        Planning and scheduling
@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     canonical -> /choosing-a-credential-as-planning-engineer (credentialfinder.org original)
 compares:      [cost and scheduling credentials, the established project controls certifications, project management certifications, product certifications for scheduling software]
 schema:        Article + FAQPage
-word_count:    1,500
+word_count:    1,496
 hashtags:      #ProjectControls #Scheduling #ProjectManagement #PMO
 ab_id:         n/a — comparison plan batch 11
 ---

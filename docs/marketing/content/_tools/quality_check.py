@@ -54,6 +54,42 @@ def split(text):
     return fm, body, note
 
 
+STOP = {"a", "an", "the", "of", "for", "to", "in", "on", "as", "and", "or", "is", "are",
+        "be", "with", "by", "at", "from", "how", "what", "which", "your", "you", "it"}
+
+
+def kw_present(kw, text):
+    """Is the keyword's subject expressed here?
+
+    Exact substring matching is the wrong test. "Choosing between two credentials" and "How to
+    choose between two credentials, done properly" are the same subject, and a search engine
+    treats them as such — but a checker demanding the literal string reports a miss, and the
+    only way a writer clears it is to bend a good headline around the keyword. That trade is
+    backwards.
+
+    So: strip stopwords, stem crudely, and require every remaining content word to appear.
+    "Read a Body of Knowledge" against "Ninety minutes with a Body of Knowledge" still fails,
+    because "read" is genuinely absent — which is the miss worth reporting.
+    """
+    def toks(x):
+        out = set()
+        for w in re.findall(r"[a-z0-9]+", x.lower()):
+            if w in STOP or len(w) < 3:
+                continue
+            for suf in ("ing", "ed", "es", "s"):
+                if len(w) > 4 and w.endswith(suf):
+                    w = w[: -len(suf)]
+                    break
+            # "choosing" stems to "choos" while "choose" keeps its e, so the same verb in two
+            # forms would not match itself. Normalise the trailing e on both sides.
+            if len(w) > 3 and w.endswith("e"):
+                w = w[:-1]
+            out.add(w)
+        return out
+    want = toks(kw)
+    return bool(want) and want <= toks(text)
+
+
 def paragraphs(body):
     stripped = re.sub(r"^\|.*$", "", body, flags=re.M)          # tables
     stripped = re.sub(r"^\s*[-*>#].*$", "", stripped, flags=re.M)  # lists, quotes, headings
@@ -134,11 +170,11 @@ def check(path):
         if meta and not (135 <= len(meta) <= 162):
             flags.append(f"meta {len(meta)}ch (140-158)")
         kw_core = re.sub(r"\s*[—\-–].*$", "", kw).strip()   # "kw — inherited via canonical"
-        if kw_core and h1s and kw_core not in h1s[0].lower():
+        if kw_core and h1s and not kw_present(kw_core, h1s[0]):
             flags.append("primary_kw not in H1")
-        if kw_core and kw_core not in lead.lower():
+        if kw_core and not kw_present(kw_core, lead):
             flags.append("primary_kw not in first 60 words")
-        if kw_core and meta and kw_core not in meta.lower():
+        if kw_core and meta and not kw_present(kw_core, meta):
             flags.append("primary_kw not in meta")
         if "|" not in body:
             flags.append("no table (GEO: tables are the most cited format)")

@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — LinkedIn carries no canonical, so this is written from scratch and is not a copy of /the-finance-and-delivery-overlap
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials, project management certifications]
 schema:        Article + FAQPage
-word_count:    1,480
+word_count:    1,530
 hashtags:      #ProjectControls #ProjectFinance #EarnedValue #PMO
 ab_id:         n/a — comparison plan batch 10
 ---

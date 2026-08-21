@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /the-finance-and-delivery-overlap (credentialfinder.org original) — written for the feed, not a copy
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials]
 schema:        Article
-word_count:    330
+word_count:    340
 hashtags:      #ProjectControls #ProjectFinance #CostEngineering #PMO
 ab_id:         n/a — comparison plan batch 10
 ---

@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /judging-a-certifying-body-that-is-new (credentialfinder.org original) — written for X, not a copy
 compares:      [the established project controls certifications, accountancy and finance qualifications, chartered routes in surveying and engineering]
 schema:        Article
-word_count:    400
+word_count:    430
 hashtags:      #ProjectControls
 ab_id:         n/a — comparison plan batch 10
 ---

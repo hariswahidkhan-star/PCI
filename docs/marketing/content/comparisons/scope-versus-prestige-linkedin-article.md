@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — LinkedIn carries no canonical, so this is written from scratch and is not a copy of /scope-versus-prestige
 compares:      [cost and scheduling credentials, project management certifications, accountancy and finance qualifications, chartered routes in surveying and engineering]
 schema:        Article + FAQPage
-word_count:    1,450
+word_count:    1,500
 hashtags:      #ProjectControls #ProjectManagement #ProjectFinance #PMO
 ab_id:         n/a — comparison plan batch 10
 ---

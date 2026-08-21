@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /scope-versus-prestige (credentialfinder.org original) — built for the carousel, not a copy
 compares:      [cost and scheduling credentials, project management certifications, accountancy and finance qualifications, chartered routes in surveying and engineering]
 schema:        Article
-word_count:    930
+word_count:    920
 hashtags:      #ProjectControls #ProjectManagement #ProjectFinance #PMO
 ab_id:         n/a — comparison plan batch 10
 ---

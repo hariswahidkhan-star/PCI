@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         Choosing between two credentials, without a ranking
-meta:          Two credentials, one budget, no league table. Six rows, the decisions you sign, and the preparation hours worked in weeks rather than fees.
+meta:          Two credentials, one budget and no league table. Six rows, the decisions you sign, and the preparation hours worked out in weeks rather than fees.
 primary_kw:    choosing between two credentials *
 secondary_kw:  comparing two syllabuses, preparation hours, credential decision grid, what a credential examines
 pillar:        Certification and careers
@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     canonical -> /choosing-between-two-credentials (credentialfinder.org original)
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, project management certifications, chartered routes in surveying and engineering]
 schema:        Article + FAQPage
-word_count:    1,620
+word_count:    1,618
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #PMO
 ab_id:         n/a — comparison plan batch 11
 ---

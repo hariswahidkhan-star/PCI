@@ -1,7 +1,7 @@
 ---
 platform:      LinkedIn post
 type:          linkedin-post
-title:         Float looks free until somebody prices it
+title:         Float looks free until somebody prices it in pounds
 meta:          Twenty days of float at £8,500 a day is £170,000. Whether your examination follows that number past the programme is the credential question for a planner.
 primary_kw:    credential for a planning engineer *
 secondary_kw:  what a scheduling credential examines, float and prolongation, planning engineer certification choice
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     derived from /choosing-a-credential-as-planning-engineer (credentialfinder.org original) — written for the feed, not a copy
 compares:      [cost and scheduling credentials, the established project controls certifications, project management certifications]
 schema:        Article
-word_count:    330
+word_count:    327
 hashtags:      #ProjectControls #Scheduling #PMO #ProjectManagement
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# Float looks free until somebody prices it
+# Float looks free until somebody prices it in pounds
 
 **Post body (1,883 characters):**
 

@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /scope-versus-prestige
 compares:      [cost and scheduling credentials, project management certifications, chartered routes in surveying and engineering]
 schema:        FAQPage
-word_count:    570
+word_count:    600
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 10
 ---

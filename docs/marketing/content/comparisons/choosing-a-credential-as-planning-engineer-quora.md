@@ -1,7 +1,7 @@
 ---
 platform:      Quora
 type:          qa-list
-title:         Which certification suits a planning engineer?
+title:         Which certification actually suits a planning engineer?
 meta:          It depends how far past the programme your signature travels. Float priced at £8,500 a day, what each category examines, and when the shorter route wins.
 primary_kw:    best certification for a planning engineer *
 secondary_kw:  what a scheduling credential examines, planning engineer certification choice, float and prolongation, scope of a syllabus
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /choosing-a-credential-as-planning-engineer
 compares:      [cost and scheduling credentials, the established project controls certifications, project management certifications, product certifications for scheduling software]
 schema:        FAQPage
-word_count:    585
+word_count:    594
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# Which certification suits a planning engineer?
+# Which certification actually suits a planning engineer?
 
 It depends on how far past the programme your signature travels, which is a question about your job rather than about the credentials. Two planners with the same title sign very different things, which is why the honest answer is a sorting rule rather than a name.
 

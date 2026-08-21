@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /choosing-a-credential-as-planning-engineer (credentialfinder.org original) — built for the carousel, not a copy
 compares:      [cost and scheduling credentials, the established project controls certifications, project management certifications, product certifications for scheduling software]
 schema:        Article
-word_count:    920
+word_count:    919
 hashtags:      #ProjectControls #Scheduling #PMO
 ab_id:         n/a — comparison plan batch 11
 ---

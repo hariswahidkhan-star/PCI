@@ -1,7 +1,7 @@
 ---
 platform:      LinkedIn post
 type:          linkedin-post
-title:         Two credentials, one evening, no league table
+title:         How to choose between two credentials in one evening
 meta:          Nobody can rank two credentials for you. Six rows, the decisions you sign, and the preparation hours nobody publishes — worked in weeks, not fees.
 primary_kw:    choosing between two credentials *
 secondary_kw:  comparing two syllabuses, preparation hours, credential decision grid, what a credential examines
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     derived from /choosing-between-two-credentials (credentialfinder.org original) — written for the feed, not a copy
 compares:      [cost and scheduling credentials, project management certifications, accountancy and finance qualifications]
 schema:        Article
-word_count:    320
+word_count:    344
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #PMO
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# Two credentials, one evening, no league table
+# How to choose between two credentials in one evening
 
 **Post body (1,845 characters):**
 

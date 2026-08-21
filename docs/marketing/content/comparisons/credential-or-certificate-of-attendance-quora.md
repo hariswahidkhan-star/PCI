@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /credential-or-certificate-of-attendance
 schema:        FAQPage
-word_count:    568
+word_count:    606
 hashtags:      n/a (Quora)
 compares:      [attendance and completion certificates, examined certifications, product certifications for scheduling software]
 ab_id:         n/a — comparison plan batch 9

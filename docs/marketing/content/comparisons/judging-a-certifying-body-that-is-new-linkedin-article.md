@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — LinkedIn Articles carry no canonical, so this is written from scratch and shares no paragraph with the credentialfinder.org version
 schema:        Article
-word_count:    1,412
+word_count:    1,577
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #PMO
 compares:      [the established project controls certifications, accountancy and finance qualifications, chartered routes in surveying and engineering]
 ab_id:         n/a — comparison plan batch 9
@@ -82,7 +82,9 @@ What a new organisation can do is design for those questions in advance and publ
 
 PCI is new. That is the first thing to weigh, not the last.
 
-The syllabus is published in full and free. The PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI) run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas, with 92 sector case studies across the three volumes and 113 mandatory PCI Standards carrying 532 process requirements underneath them. A suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material, and PCL-AI has no equivalent suite. Those are checkable facts about documents, not claims about outcomes.
+The syllabus is published in full and free. The PCI AI Project Controls Leader (PCL-AI), the PCI AI Project Finance Leader (PFL-AI) and the PCI Project Management Leader – AI (PML-AI) run to 13, 16 and 16 domains and 61, 61 and 63 knowledge areas.
+
+Behind them sit 92 sector case studies across the three volumes and 113 mandatory PCI Standards carrying 532 process requirements. A suite of 15,613 machine calculation checks covers the PFL-AI and PML-AI material, and PCL-AI has no equivalent suite. Those are checkable facts about documents, not claims about outcomes.
 
 Separation is built in: preparation and the certification decision are held apart, which is a structural choice you can interrogate rather than a promise you have to take. The appeal route and the renewal cycle are published. The verification record exists and can be tested without an account.
 

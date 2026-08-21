@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /recertification-and-what-it-is-for
 schema:        FAQPage
-word_count:    571
+word_count:    586
 hashtags:      n/a (Quora)
 compares:      [credentials with a validity period and recorded CPD, credentials requiring re-examination, credentials awarded once with no expiry]
 ab_id:         n/a — comparison plan batch 9

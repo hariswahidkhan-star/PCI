@@ -1,7 +1,7 @@
 ---
 platform:      LinkedIn Article
 type:          guide
-title:         How to choose between two credentials properly
+title:         How to choose between two credentials, done properly
 meta:          There is no honest league table, because the weights belong to whoever signs the work. Six rows, a category table and the preparation hours worked in weeks.
 primary_kw:    choosing between two credentials *
 secondary_kw:  comparing two syllabuses, preparation hours, what a credential examines, credential decision grid
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     original — LinkedIn carries no canonical, so this is written from scratch and is not a copy of /choosing-between-two-credentials
 compares:      [cost and scheduling credentials, the established project controls certifications, accountancy and finance qualifications, audit credentials, project management certifications, product certifications for scheduling software, chartered routes in surveying and engineering]
 schema:        Article + FAQPage
-word_count:    1,790
+word_count:    1,789
 hashtags:      #ProjectControls #ProjectManagement #CostEngineering #PMO
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# How to choose between two credentials properly
+# How to choose between two credentials, done properly
 
 Put both through the same six questions: what each examines, what each assumes you already know, who decides the result, what it costs in hours rather than fees, what changes on the day you hold it, and what happens if you fail. Score the answers against the decisions you personally sign. If they still tie, choose for the job you will hold in two years.
 

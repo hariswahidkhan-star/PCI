@@ -1,7 +1,7 @@
 ---
 platform:      LinkedIn Article
 type:          guide
-title:         What a planner should look for in a credential
+title:         What a planning engineer should look for in a credential
 meta:          Sort the choice by what you sign, not your job title. Float priced at £8,500 a day, the chain into reported margin, and the category each line belongs to.
 primary_kw:    credential for a planning engineer *
 secondary_kw:  what a scheduling credential examines, float and prolongation, planning engineer certification choice, scope of a syllabus
@@ -11,12 +11,12 @@ target_domain: credentialfinder.org
 canonical:     original — LinkedIn carries no canonical, so this is written from scratch and is not a copy of /choosing-a-credential-as-planning-engineer
 compares:      [cost and scheduling credentials, the established project controls certifications, project management certifications, product certifications for scheduling software]
 schema:        Article + FAQPage
-word_count:    1,680
+word_count:    1,682
 hashtags:      #ProjectControls #Scheduling #ProjectManagement #PMO
 ab_id:         n/a — comparison plan batch 11
 ---
 
-# What a planner should look for in a credential
+# What a planning engineer should look for in a credential
 
 If your signature stops at the programme, a credential examining schedule development, maintenance and analysis covers your job and is the shortest route to evidence. If your dates and progress drive a cost report, an entitlement position or a forecast somebody books, the examination you want has to cross that boundary. Sort it by what you sign.
 

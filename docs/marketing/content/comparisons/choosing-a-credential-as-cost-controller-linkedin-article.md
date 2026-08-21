@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          guide
 title:         The cost controller's credential question, answered
-meta:          A £0.45m accrual swings outturn by £1.0m and keeps moving after the cost report. How far past that report your signature travels decides which credential fits.
+meta:          A £0.45m accrual swings outturn by £1.0m and keeps moving after the cost report. How far past that report you sign decides which credential fits.
 primary_kw:    credential for a cost controller *
 secondary_kw:  accruals and cost performance, cut-off discipline, what a cost credential examines, forecast to reported result
 pillar:        Cost control and estimating
@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — LinkedIn carries no canonical, so this is written from scratch and is not a copy of /choosing-a-credential-as-cost-controller
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, the established project controls certifications, audit credentials]
 schema:        Article + FAQPage
-word_count:    1,700
+word_count:    1,563
 hashtags:      #ProjectControls #CostEngineering #ProjectFinance #PMO
 ab_id:         n/a — comparison plan batch 11
 ---

@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article
-word_count:    267
+word_count:    342
 hashtags:      #ProjectControls #CostEngineering
 compares:      [attendance and completion certificates, examined certifications, product certifications for scheduling software]
 ab_id:         n/a — comparison plan batch 9

@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         Credential or certificate of attendance: how to tell
-meta:          A credential is marked by somebody other than your trainer against a published standard. A certificate of attendance records the room. Four questions separate them.
+meta:          Marked against a published standard by somebody who did not teach you, or a record of hours? A certificate of attendance and a credential differ in four ways.
 primary_kw:    certificate of attendance *
 secondary_kw:  who marks the assessment, published syllabus, independent certification decision, renewal cycle
 pillar:        Certification and careers
@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     canonical -> https://credentialfinder.org/credential-or-certificate-of-attendance
 schema:        Article + FAQPage
-word_count:    1,392
+word_count:    1,275
 hashtags:      Medium tags — Project Management, Construction, Certification, Careers, Engineering
 compares:      [attendance and completion certificates, examined certifications, product certifications for scheduling software]
 ab_id:         n/a — comparison plan batch 9

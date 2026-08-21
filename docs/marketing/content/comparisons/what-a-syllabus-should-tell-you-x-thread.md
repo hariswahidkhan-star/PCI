@@ -10,7 +10,7 @@ credential:    suite
 target_domain: credentialfinder.org
 canonical:     original
 schema:        Article
-word_count:    267
+word_count:    336
 hashtags:      #ProjectControls #ProjectFinance
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, project management certifications]
 ab_id:         n/a — comparison plan batch 9
