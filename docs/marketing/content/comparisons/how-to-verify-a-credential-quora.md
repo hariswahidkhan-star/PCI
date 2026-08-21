@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /how-to-verify-a-credential
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials, project management certifications]
 schema:        FAQPage
-word_count:    548
+word_count:    540
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 7
 ---
@@ -22,9 +22,9 @@ To check whether someone's certification is real, check the record rather than t
 
 ## The check, in five moves
 
-**Take three things off the document.** The credential ID. The exact designation, word for word. The issue and expiry dates if they are printed. Designations from one body can differ by a single word and represent different examinations, so copy it exactly rather than paraphrasing it into your notes.
+**Take three things off the document.** The credential ID. The exact designation, word for word. The issue and expiry dates if printed. Designations from one body can differ by a single word and be different examinations, so copy rather than paraphrase.
 
-**Reach the register yourself.** Do not follow a verification link the candidate emailed you, and do not trust a page just because it looks official. Type the issuing body's own address, or scan the code on the document and read the domain it lands on before you trust anything on the page. If it is not the issuer's own domain, you have your answer already.
+**Reach the register yourself.** Not a verification link the candidate emailed you. Type the issuing body's own address, or scan the code on the document and read the domain it lands on before trusting the page. If it is not the issuer's own domain, you have your answer already.
 
 **Read the state it returns, not a yes or no.** A register worth the name distinguishes four:
 
@@ -37,13 +37,17 @@ To check whether someone's certification is real, check the record rather than t
 
 A record stored as active but carrying an expiry of 30 June must come back expired on 1 July.
 
-**Do the tamper check where one is offered.** Some issuers publish a cryptographic hash of the exact file they issued. Recompute it on the file you hold and compare all 64 characters, not the first few. Eight hex characters is 32 bits of checking, which is 16⁸ = 4,294,967,296 possibilities — a laptop grinds through that. The full string is 2²⁵⁶. Comparing the whole thing costs you five seconds.
+**Do the tamper check where one is offered.** Some issuers publish a cryptographic hash of the exact file they issued. Recompute it and compare all 64 characters, not the first few. Eight hex characters is 32 bits: 16⁸ = 4,294,967,296 possibilities, which a laptop grinds through. The full string is 2²⁵⁶.
 
 **Then read the wording.** A certificate of attendance records that somebody was present. A credential records that somebody was examined against a published standard and met a decision rule. Honorary or member designations are recognition, not examinations, and a well-run body keeps them in a separate register and says so.
 
 ## What the check cannot tell you
 
-A verified record tells you the credential is real. It does not tell you it fits the job, and that is a scope question. Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis. Accountancy and finance qualifications examine recognition, measurement and disclosure. Audit credentials examine governance, risk, control and assurance. Project management certifications examine managing projects across people, process and the business environment. Each examines its own subject thoroughly and is built to, so read the register answer next to the job description.
+A verified record tells you the credential is real. It does not tell you it fits the job, and that is a scope question.
+
+Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis. Accountancy and finance qualifications examine recognition, measurement and disclosure. Audit credentials examine governance, risk, control and assurance. Project management certifications examine managing projects across people, process and the business environment.
+
+Each examines its own subject thoroughly and is built to, so read the register answer next to the job description.
 
 One case where verification is not your first question at all. If your procurement rule or your regulator requires an accredited credential, settle that before you verify anything, because a clean register entry for an unaccredited credential still will not satisfy the rule.
 

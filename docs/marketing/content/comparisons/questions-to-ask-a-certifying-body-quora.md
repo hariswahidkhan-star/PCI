@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /questions-to-ask-a-certifying-body
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials, project management certifications]
 schema:        FAQPage
-word_count:    565
+word_count:    555
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 7
 ---
@@ -24,9 +24,9 @@ Ask a certification body before enrolling, and ask these ten things. How each on
 
 **1. Can I read the whole syllabus before I pay anything?** A good answer is a link to the document the examination is written from. A weak answer is that the syllabus arrives on enrolment, which asks you to buy the description of what you are buying.
 
-**2. Who writes the examination, and are they separate from whoever sells the preparation?** If the people who take your training fee also decide your result, the decision has an interest in it. Ask how the separation is enforced, not whether it exists.
+**2. Who writes the examination, and are they separate from whoever sells the preparation?** If the people taking your training fee also decide your result, the decision has an interest in it. Ask how the separation is enforced, not whether it exists.
 
-**3. How was the pass mark set, and by whom?** A number on its own means nothing. Seventy per cent of what? A cut score is only meaningful next to the difficulty of the paper it sits on and the method used to choose it.
+**3. How was the pass mark set, and by whom?** Seventy per cent of what? A cut score is only meaningful next to the difficulty of the paper and the method used to choose it.
 
 ## What you actually receive
 
@@ -53,9 +53,9 @@ Each examines its own subject thoroughly and is built to. The risk is not a bad 
 
 **9. What will you not claim?** Anyone promising a salary, a role or an employer's preference is claiming something they do not control.
 
-**10. If you closed tomorrow, where would the record of my examination live?** Unglamorous, and the question that most exposes whether a body has thought past its own launch.
+**10. If you closed tomorrow, where would the record of my examination live?** Unglamorous, and the question that most exposes whether a body has thought past its launch.
 
-One honest caveat before you use the list. If your employer mandates a specific certification, or a client's procurement rule requires an accredited one, question 8 settles the matter before the other nine and you should take the mandated route.
+One honest caveat. If your employer mandates a specific certification, or a client's procurement rule requires an accredited one, question 8 settles it before the other nine. Take the mandated route.
 
 ## Disclosure, because I am one of the bodies in this field
 

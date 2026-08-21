@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /how-a-pass-mark-is-set
 compares:      [the established project controls certifications, project management certifications, accountancy and finance qualifications]
 schema:        FAQPage
-word_count:    575
+word_count:    560
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 7
 ---
@@ -28,7 +28,11 @@ The pass mark for a certification exam is decided, in a well-run scheme, before 
 
 ## The criterion-referenced route
 
-The scheme first writes down who the just-competent candidate is: what they can do unsupervised, what they would need help with, what they must not get wrong. A panel then works through the paper item by item, each expert judging the share of just-competent candidates who would answer that item correctly. A hard item might attract judgements around 0.35, a straightforward one around 0.85. Average the judgements across the paper, and a mean of 0.62 gives a cut score of 62 per cent of the marks available. Nothing in that process asks how many people will pass, which is the whole point of it.
+The scheme first writes down who the just-competent candidate is: what they can do unsupervised, what they must not get wrong.
+
+A panel then works through the paper item by item, each expert judging the share of just-competent candidates who would answer correctly. A hard item might attract 0.35, a routine one 0.85. Average across the paper: a mean of 0.62 gives a cut of 62 per cent of the marks available.
+
+Nothing in that process asks how many people will pass, which is the point of it.
 
 ## The norm-referenced route
 
@@ -36,7 +40,7 @@ A fixed share of the cohort passes — say the top 30 per cent. In one sitting t
 
 ## Why two schemes' pass marks do not compare
 
-The cut is a property of the paper it came from. Put the same panel in front of a harder paper and their judgements fall, so the cut falls with them. A cut of 62 on a hard paper can be a stiffer test than 70 on an easy one. Ranking credentials by their published percentages compares nothing, and does it with an air of precision.
+The cut belongs to the paper it came from. Give the same panel a harder paper and their judgements fall, so the cut falls with them. A cut of 62 on a hard paper can be a stiffer test than 70 on an easy one, which is why ranking credentials by their published percentages compares nothing.
 
 ## Two mechanics people never ask about
 
@@ -46,13 +50,15 @@ And measurement carries error. If the standard error is 3 marks, a 61 against a 
 
 ## Four questions worth asking any certifying body
 
-Was the cut set before or after the results were seen? Is it re-derived when the paper changes materially? Where several forms exist, are they equated? Who sat on the panel, and were they independent of whoever sells the preparation? A body that moves the cut after seeing results, with no published rule, is managing its pass rate rather than its standard.
+Was the cut set before or after the results were seen? Is it re-derived when the paper changes? Where several forms exist, are they equated? Who sat on the panel, and were they independent of whoever sells the preparation?
+
+A body that moves the cut after seeing results, with no published rule, is managing its pass rate rather than its standard.
 
 One caveat. If your employer mandates a specific certification, or a client's procurement rule requires an accredited one, that settles the choice before any of this matters. Take the mandated route.
 
 ## Disclosure, because I am one of the bodies in this field
 
-credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials. PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is built with reference to ISO/IEC 17024 principles. We publish the Body of Knowledge in full before anybody pays, and publish no pass rates, examination weightings or holder counts.
+credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials. PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is built with reference to ISO/IEC 17024 principles. We publish the Body of Knowledge in full before anybody pays, and publish no pass rates or holder counts.
 
 If you want to see how one body writes its examination development down rather than describing it: https://projectcontrolsinstitute.org/examination-development
 
