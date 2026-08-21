@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          comparison
-title:         Accountancy qualifications: where PFL-AI sits
-meta:          Accountancy and finance qualifications examine recognition, measurement and disclosure. PFL-AI examines the project numbers that feed them. Which suits which reader.
+title:         Accountancy and finance qualifications: where PFL-AI sits
+meta:          Accountancy and finance qualifications examine recognition, measurement and disclosure. PFL-AI examines the project numbers feeding them. Who each suits.
 primary_kw:    accountancy and finance qualifications
 secondary_kw:  project finance credential, revenue recognition, percentage of completion, onerous contract
 pillar:        Certification and careers
@@ -16,7 +16,7 @@ ab_id:         n/a (comparison run)
 compares:      [accountancy and finance qualifications, PFL-AI]
 ---
 
-# Accountancy qualifications: where PFL-AI sits
+# Accountancy and finance qualifications: where PFL-AI sits
 
 Accountancy and finance qualifications examine recognition, measurement, disclosure, financial analysis and control across every kind of entity. If that is your work, they are the qualification to hold, and nothing on this page suggests otherwise. PFL-AI examines a narrower thing: the project numbers those standards are applied to, and where they come from.
 
@@ -76,6 +76,18 @@ An **£0.87m** movement in reported revenue, and a swing from profit to loss, wi
 The third row is the sharp one. Once expected costs exceed the contract price, the contract is loss-making, and the whole expected loss is recognised as soon as it is known rather than spread across the remaining months. Whether that trigger has been crossed is decided by a forecast produced on site.
 
 The recognition model is examined thoroughly by accountancy qualifications and is not in doubt. The forecast is examined thoroughly by project controls credentials and is not in doubt either. Whether the two people are looking at the same version of the number, on the same cut-off, under the same earning rule, is the thing nobody is examined on. That is the gap PFL-AI is built for. The hub works the same mechanics from the other end, in [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting).
+
+## The words the two sides use differently
+
+Much of the friction on a capital project is vocabulary rather than disagreement. Three words do most of the damage.
+
+**Cost.** On the delivery side it usually means committed: the order is placed and the money is spoken for. On the reporting side it means incurred, in the period the work was done, whatever the order says. Two people can be right and £0.5m apart.
+
+**Progress.** It can mean the amount certified for payment, the physical measurement of work done, or the proportion used to recognise revenue. On a month with retention and uninstalled material, those are three different figures.
+
+**Margin.** Forecast margin to completion and the margin recognised in this period are different numbers, and the second one moves whenever the first one does.
+
+None of that requires a new qualification to notice. It does require somebody who has been examined on both vocabularies, which is the case for a credential that spans them.
 
 ## What PCI does not claim
 

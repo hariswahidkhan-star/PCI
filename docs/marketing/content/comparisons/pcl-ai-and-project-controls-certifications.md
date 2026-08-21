@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          comparison
-title:         Project controls certifications: where PCL-AI sits
-meta:          The established project controls certifications examine measurement, progress and forecasting. Here is what PCL-AI adds, who each suits, and the arithmetic behind it.
+title:         The established project controls certifications, and PCL-AI
+meta:          The established project controls certifications examine measurement, progress and forecasting. What PCL-AI adds, who each suits, and the arithmetic.
 primary_kw:    the established project controls certifications
 secondary_kw:  progress measurement, earning rule, forecast at completion, credential scope
 pillar:        Certification and careers
@@ -16,7 +16,7 @@ ab_id:         n/a (comparison run)
 compares:      [the established project controls certifications, PCL-AI]
 ---
 
-# Project controls certifications: where PCL-AI sits
+# The established project controls certifications, and PCL-AI
 
 The established project controls certifications examine measurement, progress, forecasting and the control of delivery, and they examine it well. Choose one if that is your work. Choose PCL-AI if you also have to defend what your measurement does to a reported number. The difference is scope, not quality.
 
@@ -72,6 +72,14 @@ One package, one set of field data, one month. The choice of earning rule moves 
 There is a further turn. Under a cost-to-cost measure, material delivered but not yet installed inflates the numerator without any work having been done, so it has to be stripped out before the percentage is calculated. If **£0.40m** of the £3.60m is steel lying in the laydown area, cost-to-cost progress is 3.20 ÷ 7.60 = **42.1%**, not 45%.
 
 That adjustment is a reporting rule, applied to a delivery measurement, with a cost consequence. It sits precisely on the boundary between the two categories on this page. The established certifications teach measurement rigour that makes the number trustworthy; the treatment of that number has its own literature; and the person signing the report is standing in both. Turning a measurement into a decision is worked through on the hub in [what a control metric is actually for](https://projectcontrolsinstitute.org/project-performance-management).
+
+## What this comparison deliberately leaves out
+
+There is no fee here, no examination length, no question count and no difficulty ranking, for any category on this page or for PCI. Those figures change on somebody else's schedule, they are quoted out of context for years, and a page that publishes them is asking you to decide on the wrong variable.
+
+There is no employer-preference claim either. Nobody has surveyed every market, and a page that tells you what employers want is telling you what its author's contacts wanted, in one region, at one time.
+
+The two things worth comparing are what a credential examines and how the decision is made. Both are published by any body worth considering, both are stable enough to be compared, and both are checkable by you without trusting this page.
 
 ## What PCI does not claim
 

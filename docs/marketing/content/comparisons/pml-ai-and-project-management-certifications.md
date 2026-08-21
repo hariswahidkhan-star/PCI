@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          comparison
 title:         Project management certifications: where PML-AI sits
-meta:          Project management certifications examine people, process and the business environment. PML-AI adds the money and the AI governance. Which one suits which reader.
+meta:          Project management certifications examine people, process and the business environment. PML-AI adds the money and the AI governance. Who each suits.
 primary_kw:    project management certifications
 secondary_kw:  PML-AI scope, project manager credential, variation, contract margin
 pillar:        Certification and careers
@@ -72,6 +72,18 @@ Same site, same work, same month. **£0.50m** of reported margin turns on a piec
 There is a second-order effect worth seeing. With costs to date of **£2.7m** and a cost-to-cost measure, progress before the change was 2.7 ÷ 5.4 = **50%**. After the change it is 2.7 ÷ 5.85 = **46.2%**, so revenue recognised falls even though more work has been done. Adding scope dilutes measured progress until the price catches up.
 
 A project management syllabus examines change control, and examines it properly: raise it, price it, get it approved, baseline it. What it does not set out to examine is why an unsigned instruction moves reported margin by half a million pounds. Nobody is asking it to. The question is only who on your project is examined on that, and the honest answer on most jobs is nobody. If your interest is the AI half rather than the money half, [how to compare a certification that claims to cover AI](https://pciai.org/ai-project-management-certification) sets out what to look for.
+
+## The half-hour test that settles it
+
+Write down the three decisions you were most uncomfortable making last quarter. Not the busiest weeks, the decisions where you were least sure you could defend the answer.
+
+Then ask which syllabus would have examined each one.
+
+If they are about people, sequencing, stakeholders or the fit between the project and the organisation, a broad project management certification covers them and covers them well.
+
+If they are about what a change does to the reported number, whether a forecast movement belongs in this period, or what a model was allowed to decide before you signed its output, they sit in the half that broad syllabuses touch lightly.
+
+Most readers find they have two of one and one of the other, which tells them the sequence rather than the choice.
 
 ## What PCI does not claim
 

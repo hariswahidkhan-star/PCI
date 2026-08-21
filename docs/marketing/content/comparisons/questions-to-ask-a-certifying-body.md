@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         Ten questions to ask any certifying body before you pay
-meta:          Ten questions that separate a certification from a course, with what a good answer sounds like and what a weak one sounds like. Ask them of us as well.
+meta:          Ten questions to ask any certifying body before you pay, with what a good answer sounds like and what a weak one sounds like. Ask them of us as well.
 primary_kw:    questions to ask a certifying body
 secondary_kw:  choosing a certification, cut score policy, appeals, certification decision
 pillar:        Certification and careers
@@ -22,7 +22,7 @@ Ten questions sort a certification from a course, and every one of them can be a
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. PCI's own answers to several of these questions are set out below, including the ones that are not flattering.
 
-## The ten questions
+## The ten questions to ask any certifying body
 
 | # | Ask this | A good answer sounds like | A weak answer sounds like |
 |---|---|---|---|

@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          comparison
-title:         Chartered routes and where the PCI credentials sit
-meta:          Chartered routes in surveying and engineering assess professional competence over years. The PCI credentials examine scope. What each instrument actually proves.
+title:         Chartered routes in surveying and engineering, and PCI
+meta:          Chartered routes in surveying and engineering assess competence over years. The PCI credentials examine a syllabus. What each instrument actually proves.
 primary_kw:    chartered routes in surveying and engineering
 secondary_kw:  professional review, assessed competence, interim valuation, contract asset
 pillar:        Certification and careers
@@ -16,7 +16,7 @@ ab_id:         n/a (comparison run)
 compares:      [chartered routes in surveying and engineering, PCL-AI, PFL-AI, PML-AI]
 ---
 
-# Chartered routes and where the PCI credentials sit
+# Chartered routes in surveying and engineering, and PCI
 
 Chartered routes in surveying and engineering assess professional competence and confer standing, judged over years of supervised experience by peers. The PCI credentials examine a defined body of knowledge in a sitting. They are different instruments answering different questions, and holding one has almost no bearing on whether you should hold the other.
 
@@ -88,6 +88,16 @@ Every figure is right. The gap between revenue recognised and the amount certifi
 A chartered route assesses whether a professional can be trusted to handle that month responsibly, and it is a good instrument for that. What it does not do is fix a syllabus in which all three numbers, and the relationship between them, are examined content. That is what an examined scope adds, and it is the only claim being made here.
 
 Regional routes into surveying practice differ considerably, and [how those routes compare by market](https://pciglobal.ai/quantity-surveyor-certification) is worth reading before assuming the path in your country resembles anyone else's.
+
+## Two instruments, two failure modes
+
+Each instrument fails in its own way, and knowing which failure you are exposed to is more useful than knowing which is better.
+
+A competence-assessed route can certify someone whose experience is narrow, because the evidence is whatever the candidate has actually done. A supervisor's judgement, a good submission and a strong interview do not guarantee breadth across a discipline, and nobody claims they do.
+
+A knowledge examination can certify someone who has never applied any of it, because the evidence is what they answered on a date. Experience gates reduce that risk without removing it.
+
+Neither failure is an argument against the instrument. They are the reason serious professions use more than one form of evidence, and the reason an employer asking only for a badge is asking a smaller question than they think.
 
 ## What PCI does not claim
 

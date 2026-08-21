@@ -1,8 +1,8 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          comparison
-title:         Scheduling software certifications and where PCL-AI sits
-meta:          Product certifications for scheduling software prove you can drive the tool. PCL-AI examines the discipline behind it. What each is for, with a scheduling example.
+title:         Product certifications for scheduling software, and PCL-AI
+meta:          Product certifications for scheduling software prove you can drive the tool. PCL-AI examines the discipline behind it. What each is for, with an example.
 primary_kw:    product certifications for scheduling software
 secondary_kw:  tool certificate, out-of-sequence progress, retained logic, schedule discipline
 pillar:        Planning and scheduling
@@ -16,7 +16,7 @@ ab_id:         n/a (comparison run)
 compares:      [product certifications for scheduling software, PCL-AI]
 ---
 
-# Scheduling software certifications and where PCL-AI sits
+# Product certifications for scheduling software, and PCL-AI
 
 Product certifications for scheduling software prove you can operate a specific tool, which is a real, checkable skill and the fastest way to be useful in your first week. PCL-AI examines the discipline the tool serves and what its outputs do to a cost report. Most planners end up wanting both, in that order.
 
@@ -75,6 +75,18 @@ Then follow it one step further, which is where the categories separate.
 A **£40,000** movement in the revenue reported for the period, traceable to a scheduling setting.
 
 A product examination can reasonably ask which setting produces which result, and a good one does. Which setting is defensible under your contract, what your method statement says you use, and what the resulting date does to the reported period are questions from a different syllabus. How the same slipped activity is treated by each analysis method is set out on the hub in [the delay analysis techniques compared](https://projectcontrolsinstitute.org/delay-analysis-techniques).
+
+## What survives a change of tool, and what does not
+
+Planners change employers, and employers change applications. It is worth knowing in advance which part of your skill moves with you.
+
+**Travels intact.** Network logic and the meaning of a dependency. Calendars and how they distort a duration. Progress measurement and the earning rule behind it. The interpretation of float, including who owns it under the contract. Forecasting method, and the assumption behind each version. The discipline of a defensible data date.
+
+**Has to be relearnt.** Where the function lives, what the setting is called, how the file behaves at scale, the import and export quirks, and the reporting layer.
+
+The second list is real work and it is not trivial; anybody who has moved between planning applications knows the first fortnight is slow. It is also finite, and it is exactly what a product certification is designed to shorten.
+
+The first list is what a discipline credential examines, and it is the part that is still worth something in ten years, on tools that do not exist yet.
 
 ## What PCI does not claim
 

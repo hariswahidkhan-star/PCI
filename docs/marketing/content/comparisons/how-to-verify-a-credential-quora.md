@@ -2,8 +2,8 @@
 platform:      Quora
 type:          qa-list
 title:         How can I check whether someone's certification is real?
-meta:          Check the record, not the document: take the ID, reach the issuer's own register yourself, read the state it returns and compare all 64 hash characters.
-primary_kw:    check whether a certification is real *
+meta:          To check whether someone's certification is real, query the issuer's own register with the ID, read the state it returns, and compare all 64 hash characters.
+primary_kw:    check whether someone's certification is real *
 secondary_kw:  verify a credential, register states, certificate of attendance, credential ID
 pillar:        Certification and careers
 credential:    suite
@@ -18,23 +18,38 @@ ab_id:         n/a — comparison plan batch 7
 
 # How can I check whether someone's certification is real?
 
-Check the record, not the document. A certificate is a rendering of a claim held somewhere else, and the somewhere else is the issuing body's own register. The whole check takes about a minute.
+To check whether someone's certification is real, check the record rather than the document. A certificate is a rendering of a claim held somewhere else, and the somewhere else is the issuing body's own register. The whole check takes about a minute.
+
+## The check, in five moves
 
 **Take three things off the document.** The credential ID. The exact designation, word for word. The issue and expiry dates if they are printed. Designations from one body can differ by a single word and represent different examinations, so copy it exactly rather than paraphrasing it into your notes.
 
 **Reach the register yourself.** Do not follow a verification link the candidate emailed you, and do not trust a page just because it looks official. Type the issuing body's own address, or scan the code on the document and read the domain it lands on before you trust anything on the page. If it is not the issuer's own domain, you have your answer already.
 
-**Read the state it returns, not a yes or no.** A register worth the name distinguishes active, expired, suspended and revoked. Expiry should be computed at the moment you ask, so a record stored as active with an expiry of 30 June comes back expired on 1 July. Suspended is its own answer and is never a quiet pass. Revoked means the credential was withdrawn and the register kept saying so.
+**Read the state it returns, not a yes or no.** A register worth the name distinguishes four:
+
+| State | What it means for your decision |
+|---|---|
+| Active | Current at the moment you asked |
+| Expired | Past its expiry date, computed when you ask |
+| Suspended | Withheld while something is unresolved, never a quiet pass |
+| Revoked | Withdrawn, with the record kept saying so |
+
+A record stored as active but carrying an expiry of 30 June must come back expired on 1 July.
 
 **Do the tamper check where one is offered.** Some issuers publish a cryptographic hash of the exact file they issued. Recompute it on the file you hold and compare all 64 characters, not the first few. Eight hex characters is 32 bits of checking, which is 16⁸ = 4,294,967,296 possibilities — a laptop grinds through that. The full string is 2²⁵⁶. Comparing the whole thing costs you five seconds.
 
 **Then read the wording.** A certificate of attendance records that somebody was present. A credential records that somebody was examined against a published standard and met a decision rule. Honorary or member designations are recognition, not examinations, and a well-run body keeps them in a separate register and says so.
 
-**Know what the check does not answer.** A verified record tells you the credential is real. It does not tell you it fits the job. That is a scope question: cost and scheduling credentials examine estimating, cost control, planning and schedule analysis; accountancy and finance qualifications examine recognition, measurement and disclosure; audit credentials examine governance, risk, control and assurance; project management certifications examine managing projects across people, process and the business environment. Each examines its own subject thoroughly and is built to. Read the register answer next to the job description.
+## What the check cannot tell you
 
-One case where this is not your first question. If your procurement rule or your regulator requires an accredited credential, settle the accreditation question before you verify anything, because a clean register entry for an unaccredited credential still will not satisfy the rule.
+A verified record tells you the credential is real. It does not tell you it fits the job, and that is a scope question. Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis. Accountancy and finance qualifications examine recognition, measurement and disclosure. Audit credentials examine governance, risk, control and assurance. Project management certifications examine managing projects across people, process and the business environment. Each examines its own subject thoroughly and is built to, so read the register answer next to the job description.
 
-Disclosure, since I work for one of the bodies in this field: credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials. PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is built with reference to ISO/IEC 17024 principles. Read the published Body of Knowledge before deciding anything, including about us.
+One case where verification is not your first question at all. If your procurement rule or your regulator requires an accredited credential, settle that before you verify anything, because a clean register entry for an unaccredited credential still will not satisfy the rule.
+
+## Disclosure, because I am one of the bodies in this field
+
+credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials. PCI is a new, independent certifying body. It is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17024 accreditation body and does not claim to be. The scheme is built with reference to ISO/IEC 17024 principles. Read the published Body of Knowledge before deciding anything, including about us.
 
 If you want to see what a register that answers with states rather than a yes or no looks like, ours is here: https://projectcontrolsinstitute.org/verify
 

@@ -2,8 +2,8 @@
 platform:      LinkedIn Article
 type:          guide
 title:         The ten questions any certifying body should welcome
-meta:          Ten questions that work on any credential, what a good answer sounds like, what a weak one sounds like, and the arithmetic behind the one that decides most.
-primary_kw:    what to ask a certifying body *
+meta:          The ten questions any certifying body should welcome, what a weak answer sounds like, and the arithmetic behind the single question that decides the most.
+primary_kw:    questions any certifying body should welcome *
 secondary_kw:  choosing a credential, credential scope, appeals and recertification, accreditation
 pillar:        Certification and careers
 credential:    suite
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 7
 
 # The ten questions any certifying body should welcome
 
-Ten questions decide whether a credential is worth your year: can I read the syllabus first, who writes the examination, how was the pass mark set, what will the certificate say I was examined on, can a third party verify it, who hears an appeal, what does recertification check, are you accredited, what will you not claim, and where does my record live if you close.
+The ten questions any certifying body should welcome are these: can I read the syllabus first, who writes the examination, how was the pass mark set, what will the certificate say I was examined on, can a third party verify it, who hears an appeal, what does recertification check, are you accredited, what will you not claim, and where does my record live if you close.
 
 The questions are the easy part. What follows is what a good answer sounds like and what a weak one sounds like, because the difference is audible and most candidates never get to hear it.
 
@@ -50,7 +50,13 @@ A weak answer is a number with no method attached. Seventy per cent of what? A c
 
 This is the question candidates skip and the one that decides the most, because scope is where credentials genuinely differ.
 
-Cost and scheduling credentials examine estimating, cost control, planning and schedule analysis. Accountancy and finance qualifications examine recognition, measurement, disclosure and financial control. Audit credentials examine governance, risk, control and the assurance process. Project management certifications examine managing projects across people, process and the business environment.
+| Category | What it sets out to examine |
+|---|---|
+| Cost and scheduling credentials | Estimating, cost control, planning, schedule analysis |
+| Accountancy and finance qualifications | Recognition, measurement, disclosure, financial control |
+| Audit credentials | Governance, risk, control and the assurance process |
+| Project management certifications | Managing projects across people, process and the business environment |
+| Product certifications for scheduling software | Operating a specific tool rather than the discipline behind it |
 
 Each examines its own subject thoroughly and is built to. A scope boundary is a design decision, not a shortcoming. But scope is what you are buying, so read the designation and the syllabus together and ask which of them your job actually needs.
 

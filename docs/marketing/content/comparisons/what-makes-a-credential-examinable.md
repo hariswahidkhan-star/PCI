@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         What makes a credential examinable, and what does not
-meta:          A credential is examinable when its syllabus states observable, bounded things with a defensible right answer. How to test any syllabus for that before you pay.
+meta:          What makes a credential examinable: a syllabus of observable, bounded objectives with a defensible right answer. How to test one before you pay.
 primary_kw:    what makes a credential examinable
 secondary_kw:  examinable syllabus, item analysis, exam blueprint, cognitive level
 pillar:        Certification and careers

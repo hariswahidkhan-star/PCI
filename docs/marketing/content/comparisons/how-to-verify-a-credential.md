@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         How to verify a credential somebody says they hold
-meta:          Verification means checking the issuing body's own register for the holder, the status and the scope. The five checks, the red flags, and what a lapsed record means.
+meta:          How to verify a credential: check the issuing body's own register for the holder, the status and the scope. Five checks, the red flags, and lapsed records.
 primary_kw:    how to verify a credential
 secondary_kw:  credential verification, certification register, lapsed certification, hiring checks
 pillar:        Certification and careers

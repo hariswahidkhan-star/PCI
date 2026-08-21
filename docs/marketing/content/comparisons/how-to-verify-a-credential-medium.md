@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         How to verify a credential before you trust the claim
-meta:          Verify the record, not the document: the ID, the issuer's own register, the state it returns, all 64 hash characters, and the scope question underneath.
+meta:          How to verify a credential: the ID, the issuer's own register, the state it returns, all 64 characters of the hash, and the scope question underneath.
 primary_kw:    how to verify a credential *
 secondary_kw:  credential verification, register states, certificate of attendance, honorary recognition
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 7
 
 # How to verify a credential before you trust the claim
 
-To verify a credential, take the ID and the exact designation off the certificate, reach the issuing body's own register yourself rather than through a link you were sent, and read the state it returns. Where the issuer publishes a hash of the file, recompute it and compare all 64 characters. The document is evidence of nothing on its own.
+How to verify a credential, in order: take the ID and the exact designation off the certificate, reach the issuing body's own register yourself rather than through a link you were sent, and read the state it returns. Where the issuer publishes a hash of the file, recompute it and compare all 64 characters. The document proves nothing on its own.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. That is worth knowing before you read a page about checking credentials, because a body telling you to verify independently and owning the site you are reading is a fact you are entitled to weigh.
 

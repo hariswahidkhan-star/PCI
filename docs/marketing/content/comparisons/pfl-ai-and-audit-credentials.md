@@ -1,7 +1,7 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          comparison
-title:         Audit credentials: where PFL-AI sits alongside
+title:         Audit credentials: where PFL-AI sits alongside them
 meta:          Audit credentials examine governance, risk, control and assurance. PFL-AI examines the project numbers being assured. Who each suits, with a sampling example.
 primary_kw:    audit credentials
 secondary_kw:  project assurance, internal control, progress claim testing, projected misstatement
@@ -16,7 +16,7 @@ ab_id:         n/a (comparison run)
 compares:      [audit credentials, PFL-AI]
 ---
 
-# Audit credentials: where PFL-AI sits alongside
+# Audit credentials: where PFL-AI sits alongside them
 
 Audit credentials examine governance, risk, control and the assurance process, and they are subject-agnostic on purpose. If your career is assurance, that is your credential. PFL-AI examines the project numbers an assurance process is pointed at: the earning rule, the forecast, the cut-off. They fit together more often than they compete.
 
@@ -74,6 +74,22 @@ Answering it requires the contract's earning rule, the treatment of material del
 | Who signed the number a model drafted, and on what evidence? | Sits between the two, and is examined by neither by tradition |
 
 Nobody in that table is doing their job badly. The last row is simply new, and a project needs somebody who can answer all four. The month-end sequence where the two disciplines actually meet is set out on the hub in [the month-end close handshake](https://projectcontrolsinstitute.org/month-end-close-for-projects).
+
+## Five controls on a capital project that are worth testing
+
+Whatever credential you hold, these five are where project reporting usually fails, and each one is testable with evidence that already exists.
+
+**The earning rule is documented, contract by contract, and applied consistently.** Where it changed mid-contract, there is a written reason and the comparatives were restated.
+
+**Progress is approved by somebody who did not claim it.** Segregation here is ordinary practice everywhere else and is routinely absent on site.
+
+**Cut-off instructions were issued, dated, and evidenced.** Goods received and not invoiced were identified from receipt records rather than from memory.
+
+**The forecast was challenged by somebody other than its author,** and the challenge is on file. A forecast nobody argued with has not been reviewed.
+
+**Machine-assisted outputs are logged.** Where a model drafted a commentary or proposed a figure, the file shows what it produced, who reviewed it and what changed.
+
+None of those five is exotic, and the evidence for each is a document rather than an opinion. A programme built on them tests the reporting that management actually relies on, rather than the reporting that is easiest to sample.
 
 ## What PCI does not claim
 

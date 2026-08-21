@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          comparison
 title:         Cost and scheduling credentials: where PCL-AI fits
-meta:          Cost and scheduling credentials examine estimating, planning and control. PCL-AI examines the join with finance. Which one suits which reader, with the arithmetic.
+meta:          Cost and scheduling credentials examine estimating, planning and control. PCL-AI examines the join with finance. Which suits which reader, with arithmetic.
 primary_kw:    cost and scheduling credentials
 secondary_kw:  project controls credential scope, cost control certification, cut-off, estimate at completion
 pillar:        Certification and careers
@@ -18,7 +18,7 @@ compares:      [cost and scheduling credentials, PCL-AI]
 
 # Cost and scheduling credentials: where PCL-AI fits
 
-If you are paid to estimate, plan and control cost inside the delivery organisation, a cost or scheduling credential examines that work directly and is the straightforward choice. If you also sign forecasts that a finance function converts into reported revenue and margin, PCL-AI is built for that join. Both can be true, in sequence.
+If you are paid to estimate, plan and control cost inside the delivery organisation, cost and scheduling credentials examine that work directly and one of them is the straightforward choice. If you also sign forecasts that a finance function converts into reported revenue and margin, PCL-AI is built for that join. Both can be true, in sequence.
 
 > **Who publishes this page.** credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. It is not an independent comparison service, and you should read it knowing that.
 

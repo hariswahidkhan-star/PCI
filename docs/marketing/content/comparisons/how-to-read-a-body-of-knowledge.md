@@ -1,7 +1,7 @@
 ---
 platform:      Own site — credentialfinder.org
 type:          guide
-title:         How to read a Body of Knowledge before you pay
+title:         How to read a Body of Knowledge before you pay for it
 meta:          A Body of Knowledge tells you what a credential will examine. Here is how to read one properly in an hour, and map it against the work you actually do.
 primary_kw:    how to read a Body of Knowledge
 secondary_kw:  syllabus coverage, domains and knowledge areas, credential fit, exam preparation
@@ -16,7 +16,7 @@ ab_id:         n/a (comparison run)
 compares:      [certification schemes generally]
 ---
 
-# How to read a Body of Knowledge before you pay
+# How to read a Body of Knowledge before you pay for it
 
 Read a Body of Knowledge the way you would read a scope of works: check what is included, what is excluded, what is assumed and what depth is required. An hour with the syllabus tells you more than any comparison page, this one included. If the syllabus is not published before payment, that is already an answer.
 

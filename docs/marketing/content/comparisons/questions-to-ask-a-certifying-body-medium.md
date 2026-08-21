@@ -2,8 +2,8 @@
 platform:      Medium
 type:          guide
 title:         Ten questions worth asking any certifying body you pay
-meta:          The ten questions, a table of what a good answer and a weak answer sound like, the arithmetic behind the one about scope, and our own answers to all ten.
-primary_kw:    questions to ask a certifying body *
+meta:          Ten questions worth asking any certifying body, a table of what good and weak answers sound like, the arithmetic behind the one about scope, and our own answers.
+primary_kw:    questions worth asking any certifying body *
 secondary_kw:  choosing a credential, credential scope, pass mark method, recertification, accreditation
 pillar:        Certification and careers
 credential:    suite
@@ -18,7 +18,7 @@ ab_id:         n/a — comparison plan batch 7
 
 # Ten questions worth asking any certifying body you pay
 
-Before you pay a certifying body, ask whether you can read the whole syllabus first, who writes the examination, how the pass mark was set, what the certificate will say you were examined on, whether a third party can verify it, who hears an appeal, what recertification checks, whether the body is accredited, what it will not claim, and where your record lives if it closes.
+Ten questions worth asking any certifying body before you pay it: can I read the whole syllabus first, who writes the examination, how was the pass mark set, what will the certificate say I was examined on, can a third party verify it, who hears an appeal, what does recertification check, are you accredited, what will you not claim, and where does my record live if you close.
 
 credentialfinder.org is operated by Project Controls Institute Global, which awards the PCL-AI, PFL-AI and PML-AI credentials described here. So we are one of the bodies you would be asking, and every question below is answered about us further down.
 

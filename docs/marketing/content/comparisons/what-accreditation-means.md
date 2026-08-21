@@ -2,7 +2,7 @@
 platform:      Own site — credentialfinder.org
 type:          guide
 title:         What accreditation means, and what it does not prove
-meta:          Accreditation assures how a certifying body runs its process, not whether its content is any good. What the word covers, what it never covered, and how to check.
+meta:          What accreditation means: assurance about how a certifying body runs its process, not about the content. What it never covered, and how to check a claim.
 primary_kw:    what accreditation means
 secondary_kw:  ISO/IEC 17024, accredited certification, scope schedule, recognition claims
 pillar:        Certification and careers
