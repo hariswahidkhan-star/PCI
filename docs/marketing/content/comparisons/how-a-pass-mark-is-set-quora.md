@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /how-a-pass-mark-is-set
 compares:      [the established project controls certifications, project management certifications, accountancy and finance qualifications]
 schema:        FAQPage
-word_count:    612
+word_count:    681
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 7
 ---

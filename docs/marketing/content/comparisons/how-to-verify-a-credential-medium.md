@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     canonical -> /how-to-verify-a-credential (credentialfinder.org original)
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials, project management certifications]
 schema:        Article + FAQPage
-word_count:    1,520
+word_count:    1,587
 hashtags:      #ProjectControls #ProjectManagement #PMO #ProjectFinance
 ab_id:         n/a — comparison plan batch 7
 ---

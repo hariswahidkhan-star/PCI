@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — written for Quora, not a copy of /questions-to-ask-a-certifying-body
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials, project management certifications]
 schema:        FAQPage
-word_count:    555
+word_count:    643
 hashtags:      n/a (Quora)
 ab_id:         n/a — comparison plan batch 7
 ---

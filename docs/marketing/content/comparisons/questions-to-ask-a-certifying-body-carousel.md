@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /questions-to-ask-a-certifying-body (credentialfinder.org original) — built for the carousel, not a copy
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, audit credentials, project management certifications]
 schema:        Article
-word_count:    1,010
+word_count:    1,100
 hashtags:      #ProjectControls #ProjectFinance #ProjectManagement #PMO
 ab_id:         n/a — comparison plan batch 7
 ---

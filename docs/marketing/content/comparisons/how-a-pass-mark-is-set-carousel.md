@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     derived from /how-a-pass-mark-is-set (credentialfinder.org original) — built for the carousel, not a copy
 compares:      [the established project controls certifications, project management certifications, accountancy and finance qualifications]
 schema:        Article
-word_count:    900
+word_count:    1,062
 hashtags:      #ProjectControls #ProjectManagement #PMO
 ab_id:         n/a — comparison plan batch 7
 ---

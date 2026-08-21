@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — LinkedIn carries no canonical, so this is written from scratch and is not a copy of /how-a-pass-mark-is-set
 compares:      [the established project controls certifications, project management certifications, accountancy and finance qualifications, audit credentials]
 schema:        Article + FAQPage
-word_count:    1,460
+word_count:    1,528
 hashtags:      #ProjectControls #ProjectManagement #PMO #CostEngineering
 ab_id:         n/a — comparison plan batch 7
 ---

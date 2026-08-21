@@ -11,7 +11,7 @@ target_domain: credentialfinder.org
 canonical:     original — LinkedIn carries no canonical, so this is written from scratch and is not a copy of /questions-to-ask-a-certifying-body
 compares:      [cost and scheduling credentials, accountancy and finance qualifications, project management certifications, the established project controls certifications]
 schema:        Article + FAQPage
-word_count:    1,480
+word_count:    1,618
 hashtags:      #ProjectControls #ProjectFinance #ProjectManagement #PMO
 ab_id:         n/a — comparison plan batch 7
 ---
