@@ -6,7 +6,7 @@ namespace PCI.Backend.Endpoints;
 
 /// <summary>
 /// Certuvo (master-plan Phase 8) — PCI's official study &amp; practice engine, in the student portal.
-/// Formative, un-proctored practice that mirrors the PCP-AI exam format (scenario-based MCQs), with
+/// Formative, un-proctored practice that mirrors the PCL-AI exam format (scenario-based MCQs), with
 /// immediate feedback and teaching explanations, drawn from the PRACTICE pool
 /// (sample_questions.is_practice=1) which is deliberately SEPARATE from the secure examination bank.
 /// The answer key and explanations are never sent to the client until an attempt is submitted.

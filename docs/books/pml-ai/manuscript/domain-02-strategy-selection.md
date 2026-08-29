@@ -1,27 +1,18 @@
 # Domain 2 — Strategy, Selection and Business Alignment
 
-> **Group:** Leading projects (Domain 2 of 4 in Part One). **Target:** ~78 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain continues the **Meridian Care Records** programme from
-> Domain 1 into its business case and benefits map, and bridges to the appraisal machinery the
-> finance book builds in detail (PFL-AI, Domain 4). It uses Domain 3's governance-latency formula
-> and Domain 8's expected-value machinery rather than restating them, and supplies the breakeven
-> and assumption-exposure arithmetic that Domain 15 applies at portfolio scale and Domain 16 tests
-> at realisation. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domain 1 established that a project is judged on outcomes and benefits, not delivered outputs, and
 proved it arithmetically. That leaves the prior question unanswered: **how does work get chosen at
-all, and how does anyone know it was worth choosing?** This domain answers it. It sets the
-strategic context and treats alignment as a test that must be re-run rather than a box ticked at
-approval (KA 2.1); builds the business case as a decision instrument, with the options analysis and
-appraisal that make it one, and the selection models that rank competing candidates (KA 2.2); works
-benefits mapping, measurement baselines and the sustainability dimension, plus the assumption and
-dependency management on which every forecast rests (KA 2.3); and closes with the hardest
-leadership act in the discipline — **stopping** (KA 2.4). The through-line is that a business case
-is a *promise about the future made to obtain money*, and the professional question is always
-whether anyone will be held to it.
+all, and how does anyone know it was worth choosing?** This domain answers it. It sets the strategic
+context and treats alignment as a test to be re-run rather than a box ticked at approval (KA 2.1),
+then builds the business case as a decision instrument: the options analysis and appraisal that make
+it one, and the selection models that rank competing candidates (KA 2.2). Benefits mapping,
+measurement baselines and the sustainability dimension follow, with the assumption and dependency
+management on which every forecast rests (KA 2.3). The domain closes on the hardest leadership act
+in the discipline, **stopping** (KA 2.4). The through-line is that a business case is a *promise about the
+future made to obtain money*, and the professional question is always whether anyone will be held to
+it.
 
 **Learning objectives.** After this domain a candidate can: explain how strategy becomes a
 portfolio and why alignment decays; **compute a strategy-portfolio alignment index and the
@@ -36,7 +27,9 @@ benefits profile that ramps rather than assuming steady state from day one, and 
 overstatement a flat assumption produces**; **distinguish flat-equivalent from ramped-basis
 breakeven adoption and convert between them**; define measurement baselines, **separate an
 attributable improvement from a raw one with a comparison cohort, and state the invariant that
-fixes the over-claim share**; avoid double-counting; rank candidates with weighted scoring and
+fixes the over-claim share**; avoid double-counting; **distinguish sustainability and social value as
+a constraint, as a benefit and as a disclosed claim, and state the four provisions a disclosed claim
+carries and who approves it**; rank candidates with weighted scoring and
 under a binding constraint, and state each method's limits; **compute how far a criterion weight
 must move to reverse a ranking, and which criteria can never decide anything**; **derive the
 marginal value of a unit of the binding constraint by enumeration and show why it is lumpy and
@@ -48,10 +41,19 @@ errors**; **decompose a staged commitment into the price of staging and the valu
 abandonment option, and state the probability of bad news at which staging begins to pay**; and set
 kill criteria that make honest gates possible.
 
-**The master programme.** Meridian Care Records continues from Domain 1 — the shared clinical-records
+**The master programme.** Meridian Care Records continues from Domain 1: the shared clinical-records
 rollout to **40 clinics**, whose verified benefit figures (full potential **USD 979,200** per year;
 **USD 685,440** at the realistic 70 % adoption) are now used to build the business case that should
 have been written for it.
+
+**Reference points.** The portfolio material of KA 2.1 and the selection material of KA 2.2 have an
+international reference point worth naming: **ISO 21504**, which addresses guidance on portfolio
+management, sitting within the **ISO 21500** family Domain 1 introduced. Both are voluntary guidance
+describing practice (neither is legislation and neither is a certifiable requirement), and neither
+obliges anyone of itself unless an organisation, a contract or a regulator adopts it. They are named
+here and not reproduced: no clause, table or checklist from either appears in this volume, the
+treatment below is this book's own, and a reader who wants either document should obtain the current
+edition from its publisher. Naming them implies no endorsement in either direction.
 
 ---
 
@@ -72,7 +74,7 @@ stopping**, so the portfolio only ever accretes.
 The mechanism that closes the gap is a **portfolio process** with real teeth: candidate work
 described comparably, ranked against explicit criteria, funded to capacity rather than to appetite,
 and reviewed at intervals that allow re-decision. Where a project leader sits inside this, the
-obligation is specific — **describe your work honestly enough to be compared**, including its
+obligation is specific: **describe your work honestly enough to be compared**, including its
 weaknesses, because a portfolio process fed by advocacy rather than evidence selects the best
 storyteller.
 
@@ -82,8 +84,8 @@ what converts a complaint into a governance paper.
 **Worked example 2.1.1 — the alignment index, and the money it says must move.**
 
 1. **Setup.** Meridian's parent health authority publishes four strategic objectives with declared
-   weights — **access and capacity 40 %**, **safety and quality 25 %**, **digital foundation 20 %**,
-   **cost efficiency 15 %** — and a discretionary programme budget of **USD 30,000,000** a year. The
+   weights (**access and capacity 40 %**, **safety and quality 25 %**, **digital foundation 20 %**,
+   **cost efficiency 15 %**), and a discretionary programme budget of **USD 30,000,000** a year. The
    funded portfolio, read off the finance system and mapped objective by objective, is: access
    **4,800,000**; safety **6,600,000**; digital **1,800,000**; cost efficiency **4,800,000**; and
    **12,000,000** of mandatory sustainment (estate compliance, licence renewals, end-of-life
@@ -110,7 +112,7 @@ what converts a complaint into a governance paper.
    | Cost efficiency | 15.0000 % | 26.6667 % | +11.6667 pts | +2,100,000 |
 
    **Alignment index on mapped spend 76.6667 %**; **on total discretionary spend 59.0000 %**.
-   Reallocation distance **USD 4,200,000** — and the deficits (2,400,000 + 1,800,000) equal the
+   Reallocation distance **USD 4,200,000**; and the deficits (2,400,000 + 1,800,000) equal the
    surpluses (2,100,000 + 2,100,000) exactly, as they must.
 5. **Interpretation.** Four readings, and the second is the one that decides whether this paper
    survives its first meeting.
@@ -120,15 +122,15 @@ what converts a complaint into a governance paper.
    serves no stated objective. Neither figure is wrong and neither is sufficient. Reported on mapped
    spend alone, the portfolio looks broadly aligned and the sustainment question never gets asked.
    Reported on total spend alone, the authority appears to be 41 % misaligned, which is unfair —
-   sustainment is not misalignment, it is unstated strategy. The professional report gives both, and
-   its recommendation is about the third figure: **either fund sustainment as a declared objective
-   with a weight, or stop calling the other 60 % "the portfolio".** An organisation that will not put
-   a weight on keeping the lights on has no portfolio process; it has a discretionary fund and a
-   large unexamined subsidy.
+   sustainment is unstated strategy, not misalignment. The professional report gives both, and its
+   recommendation is about the third figure: **either fund sustainment as a declared objective with
+   a weight, or stop calling the other 60 % "the portfolio".** An organisation that will not put a
+   weight on keeping the lights on has no portfolio process; it has a discretionary fund and a large
+   unexamined subsidy.
 
-   **The reallocation distance is the sentence that makes this actionable, and it has a scale a board
-   already understands.** USD 4,200,000 is **1.75 times** Meridian's entire approved cost of
-   2,400,000 — and the access deficit alone, 2,400,000, is *exactly* one Meridian. That is the
+   **The reallocation distance is the sentence that makes this actionable, and it has a scale a
+   board already understands.** USD 4,200,000 is **1.75 times** Meridian's entire approved cost of
+   2,400,000; and the access deficit alone, 2,400,000, is *exactly* one Meridian. That is the
    comparison to put in the paper, because "the portfolio is 76.6667 % aligned" invites a debate
    about the measure while "the access objective is short by one programme the size of Meridian"
    invites a decision. The digital objective is funded at **50.00 %** of its declared weight, which
@@ -136,17 +138,16 @@ what converts a complaint into a governance paper.
    money says otherwise, by a factor of two.
 
    **The identity is worth holding.** Because the declared weights and the funded shares both sum to
-   one, the positive gaps and the negative gaps are equal in magnitude, so
-   `reallocation distance = (1 − index) × denominator` with no residue — here
-   `0.233333 × 18,000,000 = 4,200,000`. One consequence: an index cannot be improved by adding money
-   to a favoured objective without taking it from another, which is exactly the argument a portfolio
-   board should be having and exactly the argument that "we will fund digital next year as well"
-   avoids.
+   one, the positive gaps and the negative gaps are equal in magnitude, so `reallocation distance =
+   (1 − index) × denominator` with no residue, here `0.233333 × 18,000,000 = 4,200,000`. One
+   consequence: an index cannot be improved by adding money to a favoured objective without taking
+   it from another, which is exactly the argument a portfolio board should be having and exactly the
+   argument that "we will fund digital next year as well" avoids.
 
    **What the index cannot see, and where it is dangerous.** It is a measure of *money against
-   declared intent*, not of value, deliverability or benefit. A portfolio can score 100 % and consist
-   entirely of failing projects; it can score 60 % and be the best available set because the
-   under-weighted objective has no fundable candidates — which is a **strategic coverage** finding
+   declared intent*, not of value, deliverability or benefit. A portfolio can score 100 % and
+   consist entirely of failing projects; it can score 60 % and be the best available set because the
+   under-weighted objective has no fundable candidates, which is a **strategic coverage** finding
    (2.A.2), not an allocation one, and the two are routinely confused. The declared weights are
    themselves a governance artefact, often written for a strategy document rather than as spending
    targets, so the first question on seeing a low index is whether the weights were ever intended to
@@ -177,9 +178,9 @@ of Meridian's shape, whose cost of delay Domain 1 fixes at **USD 14,280 a week**
 difference of `4.5 × 14,280 =` **USD 64,260** per candidate — paid before any work starts, and
 invisible in every business case because no case has a line for the time it spent in a queue. The
 counter-argument is real and must be stated: a board meeting more often decides on thinner evidence,
-and a bad selection costs far more than 64,260. The resolution is not a cadence but a **threshold** —
-small candidates decided continuously against pre-agreed criteria, large ones held for the full
-board — which is Domain 3's delegation design applied to intake rather than to escalation.
+and a bad selection costs far more than 64,260. The resolution is not a cadence but a **threshold**
+(small candidates decided continuously against pre-agreed criteria, large ones held for the full
+board), which is Domain 3's delegation design applied to intake rather than to escalation.
 
 ### 2.1.2 Drivers, constraints and environment
 
@@ -191,37 +192,37 @@ implies:
 | **Compliance / regulatory** | The obligation is met by the date | Gold-plating a mandatory minimum |
 | **Cost reduction** | Measured, sustained cost decrease | Cost moved rather than removed |
 | **Revenue / growth** | New or protected income | Cannibalised existing revenue counted as new |
-| **Capability / enabling** | A later benefit becomes possible | Benefits claimed twice — here and downstream |
+| **Capability / enabling** | A later benefit becomes possible | Benefits claimed twice, here and downstream |
 | **Risk reduction** | Exposure measurably lower | Unquantified "insurance" spending |
 | **Service / outcome improvement** | Users measurably better served | Output delivered, outcome unmeasured (Domain 1) |
 
-**Constraints** — funding envelope, regulatory deadline, capacity, technical dependency — are not
-the same as objectives, and conflating them corrupts option generation: a "constraint" that is
-actually a preference silently eliminates the option that would have won. The professional habit is
-to write constraints down and mark each **hard** (physics, law, contract) or **soft** (preference,
+**Constraints** (funding envelope, regulatory deadline, capacity, technical dependency) are not the
+same as objectives, and conflating them corrupts option generation: a "constraint" that is actually
+a preference silently eliminates the option that would have won. The professional habit is to write
+constraints down and mark each **hard** (physics, law, contract) or **soft** (preference,
 convention), because only soft ones can be traded.
 
 ### 2.1.3 Alignment as a repeated test
 
 Alignment is granted at approval and **decays** thereafter: strategy moves, markets move, and the
 project's own understanding of what it can deliver moves. A project can be perfectly executed and
-strategically irrelevant by the time it lands — the most expensive form of success available.
+strategically irrelevant by the time it lands, the most expensive form of success available.
 
-Three practices keep alignment live. **Re-test at gates** — each stage gate (Domain 3, KA 3.3.1)
-asks not only "is delivery on track?" but "is this still the right thing?". **Track the assumption
-set** rather than the conclusion: business cases fail through their assumptions (KA 2.3.4), and an
-assumption that has been falsified invalidates the case whether or not delivery is green.
-**Name a benefits owner outside the project** — usually the operational leader who will run the
-changed service — because a project that owns its own benefits case will never be the one to report
-that it has stopped making sense (Domain 1's accountability rule; Domain 16's realisation).
+Three practices keep alignment live. **Re-test at gates.** Each stage gate (Domain 3, KA 3.3.1) asks
+not only "is delivery on track?" but "is this still the right thing?". **Track the assumption set**
+rather than the conclusion: business cases fail through their assumptions (KA 2.3.4), and an
+assumption that has been falsified invalidates the case whether or not delivery is green. **Name a
+benefits owner outside the project** (usually the operational leader who will run the changed
+service), because a project that owns its own benefits case will never be the one to report that it
+has stopped making sense (Domain 1's accountability rule; Domain 16's realisation).
 
 Decay is usually discussed as a mood. It is a hazard, and a hazard has a half-life.
 
 **Worked example 2.1.3 — the alignment half-life, and what a re-test is worth.**
 
 1. **Setup.** The health authority's planning team, reviewing eight years of its own board minutes,
-   assesses that a stated strategic priority is superseded — replaced, merged or de-prioritised — at
-   a rate of about **15 % a year**. This is a **locally calibrated planning figure, not a constant**;
+   assesses that a stated strategic priority is superseded (replaced, merged or de-prioritised) at a
+   rate of about **15 % a year**. This is a **locally calibrated planning figure, not a constant**;
    in a regulated utility on a five-year price control it would be far lower, and in a
    consumer-facing technology business far higher. Meridian is a **three-year** delivery spending
    **USD 800,000** a year. Compute how long alignment survives, what spend is incurred after the
@@ -242,11 +243,10 @@ Decay is usually discussed as a mood. It is a hazard, and a hazard has a half-li
    |---|---|---|---|---|---|
    | Probability the driver is still current | 85.00 % | 72.25 % | **61.41 %** | 52.20 % | 44.37 % |
 
-   **Alignment half-life 4.2650 years.** Expected misaligned spend with **no** re-test
-   `240,000 + 102,000 =` **USD 342,000** — **14.25 %** of the programme's cost. With an annual
-   alignment re-test at 80 % detection, `0.15 × 192,000 + 0.1275 × 160,000 =` **USD 49,200**. The
-   re-test is therefore worth **USD 292,800**, and its **breakeven cost is USD 97,600 per gate**
-   across the three gates.
+   **Alignment half-life 4.2650 years.** Expected misaligned spend with **no** re-test `240,000 +
+   102,000 =` **USD 342,000**: **14.25 %** of the programme's cost. With an annual alignment re-test
+   at 80 % detection, `0.15 × 192,000 + 0.1275 × 160,000 =` **USD 49,200**. The re-test is therefore
+   worth **USD 292,800**, and its **breakeven cost is USD 97,600 per gate** across the three gates.
 5. **Interpretation.** Four readings, and the first is the one to remember because it is
    parameter-free once the hazard is stated.
 
@@ -269,25 +269,26 @@ Decay is usually discussed as a mood. It is a hazard, and a hazard has a half-li
    the most, because it is the only one with anything left to protect.
 
    **Detection quality is worth less than it looks, and this is the honest part.** Raising detection
-   from 80 % to a perfect 100 % moves the expected misaligned spend from 49,200 to zero — a further
-   **USD 49,200** — while introducing the re-test at all was worth 292,800, **5.95 times** as much. The
-   large gain is in *asking the question*; the small gain is in asking it well. A leader who cannot
-   get a rigorous strategic re-test into the gate pack should still get a crude one in: at `d = 0.5`
-   the re-test is still worth **USD 201,000**, which is **58.77 %** of the 342,000 a perfect re-test
-   would save, from a process amounting to one honest agenda item. The corresponding caution: the 80 %
-   is a judgement about whether a committee reading a gate paper would notice that its own strategy
-   had moved, and every organisation should suspect its own number is lower than it thinks.
+   from 80 % to a perfect 100 % moves the expected misaligned spend from 49,200 to zero (a further
+   **USD 49,200**), while introducing the re-test at all was worth 292,800, **5.95 times** as much.
+   The large gain is in *asking the question*; the small gain is in asking it well. A leader who
+   cannot get a rigorous strategic re-test into the gate pack should still get a crude one in: at `d
+   = 0.5` the re-test is still worth **USD 201,000**, which is **58.77 %** of the 342,000 a perfect
+   re-test would save, from a process amounting to one honest agenda item. The corresponding
+   caution: the 80 % is a judgement about whether a committee reading a gate paper would notice that
+   its own strategy had moved, and every organisation should suspect its own number is lower than it
+   thinks.
 
    **The machinery is Domain 3's, the loss is not, and the difference matters.** Domain 3, KA 3.3.1
    prices a gate by its ability to detect a **delivery defect** and computes the remediation saved;
-   this example prices the same gate by its ability to detect a **strategic** change and computes the
-   irrelevant spend avoided. The two are additive — they detect different things and are not
-   substitutes — which is why a gate paper that reports only delivery status is leaving the second
+   this example prices the same gate by its ability to detect a **strategic** change and computes
+   the irrelevant spend avoided. The two are additive (they detect different things and are not
+   substitutes), which is why a gate paper that reports only delivery status is leaving the second
    value stream entirely uncollected. What the model omits is also worth naming: it assumes
-   supersession is observable at a gate if looked for, that stopping on discovery is possible (Domain
-   3's decision rights, and the reason 2.4.1's "no route for stopping" symptom converts this value to
-   zero), and that misaligned spend is a total loss, which overstates the case wherever the output has
-   residual use. Where the residual value is material, replace the spend figure with the
+   supersession is observable at a gate if looked for, that stopping on discovery is possible
+   (Domain 3's decision rights, and the reason 2.4.1's "no route for stopping" symptom converts this
+   value to zero), and that misaligned spend is a total loss, which overstates the case wherever the
+   output has residual use. Where the residual value is material, replace the spend figure with the
    spend-less-salvage and the arithmetic runs unchanged.
 
 ### AI in this KA
@@ -295,23 +296,23 @@ Decay is usually discussed as a mood. It is a hazard, and a hazard has a half-li
 Portfolio-level analysis is a legitimate AI application: normalising heterogeneous candidate
 descriptions into comparable form, surfacing dependency clashes across dozens of cases, flagging
 where a stated driver and the proposed benefits do not match. The governed limits are two.
-**Strategic weighting is a governance judgment**, not an optimisation output — a model asked to
+**Strategic weighting is a governance judgment**, not an optimisation output, a model asked to
 "optimise the portfolio" will faithfully optimise whatever proxy it was given, and the proxy is the
 decision. And **advocacy is invisible to a model**: an AI reading business cases cannot tell an
-evidenced benefit from a confident one, so it amplifies whatever the strongest writer submitted.
-AI proposes; the professional verifies, decides and remains accountable.
+evidenced benefit from a confident one, so it amplifies whatever the strongest writer submitted. AI
+proposes; the professional verifies, decides and remains accountable.
 
-**Verification, concretely.** The alignment index is where a model earns most of its keep and where its
-output must be checked hardest, because the arithmetic is trivial and the **mapping** is not: a model
-assigning programmes to objectives from their titles and summaries will produce a defensible-looking
-index built on classifications nobody agreed. So publish the mapping rule with the index, sample-check
-a stated proportion of the assignments by hand, and re-run the index under the alternative treatment of
-any multi-objective programme — if the index moves materially, the finding is about the mapping and not
-about the portfolio. The index itself is one addition of minima and should be reproduced in a
-spreadsheet whose formulae are visible. For the decay arithmetic, the supersession hazard must come
-from an organisation's own decision history, counted, and never from a model's sense of how fast
-strategies usually change: a plausible-sounding hazard drives a half-life that then drives programme
-architecture, which is a long way for an invented number to travel.
+**Verification, concretely.** The alignment index is where a model earns most of its keep and where
+its output must be checked hardest, because the arithmetic is trivial and the **mapping** is not: a
+model assigning programmes to objectives from their titles and summaries will produce a
+defensible-looking index built on classifications nobody agreed. So publish the mapping rule with
+the index, sample-check a stated proportion of the assignments by hand, and re-run the index under
+the alternative treatment of any multi-objective programme; if the index moves materially, the
+finding is about the mapping and not about the portfolio. The index itself is one addition of minima
+and should be reproduced in a spreadsheet whose formulae are visible. For the decay arithmetic, the
+supersession hazard must come from an organisation's own decision history, counted, and never from a
+model's sense of how fast strategies usually change: a plausible-sounding hazard drives a half-life
+that then drives programme architecture, which is a long way for an invented number to travel.
 
 ### Key terms — KA 2.1
 
@@ -321,10 +322,10 @@ architecture, which is a long way for an invented number to travel.
 | **Driver** | The reason the work exists; determines what success means and how it is measured. |
 | **Hard / soft constraint** | Physics, law, contract vs preference and convention; only soft ones are tradeable. |
 | **Alignment decay** | The erosion of strategic fit after approval, as strategy and understanding move. |
-| **Alignment index** | `Σ min(declared weight, funded share)` — the overlap between stated priorities and funded spend. |
+| **Alignment index** | `Σ min(declared weight, funded share)`, the overlap between stated priorities and funded spend. |
 | **Reallocation distance** | The money that must move to close the gaps: `(1 − index) × denominator`; deficits equal surpluses. |
 | **Supersession hazard** | The annual probability that a stated strategic priority is replaced, merged or de-prioritised. |
-| **Alignment half-life** | `ln(0.5) ÷ ln(1 − h)` — the delivery duration beyond which alignment is more likely lost than kept. |
+| **Alignment half-life** | `ln(0.5) ÷ ln(1 − h)`: the delivery duration beyond which alignment is more likely lost than kept. |
 | **Benefits owner** | The accountable person outside the project who will realise the benefit. |
 
 ### Sample MCQs — KA 2.1
@@ -373,8 +374,8 @@ The alignment half-life is:
 
 *Rationale:* `ln(0.5)/ln(0.85) = 4.2650` (2.1.3). A is `1/h`, the mean waiting time under a
 different model, not the median; C halves linearly (`0.5/0.15`), ignoring compounding; D uses
-`ln(0.5)/h`, treating the annual hazard as a continuous rate — a near miss that is systematically
-too long.
+`ln(0.5)/h`, treating the annual hazard as a continuous rate: a near miss that is systematically too
+long.
 
 **MCQ 2.1-E `[2.1.1 · Evaluation]`** An alignment index of 76.6667 % is reported on mapped spend
 while the index on all discretionary spend is 59.0000 %, the difference being 40 % of spend that maps
@@ -398,7 +399,7 @@ therefore:
 - D. mis-measured, because a perfect score is not attainable in practice
 
 *Rationale:* The index measures money against stated intent and nothing else (2.1.1, 2.A.2). A and C
-read an allocation measure as a balance or optimality measure — a portfolio funded exactly to weight
+read an allocation measure as a balance or optimality measure, a portfolio funded exactly to weight
 can still be entirely high-risk, entirely long-dated and entirely dependent on one scarce team. D is
 false: a perfect score simply means the funded shares match the declared weights.
 
@@ -437,36 +438,36 @@ with owners and measures (KA 2.3); **what could go wrong**, with the exposure qu
 KA 1.A.2).
 
 Its two failure modes are worth naming precisely. A **advocacy document** answers only "why" and
-"what it delivers", omitting ranges, options and risk — designed to obtain approval rather than
+"what it delivers", omitting ranges, options and risk: designed to obtain approval rather than
 support a decision. A **compliance artefact** answers all six in a template nobody reads, produced
-after the decision has been taken informally. Both are common; the test that separates them from
-the real thing is whether the case **could have concluded "no"**.
+after the decision has been taken informally. Both are common; the test that separates them from the
+real thing is whether the case **could have concluded "no"**.
 
 **The living-case principle.** The case is not filed at approval; it is the instrument the gates
 re-test (2.1.3) and the source of the benefits register Domain 16 tracks. A business case whose
-figures no longer match the project is not a historical document — it is an unmanaged forecast.
+figures no longer match the project is an unmanaged forecast, not a historical document.
 
 ### 2.2.2 Options and appraisal
 
-**A genuine options set** includes the **do-nothing / do-minimum baseline** (against which all
-value is measured — without it, benefits are unmeasurable), at least one option that is materially
-cheaper than the preferred one, and at least one that is materially more ambitious. An options set
-constructed to make the preferred option look inevitable — the "straw options" pattern — is the
-advocacy failure mode in structural form, and reviewers spot it by checking whether any option
-could plausibly have won.
+**A genuine options set** includes the **do-nothing / do-minimum baseline** (against which all value
+is measured: without it, benefits are unmeasurable), at least one option that is materially cheaper
+than the preferred one, and at least one that is materially more ambitious. An options set
+constructed to make the preferred option look inevitable (the "straw options" pattern) is the
+advocacy failure mode in structural form, and reviewers spot it by checking whether any option could
+plausibly have won.
 
 **Appraisal** applies the discounted machinery PFL-AI Domain 4 builds in full: NPV as the primary
-value measure, with the range and sensitivity that make it honest. This book uses the results;
-the finance book derives them. What belongs to a delivery leader is the **benefits profile** —
-because that is where most business cases are wrong, and the error is systematic.
+value measure, with the range and sensitivity that make it honest. This book uses the results; the
+finance book derives them. What belongs to a delivery leader is the **benefits profile**, because
+that is where most business cases are wrong, and the error is systematic.
 
 **Worked example 2.2.2 — the Meridian business case, twice.**
 
-1. **Setup.** Meridian costs **USD 2,400,000** to deliver. Domain 1 established the arithmetic:
-   full potential at 100 % adoption is **USD 979,200** per year; realistic steady-state adoption is
-   **70 %**, worth **USD 685,440** per year. The benefits are appraised over **8 years** at a **7 %**
-   discount rate. Compare the case as commonly written — full potential from year one — with an
-   honest **ramped** profile: 40 % adoption in year 1, 60 % in year 2, 70 % thereafter.
+1. **Setup.** Meridian costs **USD 2,400,000** to deliver. Domain 1 established the arithmetic: full
+   potential at 100 % adoption is **USD 979,200** per year; realistic steady-state adoption is **70
+   %**, worth **USD 685,440** per year. The benefits are appraised over **8 years** at a **7 %**
+   discount rate. Compare the case as commonly written (full potential from year one) with an honest
+   **ramped** profile: 40 % adoption in year 1, 60 % in year 2, 70 % thereafter.
 2. **Formula.** Flat case: `PV = annual benefit × AF(r, n)`. Ramped case:
    `PV = Σ (potential × adoptionₜ) / (1 + r)ᵗ`. NPV = PV − cost.
 3. **Substitution.** `AF(0.07, 8) = 5.971299`. Flat: `979,200 × 5.971299`. Ramped:
@@ -478,20 +479,21 @@ because that is where most business cases are wrong, and the error is systematic
    | **Flat, full potential** | 979,200 | 979,200 | 979,200 | 5,847,096 | **+3,447,096** |
    | **Ramped, 70 % steady state** | 391,680 | 587,520 | 685,440 | 3,732,898 | **+1,332,898** |
 
-   The flat case overstates NPV by **USD 2,114,198** — **158.6 %** of the honest figure.
+   The flat case overstates NPV by **USD 2,114,198**: **158.6 %** of the honest figure.
 
 5. **Interpretation.** Both cases approve the programme, which is precisely why the error survives:
    the decision is unchanged, so nobody checks, and the *promise* is what gets remembered. Meridian
    was later judged a failure against benefits it never could have produced (Domain 1's case study),
-   and this table is where that judgement was actually created — at approval, two years before
-   anyone noticed. Five further readings follow, and the third is the one most business cases get
-   subtly wrong even after they have fixed the profile.
+   and this table is where that judgement was actually created: at approval, two years before anyone
+   noticed. Five further readings follow, and the third is the one most business cases get subtly
+   wrong even after they have fixed the profile.
 
-   **The ramp is not pessimism.** It is the adoption curve of the *same* 70 % figure, merely arriving
-   when it actually arrives. Nothing in the honest column is a more cautious assumption than the
-   flat column; the two differ only in *when* the identical steady state is reached. That is why the
-   flat profile is not a judgement call a reasonable person might defend — it is an arithmetic claim
-   that adoption is instantaneous, which nobody would sign if it were written in words.
+   **The ramp is not pessimism.** It is the adoption curve of the *same* 70 % figure, merely
+   arriving when it actually arrives. Nothing in the honest column is a more cautious assumption
+   than the flat column; the two differ only in *when* the identical steady state is reached. That
+   is why the flat profile is not a judgement call a reasonable person might defend. It is an
+   arithmetic claim that adoption is instantaneous, which nobody would sign if it were written in
+   words.
 
    **The ramp costs a fixed fraction of value, and the fraction is worth knowing.** The ramped PV of
    3,732,898 is **91.2027 %** of the flat PV at the same 70 % steady state
@@ -502,14 +504,14 @@ because that is where most business cases are wrong, and the error is systematic
    by multiplying by 0.912027, in their head, in the meeting.
 
    **Breakeven adoption comes in two flavours, and the difference is 3.9592 points.** The
-   **flat-equivalent breakeven is 41.05 %** — `2,400,000 / 5,847,096` — the level a benefit stream
-   *flat from year one* would have to reach. The **ramped-basis breakeven is 45.01 %** —
-   `2,400,000 / 5,332,711`, where 5,332,711 is the PV of the ramped profile per unit of sustained
-   adoption — the *steady state* a proportionally ramped profile must reach. Both are correct
-   answers to different questions, and reporting the first while meaning the second understates the
-   requirement by nearly four points. This book uses the flat-equivalent figure as its headline,
-   because it is comparable across profiles, and states the basis every time. **A breakeven without
-   its basis is not a number.**
+   **flat-equivalent breakeven is 41.05 %**: `2,400,000 / 5,847,096`: the level a benefit stream
+   *flat from year one* would have to reach. The **ramped-basis breakeven is 45.01 %** (`2,400,000 /
+   5,332,711`, where 5,332,711 is the PV of the ramped profile per unit of sustained adoption) the
+   *steady state* a proportionally ramped profile must reach. Both are correct answers to different
+   questions, and reporting the first while meaning the second understates the requirement by nearly
+   four points. This book uses the flat-equivalent figure as its headline, because it is comparable
+   across profiles, and states the basis every time. **A breakeven without its basis is not a
+   number.**
 
    **The breakeven, not the NPV, is the board sentence.** "This programme creates value at any
    sustained flat-equivalent adoption above 41.05 %" states the condition value depends on, in a unit
@@ -518,12 +520,13 @@ because that is where most business cases are wrong, and the error is systematic
    only be wrong in retrospect, while a breakeven can be tested every month from go-live.
 
    **What breaks the whole example.** Three things. The 8-year horizon is a choice, and a benefit
-   stream that in fact decays — as clinical workflows change and the released hours are re-absorbed —
-   is not captured by a flat tail; where decay is plausible, profile it and let the horizon fall out.
-   The 7 % rate is an input the leader usually does not own, and the industry variations below compute
-   what a point of it is worth. And the cost side is treated as a point estimate, which Domain 7,
-   KA 7.1.1 forbids: the same table drawn with the cost at the top of its accuracy range moves every
-   breakeven, and a case that ranges its benefits but not its costs has ranged the wrong side.
+   stream that in fact decays (as clinical workflows change and the released hours are re-absorbed)
+   is not captured by a flat tail; where decay is plausible, profile it and let the horizon fall
+   out. The 7 % rate is an input the leader usually does not own, and the industry variations below
+   compute what a point of it is worth. And the cost side is treated as a point estimate, which
+   Domain 7, KA 7.1.1 forbids: the same table drawn with the cost at the top of its accuracy range
+   moves every breakeven, and a case that ranges its benefits but not its costs has ranged the wrong
+   side.
 
 > **Fig 2.2.1 — Two Meridian business cases from identical facts.** Grouped bar chart, x-axis
 > years 1–8, y-axis annual benefit USD 0–1.05m. Series A (grey) flat at 979,200 across all eight
@@ -534,11 +537,11 @@ because that is where most business cases are wrong, and the error is systematic
 > ramping to a seventy per cent steady state, with the gap between them shaded as overstated value.
 
 **The other half of the appraisal is the thing the project is being compared with**, and it is
-almost never zero. "Do nothing" is a course of action with its own cash flows: contracts that expire,
-equipment that fails, workarounds whose cost grows, obligations that fall due anyway. Where those
-costs are omitted, the case understates its own value — which makes this the mirror image of the
-flat-profile error, and the reason a reviewer must look for errors in *both* directions rather than
-assuming every case is inflated.
+almost never zero. "Do nothing" is a course of action with its own cash flows: contracts that
+expire, equipment that fails, workarounds whose cost grows, obligations that fall due anyway. Where
+those costs are omitted, the case understates its own value, which makes this the mirror image of
+the flat-profile error, and the reason a reviewer must look for errors in *both* directions rather
+than assuming every case is inflated.
 
 **Worked example 2.2.2b — the do-nothing baseline that was not zero.**
 
@@ -564,7 +567,7 @@ assuming every case is inflated.
    | Manual reconciliation avoided (years 5–8) | 160,000 | **103,363** |
    | **Do-nothing cost, and therefore value created by avoiding it** | **760,000** | **561,101** |
 
-   Incremental NPV rises from **+1,332,898** to **+1,893,998** — an uplift of **USD 561,101**, or
+   Incremental NPV rises from **+1,332,898** to **+1,893,998**: an uplift of **USD 561,101**, or
    **42.10 %** of the stated NPV. Flat-equivalent breakeven adoption falls from **41.0460 %** to
    **31.4498 %**, an improvement of **9.5962 percentage points**.
 5. **Interpretation.** Five readings, and the third is the most consequential sentence in this
@@ -573,32 +576,32 @@ assuming every case is inflated.
    **A zero do-nothing baseline is a claim, and usually a false one.** It asserts that the current
    arrangement can continue indefinitely at its current cost. That is true of very little: support
    contracts expire, regulation tightens, volumes grow, and the workaround that costs nothing today
-   costs a post holder tomorrow. The professional discipline is to appraise the do-nothing option with
-   the same rigour as the preferred one — its own cost profile, its own risks, its own owner — and to
-   record that appraisal, because that is what makes the comparison a comparison rather than an
-   assertion.
+   costs a post holder tomorrow. The professional discipline is to appraise the do-nothing option
+   with the same rigour as the preferred one (its own cost profile, its own risks, its own owner),
+   and to record that appraisal, because that is what makes the comparison a comparison rather than
+   an assertion.
 
    **The error runs in the opposite direction to the flat profile, which is why both must be looked
-   for.** The flat profile flattered Meridian by 2,114,198 of present value; the missing counterfactual
-   penalised it by 561,101. A reviewer who only knows that cases are optimistic will find the first and
-   not the second, and will then be wrong in a way that is harder to correct — because arguing that a
-   case is *understated* costs credibility that arguing the reverse does not. Net across the two
-   corrections, Meridian's honest NPV is `3,732,898 − 2,400,000 + 561,101 =` **+1,893,998**, which is
-   **54.94 %** of the 3,447,096 the approved case advertised. The case was wrong twice and still
-   positive.
+   for.** The flat profile flattered Meridian by 2,114,198 of present value; the missing
+   counterfactual penalised it by 561,101. A reviewer who only knows that cases are optimistic will
+   find the first and not the second, and will then be wrong in a way that is harder to correct;
+   because arguing that a case is *understated* costs credibility that arguing the reverse does not.
+   Net across the two corrections, Meridian's honest NPV is `3,732,898 − 2,400,000 + 561,101 =`
+   **+1,893,998**, which is **54.94 %** of the 3,447,096 the approved case advertised. The case was
+   wrong twice and still positive.
 
-   **Meridian's actual outcome sits between the two breakevens, and that is the whole lesson.** At its
-   achieved flat-equivalent adoption of **40 %**, the programme's NPV on the case as written is
-   `0.40 × 5,847,096 − 2,400,000 =` **(USD 61,162)** — a small loss, and the arithmetic that made a
-   public failure verdict defensible. On the honest baseline it is `−61,162 + 561,101 =`
-   **+USD 499,939** — a clear success. **The same programme, the same 40 % adoption, the same cost:
+   **Meridian's actual outcome sits between the two breakevens, and that is the whole lesson.** At
+   its achieved flat-equivalent adoption of **40 %**, the programme's NPV on the case as written is
+   `0.40 × 5,847,096 − 2,400,000 =` **(USD 61,162)**: a small loss, and the arithmetic that made a
+   public failure verdict defensible. On the honest baseline it is `−61,162 + 561,101 =` **+USD
+   499,939**: a clear success. **The same programme, the same 40 % adoption, the same cost:
    value-destroying or value-creating according to whether anyone appraised the do-nothing option.**
    The judgement passed on Meridian was not a measurement of the programme. It was a measurement of
    its business case.
 
    **Do-minimum is usually the honest baseline, not do-nothing, and the difference is not
-   presentational.** Pure inaction is often not permissible — the support contract cannot simply be
-   allowed to lapse on a clinical system — so the correct comparator is the **cheapest compliant
+   presentational.** Pure inaction is often not permissible (the support contract cannot simply be
+   allowed to lapse on a clinical system), so the correct comparator is the **cheapest compliant
    alternative**, here the 600,000 re-platforming on its own. Appraised that way, the 600,000 moves
    from "avoided cost" to "the do-minimum option's cost", and the incremental NPV is identical; what
    changes is that the options set now contains a genuine third option that could have won on a low
@@ -607,26 +610,38 @@ assuming every case is inflated.
    exactly that reason.
 
    **What breaks it, and where to be careful.** Avoided costs must be *genuinely* avoided and not
-   merely deferred: if the legacy re-platforming would still be needed for another system on the same
-   estate, nothing has been avoided and the 457,737 is fictitious — the same single-claimant discipline
-   KA 2.3.2 applies to benefits, applied to costs. The avoided cost must not also be counted as a
-   benefit elsewhere in the case, which is the commonest form of the double count here. The timing
-   carries real weight: the 600,000 is worth 457,737 at year 4 and would be worth **560,748** at year
-   1, so a vaguely dated obligation is a materially different number, and the year is a fact to be
-   evidenced from the contract rather than assumed. And an avoided cost is not cash released unless
-   the budget holding it is actually removed — 2.3.2's cash-releasing test applies with full force,
-   because a finance function that never held a provision for the 600,000 will not recognise its
-   avoidance. **This is an area where the accounting and budgetary treatment differs materially
-   between organisations and jurisdictions; where the case turns on it, agree the treatment with the
-   finance function in writing before the paper is written.**
+   merely deferred: if the legacy re-platforming would still be needed for another system on the
+   same estate, nothing has been avoided and the 457,737 is fictitious, the same single-claimant
+   discipline KA 2.3.2 applies to benefits, applied to costs. The avoided cost must not also be
+   counted as a benefit elsewhere in the case, which is the commonest form of the double count here.
+   The timing carries real weight: the 600,000 is worth 457,737 at year 4 and would be worth
+   **560,748** at year 1, so a vaguely dated obligation is a materially different number, and the
+   year is a fact to be evidenced from the contract rather than assumed. And an avoided cost is not
+   cash released unless the budget holding it is actually removed: 2.3.2's cash-releasing test
+   applies with full force, because a finance function that never held a provision for the 600,000
+   will not recognise its avoidance. **This is an area where the accounting and budgetary treatment
+   differs materially between organisations and jurisdictions; where the case turns on it, agree the
+   treatment with the finance function in writing before the paper is written.**
 
 ### 2.2.3 Selection and prioritisation models
 
 **Weighted scoring** ranks candidates against criteria carrying explicit weights. Its value is that
 it forces the criteria and weights into the open, where they can be argued; its limits are that
 scores are **ordinal judgments** (the arithmetic caution of Domain 8, KA 8.2.1 applies) and that
-weights are chosen by whoever runs the model — so the model can be steered by anyone who
+weights are chosen by whoever runs the model. So so the model can be steered by anyone who
 understands it.
+
+Which makes **who scores** a governance question rather than an administrative one. A scoring panel
+is a decision body, so the declaration duty of Domain 1, KA 1.2.2a applies to it in full: each
+scorer identifies any interest in the candidates before the criteria are issued, declares it in
+writing to the chair, and takes no part in scoring the candidate concerned, with the record naming
+who scored in their place. The interest to watch for here is rarely financial. It is usually a
+sponsoring or delivering role in one of the candidates, which is precisely the person whose subject
+knowledge makes them worth having on the panel. Note the sequence, because it is the part that gets
+reversed under time pressure: interests are declared and the weights are fixed **before** any
+candidate is scored, since a weight set after the scores are visible is a way of choosing the winner
+while appearing to apply a model (Domain 10, KA 10.2.3 makes the same point for bids, where the
+stakes are contractual).
 
 **Worked example 2.2.3 — four candidates, two rankings.**
 
@@ -659,47 +674,47 @@ understands it.
    **The constraint changes the answer, not merely the ordering.** The scoring model ranks **Beta
    first** (4.05 against Meridian's 3.95) on strategic fit and deliverability. Under the capacity
    constraint, **Beta + Gamma** together consume the 3 units for a combined NPV of **2,100,000**,
-   beating Meridian's 1,693,072 alone — so the constrained answer is to run the two smaller
+   beating Meridian's 1,693,072 alone, so the constrained answer is to run the two smaller
    programmes, which neither the raw NPV ranking nor the scoring model would have selected. This is
    the delivery-side twin of PFL-AI's capital rationing (its Domain 4, KA 4.3.2). The leadership
-   content is that **the binding constraint decides the method**, and naming that constraint honestly
-   — usually a scarce team, not money — is the whole game.
+   content is that **the binding constraint decides the method**, and naming that constraint
+   honestly (usually a scarce team, not money) is the whole game.
 
    **Enumeration is cheap and greedy ranking is not safe.** The feasible sets under 3 units are
-   exactly `{}`, `{Gamma}` = 900,000, `{Beta}` = 1,200,000, `{Meridian}` = 1,693,072 and
-   `{Beta, Gamma}` = **2,100,000**; `{Meridian, Beta}` needs 5 units and `{Meridian, Gamma}` needs 4,
-   so both are infeasible. Here greedy ranking by NPV per unit — Gamma at 900,000, Beta at 600,000,
-   Meridian at 564,357 — happens to reach the optimum, and that is luck rather than method. Had a
+   exactly `{}`, `{Gamma}` = 900,000, `{Beta}` = 1,200,000, `{Meridian}` = 1,693,072 and `{Beta,
+   Gamma}` = **2,100,000**; `{Meridian, Beta}` needs 5 units and `{Meridian, Gamma}` needs 4, so
+   both are infeasible. Here greedy ranking by NPV per unit (Gamma at 900,000, Beta at 600,000,
+   Meridian at 564,357) happens to reach the optimum, and that is luck rather than method. Had a
    fifth candidate **Epsilon** needed all 3 units for an NPV of **2,200,000** (733,333 per unit),
-   greedy would still have taken Gamma first and finished with Beta + Gamma at 2,100,000, missing the
-   best set by **USD 100,000**. With `n` candidates there are `2ⁿ` subsets, which for the ten or
+   greedy would still have taken Gamma first and finished with Beta + Gamma at 2,100,000, missing
+   the best set by **USD 100,000**. With `n` candidates there are `2ⁿ` subsets, which for the ten or
    twenty candidates a real portfolio board considers is a spreadsheet exercise, not a research
    problem. **Enumerate; rank only to explain the answer afterwards.**
 
-   **Divisibility is the assumption that decides whether any of this is legitimate.** Ranking by value
-   per unit is the correct optimum when candidates are *divisible* — when half of Beta can be bought
-   for half the money and half the value. Projects are almost never divisible in that sense, which is
-   what makes them lumpy and what makes greedy unsafe. Where a candidate genuinely can be **staged**,
-   it becomes partly divisible and the arithmetic improves; that is one of the underrated benefits of
-   the tranching argued for in 2.1.3 and priced in 2.A.1, and it belongs in the selection paper rather
-   than being discovered later.
+   **Divisibility is the assumption that decides whether any of this is legitimate.** Ranking by
+   value per unit is the correct optimum when candidates are *divisible*, when half of Beta can be
+   bought for half the money and half the value. Projects are almost never divisible in that sense,
+   which is what makes them lumpy and what makes greedy unsafe. Where a candidate genuinely can be
+   **staged**, it becomes partly divisible and the arithmetic improves; that is one of the
+   underrated benefits of the tranching argued for in 2.1.3 and priced in 2.A.1, and it belongs in
+   the selection paper rather than being discovered later.
 
-   **What no model does.** Scoring and ratios cannot see option value, sequencing dependencies, or the
-   strategic cost of *not* doing something. They order candidates; they do not decide. A portfolio
-   board that treats a scoring output as the decision has automated its own accountability (Domain 1,
-   KA 1.2.1). Two further blindnesses are specific to the constrained form: it takes the constraint as
-   given, when the most valuable move is often to *relax* it — priced immediately below — and it
-   assumes the candidates are independent, when Gamma may be the enabler on which Meridian's benefits
-   depend, in which case the sets are not free to be chosen (Domain 15, KA 15.1.3 handles dependent
-   candidates).
+   **What no model does.** Scoring and ratios cannot see option value, sequencing dependencies, or
+   the strategic cost of *not* doing something. They order candidates; they do not decide. A
+   portfolio board that treats a scoring output as the decision has automated its own accountability
+   (Domain 1, KA 1.2.1). Two further blindnesses are specific to the constrained form: it takes the
+   constraint as given, when the most valuable move is often to *relax* it (priced immediately
+   below), and it assumes the candidates are independent, when Gamma may be the enabler on which
+   Meridian's benefits depend, in which case the sets are not free to be chosen (Domain 15, KA
+   15.1.3 handles dependent candidates).
 
 **Worked example 2.2.3b — what one unit of the binding constraint is worth.**
 
-1. **Setup.** The three candidates above compete for one scarce integration team measured in **units**:
-   Meridian needs 3 units for an NPV of 1,693,072; Beta needs 2 for 1,200,000; Gamma needs 1 for
-   900,000. The portfolio director can grow or shrink the team, and a unit of durable integration
-   capacity — a qualified engineer with the platform knowledge, recruited and retained — costs
-   **USD 400,000** a year all-in. How much capacity should the organisation hold?
+1. **Setup.** The three candidates above compete for one scarce integration team measured in
+   **units**: Meridian needs 3 units for an NPV of 1,693,072; Beta needs 2 for 1,200,000; Gamma
+   needs 1 for 900,000. The portfolio director can grow or shrink the team, and a unit of durable
+   integration capacity (a qualified engineer with the platform knowledge, recruited and retained)
+   costs **USD 400,000** a year all-in. How much capacity should the organisation hold?
 2. **Formula.** For each capacity level `c`, solve `V(c) = max Σ NPVᵢ subject to Σ unitsᵢ ≤ c` by
    enumeration. The **marginal value of the nth unit** is `V(n) − V(n−1)`. Buy `k` further units when
    `V(c + k) − V(c) > k ×` unit cost.
@@ -717,47 +732,48 @@ understands it.
    | 5 | Meridian + Beta | 2,893,072 | **300,000** |
    | 6 | Meridian + Beta + Gamma | 3,793,072 | **900,000** |
 
-   From a base of 3 units, at 400,000 a unit: **+1 unit** gains 493,072 for 400,000 — net
-   **+93,072**; **+2 units** gains 793,072 for 800,000 — net **(6,928)**; **+3 units** gains
+   From a base of 3 units, at 400,000 a unit: **+1 unit** gains 493,072 for 400,000 (net
+   **+93,072**; **+2 units** gains 793,072 for 800,000) net **(6,928)**; **+3 units** gains
    1,693,072 for 1,200,000 — net **+493,072**.
 5. **Interpretation.** Four readings, and the second contradicts the way capacity decisions are almost
    always taken.
 
-   **There is no such thing as "the value of a unit of integration capacity".** The marginal value runs
-   900,000 · 300,000 · 900,000 · 493,072 · 300,000 · 900,000 — it is **lumpy and non-monotone**, and it
-   is a property of the *candidate set*, not of the team. Anyone who quotes a single figure for what a
-   scarce team is worth has averaged away the only information in the answer. The same applies to the
-   shadow prices a solver reports: they are valid for the set that was solved and change when a
-   candidate is added, withdrawn or re-estimated.
+   **There is no such thing as "the value of a unit of integration capacity".** The marginal value
+   runs 900,000 · 300,000 · 900,000 · 493,072 · 300,000 · 900,000. It is **lumpy and non-monotone**,
+   and it is a property of the *candidate set*, not of the team. Anyone who quotes a single figure
+   for what a scarce team is worth has averaged away the only information in the answer. The same
+   applies to the shadow prices a solver reports: they are valid for the set that was solved and
+   change when a candidate is added, withdrawn or re-estimated.
 
    **The right answer here is to add one unit or three, and never two — which no incremental process
-   would find.** Adding units one at a time, each judged on its own, accepts the first (it gains 493,072
-   for 400,000, a net **+93,072**) and then rejects the second, which gains only 300,000 for 400,000 —
-   a net **(100,000)** on its own, and (6,928) taken as a block of two. So the process stops there and
-   never reaches the block of three, whose net is **+493,072** — **5.30 times** the gain the incremental
-   process settles for. Capacity decisions are non-convex
-   because the candidates are lumpy, so they must be taken as a **block decision against enumerated
-   plans**, which is precisely what an annual headcount round asking each manager to justify the next
-   post cannot do. This is the arithmetic behind Domain 15's treatment of enterprise capacity as a
+   would find.** Adding units one at a time, each judged on its own, accepts the first (it gains
+   493,072 for 400,000, a net **+93,072**) and then rejects the second, which gains only 300,000 for
+   400,000 — a net **(100,000)** on its own, and (6,928) taken as a block of two. So the process
+   stops there and never reaches the block of three, whose net is **+493,072**: **5.30 times** the
+   gain the incremental process settles for. Capacity decisions are non-convex because the
+   candidates are lumpy, so they must be taken as a **block decision against enumerated plans**,
+   which is precisely what an annual headcount round asking each manager to justify the next post
+   cannot do. This is the arithmetic behind Domain 15's treatment of enterprise capacity as a
    portfolio-level decision (KA 15.3) rather than a departmental one.
 
-   **The comparison the portfolio board should actually be shown.** Not "should we hire?" but a table
-   of feasible plans with their NPVs and their capacity costs — because on these figures the question
-   "what is the best use of 1,200,000?" has the answer "three integration engineers", which no capital
-   proposal would ever have contained. Note also the direction that is usually forgotten: at `c = 2`
-   the marginal unit is worth only 300,000, **below its 400,000 cost**, so an organisation sitting at
-   2 units with these candidates should shrink rather than hold — a conclusion the same table produces
-   and no advocacy paper ever reaches.
+   **The comparison the portfolio board should actually be shown.** Not "should we hire?" but a
+   table of feasible plans with their NPVs and their capacity costs, because on these figures the
+   question "what is the best use of 1,200,000?" has the answer "three integration engineers", which
+   no capital proposal would ever have contained. Note also the direction that is usually forgotten:
+   at `c = 2` the marginal unit is worth only 300,000, **below its 400,000 cost**, so an
+   organisation sitting at 2 units with these candidates should shrink rather than hold: a
+   conclusion the same table produces and no advocacy paper ever reaches.
 
-   **What breaks it.** The unit cost must be the **durable** cost of holding capacity, not a contractor
-   day rate for a peak, and if the capacity can be rented for a season the whole question changes shape
-   (Domain 7, KA 7.4 prices resource acquisition modes; Domain 10 prices the make-or-buy). Recruitment
-   lag matters and is absent here: three engineers who arrive in nine months do not enable a decision
-   taken today, and Domain 1's reinforcement-trough arithmetic prices the transient they bring with
-   them. The NPVs are point estimates on candidates whose own ranges overlap, so a marginal value of
-   300,000 is not reliably different from one of 493,072. And capacity has value beyond this
-   candidate set — optionality against next year's candidates, and resilience — which this model prices
-   at zero and Domain 15, KA 15.3 prices properly as protective capacity.
+   **What breaks it.** The unit cost must be the **durable** cost of holding capacity, not a
+   contractor day rate for a peak, and if the capacity can be rented for a season the whole question
+   changes shape (Domain 7, KA 7.4 prices resource acquisition modes; Domain 10 prices the
+   make-or-buy). Recruitment lag matters and is absent here: three engineers who arrive in nine
+   months do not enable a decision taken today, and Domain 1's reinforcement-trough arithmetic
+   prices the transient they bring with them. The NPVs are point estimates on candidates whose own
+   ranges overlap, so a marginal value of 300,000 is not reliably different from one of 493,072. And
+   capacity has value beyond this candidate set (optionality against next year's candidates, and
+   resilience), which this model prices at zero and Domain 15, KA 15.3 prices properly as protective
+   capacity.
 
 **Worked example 2.2.3c — how far must a weight move to reverse the ranking?**
 
@@ -766,16 +782,16 @@ understands it.
    Meridian by 4.05 to 3.95. Two people who both accept the scores disagree about the weights: one
    believes strategic fit should carry less and benefit value more. **How much less?**
 2. **Formula.** Shift `δ` of weight from criterion `a` to criterion `b`, holding the rest fixed. A
-   candidate's total changes by `δ × (score_b − score_a)`. The ranking flips where
-   `δ × [(scoreᵦ_b − scoreᵦ_a) − (score_M_b − score_M_a)] =` the current margin. Separately, the most
-   any criterion can move a total — its **criterion influence** — is `(score range) × weight`.
+   candidate's total changes by `δ × (score_b − score_a)`. The ranking flips where `δ × [(scoreᵦ_b −
+   scoreᵦ_a) − (score_M_b − score_M_a)] =` the current margin. Separately, the most any criterion
+   can move a total (its **criterion influence**) is `(score range) × weight`.
 3. **Substitution.** Meridian gains `δ(5 − 4) = +δ`; Beta gains `δ(3 − 5) = −2δ`. The margin is 0.10,
    so `δ + 2δ = 0.10`.
 4. **Result.** `δ =` **0.033333**, i.e. **3.3333 percentage points** of weight. At fit 0.316667 and
    benefit 0.333333 both candidates score exactly **3.983333**. Criterion influence, on a 1–5 scale
-   (range 4): fit **1.40**, benefit **1.20**, deliverability **0.80**, risk **0.60** — summing to the
-   full 4.00 range of possible totals. The four candidates' actual totals span only **1.00**, which is
-   **25.00 %** of that maximum swing.
+   (range 4): fit **1.40**, benefit **1.20**, deliverability **0.80**, risk **0.60**, summing to the
+   full 4.00 range of possible totals. The four candidates' actual totals span only **1.00**, which
+   is **25.00 %** of that maximum swing.
 5. **Interpretation.** Five readings, and the last is the governance conclusion the arithmetic forces.
 
    **A 3.33-point weight shift reverses the portfolio's top candidate, and 3.33 points is inside the
@@ -785,63 +801,62 @@ understands it.
    change that is a material omission. The reviewer's question is exact: **what is the smallest
    defensible change of weight that reverses this ranking?**
 
-   **The score side is worse.** Meridian needs only **+0.50** on deliverability — 3 to 3.5 — to draw
+   **The score side is worse.** Meridian needs only **+0.50** on deliverability (3 to 3.5) to draw
    level, because deliverability carries a weight of 0.20 and `0.10/0.20 = 0.50`. On a 1–5 ordinal
    scale nobody can distinguish 3 from 3.5, which is Domain 8, KA 8.2.1's arithmetic caution about
-   ordinal scales in its sharpest form: **the model is being asked to resolve a difference finer than
-   its own inputs can express.** On the risk criterion, weighted 0.15, the required move is
-   **+0.6667**, and the general rule falls out: the score movement needed to close a gap is
-   `margin ÷ weight`, so the lightly weighted criteria are the ones where scoring error does least
-   damage.
+   ordinal scales in its sharpest form: **the model is being asked to resolve a difference finer
+   than its own inputs can express.** On the risk criterion, weighted 0.15, the required move is
+   **+0.6667**, and the general rule falls out: the score movement needed to close a gap is `margin
+   ÷ weight`, so the lightly weighted criteria are the ones where scoring error does least damage.
 
    **Some weight shifts can never flip a ranking, and knowing which is free information.** Moving
    weight between strategic fit and *deliverability* changes Meridian's total by `δ(3 − 4) = −δ` and
-   Beta's by `δ(4 − 5) = −δ` — identically — so the 0.10 margin is invariant to that trade no matter
-   how large it is. A weighting argument between those two criteria is therefore not an argument about
-   this decision at all, and a chair who knows it can stop the discussion. The pairs that matter are
-   the ones where the two candidates' score *differences* differ.
+   Beta's by `δ(4 − 5) = −δ`, identically, so the 0.10 margin is invariant to that trade no matter
+   how large it is. A weighting argument between those two criteria is therefore not an argument
+   about this decision at all, and a chair who knows it can stop the discussion. The pairs that
+   matter are the ones where the two candidates' score *differences* differ.
 
    **Criterion influence tells you what the model cannot decide.** With a 1–5 scale, the risk
    criterion at 0.15 can move a total by at most **0.60** across its whole range. If the real
    disagreement in the room is about risk, and the candidates' risk scores differ by 1 point (worth
    0.15), the model literally cannot express it: `0.15` against a spread of totals of 1.00. The
-   remedy is not a bigger weight but a different instrument — quantified exposure per Domain 8,
-   KA 8.2.2, reported beside the score rather than compressed into it.
+   remedy is not a bigger weight but a different instrument, quantified exposure per Domain 8, KA
+   8.2.2, reported beside the score rather than compressed into it.
 
    **Scoring models compress, and compression is what makes them steerable.** The four candidates
    occupy 25.00 % of the available range, because a good candidate scores well on some criteria and
    badly on others and weighting averages the differences away. Compression is not a defect to be
-   engineered out — it is the honest consequence of averaging — but it has a governance implication:
+   engineered out (it is the honest consequence of averaging), but it has a governance implication:
    **when the outputs are close, the weights decide, and the weights are chosen by whoever runs the
    model.** The countermeasures are procedural and cheap: agree and minute the weights *before* the
-   candidates are scored, publish the flip point with the ranking, and where two candidates lie within
-   the flip point of each other, report them as **not separated by this method** and decide on
-   something else — constraint economics (2.2.3b), option value (2.A.1) or portfolio balance (2.A.2).
-   A model that cannot separate two candidates has still done useful work by saying so.
+   candidates are scored, publish the flip point with the ranking, and where two candidates lie
+   within the flip point of each other, report them as **not separated by this method** and decide
+   on something else: constraint economics (2.2.3b), option value (2.A.1) or portfolio balance
+   (2.A.2). A model that cannot separate two candidates has still done useful work by saying so.
 
 ### AI in this KA
 
-Business-case drafting is now routinely AI-assisted, and this KA identifies the specific hazard:
-a model will produce a **fluent, complete-looking case with a flat benefits profile**, because that
-is what most cases in its training data look like. It will also generate plausible options sets that
-are structurally straw. The verification duty is therefore concrete — check the benefits profile
+Business-case drafting is now routinely AI-assisted, and this KA identifies the specific hazard: a
+model will produce a **fluent, complete-looking case with a flat benefits profile**, because that is
+what most cases in its training data look like. It will also generate plausible options sets that
+are structurally straw. The verification duty is therefore concrete: check the benefits profile
 ramps, check at least one option could have won, check every benefit traces to a measured outcome
 with an owner (Domain 1's benefits-chain test), and check the range and class on the cost. An
 AI-drafted case that passes those four checks is genuinely useful work; one that has not been
 checked against them is the advocacy document of 2.2.1 with better formatting.
 
 Four further checks belong on that list once this KA's arithmetic is available, and each catches a
-defect the four above do not. **A do-nothing option valued at zero** is as characteristic of generated cases
-as a flat profile, and for the same reason — most cases in the corpus do it — so ask the model
-explicitly what doing nothing costs in each year of the horizon, and then verify each item against a
-contract, licence or asset register rather than accepting the list. And **a breakeven quoted without its
-basis** is a near-certainty in generated text, because the distinction between flat-equivalent and
-ramped-basis is finer than the language usually carries; recompute it and label it. Where a model has
-been asked to run a scoring or constrained-selection model, the specific verification is the **flip
-point** and the **enumeration**: a model will produce a ranking with total confidence and will not
-volunteer that a 3.33-point weight shift reverses it, and a model asked to "optimise" a constrained
-selection will frequently return the greedy per-unit answer, which is not the optimum. Both are
-checkable in a spreadsheet in minutes, and both change recommendations.
+defect the four above do not. **A do-nothing option valued at zero** is as characteristic of
+generated cases as a flat profile, and for the same reason (most cases in the corpus do it), so ask
+the model explicitly what doing nothing costs in each year of the horizon, and then verify each item
+against a contract, licence or asset register rather than accepting the list. And **a breakeven
+quoted without its basis** is a near-certainty in generated text, because the distinction between
+flat-equivalent and ramped-basis is finer than the language usually carries; recompute it and label
+it. Where a model has been asked to run a scoring or constrained-selection model, the specific
+verification is the **flip point** and the **enumeration**: a model will produce a ranking with
+total confidence and will not volunteer that a 3.33-point weight shift reverses it, and a model
+asked to "optimise" a constrained selection will frequently return the greedy per-unit answer, which
+is not the optimum. Both are checkable in a spreadsheet in minutes, and both change recommendations.
 
 ### Key terms — KA 2.2
 
@@ -852,14 +867,14 @@ checkable in a spreadsheet in minutes, and both change recommendations.
 | **Counterfactual cost** | Cost incurred *only* in the do-nothing case, and therefore value created by avoiding it. |
 | **Straw options** | An options set built so the preferred option cannot lose. |
 | **Benefits profile** | The time-phased benefit stream; ramps in reality, flat in most business cases. |
-| **Breakeven adoption** | The adoption level at which NPV is zero — a more useful board sentence than NPV. |
+| **Breakeven adoption** | The adoption level at which NPV is zero, a more useful board sentence than NPV. |
 | **Flat-equivalent basis** | Breakeven stated as the level a profile flat from year one would need (Meridian 41.05 %). |
 | **Ramped basis** | Breakeven stated as the *steady state* a proportionally ramped profile must reach (Meridian 45.01 %). |
 | **Weighted scoring** | Ranking by Σ(weight × ordinal score); forces criteria into the open, steerable by whoever sets weights. |
 | **Value per unit of constraint** | Ranking basis when a scarce resource binds; a heuristic, not an optimum. |
 | **Marginal value of the constraint** | `V(n) − V(n−1)` from enumeration; lumpy, non-monotone, and a property of the candidate set. |
 | **Flip point** | The smallest weight shift that reverses a ranking; report it with the ranking or the ranking is unqualified. |
-| **Criterion influence** | `(score range) × weight` — the most a criterion can move a total, and therefore what the model cannot decide. |
+| **Criterion influence** | `(score range) × weight`: the most a criterion can move a total, and therefore what the model cannot decide. |
 
 ### Sample MCQs — KA 2.2
 
@@ -948,7 +963,7 @@ is displaced; D is Meridian's own NPV per unit, which is an average and not a ma
 ### Self-check — KA 2.2
 
 1. *What must an options set contain to be genuine?* — A do-nothing baseline, a materially cheaper
-   option, a materially more ambitious one — and at least one that could plausibly have won.
+   option, a materially more ambitious one; and at least one that could plausibly have won.
 2. *Why is breakeven adoption a better board sentence than NPV?* — It states the condition the
    value depends on, which is what the board can actually influence and monitor.
 3. *When does ranking by value per unit of constraint fail?* — With lumpy candidates: the feasible
@@ -1000,13 +1015,13 @@ owner sits outside the project (2.1.3).
 
 ### 2.3.2 Measures and baselines
 
-A benefit is only claimable against a **baseline** — the measured position before the change. Three
+A benefit is only claimable against a **baseline**: the measured position before the change. Three
 disciplines make measurement honest:
 
 - **Baseline before, not after.** Measure the current state before the change lands; a baseline
   reconstructed afterwards is an estimate shaped by the result it is used to justify.
 - **Attribution.** Other things change too. Where a benefit could have other causes, say so and
-  quantify what portion is plausibly attributable — over-claiming is the fastest way to lose the
+  quantify what portion is plausibly attributable, over-claiming is the fastest way to lose the
   credibility that future cases depend on.
 - **No double-counting.** The single commonest audit finding in benefits work: an enabling
   programme claims the benefit its dependent projects also claim, and the portfolio's total exceeds
@@ -1017,22 +1032,23 @@ disciplines make measurement honest:
 releases *clinician hours*; that becomes cash only if the organisation reduces cost or converts the
 hours into additional activity that has value. Reporting released hours as savings, when the
 headcount is unchanged and the hours are absorbed, is the error that makes finance directors
-distrust benefits cases — and it is avoided by stating the conversion explicitly, or by claiming
+distrust benefits cases. And and it is avoided by stating the conversion explicitly, or by claiming
 the benefit in its true unit (capacity) rather than in money it never became.
 
 Attribution is the discipline of the three that is most often waved at and least often done, because
-doing it requires a **comparison cohort** — a group that did not receive the change — and choosing to
+doing it requires a **comparison cohort** (a group that did not receive the change), and choosing to
 keep one feels like withholding a benefit. It is worth the discomfort, and it is worth arithmetic.
 
 **Worked example 2.3.2 — the measured benefit and the attributable benefit.**
 
 1. **Setup.** Twelve months after go-live, Meridian's benefits owner measures records-administration
-   time per clinic per week. The pre-change baseline, measured before deployment, was **22.0 hours**.
-   In the **28** adopting clinics it is now **15.6 hours**. In the **12** clinics that have not
-   adopted — the comparison cohort — the same measure has fallen from 22.0 to **20.9 hours**, because
-   an unrelated triage redesign was rolled out across the whole authority in the same period. The
-   valuation basis is Domain 1's: **USD 85** an hour over a **48-week** operating year. The programme's
-   business case assumed **6.0 hours** released per clinic per week. What may be claimed?
+   time per clinic per week. The pre-change baseline, measured before deployment, was **22.0
+   hours**. In the **28** adopting clinics it is now **15.6 hours**. In the **12** clinics that have
+   not adopted (the comparison cohort) the same measure has fallen from 22.0 to **20.9 hours**,
+   because an unrelated triage redesign was rolled out across the whole authority in the same
+   period. The valuation basis is Domain 1's: **USD 85** an hour over a **48-week** operating year.
+   The programme's business case assumed **6.0 hours** released per clinic per week. What may be
+   claimed?
 2. **Formula.** `Raw improvement = baseline − post-change in the adopting group`.
    `Counterfactual improvement = baseline − post-change in the comparison group`.
    `Attributable improvement = raw − counterfactual` (the difference of the two differences).
@@ -1054,52 +1070,54 @@ keep one feels like withholding a benefit. It is worth the discomfort, and it is
 
    **A measurement that beats the case can still fail to support it.** The raw figure, 6.4 hours,
    exceeds the case's 6.0, so the natural report is "benefits exceeding forecast". The attributable
-   figure, 5.3 hours, is **11.67 % below** the case, and the case's 6.0 is **13.21 % higher** than what
-   can honestly be claimed. Raw and attributable are different quantities, and it is the raw one that
-   programmes report because it is the one the programme's own data produces. **The comparison cohort
-   is what converts a measurement into evidence**, and a programme without one cannot distinguish its
-   own effect from everything else that happened that year — in either direction.
+   figure, 5.3 hours, is **11.67 % below** the case, and the case's 6.0 is **13.21 % higher** than
+   what can honestly be claimed. Raw and attributable are different quantities, and it is the raw
+   one that programmes report because it is the one the programme's own data produces. **The
+   comparison cohort is what converts a measurement into evidence**, and a programme without one
+   cannot distinguish its own effect from everything else that happened that year, in either
+   direction.
 
-   **The over-claim share is an invariant, and it is worth knowing in a meeting.** Because the raw and
-   attributable figures share the clinic count, the rate and the weeks, the over-claim as a fraction of
-   the raw claim is `counterfactual ÷ raw = 1.1/6.4 =` **17.1875 %** — irrespective of the valuation
-   rate, the operating year or how many clinics adopted. It is the exact structural twin of Domain 1's
-   adoption identity, where an output-based claim overstates by `1 − a` whatever the other numbers are
-   (KA 1.3.2). Both identities exist for the same reason and are used the same way: **you do not need
-   the model to say how wrong a claim is, only the term it omitted.**
+   **The over-claim share is an invariant, and it is worth knowing in a meeting.** Because the raw
+   and attributable figures share the clinic count, the rate and the weeks, the over-claim as a
+   fraction of the raw claim is `counterfactual ÷ raw = 1.1/6.4 =` **17.1875 %**: irrespective of
+   the valuation rate, the operating year or how many clinics adopted. It is the exact structural
+   twin of Domain 1's adoption identity, where an output-based claim overstates by `1 − a` whatever
+   the other numbers are (KA 1.3.2). Both identities exist for the same reason and are used the same
+   way: **you do not need the model to say how wrong a claim is, only the term it omitted.**
 
    **The correction moves the whole case, not just this year's report.** At 5.3 attributable hours,
-   full potential falls from 979,200 to `40 × 5.3 × 85 × 48 =` **USD 864,960**, which is
-   **88.3333 %** of the original — exactly `5.3/6.0`, since nothing else changed. The flat-equivalent
-   breakeven adoption therefore *rises* from 41.0460 % to `2,400,000 / (864,960 × 5.971299) =`
-   **46.4672 %**, a deterioration of **5.4212 percentage points**. Taken together with the do-nothing
-   correction of 2.2.2b, which improved the breakeven by 9.5962 points, the fully corrected
-   flat-equivalent breakeven is `(2,400,000 − 561,101) / (864,960 × 5.971299) =` **35.6035 %** — and
-   Meridian's achieved 40 % adoption clears it with **4.3965 points** to spare, for an NPV of
-   **+USD 227,074**. **Two errors of opposite sign, and you must fix both: fixing only the flattering
-   one produces a verdict as wrong as fixing neither.**
+   full potential falls from 979,200 to `40 × 5.3 × 85 × 48 =` **USD 864,960**, which is **88.3333
+   %** of the original, exactly `5.3/6.0`, since nothing else changed. The flat-equivalent breakeven
+   adoption therefore *rises* from 41.0460 % to `2,400,000 / (864,960 × 5.971299) =` **46.4672 %**,
+   a deterioration of **5.4212 percentage points**. Taken together with the do-nothing correction of
+   2.2.2b, which improved the breakeven by 9.5962 points, the fully corrected flat-equivalent
+   breakeven is `(2,400,000 − 561,101) / (864,960 × 5.971299) =` **35.6035 %**; and Meridian's
+   achieved 40 % adoption clears it with **4.3965 points** to spare, for an NPV of **+USD 227,074**.
+   **Two errors of opposite sign, and you must fix both: fixing only the flattering one produces a
+   verdict as wrong as fixing neither.**
 
    **Choosing a comparison cohort is a real decision with real costs, and it should be made
-   deliberately.** The 12 non-adopting clinics were not held back for measurement — they simply had not
-   adopted — which makes them a **convenience cohort**, and convenience cohorts differ systematically
-   from the adopters: the clinics that adopt first are usually the better-led, better-staffed ones, so
-   part of the 5.3 may still be selection rather than software. A deliberately staged rollout gives a
-   defensible cohort as a free by-product of the sequencing decision, which is another benefit of the
-   tranching argued in 2.1.3, and it is one of the strongest arguments a benefits owner has against a
-   simultaneous switch-on. Where withholding a change is not acceptable — and in clinical or safety
-   settings it frequently is not — the honest alternatives are a pre-change trend line extended
-   forwards, or a stated range with the attribution assumption on the face of the report. **What is not
-   acceptable is claiming the raw figure and calling the question unanswerable.**
+   deliberately.** The 12 non-adopting clinics were not held back for measurement (they simply had
+   not adopted), which makes them a **convenience cohort**, and convenience cohorts differ
+   systematically from the adopters: the clinics that adopt first are usually the better-led,
+   better-staffed ones, so part of the 5.3 may still be selection rather than software. A
+   deliberately staged rollout gives a defensible cohort as a free by-product of the sequencing
+   decision, which is another benefit of the tranching argued in 2.1.3, and it is one of the
+   strongest arguments a benefits owner has against a simultaneous switch-on. Where withholding a
+   change is not acceptable (and in clinical or safety settings it frequently is not) the honest
+   alternatives are a pre-change trend line extended forwards, or a stated range with the
+   attribution assumption on the face of the report. **What is not acceptable is claiming the raw
+   figure and calling the question unanswerable.**
 
    **What breaks it.** The two groups must be measured the **same way at the same time**; a
-   post-change measurement method that is more thorough in adopting clinics manufactures an effect. A
-   counterfactual improvement can also be *negative* — the comparison group getting worse — in which
-   case the attributable figure exceeds the raw one and the honest report is a larger claim, which is
-   the case a leader should be most careful to actually make. Attribution and adoption interact and
-   must not be double-corrected: the 5.3 hours is a per-adopting-clinic figure, and multiplying by 28
-   already applies the adoption term, so applying 70 % again is a common and severe error. And none of
-   this converts the benefit to cash: 605,472 of attributable released time is **capacity**, and the
-   cash-releasing test above still has to be passed separately.
+   post-change measurement method that is more thorough in adopting clinics manufactures an effect.
+   A counterfactual improvement can also be *negative* (the comparison group getting worse) in which
+   case the attributable figure exceeds the raw one and the honest report is a larger claim, which
+   is the case a leader should be most careful to actually make. Attribution and adoption interact
+   and must not be double-corrected: the 5.3 hours is a per-adopting-clinic figure, and multiplying
+   by 28 already applies the adoption term, so applying 70 % again is a common and severe error. And
+   none of this converts the benefit to cash: 605,472 of attributable released time is **capacity**,
+   and the cash-releasing test above still has to be passed separately.
 
 > **Fig 2.3.2 — Four breakevens from one programme.** A single horizontal axis of flat-equivalent
 > sustained adoption from 25 % to 50 %, carrying four marked thresholds computed from identical
@@ -1124,20 +1142,69 @@ labour standards in the supply chain (Domain 10's ethical sourcing). These are h
 (2.1.2) and belong in the case as requirements, not benefits.
 
 **As value:** whole-life carbon reduction, energy cost avoided, social value created, resilience to
-climate risk. These belong in the benefits map with measures and owners like any other benefit —
-and with the same honesty about attribution and monetisation. Where a carbon reduction has a price
-(a compliance cost avoided, a levy, an internal carbon price), it can be valued directly; where it
-does not, it should be reported in its physical unit alongside the financial case rather than
-converted with an invented price. **Whole-life thinking** is the practical contribution: a cheaper
-capital solution with higher operating energy and shorter life frequently loses on a whole-life
-basis, and the appraisal horizon of KA 2.2.2 is what makes that visible (PFL-AI Domain 4's
-equivalent annual value handles unequal lives).
+climate risk. These belong in the benefits map with measures and owners like any other benefit; and
+with the same honesty about attribution and monetisation. Where a carbon reduction has a price (a
+compliance cost avoided, a levy, an internal carbon price), it can be valued directly; where it does
+not, it should be reported in its physical unit alongside the financial case rather than converted
+with an invented price. **Whole-life thinking** is the practical contribution: a cheaper capital
+solution with higher operating energy and shorter life frequently loses on a whole-life basis, and
+the appraisal horizon of KA 2.2.2 is what makes that visible (PFL-AI Domain 4's equivalent annual
+value handles unequal lives).
+
+**As a disclosed claim:** the third way, and the one most often missed, because it is not an
+appraisal question at all. A benefit that stays inside the appraisal is an estimate a board may
+accept or challenge on the evidence. The moment the same benefit is reported *outside* the
+organisation (in a sustainability or annual report, in a bid or prequalification response, in a
+submission to a regulator, or in a financing or investor document) it stops being an estimate and
+becomes a **claim**, and a claim is held to a standard a forecast is not. Four provisions follow,
+and they are stated as professional obligations rather than as anyone's legal position:
+
+- **A stated boundary and method.** What is counted, over what period, against which baseline, on
+  whose emission or valuation factors, and what is deliberately excluded. A carbon or social-value
+  number without its boundary is not a measure: two organisations applying different boundaries
+  produce different figures from identical facts, and neither figure is checkable by the reader.
+- **A named owner.** One person accountable for the figure: the rule KA 2.3.2 applies to every other
+  benefit measure, and it does not weaken because the unit is tonnes or apprenticeship weeks rather
+  than currency.
+- **Retained evidence sufficient for someone else to test it.** External assurance, where it is
+  obtained, tests the evidence rather than the assertion, so a figure whose working papers were a
+  spreadsheet on one laptop cannot be assured whatever its accuracy. Domain 16, KA 16.4.4's retention
+  economics apply directly, and the record class, custodian and retention period are set *before* the
+  claim is published rather than after it is questioned. The benefits measurement plan of Domain 16,
+  KA 16.4.1 is where a claimed benefit acquires the measured evidence that later supports it.
+- **Approval by whoever signs the disclosure.** The project does not approve an external claim. That
+  approval belongs to the function that owns the report, the bid or the submission; the project's
+  obligation is to supply the measure, the boundary, the method and the evidence in a form that
+  function can sign, and to say plainly where the evidence stops.
+
+**The professional prohibition, in one line.** *A benefit that cannot be evidenced to the standard
+its intended audience requires is not reported as achieved.* Report the measured part as measured,
+the estimated part as estimated with its method beside it, and the unevidenced part not at all.
+Presenting a forecast as a result, counting a benefit the organisation did not cause, or moving the
+boundary until the number improves are the attribution failures of KA 2.3.2 committed in front of an
+audience that cannot see the working, which is why the profession treats the disclosed version as
+the graver of the two, and why the leader who supplies the number needs a written record of what was
+supplied and to whom.
+
+**The standing caveat, in this volume's usual form.** Which external disclosure and assurance
+obligations apply, to which entities, on what timetable, in what form, and with what consequence for
+an unsupported claim, is jurisdiction- and entity-specific, changes, and is taken from the
+organisation's reporting function and from qualified counsel, never from this book. Nothing here
+states the position in any jurisdiction, states what any regime requires, or characterises any
+organisation's disclosure as compliant or otherwise. One distinction is worth holding because it is
+routinely blurred: a **voluntary reporting framework** is something an organisation chooses to
+adopt, and a **disclosure regime** is something that applies on its own terms to those it reaches;
+adopting the first tells you nothing about the second, and the two questions go to the same advisers
+separately. Where a quantified greenhouse-gas figure is being prepared, **ISO 14064** is the
+document usually named as addressing the quantification and reporting of greenhouse-gas emissions
+and removals; it is voluntary guidance, it is named here and not reproduced, and it is not itself a
+disclosure obligation.
 
 ### 2.3.4 Assumptions and dependencies
 
 **Business cases fail through their assumptions**, and the assumptions are usually stated once and
 never revisited. Meridian's case rested on an adoption assumption that was never tracked as a
-measure — the direct cause of everything Domain 1's case study describes.
+measure: the direct cause of everything Domain 1's case study describes.
 
 An **assumption register** carries, per assumption: the statement, why it is believed, the impact if
 false, the owner, the date it will be tested, and the **trigger** that would falsify it. Its
@@ -1150,8 +1217,8 @@ exposure carried by its own assumptions?* and *which assumption should be tested
 
 **Worked example 2.3.4 — pricing Meridian's assumption register.**
 
-1. **Setup.** Meridian's honest case (2.2.2) gives a ramped PV of benefits of **3,732,898** against a
-   cost of 2,400,000 — an NPV of **+1,332,898** — and, per unit of sustained adoption, a PV of
+1. **Setup.** Meridian's honest case (2.2.2) gives a ramped PV of benefits of **3,732,898** against
+   a cost of 2,400,000 (an NPV of **+1,332,898**), and, per unit of sustained adoption, a PV of
    **5,332,711**. Five material assumptions underpin it. Each has an assessed impact if false, in
    present-value terms, and a probability of being false, both **assessed by the programme team and
    recorded as judgements, not measurements**. The cost of testing each is also known.
@@ -1174,32 +1241,33 @@ exposure carried by its own assumptions?* and *which assumption should be tested
    | | **Total** | 3,205,166 | | **1,074,548** | 55,000 | |
 
    Total EMV is **USD 1,074,548**, which is **80.62 %** of the NPV the case promises. A1 alone is
-   **35.01 %** of it. The three free tests together carry **USD 390,184** — **36.31 %** of the
+   **35.01 %** of it. The three free tests together carry **USD 390,184**: **36.31 %** of the
    register's exposure.
 5. **Interpretation.** Five readings, and the first is the single most useful sanity test on any
    business case.
 
-   **The exposure ratio tells a board how thin its own case is.** A positive NPV of 1,332,898 sitting
-   above an assumption exposure of 1,074,548 is a ratio of **0.8062** — the case is right-side-up, but
-   only just, and a board told "NPV +1.33m" hears something quite different from a board told "NPV
-   +1.33m against 1.07m of expected exposure in the assumptions it rests on". The ratio also gives a
-   usable rule of thumb for challenge: **where Σ EMV approaches or exceeds the NPV, the case is not a
-   value proposition but a bet**, and it should be structured as one — staged, with kill criteria
-   (2.4.3) and a real abandonment option (2.A.1) — rather than approved as a commitment.
+   **The exposure ratio tells a board how thin its own case is.** A positive NPV of 1,332,898
+   sitting above an assumption exposure of 1,074,548 is a ratio of **0.8062**: the case is
+   right-side-up, but only just, and a board told "NPV +1.33m" hears something quite different from
+   a board told "NPV +1.33m against 1.07m of expected exposure in the assumptions it rests on". The
+   ratio also gives a usable rule of thumb for challenge: **where Σ EMV approaches or exceeds the
+   NPV, the case is not a value proposition but a bet**, and it should be structured as one —
+   staged, with kill criteria (2.4.3) and a real abandonment option (2.A.1) — rather than approved
+   as a commitment.
 
    **The test-order rule is where the leader gets something for nothing.** Three of the five
    assumptions cost nothing to test: A3 is a letter to the vendor asking whether support will be
-   extended; A4 is a written funding confirmation from the clinical directorate; A5 is a conversation
-   with the finance business partner about the valuation rate. Together they carry **390,184** of
-   exposure and can be resolved in a week, before approval. Ranking by `EMV ÷ cost to test` rather than
-   by EMV alone is what surfaces that, and it inverts the usual instinct, which is to spend the
-   analysis budget on the biggest number — A1 — and to leave the cheap ones as "assumptions". **The
-   professional habit: sort the register by exposure per unit of test cost, and clear the free rows
-   before the paper is written.**
+   extended; A4 is a written funding confirmation from the clinical directorate; A5 is a
+   conversation with the finance business partner about the valuation rate. Together they carry
+   **390,184** of exposure and can be resolved in a week, before approval. Ranking by `EMV ÷ cost to
+   test` rather than by EMV alone is what surfaces that, and it inverts the usual instinct, which is
+   to spend the analysis budget on the biggest number: A1; and to leave the cheap ones as
+   "assumptions". **The professional habit: sort the register by exposure per unit of test cost, and
+   clear the free rows before the paper is written.**
 
    **The one that must be structural, not analytical, is adoption.** A1 cannot be resolved by
    analysis, only by evidence from operation, which is why its test costs 40,000 (a measured pilot
-   cohort) and why it remains the largest residual after the free rows are cleared — 466,612 of a
+   cohort) and why it remains the largest residual after the free rows are cleared: 466,612 of a
    remaining 684,365. An assumption that can only be tested by doing part of the work is the
    definition of a case for staging, and 2.A.1 prices exactly that trade for Meridian. Note the
    symmetry with the alignment re-test of 2.1.3: both convert an unmanaged belief into a scheduled
@@ -1207,54 +1275,56 @@ exposure carried by its own assumptions?* and *which assumption should be tested
 
    **EMVs are not additive as a portfolio loss, and saying they are is a real error.** A1 (adoption)
    and A2 (attributable hours) are both statements about the same clinical behaviour and will fail
-   together more often than independently; A5 (the valuation rate) is largely independent of both. So
-   the 1,074,548 is the correct *expected* total — expectations add regardless of correlation — but it
-   is **not** the right basis for a downside statement, because the correlated pair makes the tail
-   worse than an independence assumption implies. Domain 8, KA 8.A.1 handles the correlation properly
-   and KA 8.3 sizes contingency from it; the register's job here is to state the expected exposure and
-   flag which entries move together.
+   together more often than independently; A5 (the valuation rate) is largely independent of both.
+   So the 1,074,548 is the correct *expected* total (expectations add regardless of correlation),
+   but it is **not** the right basis for a downside statement, because the correlated pair makes the
+   tail worse than an independence assumption implies. Domain 8, KA 8.A.1 handles the correlation
+   properly and KA 8.3 sizes contingency from it; the register's job here is to state the expected
+   exposure and flag which entries move together.
 
    **What breaks it, and the honest limits.** Every probability in the table is a judgement, and a
-   register whose probabilities were set by the case's author will be systematically low — the same
+   register whose probabilities were set by the case's author will be systematically low: the same
    advocacy problem 2.2.1 identifies, appearing here as calibration rather than as omission. Impacts
-   assessed as single points hide their own ranges. EMV also treats all failures as equivalent losses,
-   when some are recoverable and some are not: A4 failing costs 320,000 and is survivable, while A1
-   failing changes what the programme *is*, and an expected-value table cannot express that difference
-   — Domain 8's irreversibility treatment must be read alongside it. And a register is only alive if
-   the test dates are in someone's calendar with a named owner; an assumption register reviewed at the
-   same cadence as the risk register, by the same forum, with the same escalation, is the version that
-   works, and a separate document nobody opens is the version that exists in most organisations.
+   assessed as single points hide their own ranges. EMV also treats all failures as equivalent
+   losses, when some are recoverable and some are not: A4 failing costs 320,000 and is survivable,
+   while A1 failing changes what the programme *is*, and an expected-value table cannot express that
+   difference, Domain 8's irreversibility treatment must be read alongside it. And a register is
+   only alive if the test dates are in someone's calendar with a named owner; an assumption register
+   reviewed at the same cadence as the risk register, by the same forum, with the same escalation,
+   is the version that works, and a separate document nobody opens is the version that exists in
+   most organisations.
 
-**Dependencies** — on other projects, on suppliers, on decisions not yet taken — are managed by
-naming them, naming the owner on the *other* side, and stating the date by which the dependency must
-be satisfied. Two failure modes recur: **assumed dependencies** (nobody on the other side knows
-they owe you anything) and **unmanaged reciprocals** (they are depending on you too, on a different
+**Dependencies** (on other projects, on suppliers, on decisions not yet taken) are managed by naming
+them, naming the owner on the *other* side, and stating the date by which the dependency must be
+satisfied. Two failure modes recur: **assumed dependencies** (nobody on the other side knows they
+owe you anything) and **unmanaged reciprocals** (they are depending on you too, on a different
 date). Domain 15's programme dependency management handles the multi-project case; at project level
 the discipline is simply that a dependency without a named counterpart is a hope.
 
 ### AI in this KA
 
-Benefits mapping is judgment work about causation, which is where AI is weakest — a model will
-happily assert that an output produces a benefit because most documents assert exactly that
-(Domain 1's KA 1.3 warning). Two legitimate uses. **Challenge**: ask a model to argue that the
-benefit will *not* materialise, and the enabling changes it names are often the ones the map omitted.
+Benefits mapping is judgment work about causation, which is where AI is weakest: a model will
+happily assert that an output produces a benefit because most documents assert exactly that (Domain
+1's KA 1.3 warning). Two legitimate uses. **Challenge**: ask a model to argue that the benefit will
+*not* materialise, and the enabling changes it names are often the ones the map omitted.
 **Cross-checking at portfolio scale**: detecting the same benefit claimed by two cases is
 pattern-matching over documents, which machines do well and humans do badly across fifty cases. The
 conclusions stay human, with named benefit owners.
 
-**Verification, concretely.** Two specific hazards attach to the arithmetic of this KA. A model asked
-to compute an attributable benefit will happily do the subtraction and will **not** ask whether the
-comparison group is a fair counterfactual — so the professional check is on the cohort, not on the
-subtraction: were both groups measured the same way at the same time, and is the non-adopting group
-systematically different from the adopting one? That is a judgement about selection, and no amount of
-arithmetic substitutes for it. And a model asked to populate an assumption register will supply
-**probabilities**, fluently and without provenance, which then drive an exposure ratio that a board
-reads as analysis. Where the organisation has no history to calibrate from, the correct output is that
-it has none, plus the range of probability over which the recommendation is unchanged. What is safe to
-delegate is the reconciliation work: checking that every benefit in the register has exactly one
-claimant across the portfolio, that no avoided cost appears also as a benefit, and that the adoption
-term has been applied once rather than twice — all three are mechanical, all three are commonly wrong,
-and all three are reported with a location so a human can confirm them.
+**Verification, concretely.** Two specific hazards attach to the arithmetic of this KA. A model
+asked to compute an attributable benefit will happily do the subtraction and will **not** ask
+whether the comparison group is a fair counterfactual, so the professional check is on the cohort,
+not on the subtraction: were both groups measured the same way at the same time, and is the
+non-adopting group systematically different from the adopting one? That is a judgement about
+selection, and no amount of arithmetic substitutes for it. And a model asked to populate an
+assumption register will supply **probabilities**, fluently and without provenance, which then drive
+an exposure ratio that a board reads as analysis. Where the organisation has no history to calibrate
+from, the correct output is that it has none, plus the range of probability over which the
+recommendation is unchanged. What is safe to delegate is the reconciliation work: checking that
+every benefit in the register has exactly one claimant across the portfolio, that no avoided cost
+appears also as a benefit, and that the adoption term has been applied once rather than twice: all
+three are mechanical, all three are commonly wrong, and all three are reported with a location so a
+human can confirm them.
 
 ### Key terms — KA 2.3
 
@@ -1266,12 +1336,15 @@ and all three are reported with a location so a human can confirm them.
 | **Attribution** | The portion of a measured improvement plausibly caused by this project. |
 | **Comparison cohort** | A group that did not receive the change, used to measure the counterfactual improvement. |
 | **Attributable improvement** | Raw improvement less the counterfactual improvement; the difference of the two differences. |
-| **Over-claim share** | `counterfactual ÷ raw` — invariant to the valuation rate, the operating year and the number of adopters. |
+| **Over-claim share** | `counterfactual ÷ raw`, invariant to the valuation rate, the operating year and the number of adopters. |
 | **Double-counting** | The same benefit claimed by more than one case; one claimant per benefit. |
 | **Cash-releasing / non-cash-releasing** | Benefits that reduce spend versus those that release capacity. |
 | **Assumption register** | Statement, basis, impact-if-false, owner, test date, falsifying trigger. |
 | **Assumption exposure ratio** | `Σ EMV ÷ NPV`; as it approaches one, the case is a bet rather than a value proposition. |
 | **Test-order rule** | Rank assumptions by `EMV ÷ cost to test`, so the free tests are cleared before the paper is written. |
+| **Disclosed claim** | A benefit reported outside the organisation; needs a stated boundary and method, a named owner, retained evidence and the signing function's approval, and is never approved by the project. |
+| **Claim boundary** | What a sustainability or social-value measure counts and excludes, over what period and against which baseline; without it the number is not checkable. |
+| **Voluntary framework vs disclosure regime** | A framework is adopted by choice; a regime applies on its own terms. Adopting the first says nothing about the second, and both are questions for the reporting function and qualified counsel. |
 
 ### Sample MCQs — KA 2.3
 
@@ -1282,7 +1355,7 @@ and all three are reported with a location so a human can confirm them.
 - C. it should be expressed in hours rather than money
 - D. the map should start with the strategic objective
 
-*Rationale:* Omitting enabling change hides the work that determines realisation (2.3.1) — exactly
+*Rationale:* Omitting enabling change hides the work that determines realisation (2.3.1), exactly
 how Meridian stalled at 40 % adoption with installation on plan. C is a separate (also real)
 question of unit; D is presentational.
 
@@ -1341,8 +1414,8 @@ hours. The strongest professional statement is that:
 - D. the counterfactual should be added to the claim, since both improvements are real
 
 *Rationale:* Raw and attributable are different quantities, and the over-claim share is
-`counterfactual ÷ raw`, invariant to the rate, weeks and clinic count (2.3.2). A is the error the raw
-figure invites in a good year; C over-reaches — a convenience cohort is weak evidence, not no
+`counterfactual ÷ raw`, invariant to the rate, weeks and clinic count (2.3.2). A is the error the
+raw figure invites in a good year; C over-reaches: a convenience cohort is weak evidence, not no
 evidence; D claims an improvement the programme did not cause.
 
 **MCQ 2.3-G `[2.3.4 · Evaluation]`** An assumption register carries EMVs of 466,612, 217,752, 114,434,
@@ -1366,13 +1439,21 @@ around the NPV, not deductions from it; D treats a sanity ratio as an approval t
 3. *State the relationship between assumptions and risks.* — Every assumption is a risk in
    disguise; material ones get register entries with quantified exposure.
 4. *How is an attributable improvement computed, and what is the invariant?* — Raw improvement less
-   the counterfactual improvement; the over-claim share is `counterfactual ÷ raw` — 17.1875 % on
-   Meridian — whatever the rate, weeks or number of adopters.
+   the counterfactual improvement; the over-claim share is `counterfactual ÷ raw`, 17.1875 % on
+   Meridian, whatever the rate, weeks or number of adopters.
 5. *Why must both of Meridian's baseline errors be corrected, not one?* — The flat profile flatters
    and the missing counterfactual penalises; correcting only one gives a breakeven of 46.4672 % or
    31.4498 %, where the honest figure is **35.6035 %**.
 6. *What does an assumption exposure ratio approaching one tell a board?* — That the case is a bet
    rather than a value proposition, and should be staged with kill criteria rather than committed.
+7. *What changes when a sustainability or social-value benefit is reported outside the
+   organisation?* — It becomes a claim rather than an estimate: it needs a stated boundary and
+   method, a named owner, retained evidence someone else can test, and approval from the function
+   signing the disclosure. The project supplies it; the project does not approve it.
+8. *State the professional prohibition on disclosed benefits.* — A benefit that cannot be evidenced
+   to the standard its intended audience requires is not reported as achieved. Which external
+   obligations apply, and to whom, is for the reporting function and qualified counsel, not for this
+   book.
 
 ---
 
@@ -1385,7 +1466,7 @@ around the NPV, not deductions from it; D treats a sanity ratio as an approval t
 
 Organisations that cannot stop projects cannot really select them either: a portfolio that only
 accretes has no capacity for anything new, and its selection process becomes a queue. Stopping is
-therefore a **portfolio capability**, not an admission of failure — and the leaders who can do it
+therefore a **portfolio capability**, not an admission of failure; and the leaders who can do it
 create the capacity that funds everything else.
 
 The barriers are cultural and structural, and both are addressable. **Culturally**, cancellation is
@@ -1398,7 +1479,7 @@ irreversible commitments (Domain 1's irreversibility point).
 ### 2.4.2 Sunk cost and escalation of commitment
 
 **The principle.** A continuation decision depends only on **remaining cost and remaining benefit**.
-Money already spent is irrelevant to it — it cannot be recovered by spending more, and it carries no
+Money already spent is irrelevant to it; it cannot be recovered by spending more, and it carries no
 information about the future beyond what is already in the forecast.
 
 **Worked example 2.4.2 — Meridian at the reset point.**
@@ -1425,55 +1506,56 @@ information about the future beyond what is already in the forecast.
    justified ceiling by **USD 120,000**, or **15.38 %** of it. Equivalently, continuation needs the
    remaining benefit to be at least 900,000, which is **15.38 %** more than the re-based 780,000.
    That is a far better gate sentence than a negative NPV, because it tells the meeting exactly what
-   would have to be true — and it is testable: a descope that removes 120,000 of remaining cost
-   without removing benefit turns the decision round, which is why "stop" and "descope" belong in the
-   same paper (Case study B does exactly this at scale).
+   would have to be true. And and it is testable: a descope that removes 120,000 of remaining cost
+   without removing benefit turns the decision round, which is why "stop" and "descope" belong in
+   the same paper (Case study B does exactly this at scale).
 
-   **Stopping releases the money into the constrained selection problem, which is where its real value
-   appears.** The 900,000 is redeployable to candidates the portfolio could not previously fund
-   (KA 2.2.3's constraint arithmetic) — and if the released capacity also includes the scarce team,
-   2.2.3b prices what that is worth, which may exceed the money. **This is why stopping is a
+   **Stopping releases the money into the constrained selection problem, which is where its real
+   value appears.** The 900,000 is redeployable to candidates the portfolio could not previously
+   fund (KA 2.2.3's constraint arithmetic), and if the released capacity also includes the scarce
+   team, 2.2.3b prices what that is worth, which may exceed the money. **This is why stopping is a
    strategic act and not merely a loss**, and it is also why the paper must say what the released
-   resources will do next: a board asked to accept a write-off with no redeployment proposal is being
-   asked to take the whole loss and none of the gain.
+   resources will do next: a board asked to accept a write-off with no redeployment proposal is
+   being asked to take the whole loss and none of the gain.
 
    **The rule is about *unrecoverable* spend, and three things are commonly mis-sorted into it.**
    Sunk cost is spend that cannot be recovered *and* carries no information about the future beyond
    what the forecast already holds. Recoverable amounts are not sunk and belong in the forward
-   arithmetic — resale or redeployment value of equipment and licences, recoverable prepayments, and
+   arithmetic: resale or redeployment value of equipment and licences, recoverable prepayments, and
    reusable assets such as cleaned data or a qualified team. Contractual exit costs are not sunk
-   either: they are a **forward** cost of stopping, and if terminating the supplier costs 150,000 the
-   comparison is `780,000 − 900,000 = (120,000)` for continuing against `(150,000)` for stopping, and
-   the correct decision reverses. And a cost already incurred *does* carry information where it
-   revises the forecast — an overspend that reveals the work is harder than believed should change the
-   estimate of the remaining 900,000, which is a legitimate use of history and not the sunk-cost
-   fallacy. **The discipline is to exclude sunk cost from the comparison while using the evidence it
-   generated.**
+   either: they are a **forward** cost of stopping, and if terminating the supplier costs 150,000
+   the comparison is `780,000 − 900,000 = (120,000)` for continuing against `(150,000)` for
+   stopping, and the correct decision reverses. And a cost already incurred *does* carry information
+   where it revises the forecast: an overspend that reveals the work is harder than believed should
+   change the estimate of the remaining 900,000, which is a legitimate use of history and not the
+   sunk-cost fallacy. **The discipline is to exclude sunk cost from the comparison while using the
+   evidence it generated.**
 
    **What breaks it.** The remaining-benefit figure must be re-based on measured evidence, not
-   inherited from the original case — using the approval-time benefit here would give
-   `3,732,898 − 900,000` and a spurious continuation. Both sides must be on the same present-value
-   basis and the same horizon. And the decision must be available: where an obligation is contractual
-   or statutory, there is no stop option to exercise and the arithmetic is describing a choice nobody
+   inherited from the original case: using the approval-time benefit here would give `3,732,898 −
+   900,000` and a spurious continuation. Both sides must be on the same present-value basis and the
+   same horizon. And the decision must be available: where an obligation is contractual or
+   statutory, there is no stop option to exercise and the arithmetic is describing a choice nobody
    holds, in which case the honest output is the *size of the loss* and a claim or renegotiation
-   strategy (Domain 10), not a recommendation to stop. **What a termination actually costs, and whether
-   the exit right exists at all, are questions of the particular contract and the governing law: take
-   legal advice on the exit position before the 150,000 goes into a gate paper as a number.**
+   strategy (Domain 10), not a recommendation to stop. **What a termination actually costs, and
+   whether the exit right exists at all, are questions of the particular contract and the governing
+   law: take legal advice on the exit position before the 150,000 goes into a gate paper as a
+   number.**
 
 **Escalation of commitment** is the behavioural pattern that makes this hard: personal
 identification with the project, reputational exposure for the approver, and the asymmetry that
 continuing defers the reckoning while stopping realises it now. Its countermeasures are structural,
-not exhortative — pre-set kill criteria (2.4.3), decision-makers who did not author the case, and
+not exhortative: pre-set kill criteria (2.4.3), decision-makers who did not author the case, and
 forward-only framing in every gate paper (Domain 8's bias table).
 
 ### 2.4.3 Kill criteria and honest gates
 
-**Kill criteria** are conditions, agreed **in advance**, under which the project will stop —
-"if adoption in the pilot cohort is below 50 % at month six", "if the regulatory approval is not
-granted by Q3", "if remaining cost exceeds remaining benefit at any gate". Their power is entirely
-in the *advance* agreement: the same evidence assessed against a pre-agreed threshold is a decision,
-while assessed against no threshold it is a negotiation, and negotiations are won by whoever has
-most invested.
+**Kill criteria** are conditions, agreed **in advance**, under which the project will stop: "if
+adoption in the pilot cohort is below 50 % at month six", "if the regulatory approval is not granted
+by Q3", "if remaining cost exceeds remaining benefit at any gate". Their power is entirely in the
+*advance* agreement: the same evidence assessed against a pre-agreed threshold is a decision, while
+assessed against no threshold it is a negotiation, and negotiations are won by whoever has most
+invested.
 
 That establishes *why* a criterion works. It says nothing about **where the number goes**, and a
 criterion set at the wrong level is worse than none, because it stops the wrong projects with full
@@ -1513,15 +1595,15 @@ procedural authority. Setting it is an arithmetic problem with two error costs.
    criteria; the last reconciles this result with everything 2.4.3 says in favour of kill criteria.
 
    **A criterion set at the investment breakeven kills programmes that are still worth completing.**
-   The intuitive threshold — "stop unless it will clear the adoption the business case needed" — is
+   The intuitive threshold ("stop unless it will clear the adoption the business case needed") is
    **45.0053 %** on this basis. The threshold that maximises value at *this* gate is **28.1283 %**,
    because 900,000 is already sunk and the decision is about the next 1,500,000 only. A criterion
-   pitched at the investment breakeven condemns every programme whose eventual adoption lands between
-   28.1283 % and 45.0053 % — a **16.8770-point** band containing the entire Mid state — even though
-   completing them returns 899,720 each. **The forward breakeven is the only defensible level for a
-   criterion applied at a gate**, and the fact that it moves later in delivery is a feature: a
-   criterion should get harder to trigger as the remaining cost falls, which is the exact opposite of
-   how most escalating governance behaves.
+   pitched at the investment breakeven condemns every programme whose eventual adoption lands
+   between 28.1283 % and 45.0053 % (a **16.8770-point** band containing the entire Mid state) even
+   though completing them returns 899,720 each. **The forward breakeven is the only defensible level
+   for a criterion applied at a gate**, and the fact that it moves later in delivery is a feature: a
+   criterion should get harder to trigger as the remaining cost falls, which is the exact opposite
+   of how most escalating governance behaves.
 
    **The signal, not the threshold, is what makes this criterion fail.** Even at the right threshold,
    the criterion is applied to a proxy. Of the programmes it flags Weak, most are not Low: the flagged
@@ -1533,42 +1615,44 @@ procedural authority. Setting it is an arithmetic problem with two error costs.
    two-year rollout, which is the honest reason early adoption thresholds so often do damage.
 
    **The asymmetry is structural, not a quirk of these numbers.** The loss avoided by stopping a bad
-   programme is bounded by how negative its forward NPV is — here 166,822 — while the value destroyed
+   programme is bounded by how negative its forward NPV is (here 166,822), while the value destroyed
    by stopping a good one is its whole remaining upside, 899,720 or 2,232,898. When the upside is an
-   order of magnitude larger than the downside, a criterion has to be far more accurate than intuition
-   suggests. The corollary, and it is important, is that **the asymmetry reverses where the downside is
-   large** — a programme whose failure carries a regulatory penalty, a safety consequence or a
-   contractual liability has a much more negative forward NPV, and the same signal quality then makes
-   the criterion clearly worth having. **Kill criteria pay where failure is expensive, not where
-   success is uncertain.**
+   order of magnitude larger than the downside, a criterion has to be far more accurate than
+   intuition suggests. The corollary, and it is important, is that **the asymmetry reverses where
+   the downside is large**: a programme whose failure carries a regulatory penalty, a safety
+   consequence or a contractual liability has a much more negative forward NPV, and the same signal
+   quality then makes the criterion clearly worth having. **Kill criteria pay where failure is
+   expensive, not where success is uncertain.**
 
-   **The fix is not to abandon the criterion but to change what it does.** Three changes each make it
-   value-positive. Set the threshold on the **decision-relevant quantity** — forward NPV computed from
-   the re-based benefit case — rather than on a proxy, which is what the third of 2.4.3's example
-   criteria ("if remaining cost exceeds remaining benefit at any gate") already does and is why it is
-   the strongest of the three. Where a proxy is unavoidable, make the criterion trigger a **mandatory
-   re-appraisal with a real stop option** rather than an automatic stop: the re-appraisal costs a few
-   tens of thousands and removes the false-stop loss almost entirely, which on these figures is a
-   trade of 208,693 against a fraction of it. And **improve the signal by buying information before the
-   money is committed** — which is precisely the staged commitment 2.A.1 prices, and the reason real
-   options and kill criteria are two halves of one instrument rather than two topics.
+   **The fix is not to abandon the criterion but to change what it does.** Three changes each make
+   it value-positive. Set the threshold on the **decision-relevant quantity** (forward NPV computed
+   from the re-based benefit case) rather than on a proxy, which is what the third of 2.4.3's
+   example criteria ("if remaining cost exceeds remaining benefit at any gate") already does and is
+   why it is the strongest of the three. Where a proxy is unavoidable, make the criterion trigger a
+   **mandatory re-appraisal with a real stop option** rather than an automatic stop: the
+   re-appraisal costs a few tens of thousands and removes the false-stop loss almost entirely, which
+   on these figures is a trade of 208,693 against a fraction of it. And **improve the signal by
+   buying information before the money is committed**, which is precisely the staged commitment
+   2.A.1 prices, and the reason real options and kill criteria are two halves of one instrument
+   rather than two topics.
 
-   **What this does not license.** Nothing here argues against pre-agreed criteria, and the reasoning
-   must not be borrowed to defend a portfolio that never stops anything. The result is narrower and
-   sharper: **a criterion is an instrument with a computable expected value, and it must be calibrated
-   rather than asserted.** The gate that has never stopped a project (MCQ 2.4-B) is failing a different
-   test — it has no stop option at all — and this arithmetic assumes throughout that the option
-   exists and can be exercised. A leader who cannot compute the two error costs should still insist on
-   criteria; a leader who can should insist on the right ones.
+   **What this does not license.** Nothing here argues against pre-agreed criteria, and the
+   reasoning must not be borrowed to defend a portfolio that never stops anything. The result is
+   narrower and sharper: **a criterion is an instrument with a computable expected value, and it
+   must be calibrated rather than asserted.** The gate that has never stopped a project (MCQ 2.4-B)
+   is failing a different test: it has no stop option at all, and this arithmetic assumes throughout
+   that the option exists and can be exercised. A leader who cannot compute the two error costs
+   should still insist on criteria; a leader who can should insist on the right ones.
 
-   **The limits of the model.** It assumes a stopped programme has zero forward value, which understates
-   Policy B wherever partial delivery is usable or the released capacity has an alternative use worth
-   more than nothing — reinstating either shrinks the 175,328 and could reverse it, and the honest
-   version of this table has a redeployment value in it. The three states and the signal rates come
-   from a small internal sample, so the conclusion should be tested across a range rather than taken at
-   a point; the direction of the result is robust to plausible variation, its magnitude is not. And it
-   prices only expected value, so it says nothing about a board's willingness to carry the variance —
-   which is a legitimate risk-appetite judgement belonging to the sponsor (Domain 8, KA 8.4).
+   **The limits of the model.** It assumes a stopped programme has zero forward value, which
+   understates Policy B wherever partial delivery is usable or the released capacity has an
+   alternative use worth more than nothing: reinstating either shrinks the 175,328 and could reverse
+   it, and the honest version of this table has a redeployment value in it. The three states and the
+   signal rates come from a small internal sample, so the conclusion should be tested across a range
+   rather than taken at a point; the direction of the result is robust to plausible variation, its
+   magnitude is not. And it prices only expected value, so it says nothing about a board's
+   willingness to carry the variance, which is a legitimate risk-appetite judgement belonging to the
+   sponsor (Domain 8, KA 8.4).
 
 > **Fig 2.4.1 — Why a kill criterion on a weak signal destroys value.** Two columns, y-axis expected
 > value USD 0–240,000. The left column (brand blue) is the value saved by correctly stopping Low
@@ -1583,15 +1667,15 @@ procedural authority. Setting it is an arithmetic problem with two error costs.
 
 An **honest gate** has four properties: a **real stop option** with someone authorised to exercise
 it; **evidence prepared to a standard set beforehand**, not assembled to support a conclusion;
-**decision-makers who did not write the case**; and **a recorded decision with reasons**
-(Domain 3's auditability). A gate that has never stopped anything is not a control; it is a
-milestone with a meeting attached.
+**decision-makers who did not write the case**; and **a recorded decision with reasons** (Domain 3's
+auditability). A gate that has never stopped anything is a milestone with a meeting attached, not a
+control.
 
 **Stopping well** is its own competence: capture what was learned and make it findable (Domain 9's
-lessons); harvest anything reusable (code, designs, cleaned data, supplier relationships,
-qualified people); close contracts deliberately rather than by abandonment (Domain 10); redeploy
-the team with their reputations intact — because how a cancellation is handled determines whether
-anyone proposes the next one; and tell stakeholders honestly, early (Domain 11).
+lessons); harvest anything reusable (code, designs, cleaned data, supplier relationships, qualified
+people); close contracts deliberately rather than by abandonment (Domain 10); redeploy the team with
+their reputations intact; because how a cancellation is handled determines whether anyone proposes
+the next one; and tell stakeholders honestly, early (Domain 11).
 
 ### AI in this KA
 
@@ -1600,21 +1684,21 @@ across a portfolio, and flagging when a project's own reported data has crossed 
 genuinely valuable because the crossing is usually visible in data nobody is reading. What must
 remain human is the decision and the *framing*: a model asked whether to continue will optimise
 whatever objective it was handed, and the escalation-of-commitment bias lives in the humans around
-it, not in the arithmetic. The leader's use of AI here is to make the trigger impossible to miss —
+it, not in the arithmetic. The leader's use of AI here is to make the trigger impossible to miss,
 not to outsource the courage.
 
 **Verification, concretely.** Monitoring is only as good as the threshold it monitors, so the first
-check is on the criterion itself: is it set at the **forward** breakeven, recomputed at this gate, or at
-the investment breakeven inherited from approval? A monitoring system faithfully alerting against a
-mis-calibrated threshold industrialises the error of 2.4.3. Where a model is used to score the two
-error costs of a candidate criterion, its signal-quality inputs — the false-flag rates — must come from
-counted outcomes on comparable past projects, and where those do not exist the honest output is the
-**breakeven signal quality** (10.3009 % on Meridian's successor) rather than a recommendation: it tells
-a sponsor how good the signal would have to be, which is a decidable question. Reproduce the two policy
-expectations by hand; each is three multiplications and a sum. And no model output should ever be the
-trigger of an automatic stop — a stop is an attributable decision by a named authority (Domain 3,
-KA 3.A.2), and the value of automation here is entirely in making the crossing visible on the day it
-happens rather than in the quarter it is noticed.
+check is on the criterion itself: is it set at the **forward** breakeven, recomputed at this gate,
+or at the investment breakeven inherited from approval? A monitoring system faithfully alerting
+against a mis-calibrated threshold industrialises the error of 2.4.3. Where a model is used to score
+the two error costs of a candidate criterion, its signal-quality inputs (the false-flag rates) must
+come from counted outcomes on comparable past projects, and where those do not exist the honest
+output is the **breakeven signal quality** (10.3009 % on Meridian's successor) rather than a
+recommendation: it tells a sponsor how good the signal would have to be, which is a decidable
+question. Reproduce the two policy expectations by hand; each is three multiplications and a sum.
+And no model output should ever be the trigger of an automatic stop: a stop is an attributable
+decision by a named authority (Domain 3, KA 3.A.2), and the value of automation here is entirely in
+making the crossing visible on the day it happens rather than in the quarter it is noticed.
 
 ### Key terms — KA 2.4
 
@@ -1622,7 +1706,7 @@ happens rather than in the quarter it is noticed.
 |---|---|
 | **Forward-looking NPV** | Remaining benefit PV less remaining cost; the only basis for continuation. |
 | **Sunk cost** | Unrecoverable spend carrying no information beyond the forecast; irrelevant to a continuation decision. |
-| **Forward exit cost** | The cost of stopping — termination, demobilisation, disposal; a forward cost, never sunk. |
+| **Forward exit cost** | The cost of stopping: termination, demobilisation, disposal; a forward cost, never sunk. |
 | **Forward breakeven** | The adoption or benefit level at which the *remaining* cost is just repaid; the only defensible level for a gate criterion. |
 | **Escalation of commitment** | Continuing because of what is invested; countered structurally. |
 | **Kill criteria** | Pre-agreed stop conditions; powerful only because agreed in advance, and only useful if calibrated. |
@@ -1684,8 +1768,8 @@ on a flag:
 - C. is value-neutral, since the criterion is applied consistently to every programme
 - D. cannot be assessed without knowing each programme's actual outcome
 
-*Rationale:* `33,364 − (141,706 + 66,987) = (175,328)` (2.4.3). A counts only the benefit side of the
-trade — the standard omission; C confuses procedural consistency with expected value; D is the
+*Rationale:* `33,364 − (141,706 + 66,987) = (175,328)` (2.4.3). A counts only the benefit side of
+the trade, the standard omission; C confuses procedural consistency with expected value; D is the
 argument that prevents any criterion from ever being calibrated, since actual outcomes are by
 definition unavailable at the gate.
 
@@ -1700,7 +1784,7 @@ is:
 
 *Rationale:* Exit costs are forward costs, so the comparison is (120,000) against (150,000) (2.4.2).
 A applies the rule without completing the comparison; C misclassifies a future payment as sunk; D is
-the sunk-cost fallacy, which reaches the same answer here for entirely the wrong reason — and would
+the sunk-cost fallacy, which reaches the same answer here for entirely the wrong reason, and would
 reach the wrong answer if the exit cost were 50,000.
 
 ### Self-check — KA 2.4
@@ -1714,8 +1798,8 @@ reach the wrong answer if the exit cost were 50,000.
 4. *Which three things are commonly misclassified as sunk cost?* — Recoverable value (resale,
    redeployment, reusable assets); forward exit costs; and the *information* an overspend generated,
    which should revise the remaining estimate.
-5. *At what level should a gate criterion be set, and why does it move?* — At the forward breakeven —
-   28.1283 % on Meridian's successor at month six against a 45.0053 % investment breakeven — and it
+5. *At what level should a gate criterion be set, and why does it move?* — At the forward breakeven
+   (28.1283 % on Meridian's successor at month six against a 45.0053 % investment breakeven), and it
    rises as remaining cost falls, so a criterion should get harder to trigger over time.
 6. *When do kill criteria clearly pay?* — Where failure is expensive rather than where success is
    uncertain: the false-stop loss scales with the upside forgone, so the trade improves as the downside
@@ -1727,32 +1811,32 @@ reach the wrong answer if the exit cost were 50,000.
 
 ### 2.A.1 Real options thinking in selection
 
-Static NPV values a committed plan; much project value lies in **flexibility** — the option to
-scale if a pilot succeeds, to defer while uncertainty resolves, to abandon cheaply, to switch
-technology. Treating these as options changes selection behaviour in a specific way: a small, staged
-first phase with a negative standalone NPV can be the highest-value choice if it buys the right to a
-large second phase at a decision point where far more is known. The practical rule for a delivery
-leader is **structure the work so that decision points exist** — phases sized to reach a genuine
-learning milestone, contracts that permit exit (Domain 10), architectures that permit switching.
-Formal option valuation is specialist; the *thinking* is not, and its absence is why organisations
+Static NPV values a committed plan; much project value lies in **flexibility**: the option to scale
+if a pilot succeeds, to defer while uncertainty resolves, to abandon cheaply, to switch technology.
+Treating these as options changes selection behaviour in a specific way: a small, staged first phase
+with a negative standalone NPV can be the highest-value choice if it buys the right to a large
+second phase at a decision point where far more is known. The practical rule for a delivery leader
+is **structure the work so that decision points exist**: phases sized to reach a genuine learning
+milestone, contracts that permit exit (Domain 10), architectures that permit switching. Formal
+option valuation is specialist; the *thinking* is not, and its absence is why organisations
 routinely commit fully to things they could have tested for a fraction.
 
 The thinking is also arithmetic, and doing the arithmetic once cures the two opposite errors it
-attracts — treating a pilot as automatically prudent, and treating it as automatically a delay.
+attracts: treating a pilot as automatically prudent, and treating it as automatically a delay.
 
 **Worked example 2.A.1 — staging Meridian, and what the option to abandon is actually worth.**
 
 1. **Setup.** Two ways to acquire Meridian's 40 clinics. Sustained adoption will turn out to be
-   **High, 70 %** (probability 0.60) or **Low, 35 %** (0.40) — an honest statement of the uncertainty
-   the case carried. The PV of the ramped benefit stream per unit of sustained adoption is **5,332,711**
-   (2.2.2), so High is worth 3,732,898 and Low 1,866,449 of benefit PV.
-   **Option F — full commitment:** 2,400,000 now for all 40 clinics, at 60,000 a clinic.
-   **Option S — staged:** a first phase of **12 clinics** now for **840,000** (70,000 a clinic — a
-   16.6667 % premium, because a small deployment loses the scale of a rollout), which reveals the
-   adoption state at the end of year 1; then either commit the remaining 28 clinics for **1,680,000** at
-   the original unit rate, or abandon. Staging delays the whole estate's benefit stream by **one year**;
-   if abandoned, the 12 installed clinics stay in service and earn their 30 % share at the Low
-   adoption. Rate 7 % throughout.
+   **High, 70 %** (probability 0.60) or **Low, 35 %** (0.40), an honest statement of the uncertainty
+   the case carried. The PV of the ramped benefit stream per unit of sustained adoption is
+   **5,332,711** (2.2.2), so High is worth 3,732,898 and Low 1,866,449 of benefit PV. **Option F —
+   full commitment:** 2,400,000 now for all 40 clinics, at 60,000 a clinic. **Option S — staged:** a
+   first phase of **12 clinics** now for **840,000** (70,000 a clinic, a 16.6667 % premium, because
+   a small deployment loses the scale of a rollout), which reveals the adoption state at the end of
+   year 1; then either commit the remaining 28 clinics for **1,680,000** at the original unit rate,
+   or abandon. Staging delays the whole estate's benefit stream by **one year**; if abandoned, the
+   12 installed clinics stay in service and earn their 30 % share at the Low adoption. Rate 7 %
+   throughout.
 2. **Formula.** Value each option as a probability-weighted NPV at `t = 0`, discounting the year-1
    commitment and the shifted benefit stream by `1/1.07`. Then decompose:
    **price of staging** `= E[NPV of F] − E[NPV of staging with no abandonment option]`, and
@@ -1766,23 +1850,23 @@ attracts — treating a pilot as automatically prudent, and treating it as autom
 
    | | High (0.60) | Low (0.40) | **Expected NPV** |
    |---|---|---|---|
-   | **F — full commitment** | +1,332,898 | (533,551) | **+586,318** |
-   | **S — staged, abandon on Low** | +1,078,596 | (316,697) | **+520,479** |
-   | S — staged, committed to complete | +1,078,596 | (665,749) | +380,858 |
+| **F (full commitment**) | +1,332,898 | (533,551) | **+586,318** |
+| **S (staged, abandon on Low**) | +1,078,596 | (316,697) | **+520,479** |
+| S (staged, committed to complete) | +1,078,596 | (665,749) | +380,858 |
 
    **Price of staging USD 205,460** (delay plus the 120,000 scale premium). **Value of the option to
-   abandon USD 139,621.** Net **(USD 65,839)** — staging loses money on these figures. Staging becomes
-   the better choice once the probability of the Low state exceeds **53.9740 %**. Priced instead at the
-   programme's own unit rate (720,000 for 12 clinics, no premium), staging is worth **+640,479** and
-   beats full commitment by **54,161** — so the **maximum justifiable first-phase cost is USD 774,161**,
-   a premium ceiling of **7.5223 %** against the 16.6667 % assumed.
+   abandon USD 139,621.** Net **(USD 65,839)**: staging loses money on these figures. Staging
+   becomes the better choice once the probability of the Low state exceeds **53.9740 %**. Priced
+   instead at the programme's own unit rate (720,000 for 12 clinics, no premium), staging is worth
+   **+640,479** and beats full commitment by **54,161**. So so the **maximum justifiable first-phase
+   cost is USD 774,161**, a premium ceiling of **7.5223 %** against the 16.6667 % assumed.
 5. **Interpretation.** Six readings. The decomposition in the second is the transferable technique;
    the fourth is the actionable finding.
 
-   **The option to abandon is real, computable and worth USD 139,621 — and that is not the answer.**
+   **The option to abandon is real, computable and worth USD 139,621; and that is not the answer.**
    Everything the received wisdom says about piloting is true: the option has positive value, it is
-   worth more the more uncertain the adoption, and abandoning after 840,000 is enormously better than
-   abandoning after 2,400,000 (the Low branch improves from (665,749) to (316,697), a gain of
+   worth more the more uncertain the adoption, and abandoning after 840,000 is enormously better
+   than abandoning after 2,400,000 (the Low branch improves from (665,749) to (316,697), a gain of
    **349,052**). None of that settles the decision, because the option has a **price**, and here the
    price is larger.
 
@@ -1793,52 +1877,54 @@ attracts — treating a pilot as automatically prudent, and treating it as autom
    gift. Reporting one net figure hides the only lever that exists. **The professional move is not
    "should we pilot?" but "what would the pilot have to cost and how long could it take?"**
 
-   **The whole result turns on 120,000 of scale premium, which is the actionable finding.** Remove the
-   premium and staging wins by 54,161; keep it and staging loses by 65,839. The ceiling is
+   **The whole result turns on 120,000 of scale premium, which is the actionable finding.** Remove
+   the premium and staging wins by 54,161; keep it and staging loses by 65,839. The ceiling is
    **7.5223 %**, so any pilot priced above about a 7.5 % premium over the programme's unit economics
-   destroys value on these probabilities. That converts an abstract exhortation — "structure the work so
-   decision points exist" — into a procurement instruction: **the pilot must be bought at rollout unit
-   rates, or it is not a pilot but a small expensive project.** In practice that means negotiating the
-   whole-estate rate up front with a phased commitment, which is Domain 10's framework-with-call-off
-   pattern (KA 10.3), and it is the single highest-value thing a leader can do to make staging viable.
+   destroys value on these probabilities. That converts an abstract exhortation, "structure the work
+   so decision points exist", into a procurement instruction: **the pilot must be bought at rollout
+   unit rates, or it is not a pilot but a small expensive project.** In practice that means
+   negotiating the whole-estate rate up front with a phased commitment, which is Domain 10's
+   framework-with-call-off pattern (KA 10.3), and it is the single highest-value thing a leader can
+   do to make staging viable.
 
-   **Delay is the other half of the price, and it is priced by the cost of delay, not by sentiment.**
-   Shifting the whole benefit stream by a year costs `3,732,898 × (1 − 1/1.07) =` **244,208** in the High
-   state. That is why staging fails most often on benefit-generating work with a high cost of delay —
-   Meridian's USD 14,280 a week — and succeeds most often where benefits are far off or the downside is
-   catastrophic. **A pilot that does not shorten its own decision point is paying full price for the
-   option and taking delivery late.**
+   **Delay is the other half of the price, and it is priced by the cost of delay, not by
+   sentiment.** Shifting the whole benefit stream by a year costs `3,732,898 × (1 − 1/1.07) =`
+   **244,208** in the High state. That is why staging fails most often on benefit-generating work
+   with a high cost of delay (Meridian's USD 14,280 a week), and succeeds most often where benefits
+   are far off or the downside is catastrophic. **A pilot that does not shorten its own decision
+   point is paying full price for the option and taking delivery late.**
 
-   **The breakeven probability is the sentence for the board.** "Staging pays if we think there is more
-   than a 53.9740 % chance this does not achieve the adoption the case needs" is answerable in a room;
-   "the real option is worth 139,621" is not. And it exposes something uncomfortable and useful: an
-   organisation that wants to pilot everything is asserting that it usually expects failure — which may
-   be true, and if it is, the correct response is to fix the selection process rather than to pay a
-   premium on every programme to hedge it.
+   **The breakeven probability is the sentence for the board.** "Staging pays if we think there is
+   more than a 53.9740 % chance this does not achieve the adoption the case needs" is answerable in
+   a room; "the real option is worth 139,621" is not. And it exposes something uncomfortable and
+   useful: an organisation that wants to pilot everything is asserting that it usually expects
+   failure, which may be true, and if it is, the correct response is to fix the selection process
+   rather than to pay a premium on every programme to hedge it.
 
-   **What this is not, and the honest limits.** This is an **expected-value decision tree** (Domain 8,
-   KA 8.2.2), not an option valuation: it discounts both branches at the same 7 % and takes the
-   probabilities as given, where formal option pricing would treat the risk differently — PFL-AI
+   **What this is not, and the honest limits.** This is an **expected-value decision tree** (Domain
+   8, KA 8.2.2), not an option valuation: it discounts both branches at the same 7 % and takes the
+   probabilities as given, where formal option pricing would treat the risk differently, PFL-AI
    Domain 4 sets out the appraisal machinery and its assumptions, and a genuinely large staged
    commitment warrants specialist valuation. It also assumes the pilot **resolves** the uncertainty,
-   which is generous: a 12-clinic pilot with early adopters may say very little about clinic 37, and a
-   pilot that only partly resolves the question is worth proportionately less — the same signal-quality
-   problem 2.4.3 computes for kill criteria, and the reason the two topics belong together. It ignores
-   the learning that makes phase 2 cheaper or better, which biases *against* staging, and it ignores
-   the organisational cost of restarting a stalled programme, which biases *for* it. Finally, the two
-   states are a simplification of a continuum; the sensitivity that matters — the premium ceiling —
-   should be recomputed across the plausible probability range before it is quoted.
+   which is generous: a 12-clinic pilot with early adopters may say very little about clinic 37, and
+   a pilot that only partly resolves the question is worth proportionately less, the same
+   signal-quality problem 2.4.3 computes for kill criteria, and the reason the two topics belong
+   together. It ignores the learning that makes phase 2 cheaper or better, which biases *against*
+   staging, and it ignores the organisational cost of restarting a stalled programme, which biases
+   *for* it. Finally, the two states are a simplification of a continuum; the sensitivity that
+   matters (the premium ceiling) should be recomputed across the plausible probability range before
+   it is quoted.
 
 ### 2.A.2 Portfolio balance, not just portfolio ranking
 
 Ranking selects the best individual candidates; **balance** asks whether the resulting set is
 survivable and coherent. Four balance questions: **risk profile** (is everything high-risk, or
 everything safe and incremental?), **time-to-benefit** (does anything land this year, or is all
-value in years 3–5?), **capability spread** (does the whole set depend on one scarce team — the
+value in years 3–5?), **capability spread** (does the whole set depend on one scarce team: the
 correlation problem of Domain 8, KA 8.A.1, at portfolio level?), and **strategic coverage** (are
 some stated objectives served by nothing at all?). A portfolio of individually optimal projects can
-be collectively unbalanced, and no scoring model detects it — which is why Domain 15 treats
-portfolio balancing as its own discipline.
+be collectively unbalanced, and no scoring model detects it, which is why Domain 15 treats portfolio
+balancing as its own discipline.
 
 The alignment index of 2.1.1 sits on the *allocation* side of this line and answers none of the four
 questions: a portfolio funded exactly to weight can still be entirely high-risk, entirely long-dated,
@@ -1852,9 +1938,9 @@ Invariants testable in an hour: a do-nothing baseline exists and is quantified; 
 could plausibly have won; costs carry a range and an accuracy class; **the benefits profile ramps**;
 every benefit traces to a measured outcome with an owner outside the project; enabling changes are
 named with their owners; no benefit is claimed by another case in the portfolio; assumptions have
-test dates and falsifying triggers; risk exposure is quantified and reconciles to the register;
-kill criteria exist and are numeric; and success criteria were agreed in advance. The single
-highest-yield check is the benefits profile — it is wrong in most cases, and it is wrong in the
+test dates and falsifying triggers; risk exposure is quantified and reconciles to the register; kill
+criteria exist and are numeric; and success criteria were agreed in advance. The single
+highest-yield check is the benefits profile. It is wrong in most cases, and it is wrong in the
 direction that flatters.
 
 Six further checks, each of which the domain's arithmetic makes into a one-line test, and each of
@@ -1880,67 +1966,66 @@ which a case can fail while passing all of the above.
 
 - **Public sector.** Appraisal is often mandated (published guidance, prescribed discount rates,
   optimism-bias uplifts), social value and distributional effects sit beside financial NPV, and
-  political commitment can precede the case — making 2.4's stopping problem acutely hard and
-  2.1.3's re-testing acutely necessary. The specific arithmetic consequence is that a mandated uplift
-  is a **breakeven** change, not a presentational one: a 20 % optimism-bias uplift on Meridian's cost
-  takes it to 2,880,000 and the flat-equivalent breakeven adoption from 41.0460 % to **49.2552 %**, a
-  rise of **8.2092 points** that puts the achieved 40 % decisively out of reach. A leader working under
-  a mandated uplift should therefore compute the breakeven *after* it and manage adoption to that
-  figure from day one, rather than discovering at evaluation that the standard was moved before
+  political commitment can precede the case, making 2.4's stopping problem acutely hard and 2.1.3's
+  re-testing acutely necessary. The specific arithmetic consequence is that a mandated uplift is a
+  **breakeven** change, not a presentational one: a 20 % optimism-bias uplift on Meridian's cost
+  takes it to 2,880,000 and the flat-equivalent breakeven adoption from 41.0460 % to **49.2552 %**,
+  a rise of **8.2092 points** that puts the achieved 40 % decisively out of reach. A leader working
+  under a mandated uplift should therefore compute the breakeven *after* it and manage adoption to
+  that figure from day one, rather than discovering at evaluation that the standard was moved before
   approval.
 - **Regulated utilities.** Investment cases are made to a regulator on a periodic cycle; benefits
-  are defined by the regulatory framework, and the "customer" for the case is external — so the
+  are defined by the regulatory framework, and the "customer" for the case is external, so the
   discount rate is set by the regulatory determination rather than chosen. That makes rate
   sensitivity a live governance figure: on Meridian's shape, one percentage point of discount rate
   (7 % to 8 %, `AF` 5.971299 to 5.746639) moves the flat-equivalent breakeven from 41.0460 % to
   **42.6507 %**, a rise of **1.6047 points**. It also means the supersession hazard of 2.1.3 is low
-  within a price control and spikes at its boundary, which is where the alignment half-life should be
-  recomputed rather than assumed.
-- **Technology and product.** Real options thinking (2.A.1) is the native mode — staged funding,
-  pilots, kill criteria on usage metrics — and benefits are frequently non-cash-releasing capacity
-  or optionality, so 2.3.2's honesty about units matters most here. The premium ceiling is the figure
-  to carry across: staging pays only while the first phase can be bought near rollout unit economics
-  (7.5223 % on Meridian's numbers), which in a product context usually holds, because a smaller first
-  release is genuinely cheaper rather than merely smaller — and that structural difference, not
-  cultural preference, is why staging is the default here and not in construction.
-- **Energy and infrastructure.** Whole-life and carbon considerations are first-order value
-  (2.3.3), horizons are decades, and PFL-AI's bankability tests (its Domain 5) run alongside the
-  internal case because external capital must also be convinced. Two of this domain's mechanisms
-  invert here. The alignment half-life is short relative to everything else in the appraisal — a
-  30-year asset outlives every strategy that will ever be written about it — so alignment is managed
-  by designing for optionality rather than by re-testing fit. And the scale premium on staging is usually prohibitive,
-  because civil works do not divide, which is why the flexibility is bought in the *design* (spare
-  capacity, provision for a second circuit) rather than in the commitment.
+  within a price control and spikes at its boundary, which is where the alignment half-life should
+  be recomputed rather than assumed.
+- **Technology and product.** Real options thinking (2.A.1) is the native mode (staged funding,
+  pilots, kill criteria on usage metrics), and benefits are frequently non-cash-releasing capacity
+  or optionality, so 2.3.2's honesty about units matters most here. The premium ceiling is the
+  figure to carry across: staging pays only while the first phase can be bought near rollout unit
+  economics (7.5223 % on Meridian's numbers), which in a product context usually holds, because a
+  smaller first release is genuinely cheaper rather than merely smaller. And and that structural
+  difference, not cultural preference, is why staging is the default here and not in construction.
+- **Energy and infrastructure.** Whole-life and carbon considerations are first-order value (2.3.3),
+  horizons are decades, and PFL-AI's bankability tests (its Domain 5) run alongside the internal
+  case because external capital must also be convinced. Two of this domain's mechanisms invert here.
+  The alignment half-life is short relative to everything else in the appraisal (a 30-year asset
+  outlives every strategy that will ever be written about it), so alignment is managed by designing
+  for optionality rather than by re-testing fit. And the scale premium on staging is usually
+  prohibitive, because civil works do not divide, which is why the flexibility is bought in the
+  *design* (spare capacity, provision for a second circuit) rather than in the commitment.
 - **Health and social programmes.** Benefits are largely non-financial and attribution is genuinely
   hard; the professional response is to measure outcomes in their own units with pre-change
   baselines rather than to force monetisation. Meridian's own attribution correction is the worked
-  illustration — a comparison cohort removed **17.1875 %** of a claim that had looked like an
-  over-performance — and it is representative rather than exceptional: where a whole system is
+  illustration (a comparison cohort removed **17.1875 %** of a claim that had looked like an
+  over-performance), and it is representative rather than exceptional: where a whole system is
   changing at once, the counterfactual is frequently a large fraction of the measured effect. Where
   withholding the change is not acceptable, a staged rollout gives the cohort as a by-product of the
   sequencing, which is usually the only defensible route available.
 
 ## Case study — Domain 2: the Meridian case that should have been written (public health)
 
-**Situation.** Meridian's approved business case claimed **USD 979,200** of annual benefit from
-year one — the full-potential figure — supporting an NPV of **+3,447,096** over eight years at 7 %
-against a delivery cost of 2,400,000. Every number in it was arithmetically correct. No adoption
-term appeared anywhere, and no benefit had an owner outside the programme.
+**Situation.** Meridian's approved business case claimed **USD 979,200** of annual benefit from year
+one (the full-potential figure), supporting an NPV of **+3,447,096** over eight years at 7 % against
+a delivery cost of 2,400,000. Every number in it was arithmetically correct. No adoption term
+appeared anywhere, and no benefit had an owner outside the programme.
 
 **What the honest case looks like.** Same cost, same horizon, same rate, same 70 % steady-state
-adoption Domain 1 establishes — but profiled as it would actually arrive (40 % / 60 % / 70 %):
-PV of benefits **3,732,898**, NPV **+1,332,898**. The approved case overstated present value by
-**USD 2,114,198**, or **158.6 %** of the honest NPV. It also omitted the sentence that would have
-mattered most: **breakeven sustained adoption is 41.05 %**, so the programme creates value at any
-adoption above roughly 41 % — a threshold a board can monitor, unlike an NPV.
+adoption Domain 1 establishes; but profiled as it would actually arrive (40 % / 60 % / 70 %): PV of
+benefits **3,732,898**, NPV **+1,332,898**. The approved case overstated present value by **USD
+2,114,198**, or **158.6 %** of the honest NPV. It also omitted the sentence that would have mattered
+most: **breakeven sustained adoption is 41.05 %**, so the programme creates value at any adoption
+above roughly 41 %, a threshold a board can monitor, unlike an NPV.
 
-**What followed, and why it was predictable.** Both cases approve the programme, so the flat
-profile changed no decision — and was therefore never challenged. Two years later, delivery
-complete and adoption at 40 %, the programme was measured against a promise of 979,200 and
-publicly judged a failure (Domain 1's case study). Actual annual benefit at 40 % adoption was
-**391,680**, and against the case as approved the programme's NPV at that adoption is
-`0.40 × 5,847,096 − 2,400,000 =` **(USD 61,162)** — a small negative, and the arithmetic that made
-the failure verdict defensible.
+**What followed, and why it was predictable.** Both cases approve the programme, so the flat profile
+changed no decision, and was therefore never challenged. Two years later, delivery complete and
+adoption at 40 %, the programme was measured against a promise of 979,200 and publicly judged a
+failure (Domain 1's case study). Actual annual benefit at 40 % adoption was **391,680**, and against
+the case as approved the programme's NPV at that adoption is `0.40 × 5,847,096 − 2,400,000 =` **(USD
+61,162)**: a small negative, and the arithmetic that made the failure verdict defensible.
 
 **The verdict does not survive an honest baseline.** Two corrections were available at approval and
 neither was made, and they run in opposite directions.
@@ -1950,21 +2035,21 @@ neither was made, and they run in opposite directions.
 | The case as approved (zero counterfactual, 6.0 h assumed) | 41.0460 % | **(61,162)** |
 | Attribution corrected only (5.3 attributable hours) | 46.4672 % | (334,026) |
 | Counterfactual priced only (do-nothing costs 561,101 of PV) | 31.4498 % | +499,939 |
-| **Both corrections — the honest case** | **35.6035 %** | **+227,074** |
+| **Both corrections: the honest case** | **35.6035 %** | **+227,074** |
 
 The programme was **1.05 percentage points short** of the breakeven it was judged against and
-**4.3965 points clear** of the breakeven that was true. Meridian at 40 % adoption created
-**USD 227,074** of value and was publicly recorded as a failure. **The verdict measured the business
-case, not the programme** — and the two errors that produced it are of opposite sign, which is why a
+**4.3965 points clear** of the breakeven that was true. Meridian at 40 % adoption created **USD
+227,074** of value and was publicly recorded as a failure. **The verdict measured the business case,
+not the programme**. And and the two errors that produced it are of opposite sign, which is why a
 reviewer who only knows that cases are optimistic would have found one of them and made the finding
 worse.
 
-**A third figure was available and would have changed the monthly conversation.** At the assumed 70 %
-adoption the honest case's assumption register carried **USD 1,074,548** of expected exposure against
-an NPV of 1,332,898 — a ratio of **0.8062** — of which **USD 390,184** could have been resolved for
-nothing before approval by a letter to the legacy vendor, a written funding confirmation for the
-enabling change and one conversation with the finance business partner about the valuation rate
-(KA 2.3.4). None of the three was done.
+**A third figure was available and would have changed the monthly conversation.** At the assumed 70
+% adoption the honest case's assumption register carried **USD 1,074,548** of expected exposure
+against an NPV of 1,332,898 (a ratio of **0.8062**) of which **USD 390,184** could have been
+resolved for nothing before approval by a letter to the legacy vendor, a written funding
+confirmation for the enabling change and one conversation with the finance business partner about
+the valuation rate (KA 2.3.4). None of the three was done.
 
 **What was done differently on the successor programme.** The case carried a ramped profile with
 adoption as a tracked measure; a named benefits owner in the clinical directorate; the enabling
@@ -1974,14 +2059,14 @@ The board's monthly question changed from "are clinics live?" to "what is adopti
 
 **What the domain teaches here.** A business case is a promise, and the profile is the promise's
 shape. An overstatement that changes no decision still changes the standard the programme will be
-held to — which makes the flat-profile error uniquely dangerous, because nothing at approval time
+held to, which makes the flat-profile error uniquely dangerous, because nothing at approval time
 creates any pressure to catch it.
 
 ## Case study B — Domain 2: the platform that could not be stopped (financial services)
 
 **Situation.** A core-platform replacement, approved at USD 40m over three years, reached year four
 having spent USD 62m with roughly 55 % of scope delivered. A re-based assessment put remaining cost
-at USD 21m and remaining benefit present value at USD 14m — a forward NPV of **(USD 7m)**.
+at USD 21m and remaining benefit present value at USD 14m, a forward NPV of **(USD 7m)**.
 
 **What happened at the gate.** The paper presented total investment (62m spent, 21m to go) against
 total lifetime benefits, showing a positive "programme return", and recommended continuation. Three
@@ -1996,27 +2081,27 @@ descoped to a variant whose remaining benefit (9m) exceeded its remaining cost (
 capacity was redeployed, and the write-off was taken and disclosed. The descoped variant delivered
 in eleven months.
 
-**The arithmetic of the reframing, because it is the transferable part.** Continuing as planned had a
-forward NPV of `14 − 21 =` **(7m)**. The descoped variant has `9 − 6 =` **+3m**. The swing between the
-two decisions available at that gate is therefore **10m**, which is **25 %** of the programme's
-original 40m approval and **16.13 %** of the 62m spent — a decision larger than most of the change
+**The arithmetic of the reframing, because it is the transferable part.** Continuing as planned had
+a forward NPV of `14 − 21 =` **(7m)**. The descoped variant has `9 − 6 =` **+3m**. The swing between
+the two decisions available at that gate is therefore **10m**, which is **25 %** of the programme's
+original 40m approval and **16.13 %** of the 62m spent, a decision larger than most of the change
 requests the programme had spent four years processing. Two secondary figures made the descope
 defensible rather than merely attractive. The **discarded 5m of remaining benefit** costs 15m of
-remaining spend, a ratio of **0.3333** — value per unit of spend far below the 1.5 the retained scope
-achieves, which is the same value-per-unit-of-constraint reasoning as KA 2.2.3 applied inside a single
-programme rather than across candidates. And the **released capacity had a named use**: the 15m and the
-integration team went to two funded candidates, so the board was not asked to accept a write-off with
-nothing on the other side of it.
+remaining spend, a ratio of **0.3333**: value per unit of spend far below the 1.5 the retained scope
+achieves, which is the same value-per-unit-of-constraint reasoning as KA 2.2.3 applied inside a
+single programme rather than across candidates. And the **released capacity had a named use**: the
+15m and the integration team went to two funded candidates, so the board was not asked to accept a
+write-off with nothing on the other side of it.
 
 **The gate criterion that would have caught it years earlier.** A criterion set at the forward
-breakeven — *remaining benefit must exceed remaining cost at every gate* — is the one criterion in
-2.4.3's list that needs no proxy signal and no calibration, because it is stated in the decision's own
-units. On this programme it would have been breached well before year four, and it is available to any
-gate willing to compute two numbers.
+breakeven (*remaining benefit must exceed remaining cost at every gate*) is the one criterion in
+2.4.3's list that needs no proxy signal and no calibration, because it is stated in the decision's
+own units. On this programme it would have been breached well before year four, and it is available
+to any gate willing to compute two numbers.
 
 **What the domain teaches here.** Escalation of commitment is structural before it is personal:
 absent kill criteria, an independent decider and a real stop option, a rational actor presenting a
-"total investment" frame will continue. Note that the resolution was not "stop everything" —
+"total investment" frame will continue. Note that the resolution was not "stop everything":
 descoping to the part where remaining benefit exceeds remaining cost is the same arithmetic applied
 with more imagination.
 
@@ -2026,31 +2111,32 @@ with more imagination.
 
 What a project leader cannot delegate in this domain:
 
-- **The benefits profile.** Not the NPV — the *shape*. The leader who lets a flat full-potential
+- **The benefits profile.** Not the NPV, the *shape*. The leader who lets a flat full-potential
   profile through has set the standard their programme will be judged against, and Meridian is what
   that costs.
 - **The breakeven sentence, with its basis.** Stating the condition on which value depends (41.0460 %
   flat-equivalent, 45.0053 % ramped-basis) in a form the board can monitor monthly, and never quoting
   one while meaning the other.
-- **The counterfactual.** Insisting that doing nothing is appraised rather than assumed to cost zero.
-  It is the one error that runs in the leader's favour, which is exactly why nobody else will find it —
-  and on Meridian it was the difference between a recorded failure and a 227,074 success.
+- **The counterfactual.** Insisting that doing nothing is appraised rather than assumed to cost
+  zero. It is the one error that runs in the leader's favour, which is exactly why nobody else will
+  find it, and on Meridian it was the difference between a recorded failure and a 227,074 success.
 - **The enabling change and who owns it.** Naming the non-project work that converts outputs into
   outcomes, and securing owners for it outside the project, before approval rather than after.
-- **The honest options set.** Ensuring at least one option could have won — including doing nothing.
+- **The honest options set.** Ensuring at least one option could have won, including doing nothing.
 - **The priced assumption register.** Two acts nobody else will perform: clearing the zero-cost rows
-  before the paper is written — 390,184 of Meridian's 1,074,548, because after approval they stop being
-  questions and become risks — and then saying the ratio out loud, since "NPV +1.33m against 1.07m of
-  expected exposure in the assumptions it rests on" is a different sentence from "NPV +1.33m".
+  before the paper is written (390,184 of Meridian's 1,074,548, because after approval they stop
+  being questions and become risks), and then saying the ratio out loud, since "NPV +1.33m against
+  1.07m of expected exposure in the assumptions it rests on" is a different sentence from "NPV
+  +1.33m".
 - **Forward-only framing.** Refusing every "total investment" frame at every gate, and personally
-  insisting on remaining cost against remaining benefit — including the forward exit cost, which is
+  insisting on remaining cost against remaining benefit, including the forward exit cost, which is
   not sunk.
 - **Kill criteria at approval, calibrated rather than asserted.** The leader is the only person who
   can get them agreed while goodwill is high; after the first slip, nobody will. And the level matters
   as much as the existence: set at the forward breakeven, not at the investment breakeven, or the
   criterion will stop programmes that are still worth completing.
 - **The price of staging, separated from the value of the option.** Piloting is not automatically
-  prudent. The leader owns the two numbers that decide it — what the first phase costs above rollout
+  prudent. The leader owns the two numbers that decide it: what the first phase costs above rollout
   unit rates, and how long it delays everything.
 
 ## Calculation exercises — Domain 2
@@ -2070,17 +2156,17 @@ potential, **46.87 %**. Common error: dividing cost by total undiscounted benefi
 3,600,000 = 36.1 %), which ignores discounting and understates the threshold.
 
 **Exercise 2.3** Candidates scored 1–5 on strategic fit (0.40), benefit (0.30), deliverability
-(0.20), risk-inverse (0.10): P = 4/5/2/2; Q = 5/3/4/3. Rank them.
-*Solution.* P: `1.60 + 1.50 + 0.40 + 0.20 =` **3.70**. Q: `2.00 + 0.90 + 0.80 + 0.30 =` **4.00**.
-**Q ranks first.** Common error: unweighted summation (P = 13, Q = 15 — same order here, but it is
-coincidence, and the method loses the weights that were argued over).
+(0.20), risk-inverse (0.10): P = 4/5/2/2; Q = 5/3/4/3. Rank them. *Solution.* P: `1.60 + 1.50 + 0.40
++ 0.20 =` **3.70**. Q: `2.00 + 0.90 + 0.80 + 0.30 =` **4.00**. **Q ranks first.** Common error:
+unweighted summation (P = 13, Q = 15, same order here, but it is coincidence, and the method loses
+the weights that were argued over).
 
-**Exercise 2.4** Spent USD 4,200,000; remaining cost USD 1,600,000; remaining benefit PV
-USD 1,950,000. Decide, and state what the sunk-cost frame would wrongly add.
-*Solution.* Forward NPV `1,950,000 − 1,600,000 =` **+USD 350,000 → continue.** The sunk-cost frame
-would add the irrelevant 4,200,000 to the comparison (as "total spend of 5,800,000 against
-benefits"), which here happens to reach the same decision — the point being that it reaches it for
-the wrong reason and would reach the wrong one whenever forward NPV is negative.
+**Exercise 2.4** Spent USD 4,200,000; remaining cost USD 1,600,000; remaining benefit PV USD
+1,950,000. Decide, and state what the sunk-cost frame would wrongly add. *Solution.* Forward NPV
+`1,950,000 − 1,600,000 =` **+USD 350,000 → continue.** The sunk-cost frame would add the irrelevant
+4,200,000 to the comparison (as "total spend of 5,800,000 against benefits"), which here happens to
+reach the same decision: the point being that it reaches it for the wrong reason and would reach the
+wrong one whenever forward NPV is negative.
 
 **Exercise 2.5** A directorate declares strategic weights of 45 % / 30 % / 25 % across three
 objectives. Its strategically mapped spend is USD 12,000,000, funded 3,600,000 / 5,400,000 /
@@ -2092,53 +2178,51 @@ objectives. Its strategically mapped spend is USD 12,000,000, funded 3,600,000 /
 and the surplus to report 3,600,000, which counts one movement of money twice.
 
 **Exercise 2.6** A programme costs USD 1,500,000 and has a full benefit potential of USD 540,000 a
-year, appraised over 6 %, 8 years. Doing nothing forces a mandatory USD 450,000 replacement in year 3
-and USD 25,000 a year of workaround cost in years 4 to 8. Compute the flat-equivalent breakeven
-adoption with and without the counterfactual.
-*Solution.* `AF(0.06, 8) = 6.209794`, so full-potential PV is `540,000 × 6.209794 = 3,353,289`.
-Without the counterfactual, breakeven `1,500,000 / 3,353,289 =` **44.7322 %**. Avoided cost PV
-`450,000/1.06³ = 377,828.68` plus `25,000 × 3.536782 = 88,419.55` (the years 4–8 discount factors),
-total **466,248**. With it, breakeven `(1,500,000 − 466,248) / 3,353,289 =` **30.8280 %** — an improvement
-of **13.9042 percentage points**. Common error: treating the avoided costs as additional *benefits* and
-adding them to the numerator of the adoption term, which mixes an adoption-dependent stream with one
-that is not adoption-dependent and understates the breakeven further.
+year, appraised over 6 %, 8 years. Doing nothing forces a mandatory USD 450,000 replacement in year
+3 and USD 25,000 a year of workaround cost in years 4 to 8. Compute the flat-equivalent breakeven
+adoption with and without the counterfactual. *Solution.* `AF(0.06, 8) = 6.209794`, so
+full-potential PV is `540,000 × 6.209794 = 3,353,289`. Without the counterfactual, breakeven
+`1,500,000 / 3,353,289 =` **44.7322 %**. Avoided cost PV `450,000/1.06³ = 377,828.68` plus `25,000 ×
+3.536782 = 88,419.55` (the years 4–8 discount factors), total **466,248**. With it, breakeven
+`(1,500,000 − 466,248) / 3,353,289 =` **30.8280 %**: an improvement of **13.9042 percentage
+points**. Common error: treating the avoided costs as additional *benefits* and adding them to the
+numerator of the adoption term, which mixes an adoption-dependent stream with one that is not
+adoption-dependent and understates the breakeven further.
 
-**Exercise 2.7** Candidates P (fit 4, benefit 5, deliverability 2, risk-inverse 2) and Q (5, 3, 4, 3)
-are scored under weights 0.40 / 0.30 / 0.20 / 0.10. Q leads. Find the shift of weight from strategic
-fit to benefit value that flips the ranking, and state which criterion can never decide the outcome.
-*Solution.* Totals P **3.70**, Q **4.00** — a margin of **0.30**. Shifting `δ` from fit to benefit,
-P gains `δ(5 − 4) = +δ` and Q gains `δ(3 − 5) = −2δ`, so `3δ = 0.30` and `δ =` **0.100000 — 10.0000
-percentage points** (weights become fit 0.30, benefit 0.40; both score **3.80**). Criterion influence
-on a 1–5 scale is `4 × weight`: **1.60 / 1.20 / 0.80 / 0.40**, so the risk criterion can move a total
-by at most **0.40** across its whole range, and closing the 0.30 margin through it would need a
-**3.00-point** swing in the risk scores (`0.30 / 0.10`) — three-quarters of the entire scale, which no
-assessor can defend. Common error: reporting only the ranking. A 10-point flip
-point is defensible where a 3-point one is not, and the reviewer cannot tell which case they are
-looking at unless it is stated.
+**Exercise 2.7** Candidates P (fit 4, benefit 5, deliverability 2, risk-inverse 2) and Q (5, 3, 4,
+3) are scored under weights 0.40 / 0.30 / 0.20 / 0.10. Q leads. Find the shift of weight from
+strategic fit to benefit value that flips the ranking, and state which criterion can never decide
+the outcome. *Solution.* Totals P **3.70**, Q **4.00**: a margin of **0.30**. Shifting `δ` from fit
+to benefit, P gains `δ(5 − 4) = +δ` and Q gains `δ(3 − 5) = −2δ`, so `3δ = 0.30` and `δ =`
+**0.100000 — 10.0000 percentage points** (weights become fit 0.30, benefit 0.40; both score
+**3.80**). Criterion influence on a 1–5 scale is `4 × weight`: **1.60 / 1.20 / 0.80 / 0.40**, so the
+risk criterion can move a total by at most **0.40** across its whole range, and closing the 0.30
+margin through it would need a **3.00-point** swing in the risk scores (`0.30 / 0.10`):
+three-quarters of the entire scale, which no assessor can defend. Common error: reporting only the
+ranking. A 10-point flip point is defensible where a 3-point one is not, and the reviewer cannot
+tell which case they are looking at unless it is stated.
 
-**Exercise 2.8** A case with an NPV of USD 1,100,000 rests on four assumptions whose impacts if false
-are 900,000 (P 0.30), 400,000 (0.45), 250,000 (0.20) and 150,000 (0.60). Compute the assumption
-exposure ratio and state what it implies.
-*Solution.* EMVs **270,000 / 180,000 / 50,000 / 90,000**, total **USD 590,000**. Exposure ratio
-`590,000 / 1,100,000 =` **53.64 %**. The case is comfortably right-side-up — about two-thirds of
-Meridian's 0.8062 — so it can be committed rather than staged, though the 270,000 entry still warrants a test
-date and a falsifying trigger. Common error: deducting the 590,000 from the NPV to report a
-"risk-adjusted NPV" of 510,000. The EMVs describe exposure *around* a forecast that already embodies
-its own expectations; deducting them double-counts, and it also hides the ratio, which is the useful
-output.
+**Exercise 2.8** A case with an NPV of USD 1,100,000 rests on four assumptions whose impacts if
+false are 900,000 (P 0.30), 400,000 (0.45), 250,000 (0.20) and 150,000 (0.60). Compute the
+assumption exposure ratio and state what it implies. *Solution.* EMVs **270,000 / 180,000 / 50,000 /
+90,000**, total **USD 590,000**. Exposure ratio `590,000 / 1,100,000 =` **53.64 %**. The case is
+comfortably right-side-up (about two-thirds of Meridian's 0.8062), so it can be committed rather
+than staged, though the 270,000 entry still warrants a test date and a falsifying trigger. Common
+error: deducting the 590,000 from the NPV to report a "risk-adjusted NPV" of 510,000. The EMVs
+describe exposure *around* a forecast that already embodies its own expectations; deducting them
+double-counts, and it also hides the ratio, which is the useful output.
 
-**Exercise 2.9** Four candidates compete for a scarce integration team: R needs 3 units for an NPV of
-2,100,000; S needs 2 for 1,500,000; T needs 2 for 1,350,000; U needs 1 for 800,000. Capacity is 4
-units. Find the optimal set, the shortfall a greedy per-unit ranking incurs, and the marginal value of
-a fifth unit.
-*Solution.* Per-unit values: U **800,000**, S **750,000**, R **700,000**, T **675,000**. Greedy takes
-U (1 unit), then S (2 units), then cannot fit R or T — total **2,300,000** with one unit idle.
-Enumerating the feasible sets at 4 units gives `{R,U}` = **2,900,000**, `{S,T}` = 2,850,000, `{S,U}` =
-2,300,000, `{T,U}` = 2,150,000, `{R}` = 2,100,000. The optimum is **{R, U} = 2,900,000**, so greedy
-gives up **USD 600,000 — 20.69 %** of the available value. At 5 units the best set is `{S,T,U}` =
-**3,650,000**, so the marginal value of the fifth unit is **USD 750,000**. Common error: stopping at
-the per-unit ranking because it is the method the constrained example in KA 2.2.3 introduces. Ranking
-explains an answer; enumeration finds it.
+**Exercise 2.9** Four candidates compete for a scarce integration team: R needs 3 units for an NPV
+of 2,100,000; S needs 2 for 1,500,000; T needs 2 for 1,350,000; U needs 1 for 800,000. Capacity is 4
+units. Find the optimal set, the shortfall a greedy per-unit ranking incurs, and the marginal value
+of a fifth unit. *Solution.* Per-unit values: U **800,000**, S **750,000**, R **700,000**, T
+**675,000**. Greedy takes U (1 unit), then S (2 units), then cannot fit R or T — total **2,300,000**
+with one unit idle. Enumerating the feasible sets at 4 units gives `{R,U}` = **2,900,000**, `{S,T}`
+= 2,850,000, `{S,U}` = 2,300,000, `{T,U}` = 2,150,000, `{R}` = 2,100,000. The optimum is **{R, U} =
+2,900,000**, so greedy gives up **USD 600,000, 20.69 %** of the available value. At 5 units the best
+set is `{S,T,U}` = **3,650,000**, so the marginal value of the fifth unit is **USD 750,000**. Common
+error: stopping at the per-unit ranking because it is the method the constrained example in KA 2.2.3
+introduces. Ranking explains an answer; enumeration finds it.
 
 ## Practitioner's toolkit — Domain 2
 
@@ -2159,17 +2243,21 @@ Per benefit: description · **the outcome measure that produces it** and its own
 project) · **enabling changes required**, each with an owner and whether funded · baseline value,
 measurement method and date measured · profile by year (**ramp explicit**) · cash-releasing or
 capacity · attribution note · single-claimant confirmation against the portfolio register ·
-review cadence.
+review cadence. Three further fields wherever the benefit may leave the organisation: **whether it is
+externally disclosed** and in what (report, bid, regulatory submission, financing document) · the
+**stated boundary and method** on which the figure rests, with what is excluded · and the **approving
+function and record class**, since the project supplies a disclosed claim and never approves one
+(2.3.3; Domain 16, KA 16.4.4 for the retention).
 
 ### Toolkit 2.T.3 — Gate decision pack rules
 
 One page of forward-only economics (**remaining cost, remaining benefit, forward NPV**, and the
-**forward exit cost** of stopping — total spend may be reported for information but never as the
-decision basis) · the **forward breakeven** at this gate, recomputed, with the current measure against
-it · kill criteria with current values against thresholds · assumption register extract showing which
-assumptions have been tested and which falsified · alignment re-test against current strategy ·
-options at this gate, including stop and descope, each with its own forward NPV · decider names (none
-of whom authored the case) · recorded decision and reasons.
+**forward exit cost** of stopping: total spend may be reported for information but never as the
+decision basis) · the **forward breakeven** at this gate, recomputed, with the current measure
+against it · kill criteria with current values against thresholds · assumption register extract
+showing which assumptions have been tested and which falsified · alignment re-test against current
+strategy · options at this gate, including stop and descope, each with its own forward NPV · decider
+names (none of whom authored the case) · recorded decision and reasons.
 
 ### Toolkit 2.T.4 — Assumption register row, and the test-order rule
 
@@ -2177,14 +2265,14 @@ Per assumption: the statement, in one falsifiable sentence · why it is believed
 named · **impact if false, in present-value terms** · probability, with who assessed it (never the
 case's author alone) · **EMV** · **cost to test**, including "nil" where the test is a letter or a
 conversation · **EMV per unit of test cost**, which sets the order · owner · test date, in a named
-person's calendar · the **falsifying trigger** — the observation that would settle it · whether the
-entry is correlated with another (mark the pairs; expectations add, tails do not) · and whether failure
-is recoverable or changes what the project is.
+person's calendar · the **falsifying trigger**: the observation that would settle it · whether the
+entry is correlated with another (mark the pairs; expectations add, tails do not) · and whether
+failure is recoverable or changes what the project is.
 
-Two rules make the register an instrument rather than a list. **Sort by EMV per unit of test cost and
-clear the free rows before the paper is written** — on Meridian that was 390,184 of exposure resolvable
-in a week. And **report `Σ EMV ÷ NPV` on the case's front page**: as it approaches one, the
-recommendation should change from "approve" to "stage" (2.3.4, 2.A.1).
+Two rules make the register an instrument rather than a list. **Sort by EMV per unit of test cost
+and clear the free rows before the paper is written**: on Meridian that was 390,184 of exposure
+resolvable in a week. And **report `Σ EMV ÷ NPV` on the case's front page**: as it approaches one,
+the recommendation should change from "approve" to "stage" (2.3.4, 2.A.1).
 
 ## Exam preparation — Domain 2
 
@@ -2210,7 +2298,7 @@ mistaking a gate that has never stopped anything for a functioning control (2.4.
 
 **Reflection questions.**
 1. Take your current business case: is the benefits profile flat? What is the breakeven condition,
-   and could you state it in one sentence to a board — with its basis?
+   and could you state it in one sentence to a board, with its basis?
 2. What does doing nothing actually cost your organisation over the appraisal horizon? If the answer
    is "nothing", name the contract, licence or asset that will not need attention in the next five
    years.
@@ -2218,7 +2306,7 @@ mistaking a gate that has never stopped anything for a functioning control (2.4.
    project? What happens to the benefits if they do not?
 4. List your case's five material assumptions with an impact and a probability. What is `Σ EMV ÷ NPV`,
    and which of the five could you resolve this week for nothing?
-5. What are your project's kill criteria — and if there are none, who would have to agree them, and
+5. What are your project's kill criteria, and if there are none, who would have to agree them, and
    would they agree today? If there are, are they set at the forward breakeven or at the investment
    breakeven, and what would each of the two errors cost?
 6. If your programme were staged instead of committed, what premium would the first phase carry over
@@ -2228,43 +2316,46 @@ mistaking a gate that has never stopped anything for a functioning control (2.4.
 ## Domain 2 summary
 
 Work gets chosen through a portfolio process, and the quality of that choice depends on candidates
-being described honestly enough to be compared — which makes a business case a decision instrument
+being described honestly enough to be compared, which makes a business case a decision instrument
 rather than an advocacy document only when it could have concluded "no". How far the funded work
 matches the stated strategy is measurable: an **alignment index** of `Σ min(declared, funded)` gave
 76.6667 % on the mapped spend of Meridian's parent authority, 59.0000 % on all of it, and a
-**reallocation distance** of **USD 4,200,000** — 1.75 Meridians — with the whole difference between the
-two indices being the 40 % of money that serves no declared objective. Alignment granted at approval
-then **decays**: at a 15 % annual supersession hazard the **alignment half-life is 4.2650 years**, so
-gates re-test the case and not merely delivery, and an annual re-test was worth **USD 292,800** against
-342,000 of expected misaligned spend. The domain's central arithmetic is the benefits profile:
-Meridian's approved case claimed full potential from year one for an NPV of +3,447,096, where the same
-facts profiled as adoption actually arrives (40 % / 60 % / 70 % of a 979,200 potential) give
-**+1,332,898** — an overstatement of **USD 2,114,198**, 158.6 % of the honest figure, which changed no
-approval decision and set the standard the programme was later judged to have failed. The more useful
-board sentence is the breakeven, stated with its basis: **41.0460 % flat-equivalent**, or 45.0053 % on
-the ramped basis. **The opposite error matters equally**: valuing the do-nothing option at zero cost
-Meridian **USD 561,101** of present value and 9.5962 points of breakeven headroom, while an honest
-attribution correction — a comparison cohort showing 1.1 of a 6.4-hour improvement was happening
-anyway, an over-claim of **17.1875 %** — moved it 5.4212 points the other way. Corrected both ways the
-breakeven is **35.6035 %**, and Meridian at its achieved 40 % adoption created **USD 227,074** of value
-while being publicly recorded as a failure. Selection methods each have limits — weighted scoring
-exposes criteria and can be steered, and a **3.3333-point** weight shift reverses this domain's
-ranking; ranking by value per unit of a binding constraint beats raw NPV (Beta + Gamma's 2,100,000 over
-Meridian's 1,693,072) but remains a heuristic for lumpy candidates, and the constraint's own marginal
-value is lumpy too — 900,000 · 300,000 · 900,000 · 493,072 · 300,000 · 900,000 — so capacity is a block
-decision, add one unit or three and never two. Benefits require maps that include the **enabling
-change** most omit, baselines measured before the change, comparison cohorts, single claimants, honesty
-about cash-releasing versus capacity, and sustainability treated as constraint or as value but never
-confused between them; and an assumption register is priced, not listed — Meridian's carried
-**USD 1,074,548** of expected exposure against a 1,332,898 NPV, a ratio of **0.8062**, of which 390,184
-was resolvable for nothing. And the discipline closes with stopping: continuation depends only on
-remaining cost against remaining benefit, plus the forward exit cost — 780,000 of value for 900,000 of
-spend is a stop, whatever the 1,800,000 already gone suggests — made possible by kill criteria agreed
-in advance, set at the **forward** breakeven (28.1283 % at Meridian's successor's month-6 gate, not the
-investment breakeven of 45.0053 %) and calibrated against their two errors, since a criterion on a weak
-proxy signal destroyed **USD 175,328** of expected value by stopping good programmes to prevent bad
-ones. Where the uncertainty is genuine, stage instead: Meridian's abandonment option was worth
-**USD 139,621** and its staging cost **USD 205,460**, so staging paid only above a 53.9740 % chance of
-failure — or at a first-phase premium below **7.5223 %**. Domain 3 supplies the governance and decision
-rights this domain assumes; Domain 15 scales the selection arithmetic to a portfolio; Domain 16
-measures what it promised.
+**reallocation distance** of **USD 4,200,000**, 1.75 Meridians, with the whole difference between
+the two indices being the 40 % of money that serves no declared objective. Alignment granted at
+approval then **decays**: at a 15 % annual supersession hazard the **alignment half-life is 4.2650
+years**, so gates re-test the case and not merely delivery, and an annual re-test was worth **USD
+292,800** against 342,000 of expected misaligned spend. The domain's central arithmetic is the
+benefits profile: Meridian's approved case claimed full potential from year one for an NPV of
++3,447,096, where the same facts profiled as adoption actually arrives (40 % / 60 % / 70 % of a
+979,200 potential) give **+1,332,898**: an overstatement of **USD 2,114,198**, 158.6 % of the honest
+figure, which changed no approval decision and set the standard the programme was later judged to
+have failed. The more useful board sentence is the breakeven, stated with its basis: **41.0460 %
+flat-equivalent**, or 45.0053 % on the ramped basis. **The opposite error matters equally**: valuing
+the do-nothing option at zero cost Meridian **USD 561,101** of present value and 9.5962 points of
+breakeven headroom, while an honest attribution correction (a comparison cohort showing 1.1 of a
+6.4-hour improvement was happening anyway, an over-claim of **17.1875 %**) moved it 5.4212 points
+the other way. Corrected both ways the breakeven is **35.6035 %**, and Meridian at its achieved 40 %
+adoption created **USD 227,074** of value while being publicly recorded as a failure. Selection
+methods each have limits: weighted scoring exposes criteria and can be steered, and a
+**3.3333-point** weight shift reverses this domain's ranking; ranking by value per unit of a binding
+constraint beats raw NPV (Beta + Gamma's 2,100,000 over Meridian's 1,693,072) but remains a
+heuristic for lumpy candidates, and the constraint's own marginal value is lumpy too — 900,000 ·
+300,000 · 900,000 · 493,072 · 300,000 · 900,000, so capacity is a block decision, add one unit or
+three and never two. Benefits require maps that include the **enabling change** most omit, baselines
+measured before the change, comparison cohorts, single claimants, honesty about cash-releasing
+versus capacity, and sustainability treated as constraint, as value or as a disclosed claim but
+never confused between them, a disclosed claim carrying a stated boundary and method, a named owner,
+retained evidence and the signing function's approval, and never being reported as achieved on
+evidence its audience would not accept; and an assumption register is priced, not listed: meridian's
+carried **USD 1,074,548** of expected exposure against a 1,332,898 NPV, a ratio of **0.8062**, of
+which 390,184 was resolvable for nothing. And the discipline closes with stopping: continuation
+depends only on remaining cost against remaining benefit, plus the forward exit cost (780,000 of
+value for 900,000 of spend is a stop, whatever the 1,800,000 already gone suggests) made possible by
+kill criteria agreed in advance, set at the **forward** breakeven (28.1283 % at Meridian's
+successor's month-6 gate, not the investment breakeven of 45.0053 %) and calibrated against their
+two errors, since a criterion on a weak proxy signal destroyed **USD 175,328** of expected value by
+stopping good programmes to prevent bad ones. Where the uncertainty is genuine, stage instead:
+Meridian's abandonment option was worth **USD 139,621** and its staging cost **USD 205,460**, so
+staging paid only above a 53.9740 % chance of failure, or at a first-phase premium below **7.5223
+%**. Domain 3 supplies the governance and decision rights this domain assumes; Domain 15 scales the
+selection arithmetic to a portfolio; Domain 16 measures what it promised.

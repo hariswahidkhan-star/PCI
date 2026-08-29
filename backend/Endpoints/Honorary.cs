@@ -5,7 +5,7 @@ namespace PCI.Backend.Endpoints;
 
 /// <summary>
 /// Honorary Fellow (PCI) — Route C of the three-route access model. A board-conferred recognition
-/// that is deliberately and permanently SEPARATE from the examined PCP-AI credential: no exam, no
+/// that is deliberately and permanently SEPARATE from the examined PCL-AI credential: no exam, no
 /// entitlement, no issued_credentials row, its own PCI-HON award number, and owner-only conferral.
 /// Nothing here may ever set an exam, result or credential field.
 /// </summary>

@@ -1,4 +1,4 @@
-"""PML-AI Domain 3 — Governance, Organization and Decision Rights (depth extension).
+"""PML-AI Domain 3 — Governance, Organisation and Decision Rights (depth extension).
 PCI original artwork.
 
 Fig 3.1.1  Why unanimity is a power law (KA 3.1.2). Expected wait for one decision against the

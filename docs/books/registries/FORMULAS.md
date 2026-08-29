@@ -1,6 +1,6 @@
-# Shared Formula & Symbol Registry — PML-AI · PFL-AI (binds to the PCP-AI master table)
+# Shared Formula & Symbol Registry — PML-AI · PFL-AI (binds to the PCL-AI master table)
 
-**Rule:** every symbol means the same thing in every chapter of both books (and matches PCP-AI where the
+**Rule:** every symbol means the same thing in every chapter of both books (and matches PCL-AI where the
 symbol exists there). A chapter restates a symbol's definition inline when it uses it, but never changes
 it. Every formula entered here must carry at least one independently verified **golden example**
 (inputs → full-precision result → display rounding) before any chapter that uses it can pass gate.
@@ -8,20 +8,20 @@ Golden examples are automated as checks in `_build/verify_formulas.py`.
 
 Status legend: ✅ verified golden example exists · ⏳ registered, verification pending.
 
-## 1. Symbols inherited from the PCP-AI master table (unchanged)
+## 1. Symbols inherited from the PCL-AI master table (unchanged)
 
 | Symbol | Meaning | Unit | Status |
 |---|---|---|---|
-| `PV` (BCWS) | Planned Value (EVM context) | currency | ✅ (PCP-AI D6) |
-| `EV` (BCWP) | Earned Value | currency | ✅ (PCP-AI D6) |
-| `AC` (ACWP) | Actual Cost | currency | ✅ (PCP-AI D6) |
-| `BAC` / `EAC` / `ETC` / `VAC` | Budget / Estimate at Completion, Estimate to Complete, Variance at Completion | currency | ✅ (PCP-AI D6) |
-| `CV` = `EV − AC` · `SV` = `EV − PV` | Cost / Schedule Variance | currency | ✅ (PCP-AI D6) |
-| `CPI` = `EV/AC` · `SPI` = `EV/PV` | Performance indices | ratio | ✅ (PCP-AI D6) |
-| `TCPI` | To-Complete Performance Index | ratio | ✅ (PCP-AI D6) |
-| `PoC` | Percentage of completion | % | ✅ (PCP-AI D2/D7) |
-| `r`, `n` | Discount rate per period; number of periods | ratio; count | ✅ (PCP-AI D3) |
-| `PV(x)` | Present value of amount `x` | currency | ✅ (PCP-AI D3) |
+| `PV` (BCWS) | Planned Value (EVM context) | currency | ✅ (PCL-AI D6) |
+| `EV` (BCWP) | Earned Value | currency | ✅ (PCL-AI D6) |
+| `AC` (ACWP) | Actual Cost | currency | ✅ (PCL-AI D6) |
+| `BAC` / `EAC` / `ETC` / `VAC` | Budget / Estimate at Completion, Estimate to Complete, Variance at Completion | currency | ✅ (PCL-AI D6) |
+| `CV` = `EV − AC` · `SV` = `EV − PV` | Cost / Schedule Variance | currency | ✅ (PCL-AI D6) |
+| `CPI` = `EV/AC` · `SPI` = `EV/PV` | Performance indices | ratio | ✅ (PCL-AI D6) |
+| `TCPI` | To-Complete Performance Index | ratio | ✅ (PCL-AI D6) |
+| `PoC` | Percentage of completion | % | ✅ (PCL-AI D2/D7) |
+| `r`, `n` | Discount rate per period; number of periods | ratio; count | ✅ (PCL-AI D3) |
+| `PV(x)` | Present value of amount `x` | currency | ✅ (PCL-AI D3) |
 
 > **Notation clash rule (inherited).** `PV` = Planned Value in EVM contexts; discounting always writes
 > "present value" in words or `PV(x)`. PFL-AI is discounting-heavy: its chapters use `PV(x)`/`FV(x)`
@@ -68,7 +68,7 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `D/E` | Gearing (debt : equity) | ratio | PFL-AI D9/D10 | ✅ |
 | `i_nom`, `i_real`, `π` | Nominal rate, real rate, inflation (Fisher: `1+i_nom = (1+i_real)(1+π)`) | %/period | PFL-AI D3 | ✅ |
 | `DF(t)` | Discount factor at period `t` = 1/(1+r)ᵗ | ratio | PFL-AI D3 | ✅ |
-| `A` | Annuity payment (context-flagged; PCP-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | ✅ |
+| `A` | Annuity payment (context-flagged; PCL-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | ✅ |
 
 ## 4. Verification protocol
 

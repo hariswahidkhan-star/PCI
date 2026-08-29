@@ -20,14 +20,14 @@ FRONT = """
   <div class="rule"></div>
   <div class="meta">OFFICIAL CANDIDATE DOCUMENT<br/>{year} EDITION<br/><br/>
   PROJECT CONTROLS INSTITUTE GLOBAL<br/>
-  <em>AI proposes. The professional disposes.</em></div>
+  <em>AI proposes; the professional verifies, decides and remains accountable.</em></div>
 </div>
 <div class="frontmatter">
   <p style="page-break-before:always"><strong>Notice.</strong> This document is an educational publication of
   Project Controls Institute Global. It does not constitute accounting, tax, legal, financial or other
   professional advice. Standards and frameworks are referred to by name and described in this publication's
   own words; no standard's text is reproduced, and all trademarks remain the property of their respective
-  owners. No governmental approval or third-party accreditation of the PCP-AI credential is implied.
+  owners. No governmental approval or third-party accreditation of the PCL-AI credential is implied.
   Examination operations described in the future tense will be confirmed before the first sitting.
   All examples are fictional and illustrative. Sample questions are study material, maintained separately
   from any live examination bank. © {year} Project Controls Institute Global. All rights reserved.</p>

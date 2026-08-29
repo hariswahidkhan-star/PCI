@@ -1,4 +1,4 @@
-# Sample Questions — PCP-AI
+# Sample Questions — PCL-AI
 > Sixteen study questions with rationales, drawn from the Body of Knowledge's sample bank
 
 **About these questions.** These items are study material from the Body of Knowledge's sample bank — the

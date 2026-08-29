@@ -1,4 +1,4 @@
-"""PML-AI Domain 3 (extension) — Governance, Organization and Decision Rights: golden checks for the
+"""PML-AI Domain 3 (extension) — Governance, Organisation and Decision Rights: golden checks for the
 NEW material only.
 
 The domain's ORIGINAL numbers — the `E[wait] = M/2 + L` latency of 4.0 weeks and its USD 57,120,

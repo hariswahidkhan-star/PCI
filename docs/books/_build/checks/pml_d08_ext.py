@@ -41,6 +41,10 @@ variance, σ 252,642, the P80 of 490,624, the survey tree and the fast-track tie
                    shared A+B predecessor (Simpson, convergence-checked), the P80 date is found by
                    bisection on that integral, and the naive-product/correct/dominant-path ordering is
                    asserted as an invariant across every date in the fade table.
+    notification   WE 8.4.3's drift arithmetic. The fixed pack and the onboarding hold are shown to
+                   CANCEL from the comparison (they are incurred either way), so the decision turns
+                   solely on the accrual rate — propagation plus cost of delay — and the run rate,
+                   not the total, is proved to be the transferable quantity, as in WE 1.2.2.
 
 Master-thread values come from ctx and are never re-typed: MERIDIAN_COST_OF_DELAY (USD 14,280/week),
 MERIDIAN_BASELINE (USD 2,400,000 approved cost), AURIGA_BAC (USD 4,000,000). Auriga's schedule value
@@ -787,8 +791,14 @@ def run(ctx):
     check("8.A.2 merge-correct P80 buffer over week 16", T80m - 16, D("2.8093"))
     check("8.A.2 bisection landed on 80 %", merge(T80m) * 100, 80, tol=D("0.001"))
     check("8.A.2 buffer understated by ignoring the merge, weeks", T80m - T80dom, D("0.1233"))
+    UNDERSTATEMENT = (T80m - T80dom) * COD_A
     check("8.A.2 value of that understatement at Auriga's cost of delay",
-          (T80m - T80dom) * COD_A, D("5546.37"), tol=D("0.5"))
+          UNDERSTATEMENT, D("5546.37"), tol=D("0.5"))
+    # The manuscript prints this to the nearest fifty, not to the cent: it is the difference between
+    # two numerically integrated P80 dates on PERT sigma conventions, so cents would be false
+    # precision. The derived value is pinned above; what the book shows is pinned here.
+    check("8.A.2 that understatement as printed, to the nearest fifty",
+          (UNDERSTATEMENT / 50).quantize(D("1")) * 50, D(5550))
     check("8.A.2 D reaches E behind C on expectation, weeks", teABC - teABD, D("1.17"))
     check("Exercise 8.4 naive two-path product", D("0.80") * D("0.80"), D("0.64"))
 
@@ -974,3 +984,32 @@ def run(ctx):
           (slA9 * b9 - icA9) - (slB9 * b9 - icB9), 0, tol=D("1e-16"))
     check("Ex8.9 A viability floor %", icA9 / slA9 * 100, D("0.6969"))
     check("Ex8.9 B viability floor %", icB9 / slB9 * 100, D("0.2423"))
+
+    # ---- 8.4.3 the price of a notification that drifts ---------------------------------
+    # WE 8.4.3: fixed pack + hold, against a drift that accrues re-verification at a
+    # propagation rate ON TOP OF the cost of delay. Both terms are read from ctx/derived,
+    # never re-typed: COD_M is Meridian's USD 14,280 a week from Domain 1.
+    PACK = D(26000)                                # assessment, counsel, evidence bundle
+    HOLD = D(2)                                    # weeks of onboarding hold, incurred either way
+    PROP = D(9500)                                 # assessed re-verification propagation, USD/week
+    DRIFT = D(6)                                   # weeks between confirmation and notification
+    early843 = PACK + HOLD * COD_M
+    accrual843 = PROP + COD_M                      # the only rate that matters to the decision
+    late843 = early843 + DRIFT * accrual843
+    avoidable843 = late843 - early843
+    check("WE 8.4.3 cost of notifying inside the window", early843, 54560)
+    check("WE 8.4.3 cost of notifying at week 6", late843, 197240)
+    check("WE 8.4.3 avoidable cost of six weeks of drift", avoidable843, 142680)
+    check("WE 8.4.3 avoidable cost accrual rate (USD/week)", accrual843, 23780)
+    check("WE 8.4.3 drift cost as a multiple of notifying on time",
+          avoidable843 / early843, D("2.6151"))
+    check("WE 8.4.3 weeks of drift costing as much as the whole pack",
+          PACK / accrual843, D("1.0934"))
+    # INVARIANT the avoidable cost is linear in the drift, so the run rate — not the total —
+    # is the transferable quantity, exactly as in WE 1.2.2's escalation timing.
+    check("WE 8.4.3 INVARIANT avoidable cost is drift weeks times the accrual rate",
+          DRIFT * accrual843 - avoidable843, 0, tol=D("0"))
+    # INVARIANT the hold and the pack cancel out of the comparison: they are incurred either
+    # way, so no part of the decision turns on them.
+    check("WE 8.4.3 INVARIANT the pack and the hold cancel from the difference",
+          (late843 - early843) - DRIFT * (PROP + COD_M), 0, tol=D("0"))

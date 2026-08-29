@@ -56,7 +56,7 @@ individual domains, mirroring the published PCL-AI blueprint convention.
 
 ## 3. Depth targets
 
-Every KA is authored to the family checklist (spine §10): definitions with real frameworks named;
+Every KA is authored to the family checklist (spine section 10): definitions with real frameworks named;
 principles; formulae with verified worked examples where quantitative; pitfalls; AI treatment;
 key-terms box; tagged MCQs; self-checks; cross-references. Leadership-level depth (advanced topics +
 executive perspective) is mandatory in all 16 domains — this is a *Leader* credential.

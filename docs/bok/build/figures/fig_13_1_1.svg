@@ -6,11 +6,11 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-07-14T23:17:36.595309</dc:date>
+    <dc:date>2026-08-04T12:48:49.225586</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
-      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
      </cc:Agent>
     </dc:creator>
    </cc:Work>
@@ -40,7 +40,7 @@ C 47.382394 71.108858 33.8832 98.705176 33.8832 127.476
 C 33.8832 156.246824 47.382394 183.843142 71.407742 204.187186 
 C 95.43309 224.531231 128.023027 235.962 162 235.962 
 z
-" clip-path="url(#pc7d127b73c)" style="fill: #cbd5e1; opacity: 0.3; stroke: #cbd5e1; stroke-width: 1.4; stroke-linejoin: miter"/>
+" clip-path="url(#p1ffd323606)" style="fill: #c8cfc9; opacity: 0.3; stroke: #c8cfc9; stroke-width: 1.4; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 162 201.564 
@@ -53,7 +53,7 @@ C 83.724562 88.981367 74.5056 107.827633 74.5056 127.476
 C 74.5056 147.124367 83.724562 165.970633 100.132116 179.864127 
 C 116.539671 193.757621 138.796214 201.564 162 201.564 
 z
-" clip-path="url(#pc7d127b73c)" style="fill: #93c5fd; opacity: 0.3; stroke: #93c5fd; stroke-width: 1.4; stroke-linejoin: miter"/>
+" clip-path="url(#p1ffd323606)" style="fill: #a8c3b4; opacity: 0.3; stroke: #a8c3b4; stroke-width: 1.4; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 162 167.166 
@@ -66,23 +66,23 @@ C 120.06673 106.853875 115.128 116.950089 115.128 127.476
 C 115.128 138.001911 120.06673 148.098125 128.856491 155.541068 
 C 137.646252 162.984011 149.5694 167.166 162 167.166 
 z
-" clip-path="url(#pc7d127b73c)" style="fill: #1d4ed8; opacity: 0.3; stroke: #1d4ed8; stroke-width: 1.4; stroke-linejoin: miter"/>
+" clip-path="url(#p1ffd323606)" style="fill: #14432e; opacity: 0.3; stroke: #14432e; stroke-width: 1.4; stroke-linejoin: miter"/>
    </g>
    <g id="text_1">
-    <text style="font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #64748b" x="162" y="33.543" transform="rotate(-0 162 33.543)">AI — rules-based validation</text>
+    <text style="font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #5a6560" x="162" y="33.543" transform="rotate(-0 162 33.543)">AI — rules-based validation</text>
    </g>
    <g id="text_2">
-    <text style="font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #0f172a" x="162" y="71.91" transform="rotate(-0 162 71.91)">ML — cost-forecast model</text>
+    <text style="font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #1a1a1a" x="162" y="71.91" transform="rotate(-0 162 71.91)">ML — cost-forecast model</text>
    </g>
    <g id="text_3">
-    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(145.068125 108.116625)">GenAI —</text>
-    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(125.390625 117.796312)">drafting a variance</text>
-    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(144.374375 127.476)">narrative</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(143.18 108.271625)">GenAI —</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(118.965 117.873812)">drafting a variance</text>
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(141.205 127.476)">narrative</text>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="pc7d127b73c">
+  <clipPath id="p1ffd323606">
    <rect x="5.76" y="5.76" width="312.48" height="232.848"/>
   </clipPath>
  </defs>

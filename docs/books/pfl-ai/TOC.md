@@ -1,8 +1,8 @@
 # PFL-AI Body of Knowledge — Detailed Table of Contents (Phase 0)
 
-**Book:** PCI Project Finance Leader – AI Body of Knowledge
+**Book:** PCI AI Project Finance Leader Body of Knowledge
 **Structure:** 4 parts · 16 domains · 61 knowledge areas, numbered `Domain.KA.Topic` per the pattern
-spec; family chapter shape throughout (see `PCI_BOOK_PATTERN_SPEC.md` §4). Responsible AI appears in
+spec; family chapter shape throughout (see `PCI_BOOK_PATTERN_SPEC.md` section 4). Responsible AI appears in
 every domain, with Domain 16 carrying the systematic treatment. This is an educational professional
 reference, not individualized investment, legal, tax or accounting advice — the front matter carries the
 extended finance disclaimers (decision register D-14).
@@ -27,7 +27,8 @@ disclaimers; standards & trademarks; originality) · How to use this reference �
 - **KA 1.2 — Value, cash and risk:** 1.2.1 value creation in projects · 1.2.2 cash as the binding
   constraint · 1.2.3 the risk-return-bankability triangle
 - **KA 1.3 — Ethics, fiduciary awareness and responsible AI:** 1.3.1 fiduciary and professional
-  obligations · 1.3.2 conflicts and independence · 1.3.3 the PCI responsible-AI principle in finance
+  obligations · 1.3.2 financial crime: bribery, sanctions and the money-laundering perimeter ·
+  1.3.3 conflicts and independence · 1.3.4 the PCI responsible-AI principle in finance
 
 ### Domain 2 — Accounting and financial-statement foundations
 - **KA 2.1 — The accrual model:** accrual concepts · recognition · the statements as one system
@@ -51,7 +52,9 @@ disclaimers; standards & trademarks; originality) · How to use this reference �
 - **KA 4.2 — Complementary measures:** payback · discounted payback · profitability index ·
   equivalent annual value
 - **KA 4.3 — Decision contexts:** capital rationing · mutually exclusive investments · decision
-  limitations and judgment
+  limitations and judgment · the grantor's decision rule (value for money against a constructed
+  counterfactual, inside an affordability envelope) — named for identification, no external
+  appraisal guidance reproduced
 
 ## Part Two — Structuring and modelling (Domains 5–9)
 

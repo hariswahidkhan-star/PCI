@@ -7,7 +7,7 @@ namespace PCI.Backend.Core;
 /// this renderer never sources names, dates or titles itself.</summary>
 public sealed class CertDoc
 {
-    public string Title = "Certificate";            // e.g. "Certified Project Controls Professional" / "Honorary Certificate"
+    public string Title = "Certificate";            // e.g. "PCI AI Project Controls Leader" / "Honorary Certificate"
     public string? Subtitle;                          // e.g. the honorary recognition line
     public string Recipient = "";
     public string LeadIn = "This is to certify that"; // honorary uses a different lead-in

@@ -139,7 +139,7 @@ def run(ctx):
     check("G.3.4 INVARIANT the two gearing shares differ by exactly the battery's weight",
           DEBT / SOLAR - DEBT / CAPEX, DEBT * BATT / (SOLAR * CAPEX), tol=D("0.0000001"))
 
-    # ===================== Capstone Four — Northgate Point (re-contracting) =============
+    # ===================== Capstone Four — Harbourgate Point (re-contracting) =============
     # The capstone's argument is that a tenor extension past the contracted period buys almost
     # nothing once the tail is honestly stressed. That convergence is the claim, so it is pinned as
     # an invariant rather than left as a sentence.
@@ -221,7 +221,7 @@ def run(ctx):
     BINDING = {"Kestrel distribution test": D("1.9103"),      # % of headroom
                "Aurora Ridge year one": D("0.5343"),           # DSCR
                "Helios Flats year eighteen": D("1.0595"),      # DSCR if sized on year one
-               "Northgate Point year eight": D("0.9232")}      # DSCR on the stressed re-let
+               "Harbourgate Point year eight": D("0.9232")}      # DSCR on the stressed re-let
     check("Synthesis: four distinct binding tests", D(len(BINDING)), D(4))
     check("Synthesis: four distinct binding values", D(len(set(BINDING.values()))), D(4))
     DEFAULTS = [D("0.5343"), D("1.0595"), D("0.9232")]

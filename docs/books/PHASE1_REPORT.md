@@ -2,7 +2,7 @@
 
 **Phase:** 1 of 8 · **Purpose:** prove the production model end to end on one representative
 domain per book before scaling · **Verdict:** production model **proven**; prototypes are
-**apparatus-complete at roughly 30–45 % of production depth** — the gate review (§3) mandates
+**apparatus-complete at roughly 30–45 % of production depth** — the gate review (section 3) mandates
 specific expansions before either chapter is release-grade, and scaling may begin using this
 model with the expanded depth targets.
 
@@ -62,7 +62,7 @@ installed cleanly; pandoc is not needed by the new pipeline.
 
 ## 3a. Re-gate addendum (batch 2 — depth expansions applied)
 
-The §3 expansion list has been partially executed and re-gated:
+The section 3 expansion list has been partially executed and re-gated:
 
 - **PFL-AI D3** (+~1,650 words → ~8,200; 22 → 27 pp): added WE 3.2.1b annuity-due, WE 3.2.1c
   deferred annuity, WE 3.2.2b level-principal schedule with three-shape lifetime-interest
@@ -97,12 +97,12 @@ begin (PFL-AI D4 Investment appraisal first, reusing D3's machinery).
    competencies 3/4 foundations (financial mathematics underpinning modelling and appraisal).
 4. **Sources added:** none required (both domains are first-principles quantitative; frameworks
    referenced by family rules only).
-5. **Calculations validated:** 99/99 golden checks; 1 authoring error caught and corrected (§2).
+5. **Calculations validated:** 99/99 golden checks; 1 authoring error caught and corrected (section 2).
 6. **Figures produced:** 5 original SVGs (3 PFL, 2 PML), all registered-format with alt text in
    specs.
 7. **MCQs/exercises created:** 17 tagged MCQs with full rationales; 10 calculation exercises with
    solutions and common-error notes; 16 self-check questions.
-8. **Quality gates:** pass with the depth condition (§3).
+8. **Quality gates:** pass with the depth condition (section 3).
 9. **Similarity/copyright:** all content original; no standard text reproduced; fictional
    entities only (Kestrel Water SPC, Project Auriga).
 10. **Outstanding expert decisions:** OD-1…OD-3 unchanged from Phase 0; new **OD-4** — confirm
@@ -110,7 +110,7 @@ begin (PFL-AI D4 Investment appraisal first, reusing D3's machinery).
     ≈ 240–260k words per book.
 11. **Files changed:** `docs/books/` only (manuscripts, `_build/` toolchain, figures, prototype
     PDFs, this report).
-12. **Next production batch (Phase 1 completion → Phase 2):** apply the §3 expansions to both
+12. **Next production batch (Phase 1 completion → Phase 2):** apply the section 3 expansions to both
     prototypes and re-gate; then Phase 2 foundation domains (PML-AI D1–D4; PFL-AI D1–D2, D4)
     under the concurrent-agent model, one owner per domain file, every chapter entering the
     golden-answer harness and figure registry on submission. Recommend wiring

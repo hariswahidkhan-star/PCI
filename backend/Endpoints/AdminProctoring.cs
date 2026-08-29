@@ -103,7 +103,7 @@ public static class AdminProctoring
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var action = H.GetS(b, "action") ?? "";
             var note = H.GetS(b, "note") ?? ""; if (note.Length > 1000) note = note[..1000];
-            // Configured pass mark for the attempt's CERTIFICATION (PCP-AI is simply cert 1).
+            // Configured pass mark for the attempt's CERTIFICATION (PCL-AI is simply cert 1).
             var attCertId = H.L(a.GetValueOrDefault("certification_id") ?? 1L);
             var passMark = Certs.Cfg(db, attCertId).Pass;
             var pct = H.D(a["percent"]);

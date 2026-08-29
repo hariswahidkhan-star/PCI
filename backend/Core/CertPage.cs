@@ -164,7 +164,7 @@ public static class CertPage
         }
         sb.Append("</ul>");
         if (id == Certs.DefaultId)
-            // PCP-AI has dedicated public resource pages
+            // PCL-AI has dedicated public resource pages
             sb.Append("<p class=\"lead\">See <a href=\"eligibility-requirements.html\">eligibility requirements</a>, the <a href=\"exam-structure.html\">exam structure</a>, the <a href=\"body-of-knowledge.html\">Body of Knowledge</a> and the <a href=\"handbook.html\">candidate handbook</a>.</p>");
         else if (open)
             sb.Append("<p class=\"lead\">Full eligibility criteria, the examination blueprint and the ").Append(Esc(acronym)).Append(" Body of Knowledge are confirmed during application. <a href=\"/app/register?product=exam&amp;cert=").Append(Uri.EscapeDataString(code)).Append("\">Begin your application</a> or <a href=\"request-info.html?cert=").Append(Uri.EscapeDataString(code)).Append("\">request more information</a>.</p>");

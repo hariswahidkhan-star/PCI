@@ -6,7 +6,7 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**446 terms**, consolidated from 459 key-terms entries across 16 domains.
+**503 terms**, consolidated from 516 key-terms entries across 16 domains.
 
 ## A
 
@@ -19,6 +19,8 @@
 **Accuracy range** — The band the estimator expects the outturn to fall in; narrows with definition. *(KA 8.1)*
 
 **Advance payment / bond** — Pre-mobilisation payment recovered from certifications, secured by a bond; a loan from the project to the contractor. *(KA 14.3)*
+
+**Affordability envelope** — The budget the authority actually holds for the payment stream, year by year; a budget fact rather than an appraisal output, and independent of value for money. *(KA 4.3)*
 
 **AI model risk** — Loss from decisions or actions taken on model output — wrong model, wrong envelope, or misunderstood output. *(KA 11.4)*
 
@@ -46,6 +48,8 @@
 
 **Asset-capital matching** — Pairing project risk phases with the capital suited to hold them — on two axes, risk-holding capability and timing. *(KA 1.1)*
 
+**Associated person** — Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its exposure runs. *(KA 1.3)*
+
 **At-risk commitment** — Option premiums, bid bonds, reservations — cash forfeited if the project dies. *(KA 5.1)*
 
 **Attribution residual** — Output − Σ attributions; must be nil or explained (the hundred-per-cent rule). *(KA 16.3)*
@@ -62,6 +66,8 @@
 
 ## B
 
+**Back-to-back notice check** — The comparison of the upstream notice period the project company must meet with the downstream period it has been given; the gap is an uninsured exposure identified at contract stage. *(KA 12.4)*
+
 **Balancing line** — The use that absorbs the residual of a fixed envelope; must be tested against policy. *(KA 6.2)*
 
 **Balloon / bullet** — Principal deferred to maturity; lower periodic service, refinancing risk. *(KA 10.1)*
@@ -76,7 +82,11 @@
 
 **Bankability triangle** — Value + cash + risk allocation, passed together. *(KA 1.2)*
 
+**Base case (contractual)** — The model as defined and fixed by the finance documents at close; the reference for later ratio tests, amendable only through the documents' own consent mechanism. *(KA 6.4)*
+
 **Base date** — The price level at which an estimate's rates were compiled. *(KA 8.2)*
+
+**Base-case reconciliation** — The line-by-line bridge from the closing model to the operating model used for covenant certification, separating actuals, consented amendments and re-forecasts; itself a deliverable. *(KA 6.4)*
 
 **Base-case vs minimum-period test** — Coverage required in the period tested (usually year one) against coverage required in every period; on Kestrel the difference is 2,917,226 of debt. *(KA 10.1)*
 
@@ -85,6 +95,8 @@
 **Basis bridge** — The documented reconciliation between two models of one project. *(KA 6.1)*
 
 **Basis risk (pass-through)** — Exposure remaining because the reference index differs from the price actually paid. *(KA 11.2)*
+
+**Beneficial ownership** — The natural persons who ultimately own or control a counterparty, traced through the chain rather than to the first corporate name. *(KA 1.3)*
 
 **Binding covenant** — The covenant crossed by the smallest common stress; identified by solving each covenant for the same stress variable, not by comparing ratio levels. *(KA 10.2)*
 
@@ -119,6 +131,8 @@
 **Breakeven rate / breakeven exchange rate** — The level at which a named covenant fails; a fact about the structure, not a forecast. *(KA 11.3)*
 
 **Breakeven translation** — Converting a ratio threshold into the input level that crosses it. *(KA 6.4)*
+
+**Business-day convention** — What happens when a scheduled date is not a business day in the named centres — following, modified following or preceding; it changes the accrual period and the payment date, and is a separate input from the day-count basis. *(KA 3.3)*
 
 **Buy-down** — A lump sum, usually applied to prepay debt, calibrated so the financing survives a permanently smaller plant. *(KA 14.4)*
   <br/>· *Also read at KA 5.4:* Payment applied to prepay debt so sized coverage is restored after a performance shortfall.
@@ -166,6 +180,8 @@
 
 **Certificate of satisfaction** — Numbered record of each condition, its evidence and its disposition, including waivers. *(KA 13.4)*
 
+**Certification chain** — Who produces the primary availability record, who certifies it, who may challenge, and within what window; it decides where the burden of proof sits. *(KA 7.1)*
+
 **Certification drift** — Progressive migration from milestone toward cost-incurred certification; converts secured lending into unsecured lending without a decision. *(KA 14.3)*
 
 **Certified spend** — Progress certified for payment; the basis of a draw request, lagging incurred cost. *(KA 8.2)*
@@ -178,6 +194,8 @@
 
 **CFADS tie** — `CFADS` = operating cash flow + interest paid, where interest is classified as operating. *(KA 6.2)*
 
+**Change-of-control consent** — The concession's or offtake's requirement that a change in the SPV's ownership be consented to; the reason security over shares delivers what the consents allow it to deliver. *(KA 5.2)*
+
 **Check block** — A dedicated output area computing every invariant as a difference that must be nil. *(KA 6.4)*
 
 **Circularity** — Interest depends on balance depends on drawings depends on interest; resolved by convention, iteration or algebra. *(KA 6.3)*
@@ -189,6 +207,8 @@
 **Close-cost budget** — Line-itemised transaction cost, reconciled to sources and uses; fixed component plus a proportional fee rate. *(KA 13.3)*
 
 **Close-cost premium** — The largely fixed excess of project-finance transaction costs over a corporate facility's; the source of the scale effect. *(KA 1.1)*
+
+**Closing set** — The diligence reports and reliance letters, disclosure index, Q-and-A log, finding registers, condition-precedent evidence, executed documents, funds-flow reconciliation and closing model with its audit report, retained together as one evidential set. *(KA 13.1)*
 
 **Commercial operations date (COD)** — Contractual start of operations: revenue, term debt and the operating covenant regime. *(KA 5.4)*
 
@@ -223,6 +243,8 @@
 
 **Confidence level (P50 / P80 / P95)** — The probability that the provision covers the aggregate outcome; a policy choice. *(KA 8.3)*
 
+**Confirmation of lawful grant** — The written legal confirmation, obtained before close, that support in the funding plan has been properly granted; a third-party condition precedent with a named owner, retained with the closing set. *(KA 9.4)*
+
 **Conflict of interest** — An interest that could bias judgment; declared, managed or declined. *(KA 1.3)*
 
 **Conjunction premium** — The excess of the expected close slip cost over the cost of the critical chain's own expected slip. *(KA 13.3)*
@@ -232,6 +254,8 @@
 **Consent register** — Every permission with authority, lead time, dependency, expiry, transferability and conditions. *(KA 5.3)*
 
 **Consistency rule** — One world per model; the two consistent treatments are identical to the cent, so a difference is an error and not a basis. *(KA 3.3)*
+
+**Contemporaneous records** — Site records, correspondence, programme updates and cost records maintained from the date of the event; the evidence quantum is proved on, as distinct from an argument assembled at claim stage. *(KA 12.4)*
 
 **Content requirement** — Minimum share of contract value sourced from the supporting country. *(KA 9.3)*
 
@@ -286,6 +310,8 @@
 
 **Currency mismatch** — Revenue and debt service in different currencies; unbounded and correlated with host-economy stress. *(KA 11.3)*
 
+**Custodian handover** — The recorded transfer of custody of a record set, as distinct from custody inherited by whoever now has access. *(KA 16.4)*
+
 **Cut-off** — Assigning a transaction to exactly one period. *(KA 2.4)*
 
 **Cybersecurity risk (project)** — Primarily an availability risk on the operational-technology network; a `CFADS` risk. *(KA 11.4)*
@@ -300,9 +326,13 @@
 
 **Day-count basis** — The contractual numerator and denominator for accruing interest; actual/360 is a `365/360` uplift on all interest. *(KA 3.3)*
 
+**Day-count variant** — The specific member of a day-count family the document names; "30/360" and "actual/actual" are families whose members accrue differently over the same period. *(KA 3.3)*
+
 **Daylight test** — Would full disclosure of interests leave the advice trusted? *(KA 1.3)*
 
 **Days sales outstanding (DSO)** — Receivables ÷ revenue × days in the convention; the collection period a covenant can be restated in. *(KA 2.3)*
+
+**Deadlock mechanism** — The route out of a refused reserved matter — escalation, casting vote, put/call, shoot-out or dissolution; a control term rather than a dispute clause, because the choice decides who effectively controls the vehicle. *(KA 5.2)*
 
 **Debt capacity** — `CFADS`/target `DSCR` × `AF(r, n)`; a function of cash, coverage, rate and tenor only. *(KA 10.1)*
 
@@ -315,6 +345,10 @@
 **Deduction / abatement regime** — Contractual reductions in payment for unavailability or quality failure; an uncapped, annually recurring exposure. *(KA 12.2)*
 
 **Deduction multiplier** — The factor applied to the availability shortfall; converts one operational point into more than one point of cash. *(KA 7.1)*
+
+**Deemed availability** — The value availability takes when it cannot be measured — deemed, estimated from a prior period, or nil; a term with the same cash consequence as the multiplier. *(KA 7.1)*
+
+**Default and dilution mechanic** — What follows a failure to fund a call: interest, suspension of voting rights, funding by the others, and dilution on a formula designed to make declining the expensive option. *(KA 5.2)*
 
 **Deferred annuity factor** — `AF(r, n) − AF(r, k)`; prices a level stream that starts after year `k`. *(KA 4.1)*
 
@@ -345,11 +379,15 @@
 
 **Distribution condition** — The coverage level above which cash may leave the structure at all (1.25× on Kestrel); usually the operative constraint in a healthy project. *(KA 10.4)*
 
+**Distribution confirmation** — The written confirmation, obtained for the specific distribution on the figures then current, that it remains lawful once the sustainable-service test has failed; separate from the finance documents' contractual lock-up test. *(KA 15.4)*
+
 **Distribution drought** — A run of periods generating cash that is not distributable; costs equity in cash and in timing. *(KA 15.2)*
 
 **Distribution lock-up** — Trapping equity cash when a test fails, short of default; on Kestrel the 1.15× trigger, operative only in a sick project. *(KA 10.4)*
 
 **Distribution-block account** — Where cash that fails a distribution test is held; a pre-funding mechanism, not a penalty. *(KA 15.2)*
+
+**Downgrade replacement obligation** — The requirement to replace a hedge counterparty whose credit standing falls below the level the finance documents specify — who replaces, within what period, at whose cost. *(KA 11.3)*
 
 **Draw request** — The certified application for funds: an arithmetic, an evidential and a representational claim. *(KA 14.1)*
 
@@ -365,9 +403,11 @@
 
 **Due diligence** — Evidenced pre-commitment examination of a project, reported in writing by identifiable authors. *(KA 13.1)*
 
+**Duty to correct** — The obligation to correct a number already relied on that is materially wrong, or was wrong when issued; not discharged by the figure having been superseded internally. *(KA 1.3)*
+
 ## E
 
-**EAV / EAC** — NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. *(KA 4.2)*
+**EAV** — NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. *(KA 4.2)*
 
 **EBIT** — Operating profit after depreciation; performance including capital consumption. *(KA 2.2)*
 
@@ -382,6 +422,8 @@
 **Effective sculpting rate r** — `r × (1 − T/λ)`; the rate at which a sculpted profile discounts once the interest tax shield feeds back into `CFADS`. *(KA 10.1)*
 
 **Elasticity** — Percentage change in an output per one per cent change in an input. *(KA 6.4)*
+
+**End-of-month rule** — Whether a schedule anchored on a month end continues to fall on month ends; recorded per instrument, not assumed. *(KA 3.3)*
 
 **Enforcement floor** — Net recovery from enforcing security and realising the asset; bounds every negotiation. *(KA 15.4)*
 
@@ -407,11 +449,15 @@
 
 **Escalation** — Input-price movement between base date and spend date; trade-specific, not general inflation. *(KA 8.2)*
 
+**Escalation trigger (distress)** — The failure of the sustainable-service test, which goes to the board and to counsel as a finding before any option is priced or discussed with a lender. *(KA 15.4)*
+
 **Escalation wedge** — Cumulative cash difference between a cost escalating at its own driver and the same cost escalating at the revenue index. *(KA 11.2)*
 
 **Estimate class** — The definitional maturity of an estimate, carrying a stated accuracy range. *(KA 8.1)*
 
 **Event of default** — Defined breach entitling lenders to remedies including acceleration. *(KA 10.4)*
+
+**Evidential set (model)** — Closing model, audit report and findings, provenance table, change log, reconciliation and AI-edit log, retained together because separating them destroys most of their value. *(KA 6.4)*
 
 **Exchange-rate-indexed share** — The portion of tariff linked to the exchange rate; the debt-service-matching share funds USD outflows. *(KA 11.3)*
 
@@ -420,6 +466,10 @@
 **Expected loss** — `PD × EAD × LGD`; linear in exposure, and therefore blind to concentration. *(KA 7.4)*
 
 ## F
+
+**Facilitation payment** — A small payment to secure a routine act the project is already entitled to; treated as a bribe by this book's professional standard, whatever it is called locally. *(KA 1.3)*
+
+**Failure to prevent** — The pattern, understood to exist in several jurisdictions, under which an organisation answers for bribery by an associated person; a leader should not assume that not knowing what the intermediary did will protect the organisation. Local application is a question for counsel. *(KA 1.3)*
 
 **Fatal condition** — A condition whose failure ends the project regardless of everything else. *(KA 5.1)*
 
@@ -493,11 +543,19 @@
 
 **Handback** — Transfer of the asset at concession end in a specified condition; the residual obligation and its reserve. *(KA 15.4)*
 
+**Handback provision** — The accounting recognition of the residual obligation, which unwinds over the concession and is remeasured on survey; it can move an accounting-based covenant with no cash moving. *(KA 15.4)*
+
 **Hard-coded constant** — An assumption typed inside a formula; invisible to review and immune to scenarios. *(KA 6.1)*
 
 **Headroom** — Cash that can be lost before a covenant threshold is crossed. *(KA 10.2)*
 
 **Hedge ratio** — Share of floating debt fixed by swap or cap; lenders covenant a minimum rather than a full hedge. *(KA 11.3)*
+
+**Hedge-accounting designation** — The documented designation that keeps mark-to-market movements out of profit and loss; framework- and jurisdiction-specific, confirmed with the reporting accountants before a hedge is transacted. *(KA 11.3)*
+
+**Hedging mandate** — The board-approved policy, agreed with lenders, within which a named officer may execute hedges; limits stated in figures, execution separated from confirmation. *(KA 11.3)*
+
+**Hedging strategy letter** — The statement of the hedging approach delivered to the agent where the facility requires it; part of the evidence set a reviewer should be able to find in one place. *(KA 11.3)*
 
 **Historic vs forward-looking test** — Measured on what happened vs on projection; which binds follows the slope of the cash profile, not the drafting. *(KA 10.4)*
 
@@ -565,6 +623,8 @@
 
 **LC-backed reserve** — A reserve satisfied by a letter of credit rather than cash; cheapest for the sponsor, and a substitution of bank credit risk for cash. *(KA 10.3)*
 
+**Legally available enforcement** — The qualification on the enforcement floor: whether security can be enforced, how quickly and on what terms is set by the applicable régime, and moratoria, court processes, service-continuity obligations, grantor step-in and the reopening of earlier payments can all move it. *(KA 15.4)*
+
 **Lender's cost-to-complete** — Money to completion on a commitment basis: remaining contract value + approved variations + assessed claim exposure + bottom-up owner scope + remaining financing costs. *(KA 14.2)*
 
 **Level annual charge** — Lumpy lifecycle PV converted to a level equivalent via `AF(r, n)` (Domain 4's `EAV`). *(KA 8.1)*
@@ -591,6 +651,8 @@
 
 **Local additive attribution** — An explanation of one output in the output's own units, reconciling to it. *(KA 16.3)*
 
+**Lock-in** — The period, usually through construction and beyond completion, in which shares may not be transferred, because the lenders' credit case rests on the sponsors who signed the support obligations. *(KA 5.2)*
+
 **Long-stop date** — Date after which commitments lapse; converts slippage into re-approval at today's market. *(KA 13.3)*
 
 ## M
@@ -614,6 +676,8 @@
 **Mark-to-market (swap)** — The break cost of terminating a hedge early — an exposure a swap creates rather than removes. *(KA 11.3)*
 
 **Market flex** — Contractual right to change specified terms to achieve syndication; capped, often ordered, sometimes reversible. *(KA 13.4)*
+
+**Materiality (for correction)** — Judged against the decision the recipient took or is about to take, not against the size of the arithmetic; treated as material until someone senior decides otherwise in writing. *(KA 1.3)*
 
 **Materiality threshold** — The stated size below which a difference is not a finding; best expressed in the transaction's own metric (0.01× of `DSCR`). *(KA 13.2)*
 
@@ -640,6 +704,8 @@
 **Model audit** — Independent review of a model against the transaction documents, its own logic and its arithmetic (Domain 6, KA 6.4.3). *(KA 13.2)*
   <br/>· *Also read at KA 6.4:* Independent review against documents, logic and arithmetic; a lenders' condition precedent.
 
+**Model custody** — Who may open the authoritative file read-write, who releases copies, and what happens to that custody on a personnel change. *(KA 6.4)*
+
 **Model inventory** — Every model in use, with purpose, owner, dependencies, decisions touched and tier. *(KA 16.3)*
 
 **Money multiple** — Total distributions ÷ equity contributed; a horizon-blind measure. *(KA 6.3)*
@@ -654,6 +720,8 @@
 
 ## N
 
+**Named custodian** — The person who holds a record set after the transaction team disperses, with custody transferred by recorded handover rather than inherited. *(KA 13.1)*
+
 **Natural hedge** — Borrowing in the currency of revenue; its price is the margin forgone. *(KA 9.3)*
 
 **Negative arbitrage** — Cost of holding fully drawn bond proceeds at deposit rates below the coupon. *(KA 9.2)*
@@ -665,6 +733,8 @@
 **Nominal / real rate** — Money-terms rate / purchasing-power rate; linked by Fisher. *(KA 3.3)*
 
 **Nominal rate / EAR** — Quoted annual rate with compounding frequency / its once-a-year equivalent; `EAR ≥ i_nom` always. *(KA 3.2)*
+
+**Notice as a condition precedent** — The common position under standard forms that valid, timely notice is a precondition of entitlement, so an unnotified claim can be worth nothing regardless of merit; whether and how it operates is for counsel on the executed contract. *(KA 12.4)*
 
 **NPV** — Σ discounted cash flows − investment; the primary value measure. *(KA 4.1)*
 
@@ -698,6 +768,8 @@
 
 **Outstanding balance B_k** — `A × AF(r, n − k)`; the PV of the payments that remain, and the prepayment base. *(KA 3.2)*
 
+**Over-hedging** — A notional exceeding the exposure it hedges — characteristically a flat notional against a declining balance; under a mandate it is a breach and a rate position, not an inefficiency. *(KA 11.3)*
+
 **Owner's vs contractor's contingency** — Only the owner's is drawable by the project; the contractor's is inside the price. *(KA 8.3)*
 
 ## P
@@ -710,7 +782,11 @@
 
 **Pass-through share φ** — Contractual share of an input-price movement recovered in revenue; multiplies coverage tolerance by 1/(1 − `φ`). *(KA 11.2)*
 
+**Pay-then-argue mechanism** — A deduction regime under which amounts are applied pending resolution, so a contested operational judgment becomes an immediate coverage event before anyone has ruled on it. *(KA 7.1)*
+
 **Payback / discounted payback** — Years for cumulative (discounted) inflows to repay `I₀`; exposure measures. *(KA 4.2)*
+
+**Payment-route record** — Which entity was paid, in which jurisdiction, into an account in whose name, against what invoice — with the approved reason for any departure. *(KA 1.3)*
 
 **PD / EAD / LGD** — Probability of default over a stated horizon · exposure when it occurs · proportion not recovered. *(KA 7.4)*
 
@@ -726,9 +802,15 @@
 
 **PLCR** — PV of `CFADS` to end of project life ÷ debt outstanding; counts the tail. *(KA 10.2)*
 
+**Politically exposed person** — Someone entrusted with a prominent public function, with their close associates and family; a status that raises the standard of enquiry, never a finding of wrongdoing. *(KA 1.3)*
+
 **Post-close undertaking** — A condition converted into a dated covenant surviving close. *(KA 13.3)*
 
 **Praecipium** — The arranger's exclusive share of the arrangement fee; the price of structuring and underwriting. *(KA 13.4)*
+
+**Pre-emption** — The requirement that a selling shareholder first offer its shares to the others at a price set by a stated mechanism. *(KA 5.2)*
+
+**Prescribed handback security** — Decommissioning or handback security whose form, timing and quantum are set by statute or a regulator rather than negotiated; where it applies, the deferral argument does not. *(KA 15.4)*
 
 **Present value PV(x)** — Today's worth of a future amount at discount rate `r`. *(KA 3.1)*
 
@@ -743,6 +825,8 @@
 **Prolongation cost** — Time-related cost of delay, ideally at a pre-agreed daily rate. *(KA 12.4)*
 
 **Provision / contingent liability** — Recognised (present obligation, probable, estimable) vs disclosed. *(KA 2.3)*
+
+**Public sector comparator** — The constructed, costed counterfactual of delivering the same service conventionally, against which the concession route is compared; a model the authority owns and the bidder cannot verify. *(KA 4.3)*
 
 ## R
 
@@ -760,6 +844,8 @@
 
 **Recourse sentence** — The three-limbed statement of sponsor support: who stands behind what, until when, capped at what. *(KA 1.1)*
 
+**Recovery exposure (support)** — The funding-plan risk that improperly granted support is recovered from the project company with interest — a hole in the plan rather than a grantor problem. *(KA 9.4)*
+
 **Red-flag memorandum** — An early partial deliverable that lets findings be acted on inside the envelope. *(KA 13.1)*
 
 **Refinancing** — Replacement of a facility priced for a risk since retired; value comes from margin, tenor and covenant reset together. *(KA 15.3)*
@@ -767,6 +853,8 @@
 **Refinancing gain** — PV of improved terms, net of costs; decomposed into rate and extension components. *(KA 9.4)*
 
 **Reinvestment assumption** — NPV assumes interim cash earns `r`; IRR assumes it earns the IRR. *(KA 4.1)*
+
+**Related-party instrument** — Cover provided by an entity in a sponsor's group; counted only once the arm's-length test, the disclosure and the approving body are recorded. *(KA 12.3)*
 
 **Repayment holiday (grace)** — Interest-only periods followed by amortisation over the shortened remainder; concentrates rather than reduces service. *(KA 3.2)*
 
@@ -778,7 +866,9 @@
 
 **Reserve tolerance** — `1 − DS × (1 − m/12) ÷ CFADS`; the single-year `CFADS` shortfall a reserve of `m` months survives — 6.5393 points per month on Kestrel, at 417,470 of funded cash each. *(KA 10.3)*
 
-**Responsible-AI principle** — AI proposes; the professional verifies, decides, remains accountable. *(KA 1.3)*
+**Reserved matter** — A decision the board may not take alone, requiring a stated shareholder majority or a named holder's consent; the list is a risk-allocation document, and the threshold decides who holds the veto. *(KA 5.2)*
+
+**Responsible-AI principle** — AI proposes; the professional verifies, decides and remains accountable. *(KA 1.3)*
 
 **Restated sources and uses** — The close statement re-expressed at a data date into drawn, remaining and available columns; a test rather than an identity. *(KA 14.1)*
 
@@ -787,6 +877,10 @@
 **Retained residue** — The register left after allocation — the thing contingency and reserves are sized against. *(KA 11.1)*
 
 **Retention / retention bond** — Percentage withheld from certifications, capped and released in tranches; a bond substitutes bank credit for the withholding. *(KA 14.3)*
+
+**Retention horizon** — The longest of the facility's life and tail, the applicable limitation period and any statutory tax, accounting or regulatory requirement; jurisdiction-specific, established rather than assumed. *(KA 13.1)*
+
+**Retention horizon (AI trail)** — The longest of the applicable limitation period, the facility's life and tail, and any statutory requirement the organisation has established; jurisdiction-specific and established rather than assumed. *(KA 16.4)*
 
 **Revalidation interval** — Tolerance for accumulated expected loss ÷ annual `EMV`, capped by policy. *(KA 16.3)*
 
@@ -808,6 +902,10 @@
 
 ## S
 
+**Same-obligor aggregate** — The total of every obligation resting on one group balance sheet — guarantee, equity commitment, contingent equity, cost-overrun undertaking, cash call, other projects' guarantees; the number the risk-adjusted total conceals. *(KA 12.3)*
+
+**Sanctions screening** — Checking parties and their ownership against applicable designations — at close and on change of control, as a repeated control rather than a one-off. *(KA 1.3)*
+
 **Scenario coverage** — `1 − (1 − p)ᵏ`: the chance `k` scenarios contain a mode of probability `p`. *(KA 16.2)*
 
 **Scope layers** — Arithmetic · structure · documents · assumptions and provenance; the expensive errors sit in the last two. *(KA 13.2)*
@@ -815,6 +913,8 @@
 **Sculpting** — Setting each period's debt service to hold coverage constant against uneven cash. *(KA 10.1)*
 
 **Settlement ceiling** — Present value of fighting less negotiation cost; the rational maximum to settle at. *(KA 12.4)*
+
+**Settlement lock** — The rule that settling a deduction claim which moves a covenant ratio is not a purely operational decision; it is checked against the finance documents before it is offered. *(KA 7.1)*
 
 **Several liability** — Each sponsor owes only its own share; joint and several exposes each to the whole. *(KA 5.2)*
 
@@ -850,9 +950,13 @@
 
 **Stepped damages** — Delay damages that rise through the programme to match a rising exposure. *(KA 8.4)*
 
+**Stop rule** — Where a red flag is unresolved the leader does not proceed pending written clearance: no payment, no signature, no certification. *(KA 1.3)*
+
 **Subordinated shareholder loan** — Sponsor funding as ranked debt; may create a tax shield, dangerous if mis-ranked. *(KA 9.1)*
 
 **Subordination** — Junior claims paid only after senior tests pass. *(KA 10.3)*
+
+**Subsidy-control régime** — The régime, where one applies, governing whether public support may be given; its existence, scope and consequences are jurisdiction-specific and are a question for counsel. *(KA 9.4)*
 
 **Sunk cost** — Spend that no decision can avoid; excluded from every appraisal flow. *(KA 4.1)*
 
@@ -885,6 +989,8 @@
 
 **Timeline flags** — Mutually exclusive period markers (construction, operations, loan life, tail) that calculations multiply by. *(KA 6.1)*
 
+**Tipping off** — Alerting the subject of a suspicion or a report; a serious professional failure, restricted in many jurisdictions, and fatal to the enquiry in all of them. *(KA 1.3)*
+
 **Tolerance** — The fall in a named driver that takes coverage to a threshold; the operational form of headroom. *(KA 7.3)*
 
 **Top-up / restoration** — Application of cash to restore a reserve to its required balance; ranks above distributions. *(KA 15.2)*
@@ -894,6 +1000,8 @@
 **Total misclassification cost** — `FP` × false-positive cost + `FN` × false-negative cost; the objective to minimise. *(KA 16.1)*
 
 **Trigger in driver units** — A ratio threshold restated in availability points, volume or unit cost. *(KA 15.1)*
+
+**Two-approval problem** — A decision needing both a shareholder approval and a lender or agent consent, on different timetables and with different consequences for failure. *(KA 5.2)*
 
 **Two-part tariff** — Capacity charge plus variable charge; separates fixed-cost recovery from output. *(KA 7.1)*
 
@@ -909,9 +1017,13 @@
 
 **Unrecovered advance** — Cash paid for value not yet received; a prepayment asset that reconciles with the opposite sign. *(KA 2.4)*
 
+**Unretained model** — A model whose audit trail cannot be produced in readable form once the platform that ran it has been replaced; a finding, not a housekeeping note. *(KA 16.4)*
+
 **Use-of-proceeds instrument** — Green bond or loan; proceeds restricted to eligible assets. *(KA 9.4)*
 
 ## V
+
+**Value for money (grantor's test)** — Whether the concession route delivers better risk-adjusted whole-life value than a conventionally procured alternative; a comparison of cost streams, not of return. *(KA 4.3)*
 
 **Variation / compensation event** — Instructed change; or an occurrence granting time and/or money without breach. *(KA 12.4)*
 
@@ -920,6 +1032,8 @@
 **Verifying a number vs a claim** — Recomputation by an independent route; versus tracing an assertion to a source that exists. *(KA 1.3)*
 
 **Vesting certificate** — Instrument transferring title in off-site materials to the SPV; with segregation and insurance, the condition of any off-site certification. *(KA 14.3)*
+
+**Veto map** — The arithmetic of the reserved-matter thresholds: for each holder, the matters it can block alone. *(KA 5.2)*
 
 **Viability gap funding** — Capital grant sized to make an otherwise unfinanceable project viable. *(KA 9.4)*
 

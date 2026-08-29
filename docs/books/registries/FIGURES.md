@@ -2,11 +2,11 @@
 
 **Rule:** every visual in either book is registered here with its number, title, source, alt text and
 cross-reference before its chapter passes gate. All artwork is **PCI original** (or licensed, with the
-licence recorded); style follows the PCP-AI figure standard: clean, professional, brand blue `#1D4ED8`,
+licence recorded); style follows the PCL-AI figure standard: clean, professional, brand blue `#1D4ED8`,
 labelled axes/series with sample values, accessible contrast, no decorative clutter, no text embedded in
 raster images (Arabic/RTL readiness), SVG masters in `docs/books/<book>/build/figures/`.
 
-Numbering: `Fig D.K.n` within each book (the PCP-AI scheme); the two books number independently.
+Numbering: `Fig D.K.n` within each book (the PCL-AI scheme); the two books number independently.
 Figure **specs** live in the manuscript as `> **Fig D.K.n — Title.**` blockquotes (data + render-ready
 description); the build injects the rendered SVG and hides the spec in print. Digital-only animation
 storyboards are marked "digital-only".

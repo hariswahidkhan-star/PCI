@@ -1,6 +1,6 @@
 # Domain 1 — Foundations of Accounting · Narration Script
 
-**PCP-AI Lecture Series · Project Controls Institute**
+**PCL-AI Lecture Series · Project Controls Institute**
 
 *The word-for-word narration behind each slide of the animated Domain 1 lecture — for recording a voiceover or presenting live. One slide advances one build at a time; the narration is written to be read at a natural pace (~110–130 words per minute), giving a full lecture of roughly 50–55 minutes. Timings are indicative. Pair each block with the matching slide of `Domain-01-Foundations-slides.pdf` or the live animated deck.*
 
@@ -8,7 +8,7 @@
 
 ### Slide 01 · Foundations of Accounting
 
-Welcome. This is Domain 1 of the PCP-AI programme — the foundations of accounting, taught for project-controls professionals. Not to make you an accountant, but so that every cost report, earned-value curve and forecast you produce is grounded in the record it ultimately comes from. Press the right arrow, or the space bar, to advance — the slides build one step at a time, at your pace.
+Welcome. This is Domain 1 of the PCL-AI programme — the foundations of accounting, taught for project-controls professionals. Not to make you an accountant, but so that every cost report, earned-value curve and forecast you produce is grounded in the record it ultimately comes from. Press the right arrow, or the space bar, to advance — the slides build one step at a time, at your pace.
 
 ### Slide 02 · Paced by you, one idea at a time
 
@@ -124,7 +124,7 @@ Coding is also where AI earns its place — carefully. Two capabilities are genu
 
 Step back and see the through-line. One ledger, built from the equation and double-entry. It becomes four statements that articulate. Timing — accrual and matching — decides which period a cost belongs to. Judgement — provisions under IAS 37 — handles the costs you know are coming. And cost coding threads it all onto the work breakdown so a project-controls professional can actually use it. Five Knowledge Areas, one connected system.
 
-### Slide 28 · “AI proposes; the professional disposes.”
+### Slide 28 · “AI proposes; the professional verifies, decides and remains accountable.”
 
 That completes Domain 1. Next is Domain 2 — financial reporting and the standards — where these foundations meet IFRS in depth, including IFRS 15 and how revenue is recognised on a construction contract. Thank you.
 

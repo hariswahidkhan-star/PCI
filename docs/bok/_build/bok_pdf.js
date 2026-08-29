@@ -13,7 +13,7 @@ const [inHtml, outPdf] = process.argv.slice(2);
     printBackground: true,
     margin: { top: '20mm', bottom: '18mm', left: '18mm', right: '18mm' },
     displayHeaderFooter: true,
-    headerTemplate: '<div style="font-size:7pt;color:#94a3b8;width:100%;padding:0 16mm;font-family:sans-serif;">PCP‑AI Body of Knowledge — v1 (draft for SME verification)</div>',
+    headerTemplate: '<div style="font-size:7pt;color:#94a3b8;width:100%;padding:0 16mm;font-family:sans-serif;">PCL‑AI Body of Knowledge — v1 (draft for SME verification)</div>',
     footerTemplate: '<div style="font-size:7pt;color:#94a3b8;width:100%;padding:0 16mm;text-align:center;font-family:sans-serif;">Project Controls Institute &nbsp;·&nbsp; Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>',
   });
   await browser.close();

@@ -7,6 +7,7 @@ worked-example panels, figure injection, generated contents + index) → WeasyPr
 
 Usage:  python3 build_book.py pml-ai|pfl-ai [output.pdf]
 """
+import math
 import pathlib
 import re
 import sys
@@ -15,6 +16,253 @@ import markdown
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
+STANDARDS_DIR = ROOT / "laws"
+
+# The one stylesheet for the whole publication family (docs/books/_build/DESIGN_SYSTEM.md).
+# The Standards volume and the programme reports read it and append only their own cover, and
+# docs/bok/build/print.css imports it, so the four volumes cannot drift apart again.
+HOUSE_CSS = HERE / "print.css"
+
+# Every page is set in British English: hyphenation is off without a language, and a justified
+# measure without hyphenation is a page full of rivers.
+LANG = "en-GB"
+
+
+# =================================================================================================
+# Shared house-style transforms. Imported by the other builders in the family — keep them
+# side-effect free.
+# =================================================================================================
+
+# Pictographic markers are forbidden in a published page (DESIGN_SYSTEM.md sections 5 and 7). A
+# tick, a hexagon or a warning triangle is a glyph-availability liability — it renders as a box in
+# whichever environment lacks it, which is worse than no marker — and none of them says anything
+# the written label beside it does not. Swept at render time because the corpus is owned elsewhere.
+# Arrows, mathematical operators and box-drawing characters are NOT pictographs: they carry
+# meaning in formulas, process chains and ASCII diagrams, and they stay.
+_ICONS = (
+    "✅❌✔✖✘✓✗☑☒☐"   # ticks, crosses, ballot boxes
+    "⬛⬜⬢⬣✦✧⚠⛔⭐"          # blocks, hexagons, warning, star
+    "■▪●○▶◆❖"                      # geometric markers
+    "️︎"                                                    # emoji variation selectors
+)
+_ICON_RE = re.compile("[" + _ICONS + "]|[\U0001F000-\U0001FAFF]")
+# The section sign is gone from the corpus: it belongs to statutory drafting, which is a register
+# these volumes deliberately do not borrow, and it renders as a blank box wherever the font lacks
+# it. Cross-references are written as words ("Charter section 5"). This pattern stays as a backstop
+# so a reintroduced sign is stripped at render time rather than reaching a printed page — it catches
+# both the sign standing alone before an identifier and the sign heading a call-out label.
+_MARKER_SECTION_RE = re.compile(r"[·|]?\s*§(?=\s*(?:<|$))|§\s*(?=(?:PCI\s+STANDARD|EXTERNAL|CAUTION)\b)")
+
+
+_PRE_RE = re.compile(r"<pre\b.*?</pre>", re.S)
+
+
+def sweep_icons(html: str, label: str = "") -> str:
+    """Strip pictographic markers and orphaned call-out section signs from rendered HTML.
+
+    Preformatted blocks are swept for glyphs but never re-spaced: their whitespace is the
+    diagram.
+    """
+    n = len(_ICON_RE.findall(html)) + len(_MARKER_SECTION_RE.findall(html))
+
+    def tidy(chunk: str) -> str:
+        chunk = _MARKER_SECTION_RE.sub("", chunk)
+        chunk = _ICON_RE.sub("", chunk)
+        # Tidy what the removal leaves behind: doubled spaces, a space before punctuation, and a
+        # separator dot left dangling at the end of a cell or a sentence.
+        chunk = re.sub(r"[ \t]{2,}", " ", chunk)
+        chunk = re.sub(r" +([.,;:)\]])", r"\1", chunk)
+        chunk = re.sub(r"\s*[·|]\s*(?=</)", "", chunk)
+        chunk = re.sub(r"\(\s*\)", "", chunk)
+        chunk = re.sub(r"[ \t]+(</(?:p|td|th|li|div|span|strong|em|h[1-6])>)", r"\1", chunk)
+        chunk = re.sub(r"(<(?:p|td|th|li)(?:\s[^>]*)?>)[ \t]+", r"\1", chunk)
+        return chunk
+
+    out, at = [], 0
+    for m in _PRE_RE.finditer(html):
+        out.append(tidy(html[at:m.start()]))
+        out.append(_ICON_RE.sub("", m.group(0)))
+        at = m.end()
+    out.append(tidy(html[at:]))
+    if label:
+        print(f"pictographic markers removed [{label}]: {n}")
+    return "".join(out)
+
+
+_TAG_RE = re.compile(r"<[^>]+>")
+_CELL_RE = re.compile(r"<(t[dh])(\s[^>]*)?>(.*?)</\1>", re.S)
+_ROW_RE = re.compile(r"<tr(?:\s[^>]*)?>(.*?)</tr>", re.S)
+
+
+def _cell_text(html: str) -> str:
+    t = _TAG_RE.sub("", html)
+    return re.sub(r"&[a-z]+;|&#\d+;", " ", t).strip()
+
+
+def _is_numeric(text: str) -> bool:
+    """A cell reads as a number when digits carry it and at most a unit or two rides along."""
+    if not text:
+        return False
+    digits = sum(c.isdigit() for c in text)
+    letters = sum(c.isalpha() for c in text)
+    return digits > 0 and letters <= 3 and digits >= letters
+
+
+def tag_table_columns(html: str, label: str = "") -> str:
+    """Right-align numeric columns on tabular figures, and spare all-caps headers small caps.
+
+    Real small caps need lowercase input: a header already set in capitals would be rendered by
+    the `smcp` feature as full capitals at header size, which is not what the design asks for.
+    Those headers are tagged `nosc` and set in lining figures instead.
+    """
+    numeric_cols = 0
+
+    def do_table(tm):
+        nonlocal numeric_cols
+        table = tm.group(0)
+        rows = _ROW_RE.findall(table)
+        if len(rows) < 2:
+            return table
+        body = []
+        for r in rows:
+            cells = _CELL_RE.findall(r)
+            if cells and all(c[0] == "td" for c in cells):
+                body.append([_cell_text(c[2]) for c in cells])
+        if len(body) < 2:
+            return table
+        width = max(len(r) for r in body)
+        numeric = set()
+        for col in range(width):
+            vals = [r[col] for r in body if col < len(r) and r[col]]
+            if len(vals) >= 2 and sum(_is_numeric(v) for v in vals) >= 0.7 * len(vals):
+                numeric.add(col)
+        if numeric:
+            numeric_cols += len(numeric)
+
+        def do_row(rm):
+            i = [0]
+
+            def do_cell(cm):
+                tag, attrs, inner = cm.group(1), cm.group(2) or "", cm.group(3)
+                col = i[0]
+                i[0] += 1
+                classes = []
+                if col in numeric:
+                    classes.append("num")
+                # An identifier cell stays whole. Bounded to short strings, so a long path in a
+                # cell still wraps and can never push a table past the measure.
+                txt_c = _cell_text(inner)
+                if "<code>" in inner and 2 < len(txt_c) <= 22 and " " not in txt_c:
+                    classes.append("id")
+                if tag == "th":
+                    txt = _cell_text(inner)
+                    if len(txt) > 3 and txt == txt.upper() and any(c.isalpha() for c in txt):
+                        classes.append("nosc")
+                if not classes:
+                    return cm.group(0)
+                if 'class="' in attrs:
+                    attrs = attrs.replace('class="', 'class="' + " ".join(classes) + " ", 1)
+                else:
+                    attrs += f' class="{" ".join(classes)}"'
+                return f"<{tag}{attrs}>{inner}</{tag}>"
+
+            return "<tr" + (rm.group(0)[3:rm.group(0).index(">")]) + ">" + \
+                _CELL_RE.sub(do_cell, rm.group(1)) + "</tr>"
+
+        return _ROW_RE.sub(do_row, table)
+
+    out = re.sub(r"<table(?:\s[^>]*)?>.*?</table>", do_table, html, flags=re.S)
+    if label:
+        print(f"numeric table columns aligned [{label}]: {numeric_cols}")
+    return out
+
+
+def strip_pandoc_default_css(html: str) -> str:
+    """Remove the stylesheet pandoc's standalone template injects into <head>.
+
+    It sets `body { max-width: 36em; padding: 50px }`, a print-media `font-size: 12pt`, its own
+    paragraph margins and its own table rules. Because it lives in the document it wins over the
+    stylesheet passed to WeasyPrint for every property that stylesheet does not explicitly set,
+    which is how a designed page ends up as a 36-em column adrift on A4.
+    """
+    out = re.sub(r"<style>(?:(?!</style>).)*?max-width:\s*36em(?:(?!</style>).)*?</style>",
+                 "", html, flags=re.S)
+    if out != html:
+        print("pandoc default stylesheet removed")
+    return out
+
+
+_TOC_RE = re.compile(r'<(h1|h2|h3|div)\b([^>]*?)data-toc="([12])"([^>]*?)>(.*?)</\1>', re.S)
+
+
+def build_toc(body_html: str, relabel: dict | None = None) -> str:
+    """The family's table of contents, generated from the assembled body.
+
+    Anything that carries `data-toc="1"` or `"2"` earns a contents line, so every part of a volume
+    that carries a running head is also findable from the front: domains and Knowledge Areas, the
+    standards, the appendices, the glossary and the index. `relabel` maps an element id to the text
+    that should be used instead — a chapter's own heading is its title alone, and a contents line
+    reading "Cost, Schedule and Contingency Integration" tells the reader nothing about which
+    domain it is.
+    """
+    relabel = relabel or {}
+    items = []
+    for m in _TOC_RE.finditer(body_html):
+        hid = re.search(r'id="([^"]+)"', m.group(2) + m.group(4))
+        if not hid:
+            continue
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(5))).strip()
+        if hid.group(1) in relabel:
+            text = f"{relabel[hid.group(1)]} — {text}"
+        items.append((m.group(3), hid.group(1), text))
+    out, open_sub = ['<nav id="TOC"><ul>'], False
+    for lvl, hid, text in items:
+        if lvl == "1":
+            if open_sub:
+                out.append("</ul></li>")
+            out.append(f'<li><a href="#{hid}">{text}</a><ul>')
+            open_sub = True
+        else:
+            out.append(f'<li><a href="#{hid}">{text}</a></li>')
+    if open_sub:
+        out.append("</ul></li>")
+    out.append("</ul></nav>")
+    print(f"contents lines: {len(items)} ({sum(1 for i in items if i[0] == '1')} top level)")
+    return "".join(out)
+
+
+def normalise_list_indent(md: str) -> tuple:
+    """Re-indent 3-space list continuations to 4 so nested tables stay inside their list item.
+
+    The manuscripts indent content under a numbered step by three spaces. python-markdown needs
+    four: at three, a table under step 4 terminates the list, and step 5 opens a fresh <ol> that
+    restarts at 1. A five-step worked example then prints 1, 2, 3, 4, 1. The source convention is
+    perfectly readable and is used consistently, so this normalises at build time rather than
+    re-indenting several thousand lines of manuscript.
+    """
+    out, fixed, in_list, in_fence = [], 0, False, False
+    for line in md.split("\n"):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+        if in_fence:
+            out.append(line)
+            continue
+        if re.match(r"^\s{0,3}(?:\d+\.|[-*+])\s+\S", line):
+            in_list = True
+        elif in_list and line.strip() == "":
+            pass                                   # a blank line may still be inside the item
+        elif in_list and re.match(r"^ {3}(?! )\S", line):
+            line = " " + line                      # 3 -> 4, keeping the item open
+            fixed += 1
+        elif in_list and not line.startswith(" "):
+            in_list = False                        # unindented prose closes the list
+        out.append(line)
+    return "\n".join(out), fixed
+
+
+def house_style(html: str, label: str = "") -> str:
+    """The passes every PCI volume gets, whatever built it."""
+    return tag_table_columns(sweep_icons(strip_pandoc_default_css(html), label), label)
 
 BOOKS = {
     "pml-ai": {
@@ -22,6 +270,16 @@ BOOKS = {
         "run_title": "PCI PML-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI Project Management Leader – AI<br/>"
                      "Leadership · delivery systems · governance · the governed use of AI"),
+        # Cover. The credential line is the approved public name of the credential — the same
+        # wording as the inner title page, which is the whole point of keeping them in one config.
+        "cover": {
+            "code": "PML-AI",
+            "credential": "The reference for the PCI Project Management Leader – AI",
+            "themes": "Leadership · delivery systems · governance · the governed use of AI",
+            "chart": "paths",
+        },
+        # Certification standard set appended as back matter (skipped silently when not yet authored).
+        "laws_file": "PML_AI_STANDARDS.md",
         # (part number, title, description, domain range) — a divider is emitted only where the
         # part's lowest-numbered EXISTING domain is found, so parts appear as authorship reaches them.
         "parts": [
@@ -44,6 +302,13 @@ BOOKS = {
         "run_title": "PCI PFL-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI AI Project Finance Leader<br/>"
                      "Project economics · structuring · financial mathematics · the governed use of AI"),
+        "cover": {
+            "code": "PFL-AI",
+            "credential": "The reference for the PCI AI Project Finance Leader",
+            "themes": "Structuring · modelling · coverage · the governed use of AI",
+            "chart": "coverage",
+        },
+        "laws_file": "PFL_AI_STANDARDS.md",
         "parts": [
             (1, "Part One", "Foundations",
              "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
@@ -93,14 +358,14 @@ FRONT = """
 <div class="frontmatter">
   <h2 style="page-break-before: always;">Status of this draft</h2>
   <p>This is a <strong>complete first draft</strong> of all {domains} domains of this volume, produced
-  under the phase-gated programme recorded in <code>docs/books/</code>. It is <strong>not a released
+  under the Institute's phase-gated authoring programme. It is <strong>not a released
   PCI publication</strong>: it carries no entitlement, syllabus or examination status, and the
   released edition will carry the full copyright, disclaimer and notices of the PCI book family.</p>
   <p><strong>What has been verified.</strong> Every number printed in this volume as a result — in
   worked examples, in-text calculations, multiple-choice options, exercise solutions and case studies
-  — is recomputed independently with decimal arithmetic by the golden-answer suite
-  (<code>_build/verify_formulas.py</code>), which must pass in full before any domain passes gate. All
-  figures are PCI-original artwork generated from source in <code>_build/figures_src/</code>. No text,
+  — is recomputed independently with decimal arithmetic by the Institute's golden-answer verification
+  suite, which must pass in full before any domain passes gate. All
+  figures are PCI-original artwork generated from source specifications maintained by the Institute. No text,
   table, diagram, question or distinctive structure from any other publisher or certification body is
   reproduced; public standards are discussed and cited by name without reproducing their content. All
   organisations, projects and cases are fictitious.</p>
@@ -172,6 +437,205 @@ FRONT = """
 """
 
 
+# The one cover design in the family. Every volume fills the same five slots; nothing else about a
+# cover is a decision anyone makes twice.
+COVER = """
+<div class="cover">
+  <div class="coverhead">
+    <div class="coverkicker">Project Controls Institute Global</div>
+    <div class="covercode">{code}</div>
+    <div class="coverbook">{book}</div>
+    <div class="coverrule"></div>
+    <div class="covercred">{credential}</div>
+    <div class="coverthemes">{themes}</div>
+  </div>
+  <div class="coverband">{chart}</div>
+  <div class="coverfoot">
+    <div class="coverprinciple">{principle}</div>
+    <div class="coverbadge"><span class="cbmain">{badge}</span>
+    <span class="cbsub">{badgesub}</span></div>
+    <div class="covertag">{tag}</div>
+  </div>
+</div>
+"""
+
+COVER_DEFAULTS = {
+    "book": "Body of Knowledge",
+    "principle": "AI proposes; the professional verifies,<br/>decides and remains accountable.",
+    "badge": "First edition — draft",
+    "badgesub": "For editorial and technical review · not for release or distribution",
+    "tag": "Finance intelligently. Control predictively. Deliver successfully.",
+}
+
+
+def cover_html(**fields) -> str:
+    """Fill the family cover. Unstated slots take the family default."""
+    return COVER.format(**{**COVER_DEFAULTS, **fields})
+
+# Cover artwork. Inline SVG rather than a bitmap so the cover stays vector at any size, and so the
+# label colours are readable here in the source: everything on the cover band is light ink on the
+# forest field, which is what the "debt service" label failed to be in the reviewed draft.
+# The device is drawn in the two inks the cover type already uses — the cover of a professional
+# body's reference is a title, not a poster, and one accent means one accent.
+COVER_INK = "#F2EFE7"        # primary label ink on the forest field — always light
+COVER_DIM = "#9DB3A5"        # secondary label ink
+COVER_BAR = "#5C8A72"        # the mark itself
+COVER_HOT = "#F2EFE7"        # the one emphasised element, in the primary ink
+
+
+def _chart_coverage() -> str:
+    """PFL: cash available against a debt-service line — the gap above the line is the headroom.
+
+    The plot stops well short of the right edge so the debt-service line's label sits in clear
+    field, in light ink: on the reviewed draft that label was dark-on-dark and simply disappeared.
+    """
+    vals = [100, 96, 92, 88, 84, 80, 76, 72, 68, 52]
+    x0, base, bw, gap, scale = 34.0, 244.0, 30.0, 16.0, 1.78
+    line = base - 60 * scale                      # the debt-service line
+    plot_r = x0 + len(vals) * (bw + gap) - gap    # right edge of the bars
+    bars = []
+    for i, v in enumerate(vals):
+        x = x0 + i * (bw + gap)
+        h = v * scale
+        fill = COVER_HOT if i == len(vals) - 1 else COVER_BAR
+        bars.append(f'<rect x="{x:.1f}" y="{base - h:.1f}" width="{bw}" height="{h:.1f}" fill="{fill}"/>')
+    # Headroom bracket on one bar, so the strapline has something to point at.
+    bx = x0 + 2 * (bw + gap) + bw / 2
+    top = base - vals[2] * scale
+    bars.append(f'<line x1="{bx:.1f}" y1="{top:.1f}" x2="{bx:.1f}" y2="{line:.1f}" '
+                f'stroke="{COVER_INK}" stroke-width="1.8"/>')
+    bars.append(f'<path d="M{bx - 4:.1f} {top + 6:.1f} L{bx:.1f} {top:.1f} L{bx + 4:.1f} {top + 6:.1f}" '
+                f'fill="none" stroke="{COVER_INK}" stroke-width="1.8"/>')
+    bars.append(f'<path d="M{bx - 4:.1f} {line - 6:.1f} L{bx:.1f} {line:.1f} L{bx + 4:.1f} {line - 6:.1f}" '
+                f'fill="none" stroke="{COVER_INK}" stroke-width="1.8"/>')
+    # The label clears the tallest bar, not just its own: at bx it sat on the top edge of the two
+    # bars beside it.
+    bars.append(f'<text x="{bx:.1f}" y="{base - max(vals) * scale - 12:.1f}" font-size="15" '
+                f'fill="{COVER_INK}" font-family="Linux Biolinum O" '
+                f'text-anchor="middle">headroom</text>')
+    return (
+        '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
+        + "".join(bars)
+        + f'<line x1="24" y1="{line:.1f}" x2="{plot_r + 10:.1f}" y2="{line:.1f}" stroke="{COVER_INK}" '
+          f'stroke-width="2.2" stroke-dasharray="10 7"/>'
+        + f'<text x="{plot_r + 18:.1f}" y="{line + 5:.1f}" font-size="15" fill="{COVER_INK}" '
+          f'font-family="Linux Biolinum O" letter-spacing="0.6">debt service</text>'
+        + f'<text x="24" y="284" font-size="15" fill="{COVER_DIM}" font-family="Linux Biolinum O">'
+          'cash available · the gap is the headroom</text>'
+        "</svg>")
+
+
+def _chart_paths() -> str:
+    """PML: the communication-path count — eight people, twenty-eight channels."""
+    cx, cy, r, n = 320.0, 140.0, 104.0, 8
+    pts = [(cx + r * math.cos(2 * math.pi * i / n - math.pi / 2),
+            cy + r * math.sin(2 * math.pi * i / n - math.pi / 2)) for i in range(n)]
+    edges = "".join(
+        f'<line x1="{pts[i][0]:.1f}" y1="{pts[i][1]:.1f}" x2="{pts[j][0]:.1f}" y2="{pts[j][1]:.1f}" '
+        f'stroke="{COVER_BAR}" stroke-width="1.5"/>'
+        for i in range(n) for j in range(i + 1, n))
+    nodes = "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="9" fill="{COVER_HOT}"/>' for x, y in pts)
+    return (
+        '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
+        + edges + nodes
+        + f'<text x="{cx:.0f}" y="278" font-size="16" fill="{COVER_INK}" font-family="Linux Biolinum O" '
+          'text-anchor="middle">n(n − 1)/2 = 28</text>'
+        + f'<text x="{cx:.0f}" y="298" font-size="13" fill="{COVER_DIM}" font-family="Linux Biolinum O" '
+          'text-anchor="middle">eight people · twenty-eight channels · every one a place to lose a '
+          'decision</text>'
+        "</svg>")
+
+
+def _chart_variance() -> str:
+    """PCL: the three curves of earned value — planned, earned and actual, and the two gaps.
+
+    Drawn in the cover's own two inks: the plan and the spend as quiet lines, the earned curve as
+    the emphasised one, because the whole discipline is the distance between them.
+    """
+    x0, y0, w, h = 40.0, 250.0, 560.0, 190.0
+
+    def path(fs, upto=1.0, ink=COVER_BAR, width=2.0, dash=""):
+        pts = []
+        n = 60
+        for i in range(int(n * upto) + 1):
+            t = i / n
+            pts.append(f"{x0 + t * w:.1f},{y0 - fs(t) * h:.1f}")
+        d = f' stroke-dasharray="{dash}"' if dash else ""
+        return (f'<polyline points="{" ".join(pts)}" fill="none" stroke="{ink}" '
+                f'stroke-width="{width}"{d}/>')
+
+    def s(t):                      # the S-curve: slow, fast, slow
+        return t * t * (3 - 2 * t)
+
+    cut = 0.62                     # the data date
+    xd = x0 + cut * w
+    planned = path(s, 1.0, COVER_BAR, 1.8, "8 6")
+    actual = path(lambda t: s(t) * 1.14, cut, COVER_BAR, 1.8)
+    earned = path(lambda t: s(t) * 0.78, cut, COVER_HOT, 2.6)
+    ac = y0 - s(cut) * 1.14 * h
+    ev = y0 - s(cut) * 0.78 * h
+    # No callouts on the curves. At the size a cover device is actually printed, a bracket and its
+    # label are two marks too small to read and one more thing competing with the title; the two
+    # gaps are visible as gaps, and the line beneath says what they are.
+    return (
+        '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
+        + f'<line x1="{x0}" y1="{y0}" x2="{x0 + w}" y2="{y0}" stroke="{COVER_DIM}" stroke-width="1"/>'
+        + planned + actual + earned
+        + f'<line x1="{xd:.1f}" y1="{y0}" x2="{xd:.1f}" y2="{ac - 12:.1f}" stroke="{COVER_DIM}" '
+          'stroke-width="1" stroke-dasharray="3 5"/>'
+        + f'<circle cx="{xd:.1f}" cy="{ev:.1f}" r="5" fill="{COVER_HOT}"/>'
+        + f'<text x="{x0}" y="284" font-size="15" fill="{COVER_DIM}" font-family="Linux Biolinum O">'
+          'planned · earned · actual — the distance between them is the discipline</text>'
+        "</svg>")
+
+
+CHARTS = {"coverage": _chart_coverage, "paths": _chart_paths, "variance": _chart_variance}
+
+
+def slug(text: str) -> str:
+    s = re.sub(r"<[^>]+>", " ", text)
+    s = re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+    return s or "section"
+
+
+def normalise_lists(text: str, announce: bool = True) -> str:
+    """Give every list block the blank line python-markdown needs to see it as a list.
+
+    Manuscripts write MCQ options directly under the stem line:
+
+        ... its present value is closest to:
+        - A. USD 370,370
+
+    Markdown (unlike CommonMark) will not let a list interrupt a paragraph, so the whole block was
+    typeset as one run-on sentence. Inserting the blank line here — not in the manuscripts, which
+    other agents own — makes the options a real list without touching a word of the source.
+    """
+    marker = re.compile(r"^(?:[-*+]\s+|\d+[.)]\s+)")
+    out, fence, prev, added = [], False, "", 0
+    for line in text.split("\n"):
+        stripped = line.lstrip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            fence = not fence
+        elif not fence and marker.match(line) and prev.strip():
+            p = prev
+            if not (marker.match(p) or p[0] in "#|>" or p[0] in " \t" or p.rstrip().endswith("|")
+                    or p.lstrip().startswith("<")):
+                out.append("")
+                added += 1
+        out.append(line)
+        prev = line
+    if announce:
+        print(f"list blocks unglued: {added}")
+    return "\n".join(out)
+
+
+# The manuscripts mark the correct MCQ option with ✅ (U+2705), which exists in no book font — it
+# printed as blank space, so the answer key silently vanished from every MCQ. The replacement is a
+# written word in real small caps inside a hairline rule: no glyph to go missing in any
+# environment, legible in greyscale, and never dependent on colour.
+MCQ_KEY = '<span class="mcq-key">correct</span>'
+
+
 def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
     out, injected = [], 0
     for line in corpus.split("\n"):
@@ -188,33 +652,194 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
     return "\n".join(out)
 
 
+# ---------------------------------------------------------------------------------------------
+# PCI Standards — back-matter part assembled from the shared foundational set plus the
+# book's own certification standard set. Both are authored elsewhere; either may be absent mid-run, and
+# an absent file is skipped rather than fatal.
+# ---------------------------------------------------------------------------------------------
+
+# Two of a standard's twenty-five elements are call-outs in their own right
+# (PCI_STANDARDS_DRAFTING_MANUAL.md section 8). They are matched tolerantly — with or without the element
+# number, singular or plural — because a field that is boxed in one standard and not in the next
+# looks like a mistake rather than a system. The element number and name are kept inside the box
+# and the class's own small-caps label is suppressed there: the standards cite their elements by
+# number ("named in element 19"), so the number cannot be thrown away, and the field name already
+# says what the call-out is.
+STD_FIELD_BOXES = ((r"External references?\.", "ext-ref field"),
+                   (r"Jurisdictional cautions?\.", "pci-caution field"))
+
+
+def _std_prose(md: str) -> str:
+    inner = markdown.markdown(md, extensions=["tables"])
+    inner = inner.replace("<hr />", "")
+    # The legal-status disclaimer is set as a blockquote in source; it is a caution, so it prints
+    # as one — labelled, bordered and readable without colour.
+    inner = inner.replace("<blockquote>", '<div class="pci-caution">').replace("</blockquote>", "</div>")
+    return inner
+
+
+def _std_box(law_id: str, title: str, body_md: str) -> str:
+    inner = markdown.markdown(body_md, extensions=["tables"])
+    inner = inner.replace("<hr />", "")
+    for pattern, cls in STD_FIELD_BOXES:
+        inner = re.sub(r"(<p><strong>(?:\d+\.\s*)?" + pattern + r"</strong>(?:(?!</p>).)*</p>)"
+                       r"(\s*<ul>(?:(?!</ul>).)*</ul>)?",
+                       lambda m, c=cls: f'<div class="{c}">{m.group(1)}{m.group(2) or ""}</div>',
+                       inner, flags=re.S)
+    return (f'<div class="pci-standard" id="{slug("standard-" + law_id)}">'
+            f'<div class="stdhead"><span class="stdid">{law_id}</span>'
+            f'<span class="stdname">{title}</span></div>{inner}</div>')
+
+
+def render_standards_file(path: pathlib.Path) -> tuple:
+    """One standards file → (set title, html, standard count)."""
+    text = path.read_text(encoding="utf-8")
+    m = re.match(r"#\s+([^\n]+)\n", text)
+    set_title = m.group(1).strip() if m else path.stem.replace("_", " ")
+    body = normalise_lists(text[m.end():] if m else text, announce=False)
+
+    # The "How to read these standards" section is explanatory prose, not a recommendation.
+    # Wrapping it in the guidance call-out drew a dashed rule down the outer edge of six
+    # consecutive pages, which is what a call-out looks like when it is asked to hold a chapter.
+    out, buf, law = [], [], None
+
+    def flush():
+        nonlocal buf, law
+        chunk = "\n".join(buf).strip()
+        buf = []
+        if not chunk:
+            law = None
+            return
+        if law:
+            out.append(_std_box(law[0], law[1], chunk))
+        else:
+            out.append(_std_prose(chunk))
+        law = None
+
+    laws = 0
+    for line in body.split("\n"):
+        # Law headings are matched at H2 or H3: the rebuilt sets do not agree on level,
+        # and a level mismatch would silently drop the law out of its call-out box.
+        head3 = re.match(r"#{2,3}\s+PCI STANDARD\s+(\S+)\s+—\s+(.+?)\s*$", line)
+        head2 = re.match(r"##\s+(.+?)\s*$", line) if not head3 else None
+        if head3:
+            flush()
+            law = (head3.group(1), head3.group(2))
+            laws += 1
+        elif head2:
+            flush()
+            out.append(f'<h3 class="stdgroup" id="{slug(set_title + "-" + head2.group(1))}" '
+                       f'data-toc="2">{head2.group(1)}</h3>')
+        else:
+            buf.append(line)
+    flush()
+    return set_title, "".join(out), laws
+
+
+def render_laws(book: str, cfg: dict) -> str:
+    """The whole 'PCI Standards' part, or '' when no law file is present yet."""
+    wanted = [STANDARDS_DIR / "PCI_FOUNDATIONAL_STANDARDS.md", STANDARDS_DIR / cfg.get("laws_file", "_none_")]
+    files = [f for f in wanted if f.exists()]
+    missing = [f.name for f in wanted if not f.exists()]
+    if missing:
+        print(f"standards: skipped (not yet authored) — {', '.join(missing)}")
+    if not files:
+        return ""
+    sets, total = [], 0
+    for f in files:
+        try:
+            title, html, laws = render_standards_file(f)
+        except Exception as exc:                      # a malformed law file must not lose the book
+            print(f"standards: FAILED to render {f} — {type(exc).__name__}: {exc}")
+            continue
+        total += laws
+        sets.append(f'<h2 class="stdset" id="{slug(title)}" data-toc="2">{title}</h2>' + html)
+    if not sets:
+        return ""
+    print(f"standards: {total} standards from {len(sets)} set(s)")
+    return ('<div class="backmatter stdspart">'
+            '<h1 class="stdstitle bmtitle" id="pci-professional-laws" data-toc="1">'
+            'PCI Standards</h1>'
+            '<p class="bmnote">Mandatory professional rules established by PCI Global for work '
+            'within a PCI certification scope. They are not legislation and do not displace '
+            'applicable law, contract or authoritative standards, and each law is cited by its '
+            'stable identifier — never by page. The foundational set binds every PCI credential; '
+            'the certification set that follows it binds this one.</p>'
+            + "".join(sets) + "</div>")
+
+
 def build(book: str, out: pathlib.Path) -> None:
     cfg = BOOKS[book]
     book_dir = ROOT / book
     files = manuscript_order(book_dir)
     print(f"manuscripts: {len(files)} — " + ", ".join(f.name for f in files))
     corpus = "\n\n".join(f.read_text(encoding="utf-8") for f in files)
+    raw_corpus = corpus                       # pre-normalisation, for the key-terms index scrape
+    corpus = normalise_lists(corpus)
     corpus = inject_figures(book_dir, corpus)
+    keyed = corpus.count("✅")
+    corpus = corpus.replace("✅", MCQ_KEY)
+    print(f"MCQ answer keys marked: {keyed}")
 
+    corpus, _relaid = normalise_list_indent(corpus)
+    print(f"list continuations re-indented for nesting: {_relaid}")
     html = markdown.markdown(corpus, extensions=["tables", "fenced_code", "toc"],
                              extension_configs={"toc": {"anchorlink": False}})
 
-    # Chapter openers.
+    # Chapter openers. Label, then the number large in the display cut, then the title, then one
+    # hairline to close the block — the opener takes the page and fills its top third with nothing.
     def chap(m):
-        return (f'<div class="chapter"><div class="chapnum">{int(m.group(2)):02d}</div>'
-                f'<div class="chapkicker">Domain {m.group(2)}</div>'
-                f'<h1 id="{m.group(1)}">{m.group(3)}</h1>'
-                f'<div class="chaprule"></div><div class="chaprule2"></div></div>')
+        return (f'<div class="chapter"><div class="chapkicker">Domain</div>'
+                f'<div class="chapnum">{int(m.group(2))}</div>'
+                f'<h1 id="{m.group(1)}" data-toc="1">{m.group(3)}</h1>'
+                f'<div class="chaprule"></div></div>')
     html = re.sub(r'<h1 id="([^"]+)">Domain\s+(\d+)\s+—\s+(.+?)</h1>', chap, html, flags=re.S)
 
     # KA openers.
     html = re.sub(r'<h2 id="([^"]+)">Knowledge\s+Area\s+(\d+\.\d+)\s+—\s+(.+?)</h2>',
-                  r'<h2 class="ka" id="\1"><span class="kanum">Knowledge Area \2</span>'
+                  r'<h2 class="ka" id="\1" data-toc="2"><span class="kanum">Knowledge Area \2</span>'
                   r'<span class="katitle">\3</span></h2>', html, flags=re.S)
+
+    # MCQ option lists: mark the list that follows an MCQ stem so the options set as one option per
+    # line with their own A./B./C./D. labels rather than markdown bullets.
+    mcq_ul = re.compile(r"(<p><strong>MCQ (?:(?!</p>).)*</p>\s*)<ul>", re.S)
+    nopts = len(mcq_ul.findall(html))
+    html = mcq_ul.sub(r'\1<ul class="mcqopts">', html)
+    print(f"MCQ option lists: {nopts}")
 
     # Apparatus mini-heads.
     html = re.sub(r'<h3 id="([^"]+)">((?:Key terms|Sample MCQs|Self-check)[^<]*)</h3>',
                   r'<h3 class="minihead" id="\1">\2</h3>', html)
+
+    # A table inside an ordered-list item terminates the list in python-markdown, so the item after
+    # the table restarts at 1. A five-step worked example then reads 1,2,3,4,1 — visible on the page
+    # and wrong. Carry the count across the break by giving each continuation list a start value.
+    def continue_broken_lists(doc: str) -> str:
+        parts = re.split(r'(<ol[^>]*>|</ol>|<li[\s>])', doc)
+        out, depth, count, carry = [], 0, 0, 0
+        for tok in parts:
+            if tok.startswith("<ol"):
+                depth += 1
+                if depth == 1:
+                    if carry and "start=" not in tok:
+                        tok = tok[:-1] + f' start="{carry + 1}">'
+                    count = carry
+            elif tok == "</ol>":
+                depth -= 1
+                if depth == 0:
+                    carry = count
+            elif tok.startswith("<li") and depth == 1:
+                count += 1
+            elif depth == 0 and tok.strip() and not tok.startswith("<"):
+                # Ordinary prose between lists ends the sequence.
+                carry = 0
+            out.append(tok)
+        return "".join(out)
+
+    before = html
+    html = continue_broken_lists(html)
+    resumed = html.count(' start="') - before.count(' start="')
+    print(f"ordered lists resumed after an interrupting table: {resumed}")
 
     # Worked-example panels (heading para + following <ol>).
     wex = re.compile(r'<p><strong>Worked example ([^<]+)</strong>((?:(?!</p>).)*)</p>\s*'
@@ -237,40 +862,18 @@ def build(book: str, out: pathlib.Path) -> None:
         in_part = [d for d in present if lo <= d <= hi]
         if not in_part:
             continue                      # part not yet reached by authorship
-        kicker = f"Domain {in_part[0]}"
-        kick_m = re.search(r'<div class="chapter"><div class="chapnum">\d+</div>'
-                           r'<div class="chapkicker">' + re.escape(kicker) + r'</div>', html)
+        kick_m = re.search(r'<div class="chapter"><div class="chapkicker">Domain</div>'
+                           r'<div class="chapnum">' + str(in_part[0]) + r'</div>', html)
         if not kick_m:
             continue
-        part_html = (f'<div class="partpage"><div class="partghost">{pnum:02d}</div>'
+        part_html = (f'<div class="partpage">'
                      f'<div class="partnum">{num}</div><div class="parttitle">{title}</div>'
-                     f'<div class="partdesc">{desc}</div><div class="partbar"></div></div>')
+                     f'<div class="partdesc">{desc}</div></div>')
         html = html[:kick_m.start()] + part_html + html[kick_m.start():]
-
-    # Contents (h1 + h2 headings, in order).
-    toc_items = []
-    for m in re.finditer(r'<h(1|2)(?: class="ka")? id="([^"]+)">(.*?)</h\1>', html, flags=re.S):
-        text = re.sub(r"<[^>]+>", " ", m.group(3))
-        text = re.sub(r"\s+", " ", text).strip()
-        toc_items.append((m.group(1), m.group(2), text))
-    toc = ['<nav id="TOC"><ul>']
-    open_sub = False
-    for lvl, hid, text in toc_items:
-        if lvl == "1":
-            if open_sub:
-                toc.append("</ul></li>")
-                open_sub = False
-            toc.append(f'<li><a href="#{hid}">{text}</a><ul>')
-            open_sub = True
-        else:
-            toc.append(f'<li><a href="#{hid}">{text}</a></li>')
-    if open_sub:
-        toc.append("</ul></li>")
-    toc.append("</ul></nav>")
 
     # Index from key-terms tables.
     terms = {}
-    for m in re.finditer(r'### Key terms — KA (\d+\.\d+)\n\n\| Term \| Meaning \|\n\|[-| ]+\|\n((?:\|.*\|\n)+)', corpus):
+    for m in re.finditer(r'### Key terms — KA (\d+\.\d+)\n\n\| Term \| Meaning \|\n\|[-| ]+\|\n((?:\|.*\|\n)+)', raw_corpus):
         ka, rows = m.group(1), m.group(2)
         for row in rows.strip().split("\n"):
             cells = [c.strip() for c in row.strip("|").split("|")]
@@ -279,14 +882,15 @@ def build(book: str, out: pathlib.Path) -> None:
                 if term and term.lower() not in terms:
                     terms[term.lower()] = (term, ka)
     ka_ids = {m.group(2): m.group(1) for m in re.finditer(
-        r'<h2 class="ka" id="([^"]+)"><span class="kanum">Knowledge Area (\d+\.\d+)</span>', html)}
+        r'<h2 class="ka" id="([^"]+)"[^>]*><span class="kanum">Knowledge Area (\d+\.\d+)</span>', html)}
     groups = {}
     for term, ka in sorted(terms.values(), key=lambda t: t[0].lower()):
         hid = ka_ids.get(ka)
         if hid:
             letter = term[0].upper() if term[0].isalpha() else "#"
             groups.setdefault(letter, []).append(f'<div class="ixe"><a href="#{hid}">{term}</a></div>')
-    ix = ['<div class="bookindex"><div class="ixtitle">Index</div><div class="ixcols">']
+    ix = ['<div class="bookindex">'
+          '<div class="ixtitle" id="book-index" data-toc="1">Index</div><div class="ixcols">']
     for letter in sorted(groups):
         ix.append(f'<div class="ixl">{letter}</div>' + "".join(groups[letter]))
     ix.append("</div></div>")
@@ -306,7 +910,7 @@ def build(book: str, out: pathlib.Path) -> None:
         inner = re.sub(r"<p><strong>", '<p class="glossentry"><strong>', inner)
         n_terms = inner.count('class="glossentry"')
         gloss_html = ('<div class="backmatter glossary">'
-                      '<h1 id="glossary" class="bmtitle">Glossary</h1>'
+                      '<h1 id="glossary" class="bmtitle" data-toc="1">Glossary</h1>'
                       '<p class="bmnote">Consolidated from every Knowledge Area\u2019s key-terms table. '
                       'The Knowledge Area reference after each entry is the authority \u2014 the gloss '
                       'points to the treatment and does not replace it.</p>'
@@ -320,7 +924,9 @@ def build(book: str, out: pathlib.Path) -> None:
         atext = app_file.read_text(encoding="utf-8")
         abody = re.sub(r"\A# [^\n]*\n+(?:> [^\n]*\n)*\n?", "", atext)
         inner = markdown.markdown(abody, extensions=["tables"])
-        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h2 class="apptitle">\1</h2>', inner)
+        inner = re.sub(r"<h2>([^<]+)</h2>",
+                       lambda m: f'<h2 class="apptitle" id="{slug(m.group(1))}" data-toc="1">'
+                                 f"{m.group(1)}</h2>", inner)
         app_html = '<div class="backmatter appendices">' + inner + "</div>"
         print(f"appendix tables: {inner.count('<table>')}")
 
@@ -335,7 +941,8 @@ def build(book: str, out: pathlib.Path) -> None:
         inner = markdown.markdown(sbody, extensions=["tables"])
         inner = re.sub(r"<h2>([^<]+)</h2>", r'<h3>\1</h3>', inner)
         std_html = ('<div class="backmatter appendices">'
-                    '<h2 class="apptitle">Appendix F — Standards and frameworks referenced</h2>'
+                    '<h2 class="apptitle" id="appendix-f" data-toc="1">'
+                    'Appendix F — Standards and frameworks referenced</h2>'
                     + inner + "</div>")
         # Count body rows, not `<tr>` minus `<th>` — that counted the family tables (4 and 7) and
         # reported them as entries, which is a log line that lies about coverage.
@@ -350,23 +957,44 @@ def build(book: str, out: pathlib.Path) -> None:
         ctext = cap_file.read_text(encoding="utf-8")
         cbody = re.sub(r"\A# [^\n]*\n+", "", ctext)
         inner = markdown.markdown(cbody, extensions=["tables"])
-        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h2 class="apptitle">\1</h2>', inner)
+        inner = re.sub(r"<h2>([^<]+)</h2>",
+                       lambda m: f'<h2 class="apptitle" id="{slug(m.group(1))}" data-toc="1">'
+                                 f"{m.group(1)}</h2>", inner)
         cap_html = ('<div class="backmatter appendices">'
-                    '<h2 class="apptitle">Appendix G — Integrated capstones</h2>'
+                    '<h2 class="apptitle" id="appendix-g" data-toc="1">'
+                    'Appendix G — Integrated capstones</h2>'
                     + inner + "</div>")
         print(f"capstone sections: {inner.count('<h3>')}")
 
+    # Back matter — the PCI Standards part: after the appendices, before the glossary.
+    laws_html = render_laws(book, cfg)
+
+    # Contents. Generated from the assembled body rather than the chapters alone, so every part of
+    # the volume that carries a running head also carries a contents line: domains and Knowledge
+    # Areas, then appendices, the law part, the glossary and the index.
+    body_html = f"{html}{app_html}{std_html}{cap_html}{laws_html}{gloss_html}{''.join(ix)}"
+    # A chapter's own heading is the title alone — the domain number lives in the opener's kicker.
+    # The contents line needs both, or "Cost, Schedule and Contingency Integration" gives the reader
+    # no way to tell which domain it is.
+    chap_kicker = {m.group(2): f"Domain {m.group(1)}" for m in re.finditer(
+        r'<div class="chapkicker">Domain</div><div class="chapnum">(\d+)</div><h1 id="([^"]+)"',
+        body_html)}
+    toc = build_toc(body_html, chap_kicker)
+
+    cv = cfg["cover"]
+    cover = cover_html(code=cv["code"], credential=cv["credential"], themes=cv["themes"],
+                       chart=CHARTS[cv["chart"]]())
     front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
-    doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
+    doc_html = (f"<!doctype html><html lang='{LANG}'><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{front}{''.join(toc)}{html}{app_html}{std_html}{cap_html}{gloss_html}"
-                f"{''.join(ix)}</body></html>")
+                f"</head><body>{cover}{front}{toc}{body_html}</body></html>")
+    doc_html = house_style(doc_html, book)
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
     html_file.write_text(doc_html, encoding="utf-8")
 
     from weasyprint import CSS, HTML
-    doc = HTML(filename=str(html_file)).render(stylesheets=[CSS(filename=str(HERE / "print.css"))])
+    doc = HTML(filename=str(html_file)).render(stylesheets=[CSS(filename=str(HOUSE_CSS))])
     doc.write_pdf(str(out))
     print(f"OK {out}  pages={len(doc.pages)}")
 

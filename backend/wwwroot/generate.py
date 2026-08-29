@@ -19,7 +19,7 @@ RAW_REPLACEMENTS = [
  ("A live site would provide a downloadable PDF; here the form is presented online.",
   "You can submit online using the details above. If you need a paper copy or another format, contact us and we\u2019ll arrange it."),
  ("Illustrative result. In this design prototype, lookups are not connected to a live registry.",
-  "Illustrative result shown for layout. Live verification becomes available as PCP-AI credentials are issued; each lookup then checks the credential against the PCI registry."),
+  "Illustrative result shown for layout. Live verification becomes available as PCL-AI credentials are issued; each lookup then checks the credential against the PCI registry."),
  ("Placeholder details for the design prototype.",
   "Prefer email? Write to hello@projectcontrolsinstitute.org and we\u2019ll route your message to the right team."),
  ("We aim to respond promptly; in this prototype, contact details are placeholders.",
@@ -154,7 +154,7 @@ def dl_section(title, files):
 DOWNLOADS = {
  'white-papers': ('White papers', [
     ('Governed AI in Project Controls — 2026 Position Paper', 'PDF', 'PDF · 2.4 MB', '/downloads/governed-ai-2026.pdf'),
-    ('The PCP-AI Competency Framework', 'PDF', 'PDF · 1.1 MB', '/downloads/pcp-ai-competency-framework.pdf'),
+    ('The PCL-AI Competency Framework', 'PDF', 'PDF · 1.1 MB', '/downloads/pcl-ai-competency-framework.pdf'),
     ('Earned Value in AI-Assisted Schedules', 'PDF', 'PDF · 980 KB', '/downloads/evm-ai-schedules.pdf')]),
  'publications': ('Reports & publications', [
     ('Annual Report 2025', 'PDF', 'PDF · 3.2 MB', '/downloads/pci-annual-report-2025.pdf'),
@@ -292,7 +292,7 @@ CONTENT = {
            ('Can\u2019t find it?', 'It may be mistyped, withdrawn, or not yet issued \u2014 contact us to confirm.')])
     + facts([('What you can confirm', 'Name as issued, the credential, its status and dates.'),
              ('What stays private', 'No contact details, exam scores or personal data are shown.'),
-             ('Employers', 'You can verify any PCP-AI holder, free, without an account.'),
+             ('Employers', 'You can verify any PCL-AI holder, free, without an account.'),
              ('Reporting a concern', 'If a credential looks misrepresented, tell us and we\u2019ll review it.')])
     + priv('verification') + SUPPORT, alt=True),
 
@@ -316,7 +316,7 @@ CONTENT = {
            ('We share what you asked for', 'Syllabus, fees, the roadmap, or a call \u2014 whatever helps you decide.')])
     + facts([('Response time', 'We aim to acknowledge within two working days.'),
              ('For organisations', 'Tell us your scale and goals for a tailored reply.'),
-             ('Materials', 'Ask for the PCP-AI syllabus, fees or certification roadmap.'),
+             ('Materials', 'Ask for the PCL-AI syllabus, fees or certification roadmap.'),
              ('Prefer to talk?', 'Ask for a call and we\u2019ll arrange a time.')])
     + priv('enquiry') + SUPPORT),
 

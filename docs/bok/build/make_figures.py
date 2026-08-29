@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Render the PCP-AI BoK figure specifications as SVG diagrams.
+"""Render the PCL-AI BoK figure specifications as SVG diagrams.
 
 Each figure is drawn from the exact underlying data in its spec block in the text.
-Style: brand blue #1D4ED8, clean professional diagrams, DejaVu Sans labels.
+Style: brand blue #14432E, clean professional diagrams, DejaVu Sans labels.
 Run with python3.12 (matplotlib installed there). Outputs to build/figures/.
 """
 import pathlib
@@ -11,8 +11,8 @@ matplotlib.use("svg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Polygon, Circle, Rectangle
 
-BLUE, INK, SLATE, LIGHT, GREY = "#1D4ED8", "#0F172A", "#64748B", "#EEF3FF", "#CBD5E1"
-RED, GREEN, AMBER, PALE = "#C13329", "#16A34A", "#D97706", "#F1F5F9"
+BLUE, INK, SLATE, LIGHT, GREY = "#14432E", "#1A1A1A", "#5A6560", "#F2F6F3", "#C8CFC9"
+RED, GREEN, AMBER, PALE = "#8A5A00", "#16A34A", "#8A5A00", "#F6F8F7"
 OUT = pathlib.Path(__file__).resolve().parent / "figures"
 OUT.mkdir(exist_ok=True)
 plt.rcParams.update({
@@ -25,7 +25,7 @@ plt.rcParams.update({
     "lines.linewidth": 2.2, "lines.solid_capstyle": "round",
     "legend.frameon": False, "legend.fontsize": 8,
 })
-CHART_GRID = "#EDF1F7"
+CHART_GRID = "#F2F6F3"
 
 def _premium(fig):
     """Uniform premium pass applied to every figure at save time."""
@@ -203,7 +203,7 @@ def fig_2_2_2():
 def fig_3_1_1():
     fig, ax = plt.subplots(figsize=(6.6, 3.2))
     ax.bar(0, 9.0, color=BLUE)
-    ax.bar(1, 0.7, bottom=9.0, color="#60A5FA")
+    ax.bar(1, 0.7, bottom=9.0, color="#4C7C64")
     ax.bar(2, 9.7, color=BLUE, alpha=0.35)
     ax.bar(3, 0.5, bottom=9.7, color=GREY)
     ax.bar(4, 10.2, color=SLATE, alpha=0.4)
@@ -243,6 +243,8 @@ def fig_3_5_1():
     ax.fill_between(m, cash, 0, where=[c < 0 for c in cash], color=RED, alpha=0.12)
     ax.annotate("peak funding requirement (280)", (2, -280), xytext=(3.1, -262),
                 fontsize=8, color=RED, arrowprops=dict(arrowstyle="->", color=RED))
+    ax.set_ylim(-320, 160)
+    ax.set_yticks([-300, -250, -200, -150, -100, -50, 0, 50, 100, 150])
     ax.set_xlabel("Month"); ax.set_ylabel("Cumulative cash (USD 000)")
     for s in ("top", "right"): ax.spines[s].set_visible(False)
     save(fig, "fig_3_5_1")
@@ -458,7 +460,7 @@ def fig_12_2_1():
 def fig_13_1_1():
     fig, ax = newfig(5.6, 4.2)
     ax.set_xlim(-5, 5); ax.set_ylim(-4.4, 4.4)
-    for r, lab, c in [(4.1, "ARTIFICIAL INTELLIGENCE", GREY), (2.8, "MACHINE LEARNING", "#93C5FD"),
+    for r, lab, c in [(4.1, "ARTIFICIAL INTELLIGENCE", GREY), (2.8, "MACHINE LEARNING", "#A8C3B4"),
                       (1.5, "GENERATIVE AI", BLUE)]:
         ax.add_patch(Circle((0, -0.2), r, fc=c, alpha=0.30, ec=c, lw=1.4))
     ax.text(0, 3.35, "AI — rules-based validation", ha="center", fontsize=8, color=SLATE)
@@ -488,7 +490,7 @@ def fig_13_4_1():
     for i in range(len(needs)):
         for j in range(len(cats)):
             v = fit[i][j]
-            c = BLUE if v == 2 else ("#93C5FD" if v == 1 else PALE)
+            c = BLUE if v == 2 else ("#A8C3B4" if v == 1 else PALE)
             ax.add_patch(Rectangle((j, len(needs)-1-i), 0.94, 0.94, fc=c, ec="white"))
     ax.set_xticks([j + 0.47 for j in range(len(cats))]); ax.set_xticklabels(cats, fontsize=7.5, rotation=30, ha="right")
     ax.set_yticks([len(needs)-1-i + 0.47 for i in range(len(needs))]); ax.set_yticklabels(needs, fontsize=8)
@@ -605,11 +607,19 @@ def fig_9_3_4():
 
 def fig_10_3_1():
     fig, ax = plt.subplots(figsize=(6.4, 3.2))
-    days = [14,13,12,11,10]; cost = [0,2000,4000,7500,12500]
+    days = [14,13,12,11]; cost = [0,5000,10000,18000]
     ax.plot(days, cost, color=BLUE, lw=2.2, marker="o", ms=4)
-    for d, c, t in [(13,2000,"crash A (2,000/d)"),(12,4000,"crash A again"),(11,7500,"crash B (3,500)"),(10,12500,"B + C: both paths\n(5,000/d)")]:
-        ax.annotate(t, xy=(d, c), xytext=(d-0.05, c+900), fontsize=7, color=SLATE)
+    for d, c, t in [(13, 5000, "crash B (5,000/d)"),
+                    (12, 10000, "crash B again"),
+                    (11, 18000, "crash D (8,000/d)")]:
+        ax.annotate(t, xy=(d, c), xytext=(-7, 7), textcoords="offset points",
+                    fontsize=7, color=SLATE, ha="right", va="bottom")
+    ax.text(0.53, 0.10, "parallel path A–C–E–F = 10 days — below day 11\n"
+                        "every further day must be bought on both paths at once",
+            transform=ax.transAxes, fontsize=6.8, color=SLATE, ha="left", va="bottom")
     ax.invert_xaxis()
+    ax.set_xticks(days)
+    ax.set_ylim(0, 21000)
     ax.set_xlabel("Project duration (days)"); ax.set_ylabel("Cumulative crash cost (USD)")
     save(fig, "fig_10_3_1")
 

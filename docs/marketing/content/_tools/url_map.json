@@ -1,0 +1,922 @@
+[
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-certification",
+  "url": "https://projectcontrolsinstitute.org/project-controls-certification",
+  "title": "Project controls certification: what it actually proves",
+  "kw": "project controls certification",
+  "pillar": "Certification and careers",
+  "type": "pillar",
+  "file": "articles/001-own-site-project-controls-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "what-is-project-controls",
+  "url": "https://projectcontrolsinstitute.org/what-is-project-controls",
+  "title": "What is project controls, and who actually does it?",
+  "kw": "what is project controls",
+  "pillar": "Project controls fundamentals",
+  "type": "pillar",
+  "file": "articles/002-own-site-what-is-project-controls.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "earned-value-management",
+  "url": "https://projectcontrolsinstitute.org/earned-value-management",
+  "title": "What is earned value management? The practitioner's guide",
+  "kw": "what is earned value management",
+  "pillar": "Earned value management",
+  "type": "pillar",
+  "file": "articles/003-own-site-earned-value-management.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-training",
+  "url": "https://projectcontrolsinstitute.org/project-controls-training",
+  "title": "Project controls training: what actually prepares you",
+  "kw": "project controls training",
+  "pillar": "Certification and careers",
+  "type": "pillar",
+  "file": "articles/004-own-site-project-controls-training.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-course",
+  "url": "https://projectcontrolsinstitute.org/project-controls-course",
+  "title": "Project controls course: how to judge one before you pay",
+  "kw": "project controls course",
+  "pillar": "Certification and careers",
+  "type": "pillar",
+  "file": "articles/005-own-site-project-controls-course.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "schedule-risk-analysis",
+  "url": "https://projectcontrolsinstitute.org/schedule-risk-analysis",
+  "title": "Schedule risk analysis: everything the search actually asks",
+  "kw": "schedule risk analysis",
+  "pillar": "Risk management",
+  "type": "pillar",
+  "file": "articles/006-own-site-schedule-risk-analysis.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "ifrs-for-project-controls",
+  "url": "https://projectcontrolsinstitute.org/ifrs-for-project-controls",
+  "title": "IFRS for project controls: what cost engineers must know",
+  "kw": "IFRS for project controls",
+  "pillar": "Cost control and estimating",
+  "type": "pillar",
+  "file": "articles/007-own-site-ifrs-for-project-controls.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-budgeting-and-forecasting",
+  "url": "https://projectcontrolsinstitute.org/project-budgeting-and-forecasting",
+  "title": "Project budgeting and forecasting: an end-to-end guide",
+  "kw": "project budgeting and forecasting",
+  "pillar": "Cost control and estimating",
+  "type": "pillar",
+  "file": "articles/008-own-site-project-budgeting-and-forecasting.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "what-are-capital-projects",
+  "url": "https://projectcontrolsinstitute.org/what-are-capital-projects",
+  "title": "What are capital projects? The complete beginner's guide",
+  "kw": "what are capital projects",
+  "pillar": "Project controls fundamentals",
+  "type": "pillar",
+  "file": "articles/009-own-site-what-are-capital-projects.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "finance-and-project-management-certification",
+  "url": "https://projectcontrolsinstitute.org/finance-and-project-management-certification",
+  "title": "Why finance and project management certification exists",
+  "kw": "finance and project management certification",
+  "pillar": "Certification and careers",
+  "type": "pillar",
+  "file": "articles/010-own-site-finance-and-project-management-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "why-pci-ai",
+  "url": "https://projectcontrolsinstitute.org/why-pci-ai",
+  "title": "Project controls qualifications: the gap PCI AI fills",
+  "kw": "project controls qualifications",
+  "pillar": "Certification and careers",
+  "type": "pillar",
+  "file": "articles/011-own-site-why-pci-ai.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-institute",
+  "url": "https://projectcontrolsinstitute.org/project-controls-institute",
+  "title": "Project controls institute: what it is and how to start",
+  "kw": "project controls institute",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/012-own-site-project-controls-institute.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "pcl-ai-certification",
+  "url": "https://projectcontrolsinstitute.org/pcl-ai-certification",
+  "title": "PCL-AI certification: what it covers and how to start",
+  "kw": "PCL-AI certification",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/013-own-site-pcl-ai-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "certuvo",
+  "url": "https://projectcontrolsinstitute.org/certuvo",
+  "title": "Certuvo: what it is, who it is for, and how to start",
+  "kw": "Certuvo",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/014-own-site-certuvo.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-certification-online",
+  "url": "https://projectcontrolsinstitute.org/project-controls-certification-online",
+  "title": "Project controls certification online: routes and cost",
+  "kw": "project controls certification online",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/015-own-site-project-controls-certification-online.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-course-online",
+  "url": "https://projectcontrolsinstitute.org/project-controls-course-online",
+  "title": "Project controls course online: what you actually get",
+  "kw": "project controls course online",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/016-own-site-project-controls-course-online.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-certification-cost",
+  "url": "https://projectcontrolsinstitute.org/project-controls-certification-cost",
+  "title": "Project controls certification cost: the real answers",
+  "kw": "project controls certification cost",
+  "pillar": "Certification and careers",
+  "type": "faq",
+  "file": "articles/017-own-site-project-controls-certification-cost.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "certified-project-controls-professional",
+  "url": "https://projectcontrolsinstitute.org/certified-project-controls-professional",
+  "title": "Certified project controls professional: what it proves",
+  "kw": "certified project controls professional",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/018-own-site-certified-project-controls-professional.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "earned-value-management-certification",
+  "url": "https://projectcontrolsinstitute.org/earned-value-management-certification",
+  "title": "Earned value management certification: who it suits",
+  "kw": "earned value management certification",
+  "pillar": "Earned value management",
+  "type": "guide",
+  "file": "articles/019-own-site-earned-value-management-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "earned-value-management-training",
+  "url": "https://projectcontrolsinstitute.org/earned-value-management-training",
+  "title": "Earned value management training: what actually works",
+  "kw": "earned value management training",
+  "pillar": "Earned value management",
+  "type": "guide",
+  "file": "articles/020-own-site-earned-value-management-training.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "earned-value-worked-example",
+  "url": "https://projectcontrolsinstitute.org/earned-value-worked-example",
+  "title": "Earned value worked example: a full month, end to end",
+  "kw": "earned value worked example",
+  "pillar": "Earned value management",
+  "type": "guide",
+  "file": "articles/021-own-site-earned-value-worked-example.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "earned-value-formulas-cheat-sheet",
+  "url": "https://projectcontrolsinstitute.org/earned-value-formulas-cheat-sheet",
+  "title": "Earned value formulas cheat sheet, explained properly",
+  "kw": "earned value formulas cheat sheet",
+  "pillar": "Earned value management",
+  "type": "guide",
+  "file": "articles/022-own-site-earned-value-formulas-cheat-sheet.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "four-eac-formulas",
+  "url": "https://projectcontrolsinstitute.org/four-eac-formulas",
+  "title": "The four EAC formulas: predicting final project cost",
+  "kw": "four EAC formulas",
+  "pillar": "Earned value management",
+  "type": "how-to",
+  "file": "articles/023-own-site-four-eac-formulas.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-performance-management",
+  "url": "https://projectcontrolsinstitute.org/project-performance-management",
+  "title": "Project performance management: metrics to decisions",
+  "kw": "project performance management",
+  "pillar": "Earned value management",
+  "type": "guide",
+  "file": "articles/024-own-site-project-performance-management.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "earned-value-reporting-thresholds",
+  "url": "https://projectcontrolsinstitute.org/earned-value-reporting-thresholds",
+  "title": "Earned value reporting thresholds that trigger action",
+  "kw": "earned value reporting thresholds",
+  "pillar": "Earned value management",
+  "type": "guide",
+  "file": "articles/025-own-site-earned-value-reporting-thresholds.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "earned-value-practice-questions",
+  "url": "https://projectcontrolsinstitute.org/earned-value-practice-questions",
+  "title": "Earned value practice questions and how to use them",
+  "kw": "earned value practice questions",
+  "pillar": "Certification and careers",
+  "type": "template",
+  "file": "articles/026-own-site-earned-value-practice-questions.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "eac-accounting",
+  "url": "https://projectcontrolsinstitute.org/eac-accounting",
+  "title": "EAC accounting: how a forecast becomes reported profit",
+  "kw": "EAC accounting",
+  "pillar": "Cost control and estimating",
+  "type": "guide",
+  "file": "articles/027-own-site-eac-accounting.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "month-end-close-for-projects",
+  "url": "https://projectcontrolsinstitute.org/month-end-close-for-projects",
+  "title": "Month-end close for projects: the controls handshake",
+  "kw": "month-end close for projects",
+  "pillar": "Cost control and estimating",
+  "type": "process-guide",
+  "file": "articles/028-own-site-month-end-close-for-projects.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "ifrs-15-for-construction",
+  "url": "https://projectcontrolsinstitute.org/ifrs-15-for-construction",
+  "title": "IFRS 15 for construction contracts: measuring progress",
+  "kw": "IFRS 15 for construction",
+  "pillar": "Cost control and estimating",
+  "type": "guide",
+  "file": "articles/029-own-site-ifrs-15-for-construction.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-cash-flow-forecasting",
+  "url": "https://projectcontrolsinstitute.org/project-cash-flow-forecasting",
+  "title": "Project cash flow forecasting: S-curves that hold up",
+  "kw": "project cash flow forecasting",
+  "pillar": "Cost control and estimating",
+  "type": "guide",
+  "file": "articles/030-own-site-project-cash-flow-forecasting.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "cost-control-in-construction",
+  "url": "https://projectcontrolsinstitute.org/cost-control-in-construction",
+  "title": "Cost control in construction: catching overruns early",
+  "kw": "cost control in construction",
+  "pillar": "Cost control and estimating",
+  "type": "guide",
+  "file": "articles/031-own-site-cost-control-in-construction.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "cost-engineer-certification",
+  "url": "https://projectcontrolsinstitute.org/cost-engineer-certification",
+  "title": "Cost engineer certification: an honest route comparison",
+  "kw": "cost engineer certification",
+  "pillar": "Certification and careers",
+  "type": "comparison",
+  "file": "articles/032-own-site-cost-engineer-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "cost-controller-certification",
+  "url": "https://projectcontrolsinstitute.org/cost-controller-certification",
+  "title": "Cost controller certification: what it covers, who it suits",
+  "kw": "cost controller certification",
+  "pillar": "Cost control and estimating",
+  "type": "guide",
+  "file": "articles/033-own-site-cost-controller-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-exam-questions",
+  "url": "https://projectcontrolsinstitute.org/project-controls-exam-questions",
+  "title": "Project controls exam questions: 25 problems solved",
+  "kw": "project controls exam questions",
+  "pillar": "Certification and careers",
+  "type": "practice",
+  "file": "articles/034-own-site-project-controls-exam-questions.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "primavera-p6-certification",
+  "url": "https://projectcontrolsinstitute.org/primavera-p6-certification",
+  "title": "Primavera P6 certification: cost, content and value",
+  "kw": "primavera p6 certification",
+  "pillar": "Planning and scheduling",
+  "type": "guide",
+  "file": "articles/035-own-site-primavera-p6-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "primavera-p6-online-course",
+  "url": "https://projectcontrolsinstitute.org/primavera-p6-online-course",
+  "title": "Primavera P6 online course: is certification worth it?",
+  "kw": "primavera p6 online course",
+  "pillar": "Planning and scheduling",
+  "type": "comparison",
+  "file": "articles/036-own-site-primavera-p6-online-course.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "primavera-p6-practice-test",
+  "url": "https://projectcontrolsinstitute.org/primavera-p6-practice-test",
+  "title": "Primavera P6 practice test: a free tool and how to use it",
+  "kw": "primavera p6 practice test",
+  "pillar": "Certification and careers",
+  "type": "template",
+  "file": "articles/037-own-site-primavera-p6-practice-test.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "realistic-schedule-in-primavera-p6",
+  "url": "https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6",
+  "title": "Build a realistic schedule in Primavera P6: eight steps",
+  "kw": "realistic schedule in Primavera P6",
+  "pillar": "Planning and scheduling",
+  "type": "guide",
+  "file": "articles/038-own-site-realistic-schedule-in-primavera-p6.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "critical-path-method",
+  "url": "https://projectcontrolsinstitute.org/critical-path-method",
+  "title": "Critical path method definition, with a worked example",
+  "kw": "critical path method definition",
+  "pillar": "Planning and scheduling",
+  "type": "glossary",
+  "file": "articles/039-own-site-critical-path-method.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "total-float",
+  "url": "https://projectcontrolsinstitute.org/total-float",
+  "title": "Total float definition, examples and why it matters",
+  "kw": "total float definition",
+  "pillar": "Planning and scheduling",
+  "type": "glossary",
+  "file": "articles/040-own-site-total-float.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "planning-engineer-certification",
+  "url": "https://projectcontrolsinstitute.org/planning-engineer-certification",
+  "title": "Planning engineer certification: the routes compared",
+  "kw": "planning engineer certification",
+  "pillar": "Planning and scheduling",
+  "type": "guide",
+  "file": "articles/041-own-site-planning-engineer-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "certified-planning-engineer",
+  "url": "https://projectcontrolsinstitute.org/certified-planning-engineer",
+  "title": "Certified planning engineer: what it actually proves",
+  "kw": "certified planning engineer",
+  "pillar": "Planning and scheduling",
+  "type": "guide",
+  "file": "articles/042-own-site-certified-planning-engineer.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-scheduler-certification",
+  "url": "https://projectcontrolsinstitute.org/project-scheduler-certification",
+  "title": "Project scheduler certification: scope, cost and fit",
+  "kw": "project scheduler certification",
+  "pillar": "Planning and scheduling",
+  "type": "guide",
+  "file": "articles/043-own-site-project-scheduler-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "quantitative-schedule-risk-analysis",
+  "url": "https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis",
+  "title": "Quantitative schedule risk analysis: a beginner's guide",
+  "kw": "quantitative schedule risk analysis QSRA",
+  "pillar": "Risk management",
+  "type": "guide",
+  "file": "articles/044-own-site-quantitative-schedule-risk-analysis.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "monte-carlo-cost-simulation",
+  "url": "https://projectcontrolsinstitute.org/monte-carlo-cost-simulation",
+  "title": "How to run a Monte Carlo cost simulation, step by step",
+  "kw": "Monte Carlo cost simulation",
+  "pillar": "Risk management",
+  "type": "how-to",
+  "file": "articles/045-own-site-monte-carlo-cost-simulation.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "risk-register-that-gets-used",
+  "url": "https://projectcontrolsinstitute.org/risk-register-that-gets-used",
+  "title": "How to build a risk register that gets used, not filed",
+  "kw": "risk register that gets used",
+  "pillar": "Risk management",
+  "type": "how-to",
+  "file": "articles/046-own-site-risk-register-that-gets-used.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "project-controls-vs-project-management",
+  "url": "https://projectcontrolsinstitute.org/project-controls-vs-project-management",
+  "title": "Project controls vs project management: the real split",
+  "kw": "project controls vs project management",
+  "pillar": "Project controls fundamentals",
+  "type": "comparison",
+  "file": "articles/047-own-site-project-controls-vs-project-management.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "delay-analysis-techniques",
+  "url": "https://projectcontrolsinstitute.org/delay-analysis-techniques",
+  "title": "Delay analysis techniques compared: which one, and when",
+  "kw": "delay analysis techniques",
+  "pillar": "Project controls fundamentals",
+  "type": "comparison",
+  "file": "articles/048-own-site-delay-analysis-techniques.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "capital-project-management-process",
+  "url": "https://projectcontrolsinstitute.org/capital-project-management-process",
+  "title": "The capital project management process, step by step",
+  "kw": "capital project management process",
+  "pillar": "Project controls fundamentals",
+  "type": "process-guide",
+  "file": "articles/049-own-site-capital-project-management-process.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "pmo-certification",
+  "url": "https://projectcontrolsinstitute.org/pmo-certification",
+  "title": "PMO certification: what it covers and where it stops",
+  "kw": "PMO certification",
+  "pillar": "Project controls fundamentals",
+  "type": "guide",
+  "file": "articles/050-own-site-pmo-certification.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "how-to-become-a-project-controls-manager",
+  "url": "https://projectcontrolsinstitute.org/how-to-become-a-project-controls-manager",
+  "title": "How to become a project controls manager: the route",
+  "kw": "how to become a project controls manager",
+  "pillar": "Certification and careers",
+  "type": "how-to",
+  "file": "articles/051-own-site-how-to-become-a-project-controls-manager.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "honorary-fellowship-engineering",
+  "url": "https://projectcontrolsinstitute.org/honorary-fellowship-engineering",
+  "title": "Honorary fellowship in engineering: what it recognises",
+  "kw": "honorary fellowship engineering",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/052-own-site-honorary-fellowship-engineering.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "how-to-become-a-fellow-of-a-professional-institution",
+  "url": "https://projectcontrolsinstitute.org/how-to-become-a-fellow-of-a-professional-institution",
+  "title": "How to become a fellow of a professional institution",
+  "kw": "how to become a fellow of a professional institution",
+  "pillar": "Certification and careers",
+  "type": "how-to",
+  "file": "articles/053-own-site-how-to-become-a-fellow-of-a-professional-institution.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "professional-fellowship-application",
+  "url": "https://projectcontrolsinstitute.org/professional-fellowship-application",
+  "title": "Professional fellowship application: what assessors look for",
+  "kw": "professional fellowship application",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/054-own-site-professional-fellowship-application.md"
+ },
+ {
+  "host": "projectcontrolsinstitute.org",
+  "slug": "fellowship-for-project-professionals",
+  "url": "https://projectcontrolsinstitute.org/fellowship-for-project-professionals",
+  "title": "Fellowship for project professionals: routes and evidence",
+  "kw": "fellowship for project professionals",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/055-own-site-fellowship-for-project-professionals.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-in-project-controls",
+  "url": "https://pciai.org/ai-in-project-controls",
+  "title": "AI in project controls: what works and what does not",
+  "kw": "AI in project controls",
+  "pillar": "AI in project controls",
+  "type": "pillar",
+  "file": "articles/056-own-site-ai-in-project-controls.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-project-controls-certification",
+  "url": "https://pciai.org/ai-project-controls-certification",
+  "title": "AI project controls certification: what it examines",
+  "kw": "AI project controls certification",
+  "pillar": "AI in project controls",
+  "type": "guide",
+  "file": "articles/057-own-site-ai-project-controls-certification.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-for-construction-scheduling",
+  "url": "https://pciai.org/ai-for-construction-scheduling",
+  "title": "AI for construction scheduling: a practitioner's guide",
+  "kw": "AI for construction scheduling",
+  "pillar": "AI in project controls",
+  "type": "guide",
+  "file": "articles/058-own-site-ai-for-construction-scheduling.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-in-construction-project-management",
+  "url": "https://pciai.org/ai-in-construction-project-management",
+  "title": "AI in construction project management: an honest guide",
+  "kw": "AI in construction project management",
+  "pillar": "AI in project controls",
+  "type": "guide",
+  "file": "articles/059-own-site-ai-in-construction-project-management.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "will-ai-replace-planning-engineers",
+  "url": "https://pciai.org/will-ai-replace-planning-engineers",
+  "title": "Will AI replace planning engineers? The honest answer",
+  "kw": "will AI replace planning engineers",
+  "pillar": "AI in project controls",
+  "type": "faq",
+  "file": "articles/060-own-site-will-ai-replace-planning-engineers.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "will-ai-replace-project-managers",
+  "url": "https://pciai.org/will-ai-replace-project-managers",
+  "title": "Will AI replace project managers? A practitioner's view",
+  "kw": "will AI replace project managers",
+  "pillar": "AI in project controls",
+  "type": "guide",
+  "file": "articles/061-own-site-will-ai-replace-project-managers.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-project-management-certification",
+  "url": "https://pciai.org/ai-project-management-certification",
+  "title": "AI project management certification: how to compare",
+  "kw": "AI project management certification",
+  "pillar": "AI in project controls",
+  "type": "comparison",
+  "file": "articles/062-own-site-ai-project-management-certification.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "future-of-project-controls",
+  "url": "https://pciai.org/future-of-project-controls",
+  "title": "The future of project controls: what actually changes",
+  "kw": "future of project controls",
+  "pillar": "AI in project controls",
+  "type": "guide",
+  "file": "articles/063-own-site-future-of-project-controls.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-for-cost-estimating-in-construction",
+  "url": "https://pciai.org/ai-for-cost-estimating-in-construction",
+  "title": "AI for cost estimating in construction: an honest guide",
+  "kw": "AI for cost estimating in construction",
+  "pillar": "AI in project controls",
+  "type": "guide",
+  "file": "articles/064-own-site-ai-for-cost-estimating-in-construction.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "best-ai-construction-scheduling-software",
+  "url": "https://pciai.org/best-ai-construction-scheduling-software",
+  "title": "Best AI construction scheduling software: how to judge",
+  "kw": "best AI construction scheduling software",
+  "pillar": "AI in project controls",
+  "type": "comparison",
+  "file": "articles/065-own-site-best-ai-construction-scheduling-software.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-in-project-management-2026",
+  "url": "https://pciai.org/ai-in-project-management-2026",
+  "title": "AI in project management in 2026: the state of play",
+  "kw": "AI in project management in 2026",
+  "pillar": "AI in project controls",
+  "type": "pillar",
+  "file": "articles/066-own-site-ai-in-project-management-2026.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "prompt-engineering-for-project-professionals",
+  "url": "https://pciai.org/prompt-engineering-for-project-professionals",
+  "title": "Prompt engineering for project professionals explained",
+  "kw": "prompt engineering for project professionals",
+  "pillar": "AI in project controls",
+  "type": "how-to",
+  "file": "articles/067-own-site-prompt-engineering-for-project-professionals.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "llm-schedule-review",
+  "url": "https://pciai.org/llm-schedule-review",
+  "title": "LLM schedule review: a protocol for planning teams",
+  "kw": "LLM schedule review",
+  "pillar": "AI in project controls",
+  "type": "how-to",
+  "file": "articles/068-own-site-llm-schedule-review.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "ai-policy-for-project-controls",
+  "url": "https://pciai.org/ai-policy-for-project-controls",
+  "title": "AI policy for project controls: a template you can use",
+  "kw": "AI policy for project controls",
+  "pillar": "AI in project controls",
+  "type": "template",
+  "file": "articles/069-own-site-ai-policy-for-project-controls.md"
+ },
+ {
+  "host": "pciai.org",
+  "slug": "generative-ai-project-reporting",
+  "url": "https://pciai.org/generative-ai-project-reporting",
+  "title": "Generative AI project reporting: keep the audit trail",
+  "kw": "generative AI project reporting",
+  "pillar": "AI in project controls",
+  "type": "how-to",
+  "file": "articles/070-own-site-generative-ai-project-reporting.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "project-controls-certification-uk",
+  "url": "https://pciglobal.ai/project-controls-certification-uk",
+  "title": "Project controls certification UK: what actually counts",
+  "kw": "project controls certification UK",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/071-own-site-project-controls-certification-uk.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "project-controls-certification-usa",
+  "url": "https://pciglobal.ai/project-controls-certification-usa",
+  "title": "Project controls certification USA: what actually counts",
+  "kw": "project controls certification USA",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/072-own-site-project-controls-certification-usa.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "project-controls-course-india",
+  "url": "https://pciglobal.ai/project-controls-course-india",
+  "title": "Project controls course India: an honest comparison",
+  "kw": "project controls course India",
+  "pillar": "Certification and careers",
+  "type": "comparison",
+  "file": "articles/073-own-site-project-controls-course-india.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "project-controls-courses-dubai",
+  "url": "https://pciglobal.ai/project-controls-courses-dubai",
+  "title": "Project controls courses in Dubai: how to choose one",
+  "kw": "project controls courses in Dubai",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/074-own-site-project-controls-courses-dubai.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "project-controls-training-uae",
+  "url": "https://pciglobal.ai/project-controls-training-uae",
+  "title": "Project controls training UAE: the real 2026 options",
+  "kw": "project controls training UAE",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/075-own-site-project-controls-training-uae.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "planning-engineer-course-in-saudi-arabia",
+  "url": "https://pciglobal.ai/planning-engineer-course-in-saudi-arabia",
+  "title": "Planning engineer course in Saudi Arabia: the routes",
+  "kw": "planning engineer course in Saudi Arabia",
+  "pillar": "Planning and scheduling",
+  "type": "guide",
+  "file": "articles/076-own-site-planning-engineer-course-in-saudi-arabia.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "project-controls-courses-in-qatar",
+  "url": "https://pciglobal.ai/project-controls-courses-in-qatar",
+  "title": "Project controls courses in Qatar: what to look for",
+  "kw": "project controls courses in Qatar",
+  "pillar": "Certification and careers",
+  "type": "guide",
+  "file": "articles/077-own-site-project-controls-courses-in-qatar.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "primavera-p6-course-in-dubai",
+  "url": "https://pciglobal.ai/primavera-p6-course-in-dubai",
+  "title": "Primavera P6 course in Dubai: choosing the right one",
+  "kw": "primavera p6 course in Dubai",
+  "pillar": "Planning and scheduling",
+  "type": "guide",
+  "file": "articles/078-own-site-primavera-p6-course-in-dubai.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "quantity-surveyor-certification",
+  "url": "https://pciglobal.ai/quantity-surveyor-certification",
+  "title": "Quantity surveyor certification: global routes compared",
+  "kw": "quantity surveyor certification",
+  "pillar": "Cost control and estimating",
+  "type": "guide",
+  "file": "articles/079-own-site-quantity-surveyor-certification.md"
+ },
+ {
+  "host": "pciglobal.ai",
+  "slug": "quantity-surveyor-certification-online",
+  "url": "https://pciglobal.ai/quantity-surveyor-certification-online",
+  "title": "Quantity surveyor certification online: what you get",
+  "kw": "quantity surveyor certification online",
+  "pillar": "Cost control and estimating",
+  "type": "guide",
+  "file": "articles/080-own-site-quantity-surveyor-certification-online.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "planning-engineer-salary",
+  "url": "https://pciworld.org/planning-engineer-salary",
+  "title": "Planning engineer salary: a free tool and how to use it",
+  "kw": "planning engineer salary",
+  "pillar": "Certification and careers",
+  "type": "template",
+  "file": "articles/081-own-site-planning-engineer-salary.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "project-controls-salary",
+  "url": "https://pciworld.org/project-controls-salary",
+  "title": "Project controls salary: a free tool and how to use it",
+  "kw": "project controls salary",
+  "pillar": "Certification and careers",
+  "type": "template",
+  "file": "articles/082-own-site-project-controls-salary.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "planning-engineer-salary-uae",
+  "url": "https://pciworld.org/planning-engineer-salary-uae",
+  "title": "Planning engineer salary UAE: what the market really pays",
+  "kw": "planning engineer salary UAE",
+  "pillar": "Certification and careers",
+  "type": "data-study",
+  "file": "articles/083-own-site-planning-engineer-salary-uae.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "planning-engineer-jobs-in-uae",
+  "url": "https://pciworld.org/planning-engineer-jobs-in-uae",
+  "title": "Planning engineer jobs in UAE: where the demand sits",
+  "kw": "planning engineer jobs in UAE",
+  "pillar": "Certification and careers",
+  "type": "data-study",
+  "file": "articles/084-own-site-planning-engineer-jobs-in-uae.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "project-controls-jobs-in-saudi-arabia",
+  "url": "https://pciworld.org/project-controls-jobs-in-saudi-arabia",
+  "title": "Project controls jobs in Saudi Arabia: the giga-projects",
+  "kw": "project controls jobs in Saudi Arabia",
+  "pillar": "Certification and careers",
+  "type": "data-study",
+  "file": "articles/085-own-site-project-controls-jobs-in-saudi-arabia.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "how-to-become-a-planning-engineer",
+  "url": "https://pciworld.org/how-to-become-a-planning-engineer",
+  "title": "How to become a planning engineer: route and first job",
+  "kw": "how to become a planning engineer",
+  "pillar": "Certification and careers",
+  "type": "how-to",
+  "file": "articles/086-own-site-how-to-become-a-planning-engineer.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "senior-planning-engineer-career-path",
+  "url": "https://pciworld.org/senior-planning-engineer-career-path",
+  "title": "Senior planning engineer career path: the real gates",
+  "kw": "senior planning engineer career path",
+  "pillar": "Certification and careers",
+  "type": "how-to",
+  "file": "articles/087-own-site-senior-planning-engineer-career-path.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "what-does-a-project-controls-engineer-do",
+  "url": "https://pciworld.org/what-does-a-project-controls-engineer-do",
+  "title": "What does a project controls engineer do? A day in the role",
+  "kw": "what does a project controls engineer do",
+  "pillar": "Project controls fundamentals",
+  "type": "guide",
+  "file": "articles/088-own-site-what-does-a-project-controls-engineer-do.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "planning-engineer-interview-questions",
+  "url": "https://pciworld.org/planning-engineer-interview-questions",
+  "title": "Planning engineer interview questions: 20 that come up",
+  "kw": "planning engineer interview questions",
+  "pillar": "Planning and scheduling",
+  "type": "qa-list",
+  "file": "articles/089-own-site-planning-engineer-interview-questions.md"
+ },
+ {
+  "host": "pciworld.org",
+  "slug": "project-controls-interview-questions",
+  "url": "https://pciworld.org/project-controls-interview-questions",
+  "title": "Project controls interview questions and strong answers",
+  "kw": "project controls interview questions",
+  "pillar": "Certification and careers",
+  "type": "qa-list",
+  "file": "articles/090-own-site-project-controls-interview-questions.md"
+ },
+ {
+  "host": "credentialfinder.org",
+  "slug": "best-project-controls-certification",
+  "url": "https://credentialfinder.org/best-project-controls-certification",
+  "title": "Best project controls certification: an honest comparison",
+  "kw": "best project controls certification",
+  "pillar": "Certification and careers",
+  "type": "comparison",
+  "file": "articles/091-own-site-best-project-controls-certification.md"
+ },
+ {
+  "host": "credentialfinder.org",
+  "slug": "best-certification-for-planning-engineers",
+  "url": "https://credentialfinder.org/best-certification-for-planning-engineers",
+  "title": "Best certification for planning engineers, compared",
+  "kw": "best certification for planning engineers",
+  "pillar": "Planning and scheduling",
+  "type": "comparison",
+  "file": "articles/092-own-site-best-certification-for-planning-engineers.md"
+ }
+]

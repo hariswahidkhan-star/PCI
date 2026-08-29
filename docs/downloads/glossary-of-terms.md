@@ -1,11 +1,11 @@
-# Glossary of Terms — PCP-AI
+# Glossary of Terms — PCL-AI
 > The Body of Knowledge's global glossary — every key term, defined once
 
 **How to use this glossary.** Each term is defined once, attributed to the Knowledge Area where it is first
 taught; the same definitions govern everywhere in the Body of Knowledge, the examination and the Institute's
 publications.
 
-Consolidated from every domain's key-terms box — **255 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Style Spine §3).
+Consolidated from every domain's key-terms box — **255 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Style Spine section 3).
 
 | Term | Definition | First defined |
 |---|---|---|

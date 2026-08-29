@@ -6,7 +6,8 @@ The production home for two publication-ready professional books:
 2. **PCI Project Finance Leader – AI Body of Knowledge** (PFL-AI)
 
 Each ≥ 1,200 genuinely useful typeset pages, following the validated pattern of the approved
-**PCL-AI Body of Knowledge** (stored under its pre-rename designation PCP-AI in `docs/bok/`), under
+**PCL-AI Body of Knowledge** (in `docs/bok/`; converted from its former designation PCP-AI — only the
+historical v1 PDF artifact keeps the old filename), under
 phase-gated production. The previously written book is the family pattern; these books adapt it to
 their subject matter without inheriting its defects.
 

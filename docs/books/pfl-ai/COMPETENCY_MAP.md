@@ -1,7 +1,7 @@
 # PFL-AI Competency Map (Phase 0)
 
 **Certification:** PFL-AI — PCI AI Project Finance Leader (`backend/Data/MultiCert.cs`, id 2; the
-programme brief's "PCI Project Finance Leader – AI" naming variance is open decision OD-1)
+programme brief's "PCI Project Finance Leader – AI" is superseded, closing decision OD-1)
 **Blueprint status:** as with PML-AI, **no examination blueprint exists** — no weightings or item
 counts are published. The authoritative competency-adjacent content is the catalogue's **19-item
 competency list** (`MultiCert.cs:50-57`). This map proves each published competency has a home in the
@@ -50,8 +50,8 @@ convention. Weights attach to parts, not domains.
 
 ## 3. Depth targets and boundaries
 
-Family checklist depth throughout (spine §10), with the quantitative flagships (D3, D4, D6, D8, D10,
+Family checklist depth throughout (spine section 10), with the quantitative flagships (D3, D4, D6, D8, D10,
 D14) carrying master-model threads and full calculation-exercise sets. Boundaries: educational
 professional reference only — no individualized investment, legal, tax or accounting advice;
-jurisdiction-specific treatments are flagged as such and referred to qualified advisers (charter §9,
+jurisdiction-specific treatments are flagged as such and referred to qualified advisers (charter section 9,
 decision D-14).

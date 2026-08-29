@@ -1,49 +1,29 @@
-# Domain 16 — Data, Automation and Responsible AI in Finance *(systematic AI treatment)*
-
-> **Group:** Operating and the future (Domain 16 of 16, closing Part Four). **Target:** ~78 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). Every earlier domain carried an **AI in this KA** treatment; this
-> domain is where the treatment becomes **arithmetic**. It composes registered symbols —
-> `CFADS`, `DSCR`, `NPV`, `AF(r, n)`, `EMV`, the hundred-per-cent rule, the mesh-versus-layer
-> interface count `n(n−1)/2`, and PML-AI's governance latency `E[wait] = M/2 + L` — and it
-> proposes for the registry the six automation and assurance measures it derives: **cost per
-> reviewed item**, **automation breakeven volume**, **total misclassification cost**,
-> **break-even posterior**, **zero-failure validation sample size** and **revalidation
-> interval**. Where a figure was derived earlier it is **cited, not re-derived**: `CFADS`
-> **6,384,000**, debt service **5,009,635.23**, `DSCR` **1.2743**, the 1.20× covenant biting at
-> `CFADS` **6,011,562** and the annual headroom of **372,438** come from Domain 10 (KA 10.1–10.2);
-> the 3,250,352 debt-capacity consequence of a one-cell tax error and the year-twelve minimum
-> `DSCR` of 1.1851 come from Domain 6 (KA 6.4.1); the working-capital treatment worth
-> **600,000** of `CFADS` comes from Domain 2 (KA 2.3.1); model risk as a priced register line
-> comes from Domain 11 (KA 11.4.3). British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`). Rates used throughout, stated once: a loaded analyst hour **USD 96.00**
-> (**USD 1.60** a minute), a senior modeller or reviewer hour **USD 150.00**, a legal-and-finance
-> specialist hour **USD 240.00**.
-
+# Domain 16 — Data, Automation and Responsible AI in Finance
 ## Why this domain exists
 
 Fifteen domains have each ended with a paragraph on where machine assistance earns its place and
-where it must not go. Those paragraphs were judgments — well-founded, but judgments. They left one
-question open, and it is the question a finance director actually has to answer: **at what point,
-measured in money, does automating a piece of the finance function stop being a slide and start
-being a decision that survives audit?** Nothing so far has priced an automation, chosen an alert
-threshold, sized a validation suite, or stated what a human approval costs and what it buys. This
-domain does all four, and it does them with the same decimal discipline the book applies to a debt
-schedule, because an automation programme that cannot be costed cannot be governed.
+where it must not go. Those paragraphs were judgments (well-founded, but judgments). They left
+one question open, and it is the question a finance director actually has to answer: **at what
+point, measured in money, does automating a piece of the finance function stop being a slide and
+start being a decision that survives audit?** Nothing so far has priced an automation, chosen an
+alert threshold, sized a validation suite, or stated what a human approval costs and what it
+buys. This domain does all four, and it does them with the same decimal discipline the book
+applies to a debt schedule, because an automation programme that cannot be costed cannot be
+governed.
 
 The domain's central claim is that **responsible AI in finance is a quantitative discipline, and
 the numbers usually point somewhere other than intuition.** Four results carry the chapter, and
 each contradicts something a practitioner is likely to believe. Automation economics turn on the
-**cost of the errors the automation makes**, not on the labour it displaces — so the more
-consequential the work, the *more* volume automation needs before it pays, which is the opposite of
-the usual argument for automating the important things first. An anomaly detector tuned to maximise
-accuracy is tuned wrongly whenever a false positive and a missed error cost different amounts, and
-the gap between the accuracy-optimal and the cost-optimal threshold is a real annual number
-somebody is paying. Validation by testing proves far less than it appears to: the suite an
-organisation can afford bounds the defect rate at a level that still admits hundreds of errors a
-year at production volume, which is why continuous monitoring and human approval — not
-pre-deployment testing — carry the assurance load. And the value of a control, like the value of a
-loosened threshold, is a **marginal** quantity: a blanket four-eyes rule is close to
+**cost of the errors the automation makes**, not on the labour it displaces, so the more
+consequential the work, the *more* volume automation needs before it pays, which is the opposite
+of the usual argument for automating the important things first. An anomaly detector tuned to
+maximise accuracy is tuned wrongly whenever a false positive and a missed error cost different
+amounts, and the gap between the accuracy-optimal and the cost-optimal threshold is a real
+annual number somebody is paying. Validation by testing proves far less than it appears to: the
+suite an organisation can afford bounds the defect rate at a level that still admits hundreds of
+errors a year at production volume, which is why continuous monitoring and human approval, not
+pre-deployment testing, carry the assurance load. And the value of a control, like the value of
+a loosened threshold, is a **marginal** quantity: a blanket four-eyes rule is close to
 value-neutral, while the same rule above a derivable threshold is strongly positive.
 
 Underneath all four sits the principle the suite has carried since its first page, now with an
@@ -56,30 +36,31 @@ disagreement about the technology.
 **Learning objectives.** After this domain a candidate can: describe a financial-data spine and
 price the architecture choice against a pairwise-reconciliation estate using the registered
 interface count; compute the all-in cost per reviewed item for a manual and an automated process
-including the cost of the errors each makes, and derive the breakeven volume, the volume at which
-a specific asset does *not* justify automation, the automated error rate at which the case
-reverses, and the consequence cost at which it reverses; explain why the breakeven rises with the
-consequence of an error; read an anomaly detector as a classifier, compute precision, recall,
-accuracy and total misclassification cost at several thresholds, identify the cost-minimising
-threshold, demonstrate that it differs from the accuracy-maximising threshold, quantify the annual
-cost of choosing the latter, and derive the break-even posterior probability and the marginal
-precision test that locates the optimum; derive the number of scenarios required to surface a
-failure mode of stated probability at stated confidence and explain why a reported worst case from
-a generated set is a percentile rather than a stress; compute the probability that a multi-item
-document extraction is entirely correct, derive the per-item accuracy a stated sweep confidence
-requires, and defend a verification scope on the load-bearing subset; compute the real and apparent
-saving from machine-assisted model building and price the review that is habitually omitted; test
-an explanation for attributional completeness using the hundred-per-cent rule; derive the
-zero-failure validation sample size for a stated confidence and defect-rate bound, adjust it for
-one observed failure, and translate a validated defect rate into expected annual production errors;
-identify and quantify label bias in a detector trained on a prior process's output, and size the
-blind audit sample that measures it; build a model inventory tiered by expected annual loss and
-derive each model's revalidation interval; price a managed against a private deployment and state
-the breach consequence at which the answer flips; derive a dual-approval threshold from the
-approver's cost and the loss it prevents, and compute the value destroyed by applying the control
-blanket-fashion; price approval latency using the registered governance-latency formula; and set
-out an AI governance frame — inventory, tiering, human approval, incident and rollback, disclosure
-— that a lender's information covenants can be satisfied against.
+including the cost of the errors each makes, and derive the breakeven volume, the volume at
+which a specific asset does *not* justify automation, the automated error rate at which the case
+reverses, and the consequence cost at which it reverses; explain why the breakeven rises with
+the consequence of an error; read an anomaly detector as a classifier, compute precision,
+recall, accuracy and total misclassification cost at several thresholds, identify the
+cost-minimising threshold, demonstrate that it differs from the accuracy-maximising threshold,
+quantify the annual cost of choosing the latter, and derive the break-even posterior probability
+and the marginal precision test that locates the optimum; derive the number of scenarios
+required to surface a failure mode of stated probability at stated confidence and explain why a
+reported worst case from a generated set is a percentile rather than a stress; compute the
+probability that a multi-item document extraction is entirely correct, derive the per-item
+accuracy a stated sweep confidence requires, and defend a verification scope on the load-bearing
+subset; compute the real and apparent saving from machine-assisted model building and price the
+review that is habitually omitted; test an explanation for attributional completeness using the
+hundred-per-cent rule; derive the zero-failure validation sample size for a stated confidence
+and defect-rate bound, adjust it for one observed failure, and translate a validated defect rate
+into expected annual production errors; identify and quantify label bias in a detector trained
+on a prior process's output, and size the blind audit sample that measures it; build a model
+inventory tiered by expected annual loss and derive each model's revalidation interval; price a
+managed against a private deployment and state the breach consequence at which the answer flips;
+derive a dual-approval threshold from the approver's cost and the loss it prevents, and compute
+the value destroyed by applying the control blanket-fashion; price approval latency using the
+registered governance-latency formula; and set out an AI governance frame (inventory, tiering,
+human approval, incident and rollback, disclosure) that a lender's information covenants can be
+satisfied against.
 
 **The master estate.** Kestrel Water SPC is in operation, with the structure Domains 10 and 15
 established. Its sponsor group owns **six operating assets** and runs one finance function across
@@ -107,14 +88,14 @@ review · 16.1.3 anomaly detection as a classifier.*
 
 **Definition.** A **financial-data spine** is a single governed layer through which every system
 publishes and consumes financial facts, so that each fact has one authoritative representation.
-Four properties make it a spine rather than a warehouse. **Grain** — every table states the level
-at which one row is one fact (one meter reading, one invoice line, one period's `CFADS`), because
-most reconciliation failures are grain mismatches rather than arithmetic errors. **Golden source**
-— exactly one system is authoritative for each fact, named, and the others are derived.
-**Lineage** — every reported figure can be traced to the transactions beneath it without human
-reconstruction. And the property that matters most in a financing and is most often absent, the
-**definitional layer**: the facility's defined terms are implemented **once**, as code, with a
-clause reference, so that `CFADS` means in the data what it means in the document.
+Four properties make it a spine rather than a warehouse. **Grain**: every table states the level
+at which one row is one fact (one meter reading, one invoice line, one period's `CFADS`),
+because most reconciliation failures are grain mismatches rather than arithmetic errors.
+**Golden source**; exactly one system is authoritative for each fact, named, and the others are
+derived. **Lineage**; every reported figure can be traced to the transactions beneath it without
+human reconstruction. And the property that matters most in a financing and is most often
+absent, the **definitional layer**: the facility's defined terms are implemented **once**, as
+code, with a clause reference, so that `CFADS` means in the data what it means in the document.
 
 That last property is the finance-specific one, and it is why this topic is not an information
 technology digression. Domain 2 (KA 2.3.1) showed Kestrel's `CFADS` moving by **600,000** on one
@@ -146,22 +127,23 @@ organisation discovers the drift when two papers disagree in front of a credit c
    convexity rather than the level. The mesh grows as the square of the estate: adding a tenth
    system adds **9** pairwise reconciliations — **1,296 hours** and **USD 124,416** a year —
    against **48 hours** and **USD 4,608** for one more spine feed, a ratio of **27 to 1**. At
-   fifteen systems the mesh needs **105** reconciliations and **USD 1,451,520** a year against the
-   spine's **USD 69,120**. So the spine is not a labour saving on today's estate; it is the only
-   architecture whose cost is linear in an estate that will grow, and the appraisal should be run
-   at the estate size the organisation expects rather than the one it has. Two cautions, and the
-   second is the professional one. **The saving is only realised if the pairwise reconciliations are
-   actually retired** — estates routinely acquire a spine and keep the reconciliations, which
-   converts a 316,192 saving into a 181,472 cost — the spine's own 41,472 of feed labour plus its
-   140,000 run cost, paid on top of an unchanged mesh — and that failure is a governance failure
-   rather than a technical one. And **the labour case is not the case that matters.** A single definitional
-   divergence in `CFADS` is worth **600,000** of reported cash (Domain 2, KA 2.3.1) — **1.6110
-   times** Kestrel's entire annual covenant headroom of 372,438 — and a definition implemented
-   wrongly in code does not misreport once: it misreports every period until somebody finds it, so
-   over the same ten-year appraisal it is worth `600,000 × AF(0.08, 10) =` **USD 4,026,049** in
-   present value, **3.2955 times** the 1,221,674 the hours produced. The business case that gets built is the labour one;
-   the business case that decides is the definitional one. State both, and be honest that the
-   second is the reason.
+   fifteen systems the mesh needs **105** reconciliations and **USD 1,451,520** a year against
+   the spine's **USD 69,120**. So the spine is not a labour saving on today's estate; it is the
+   only architecture whose cost is linear in an estate that will grow, and the appraisal should
+   be run at the estate size the organisation expects rather than the one it has. Two cautions,
+   and the second is the professional one. **The saving is only realised if the pairwise
+   reconciliations are actually retired** (estates routinely acquire a spine and keep the
+   reconciliations, which converts a 316,192 saving into a 181,472 cost) the spine's own 41,472
+   of feed labour plus its 140,000 run cost, paid on top of an unchanged mesh, and that failure
+   is a governance failure rather than a technical one. And **the labour case is not the case
+   that matters.** A single definitional divergence in `CFADS` is worth **600,000** of reported
+   cash (Domain 2, KA 2.3.1) (**1.6110 times** Kestrel's entire annual covenant headroom of
+   372,438), and a definition implemented wrongly in code does not misreport once: it misreports
+   every period until somebody finds it, so over the same ten-year appraisal it is worth
+   `600,000 × AF(0.08, 10) =` **USD 4,026,049** in present value, **3.2955 times** the 1,221,674
+   the hours produced. The business case that gets built is the labour one; the business case
+   that decides is the definitional one. State both, and be honest that the second is the
+   reason.
 
 ### 16.1.2 Forecast automation and the economics of a review
 
@@ -196,30 +178,30 @@ comparison that omits the second part is not a comparison.
    records the automation costs **USD 54,000 a year more** than the manual process. Across the six-asset
    portfolio's **56,400** records it saves **USD 416,000 a year** (manual 1,091,904 against
    675,904 all-in, or **USD 11.9841** a record).
-5. **Interpretation.** Three readings, in ascending order of usefulness. **First, the answer is an
-   estate answer, not an asset answer.** The same platform is a 54,000 annual loss at one project
-   and a 416,000 annual gain at six, and no amount of enthusiasm at the project changes that;
-   the project's honest options are to wait for the estate, to buy a service priced per record
-   rather than per year, or to decline. Automation cases fail at the asset level far more often
-   than they fail technically. **Second, the error-cost term is where the case is decided, and
-   omitting it flatters automation.** Ignore both error rates and the advantage rises to
-   `13.60 − 1.04 = 12.56`, so the breakeven appears at **11,783 records** — **3,017 records**, or
-   **20.3822 per cent**, lower than the truth. The sensitivities are worth carrying in the head: at
-   the portfolio's 56,400 records the case survives an automated undetected-error rate up to
-   **4.9050 per cent** (against the 2.60 modelled, so it tolerates nearly double) and a consequence
-   cost up to **USD 1,241.99** an error. **Third — and this is the result that changes behaviour —
-   the breakeven rises with the consequence of an error.** Reprice an undetected error at
-   **USD 1,200** rather than 320 and both processes get dearer, but the automated one gets dearer
-   faster, because its error rate is the higher of the two: manual **35.20**, automated **32.24**,
-   advantage only **2.96**, and the **breakeven moves to 50,000 records a year**. At the
-   portfolio's 56,400 the whole programme is then worth **USD 18,944** a year — arithmetically
-   positive, professionally indistinguishable from nil. The intuition to abandon is "automate the
-   important work first". The defensible rule is the reverse: **automate the high-volume,
-   low-consequence work, and spend the freed capacity on the low-volume, high-consequence work
-   where a human error rate of 1.80 per cent beats a machine's 2.60.** The caution that belongs
-   beside every such case: both error rates are *measured* quantities, and an organisation that has
-   not measured its manual error rate has no automation case at all, only an aspiration with a
-   spreadsheet.
+5. **Interpretation.** Three readings, in ascending order of usefulness. **First, the answer is
+   an estate answer, not an asset answer.** The same platform is a 54,000 annual loss at one
+   project and a 416,000 annual gain at six, and no amount of enthusiasm at the project changes
+   that; the project's honest options are to wait for the estate, to buy a service priced per
+   record rather than per year, or to decline. Automation cases fail at the asset level far more
+   often than they fail technically. **Second, the error-cost term is where the case is decided,
+   and omitting it flatters automation.** Ignore both error rates and the advantage rises to
+   `13.60 − 1.04 = 12.56`, so the breakeven appears at **11,783 records** — **3,017 records**,
+   or **20.3822 per cent**, lower than the truth. The sensitivities are worth carrying in the
+   head: at the portfolio's 56,400 records the case survives an automated undetected-error rate
+   up to **4.9050 per cent** (against the 2.60 modelled, so it tolerates nearly double) and a
+   consequence cost up to **USD 1,241.99** an error. **Third, and this is the result that
+   changes behaviour, the breakeven rises with the consequence of an error.** Reprice an
+   undetected error at **USD 1,200** rather than 320 and both processes get dearer, but the
+   automated one gets dearer faster, because its error rate is the higher of the two: manual
+   **35.20**, automated **32.24**, advantage only **2.96**, and the **breakeven moves to 50,000
+   records a year**. At the portfolio's 56,400 the whole programme is then worth **USD 18,944**
+   a year (arithmetically positive, professionally indistinguishable from nil). The intuition to
+   abandon is "automate the important work first". The defensible rule is the reverse:
+   **automate the high-volume, low-consequence work, and spend the freed capacity on the
+   low-volume, high-consequence work where a human error rate of 1.80 per cent beats a machine's
+   2.60.** The caution that belongs beside every such case: both error rates are *measured*
+   quantities, and an organisation that has not measured its manual error rate has no automation
+   case at all, only an aspiration with a spreadsheet.
 
 > **Fig 16.1.2 — Where automation starts to pay, and what the error cost does to the answer.**
 > Line chart, x-axis annual review volume 0–70,000 records, y-axis net annual saving from
@@ -237,15 +219,15 @@ comparison that omits the second part is not a comparison.
 
 **The forecast-quality translation.** The pipeline's purpose is a better forecast, and forecast
 quality has to be expressed in covenant terms to mean anything to a board. Measured over the
-estate's last three years, the manual cycle's revenue forecast carried a mean absolute percentage
-error of **4.8 per cent** and the automated pipeline's **3.1 per cent**. On Kestrel's `CFADS` of
-**6,384,000** those are error bands of **USD 306,432** and **USD 197,904** — **82.2773 per cent**
-and **53.1374 per cent** of the annual covenant headroom of 372,438. That is the sentence that
-belongs in the paper: the improvement is not "1.7 points of accuracy", it is **the difference
-between a forecast band that nearly consumes the covenant headroom and one that consumes half of
-it.** Note also what the comparison does not license — a lower average error does not mean a
-smaller tail, and the covenant is tested in periods (Domain 10, KA 10.2.1), so the figure to
-monitor is the worst period's error, not the mean.
+estate's last three years, the manual cycle's revenue forecast carried a mean absolute
+percentage error of **4.8 per cent** and the automated pipeline's **3.1 per cent**. On Kestrel's
+`CFADS` of **6,384,000** those are error bands of **USD 306,432** and **USD 197,904** (**82.2773
+per cent** and **53.1374 per cent** of the annual covenant headroom of 372,438). That is the
+sentence that belongs in the paper: the improvement is not "1.7 points of accuracy", it is **the
+difference between a forecast band that nearly consumes the covenant headroom and one that
+consumes half of it.** Note also what the comparison does not license — a lower average error
+does not mean a smaller tail, and the covenant is tested in periods (Domain 10, KA 10.2.1), so
+the figure to monitor is the worst period's error, not the mean.
 
 ### 16.1.3 Anomaly detection as a classifier
 
@@ -260,8 +242,8 @@ the choice of threshold, which none of those three is: **total misclassification
 
 **Worked example 16.1.3 — the threshold, chosen properly.**
 
-1. **Setup.** The estate's payment-and-journal detector: **48,000** items a year, of which
-   **2.5 per cent — 1,200** are genuinely erroneous and **46,800** are clean. Investigating a false
+1. **Setup.** The estate's payment-and-journal detector: **48,000** items a year, of which **2.5
+   per cent, 1,200** are genuinely erroneous and **46,800** are clean. Investigating a false
    positive costs **USD 40** (25 minutes of an analyst). A missed error costs **USD 320**. Five
    candidate thresholds have been measured on a held-out year.
 2. **Formula.** Recall, precision and accuracy as defined; total cost `= FP × 40 + FN × 320`. The
@@ -277,37 +259,38 @@ the choice of threshold, which none of those three is: **total misclassification
    | T4 (≥ 0.60) | 960 | 950 | 240 | 80.0 % | 50.2618 % | 97.5208 % | 1,910 | **114,800** |
    | T5 (≥ 0.45) | 1,080 | 2,900 | 120 | 90.0 % | 27.1357 % | 93.7083 % | 3,980 | 154,400 |
 
-4. **Result, stated.** Total cost is minimised at **T4 — USD 114,800 a year**. Accuracy is
-   maximised at **T2 — 98.5729 per cent**, where the total cost is **USD 161,800**. Choosing the
+4. **Result, stated.** Total cost is minimised at **T4 (USD 114,800 a year)**. Accuracy is
+   maximised at **T2: 98.5729 per cent**, where the total cost is **USD 161,800**. Choosing the
    accuracy-maximising threshold therefore costs **USD 47,000 a year**.
 5. **Interpretation.** The headline is the one the spine of this domain demands: **maximising
    accuracy is the wrong objective whenever a false positive and a false negative cost different
    amounts**, and here they differ eight-fold. Accuracy weights every item equally, so it is
-   dominated by the 46,800 clean items and rewards a detector for leaving them alone; cost weights
-   each item by its consequence, and a missed error costs eight investigations. The 47,000 is not
-   an abstraction — it is an annual sum the finance function is paying for a metric choice nobody
-   minuted. Three further readings do the professional work. **The optimum looks bad on
-   precision.** At T4 only **50.2618 per cent** of alerts are real, so the team working the queue
-   experiences a coin flip and will lobby to tighten the threshold; the leader's job is to explain
-   that a queue which is half false is the *correct* queue at these costs, and to resource the
-   **1,910 alerts** — at 25 minutes each, about **795.83 hours** a year, or **USD 76,400** of
-   analyst time — rather than tune the model to make the queue feel better. **The decision rule is marginal, not average.** The break-even
-   posterior is `40 ÷ 320 = 12.5 per cent`: act on an item whenever there is at least a **one in
-   eight** chance it is real. Average precision at every threshold in the table exceeds 12.5 per
-   cent, including T5's 27.1357 per cent — yet T5 is worse than T4, because what matters is the
-   quality of the **additional** alerts a looser threshold buys. From T3 to T4 the step adds 120
-   real errors and 550 false ones: marginal precision **17.9104 per cent**, above 12.5, benefit
-   `120 × 320 = 38,400` against cost `550 × 40 = 22,000`, net **+16,400** — take it. From T4 to T5
-   the step adds 120 real and **1,950** false: marginal precision **5.7971 per cent**, benefit
-   38,400 against cost **78,000**, net **−39,600** — refuse it. The optimum is where marginal
-   precision crosses the break-even posterior, and every step's net exactly reconciles to the
-   change in the cost column, which is the arithmetic check to run on any such table. **And the
-   two cost inputs are the real argument.** They are estimates, and the threshold is a function of
-   their ratio alone, so the productive discussion in the room is "what does a missed error
-   actually cost us?" rather than "which model is best". Change the ratio to 1:4 and the optimum
-   tightens to T3; change it to 1:20 and it loosens to T5, the last threshold measured. State the
-   ratio, own it, and revisit it when the consequence changes — for instance when the same detector begins to screen items that
-   feed a covenant certificate rather than a management report.
+   dominated by the 46,800 clean items and rewards a detector for leaving them alone; cost
+   weights each item by its consequence, and a missed error costs eight investigations. The
+   47,000 is an annual sum the finance function is paying for a metric choice nobody minuted,
+   not an abstraction. Three further readings do the professional work. **The optimum looks bad
+   on precision.** At T4 only **50.2618 per cent** of alerts are real, so the team working the
+   queue experiences a coin flip and will lobby to tighten the threshold; the leader's job is to
+   explain that a queue which is half false is the *correct* queue at these costs, and to
+   resource the **1,910 alerts** (at 25 minutes each, about **795.83 hours** a year, or **USD
+   76,400** of analyst time), rather than tune the model to make the queue feel better. **The
+   decision rule is marginal, not average.** The break-even posterior is `40 ÷ 320 = 12.5 per
+   cent`: act on an item whenever there is at least a **one in eight** chance it is real.
+   Average precision at every threshold in the table exceeds 12.5 per cent, including T5's
+   27.1357 per cent, yet T5 is worse than T4, because what matters is the quality of the
+   **additional** alerts a looser threshold buys. From T3 to T4 the step adds 120 real errors
+   and 550 false ones: marginal precision **17.9104 per cent**, above 12.5, benefit `120 × 320 =
+   38,400` against cost `550 × 40 = 22,000`, net **+16,400**, take it. From T4 to T5 the step
+   adds 120 real and **1,950** false: marginal precision **5.7971 per cent**, benefit 38,400
+   against cost **78,000**, net **−39,600**, refuse it. The optimum is where marginal precision
+   crosses the break-even posterior, and every step's net exactly reconciles to the change in
+   the cost column, which is the arithmetic check to run on any such table. **And the two cost
+   inputs are the real argument.** They are estimates, and the threshold is a function of their
+   ratio alone, so the productive discussion in the room is "what does a missed error actually
+   cost us?" rather than "which model is best". Change the ratio to 1:4 and the optimum tightens
+   to T3; change it to 1:20 and it loosens to T5, the last threshold measured. State the ratio,
+   own it, and revisit it when the consequence changes: for instance when the same detector
+   begins to screen items that feed a covenant certificate rather than a management report.
 
 > **Fig 16.1.3 — The accuracy-maximising threshold is not the cost-minimising threshold.**
 > Combination chart over the five thresholds of the table. Bars (left axis, USD 0–220k) show total
@@ -324,26 +307,26 @@ the choice of threshold, which none of those three is: **total misclassification
 ### AI in this KA
 
 **Where it earns its place.** Everything in this knowledge area is machine work by construction,
-and the highest-value application is the one organisations skip: using the pipeline's own output to
-**measure** the quantities the business case assumed. The manual error rate, the automated error
-rate, the referral rate, the adjudication time and the realised consequence of an undetected error
-are all observable once the pipeline is instrumented, and a business case that is re-run on
-measured inputs each year is a governed automation rather than a purchased one. Machine assistance
-also belongs in the threshold work — scoring a held-out year at fifty thresholds and tabulating
-cost is trivial for a machine and tedious for a person.
+and the highest-value application is the one organisations skip: using the pipeline's own output
+to **measure** the quantities the business case assumed. The manual error rate, the automated
+error rate, the referral rate, the adjudication time and the realised consequence of an
+undetected error are all observable once the pipeline is instrumented, and a business case that
+is re-run on measured inputs each year is a governed automation rather than a purchased one.
+Machine assistance also belongs in the threshold work: scoring a held-out year at fifty
+thresholds and tabulating cost is trivial for a machine and tedious for a person.
 
 **Where it must not go.** No model may set its own operating threshold, because the threshold
-encodes the organisation's view of what a missed error costs, and that is a judgment with an owner.
-Nor may a detector's alert be closed by the same system that raised it: adjudication is the human
-step that converts a score into a finding, and a pipeline that both flags and clears has no control
-in it at all (16.4.2 prices exactly this). And no automation business case may be approved on
-processing costs alone — the omission of the error-cost term is the specific, nameable defect that
-makes automation look 20.3822 per cent better than it is.
+encodes the organisation's view of what a missed error costs, and that is a judgment with an
+owner. Nor may a detector's alert be closed by the same system that raised it: adjudication is
+the human step that converts a score into a finding, and a pipeline that both flags and clears
+has no control in it at all (16.4.2 prices exactly this). And no automation business case may be
+approved on processing costs alone: the omission of the error-cost term is the specific,
+nameable defect that makes automation look 20.3822 per cent better than it is.
 
 **Verification, concretely.** Recompute one period's cost per item by hand from the loaded rate,
 the minutes and the measured error rate, and require agreement to the cent. Confirm that every
 threshold row's total cost reconciles to the previous row's plus the marginal benefit less the
-marginal cost — an arithmetic identity that catches transcription errors instantly. Confirm the
+marginal cost (an arithmetic identity that catches transcription errors instantly). Confirm the
 prevalence used in the table against a blind audit rather than against the detector's own labels
 (16.3.3 shows what happens when this is skipped). Reconcile the pipeline's published forecast to
 the ledger for one period, line by line, and express the residual as a percentage of covenant
@@ -378,34 +361,35 @@ breakeven volume is:
 
 *Rationale:* All-in costs are `13.60 + 0.018 × 320 = 19.36` and `1.04 + 0.026 × 320 = 9.36`; the
 advantage is 10.00 and `148,000 ÷ 10.00 = 14,800`. A omits the error-cost term from both sides
-(advantage 12.56, `148,000 ÷ 12.56 = 11,783`) — the specific defect of 16.1.2. C divides the fixed
-cost by the automated all-in cost per record (`148,000 ÷ 9.36`) instead of by the advantage,
-treating the comparison as an absorption problem rather than a differential one. D makes the same
-error against the automated *processing* cost alone (`148,000 ÷ 1.04`), ignoring the manual
-alternative entirely.
+(advantage 12.56, `148,000 ÷ 12.56 = 11,783`) (the specific defect of 16.1.2). C divides the
+fixed cost by the automated all-in cost per record (`148,000 ÷ 9.36`) instead of by the
+advantage, treating the comparison as an absorption problem rather than a differential one. D
+makes the same error against the automated *processing* cost alone (`148,000 ÷ 1.04`), ignoring
+the manual alternative entirely.
 
-**MCQ 16.1-B `[16.1.2 · Analysis]`** An organisation reprices an undetected error from USD 320 to
-USD 1,200 on the same two processes — manual review 13.60 a record leaving 1.80 % of records with an
-undetected error, automated processing 1.04 a record leaving 2.60 %, on a committed fixed cost of
-148,000 a year. The breakeven volume:
+**MCQ 16.1-B `[16.1.2 · Analysis]`** An organisation reprices an undetected error from USD 320
+to USD 1,200 on the same two processes: manual review 13.60 a record leaving 1.80 % of records
+with an undetected error, automated processing 1.04 a record leaving 2.60 %, on a committed
+fixed cost of 148,000 a year. The breakeven volume:
 - A. falls, because errors are now more expensive and automation catches more of them
 - B. is unchanged, because the error rates are unchanged
 - C. rises from 14,800 to 50,000, because the automated process has the higher error rate so a larger consequence erodes its advantage ✅
 - D. becomes irrelevant, because at a high enough consequence neither process is acceptable
 
-*Rationale:* Manual becomes `13.60 + 0.018 × 1,200 = 35.20` and automated
-`1.04 + 0.026 × 1,200 = 32.24`; the advantage falls from 10.00 to 2.96 and `148,000 ÷ 2.96 =
-50,000`. A assumes the automation is the more accurate process, which the given rates contradict.
-B confuses the rates with their monetised effect. D is a governance observation, not the arithmetic
-asked for — and at 56,400 records the automation is still positive, by 18,944.
+*Rationale:* Manual becomes `13.60 + 0.018 × 1,200 = 35.20` and automated `1.04 + 0.026 × 1,200
+= 32.24`; the advantage falls from 10.00 to 2.96 and `148,000 ÷ 2.96 = 50,000`. A assumes the
+automation is the more accurate process, which the given rates contradict. B confuses the rates
+with their monetised effect. D is a governance observation, not the arithmetic asked for, and at
+56,400 records the automation is still positive, by 18,944.
 
 **MCQ 16.1-C `[16.1.3 · Analysis]`** A detector's five thresholds give accuracies of 98.5208,
 98.5729, 98.4167, 97.5208 and 93.7083 per cent and total misclassification costs of 196,400,
 161,800, 131,200, 114,800 and 154,400. The threshold that should be operated, and why:
-- A. the second — it maximises accuracy, which is the standard classification metric
-- B. the fifth — it maximises recall, and missing an error is the expensive outcome
-- C. the fourth — it minimises total cost, which is the only objective that reflects the different consequences of the two error types ✅
-- D. the first — its precision of 84.5070 % gives the investigation team the most reliable queue
+- A. the second: it maximises accuracy, which is the standard classification metric
+- B. the fifth: it maximises recall, and missing an error is the expensive outcome
+- C. the fourth: it minimises total cost, which is the only objective that reflects the
+  different consequences of the two error types ✅
+- D. the first: its precision of 84.5070 % gives the investigation team the most reliable queue
 
 *Rationale:* Accuracy weights all items equally and is dominated by the 46,800 clean ones; cost
 weights each by consequence, and the minimum is 114,800 at T4 — choosing T2 on accuracy costs
@@ -415,20 +399,23 @@ weights each by consequence, and the minimum is 114,800 at T4 — choosing T2 on
 **MCQ 16.1-D `[16.1.3 · Analysis]`** A false positive costs 40 and a missed error 320. Loosening
 the threshold from T4 to T5 would add 120 true positives and 1,950 false positives. The correct
 conclusion is:
-- A. accept — the marginal alerts still have 27.1357 % precision overall, well above the 12.5 % break-even
-- B. refuse — marginal precision is 5.7971 %, below the 12.5 % break-even, and the step costs 78,000 to save 38,400 ✅
-- C. accept — recall rises from 80 % to 90 %, and recall is the measure lenders ask about
+- A. accept: the marginal alerts still have 27.1357 % precision overall, well above the 12.5 %
+  break-even
+- B. refuse; marginal precision is 5.7971 %, below the 12.5 % break-even, and the step costs
+  78,000 to save 38,400 ✅
+- C. accept: recall rises from 80 % to 90 %, and recall is the measure lenders ask about
 - D. indeterminate without knowing the anomaly base rate
 
-*Rationale:* The test is on the *marginal* alerts: `120 ÷ (120 + 1,950) = 5.7971 %`, and the net is
-−39,600, which reconciles exactly to the cost column rising from 114,800 to 154,400. A quotes T5's
-*average* precision, which is the standing error in threshold decisions. C treats a ratio as an
-objective. D is false — the counts given already embed the base rate.
+*Rationale:* The test is on the *marginal* alerts: `120 ÷ (120 + 1,950) = 5.7971 %`, and the net
+is −39,600, which reconciles exactly to the cost column rising from 114,800 to 154,400. A quotes
+T5's *average* precision, which is the standing error in threshold decisions. C treats a ratio
+as an objective. D is false: the counts given already embed the base rate.
 
 **MCQ 16.1-E `[16.1.1 · Evaluation]`** The paper recommending the financial-data spine leads with a
 **+1,221,674** net present value from retiring 36 pairwise reconciliations, a 316,192 annual labour
 saving against a 900,000 build. What should a reviewer require before it goes to the board?
-- A. nothing further — a +1,221,674 net present value at the board's 8 % over ten years clears the hurdle on its own
+- A. nothing further: a +1,221,674 net present value at the board's 8 % over ten years clears
+  the hurdle on its own
 - B. the definitional case stated alongside it — one `CFADS` divergence is worth 600,000 a period and 4,026,049 in present value over the same appraisal, 3.2955 times the labour case — together with a commitment to retire the 36 reconciliations, without which the 316,192 saving becomes a 181,472 annual cost ✅
 - C. that the appraisal be re-run at the fifteen-system estate the group expects, where the mesh costs 1,451,520 a year against the spine's 69,120
 - D. that the 900,000 build be competitively tendered, since it is the largest single figure in the paper
@@ -448,11 +435,11 @@ best captures why the second cannot be left out?
 - C. because errors that are found still cost money to put right
 - D. because the pipeline exists to improve forecast accuracy, and accuracy belongs in its cost
 
-*Rationale:* The second part monetises the errors that *survive* the process, which is what makes
-two processes with different accuracies comparable (16.1.2). A names a real and separate term, which
-the breakeven-volume calculation handles — the per-item figures of 19.36 and 9.36 are variable costs
-by construction. C describes detected errors, whose handling already sits inside the processing cost
-as adjudication minutes. D confuses a benefit with a cost.
+*Rationale:* The second part monetises the errors that *survive* the process, which is what
+makes two processes with different accuracies comparable (16.1.2). A names a real and separate
+term, which the breakeven-volume calculation handles: the per-item figures of 19.36 and 9.36 are
+variable costs by construction. C describes detected errors, whose handling already sits inside
+the processing cost as adjudication minutes. D confuses a benefit with a cost.
 
 **MCQ 16.1-G `[16.1.2 · Evaluation]`** A finance director proposes automating the estate's
 highest-consequence review work first, because that is where an error costs most and a machine is more
@@ -461,22 +448,24 @@ records with an undetected error, the pipeline **1.04** a record leaving **2.60 
 **148,000** a year — the soundest sequencing advice is to:
 - A. automate the highest-consequence work first, since that is where an error costs most and consistency is
   worth most
-- B. automate the high-volume, low-consequence work and spend the freed capacity on the low-volume,
-  high-consequence work, because the breakeven **rises** with the consequence of an error — 14,800 records
-  at 320 an error, 50,000 at 1,200 — while the manual 1.80 % beats the pipeline's 2.60 % ✅
+- B. automate the high-volume, low-consequence work and spend the freed capacity on the
+  low-volume, high-consequence work, because the breakeven **rises** with the consequence of an
+  error (14,800 records at 320 an error, 50,000 at 1,200), while the manual 1.80 % beats the
+  pipeline's 2.60 % ✅
 - C. automate nothing until the pipeline's residual error rate falls below the manual rate, since automating
   a less accurate process cannot be justified
 - D. automate everything at once, because the 148,000 is committed whatever the scope and the marginal record
   then costs only 1.04 to process
 
-*Rationale:* The automated process carries the **higher** residual error rate, so a larger consequence per
-error erodes its advantage instead of enlarging it: repricing an undetected error from 320 to 1,200 moves
-the breakeven from 14,800 records to 50,000, at which the estate's 56,400 records leave the whole programme
-worth **18,944** a year — arithmetically positive and professionally indistinguishable from nil (16.1.2). A
-is the intuition the arithmetic reverses. C sets a defensible-sounding but wrong condition: at 56,400
-records and 320 an error the case tolerates an automated rate up to **4.9050 %**, nearly double the 2.60 %
-modelled, because volume and consequence decide the comparison and not the rate alone. D compares 1.04 with
-13.60 and so omits the error-cost term from both sides — the defect that makes automation look
+*Rationale:* The automated process carries the **higher** residual error rate, so a larger
+consequence per error erodes its advantage instead of enlarging it: repricing an undetected
+error from 320 to 1,200 moves the breakeven from 14,800 records to 50,000, at which the estate's
+56,400 records leave the whole programme worth **18,944** a year — arithmetically positive and
+professionally indistinguishable from nil (16.1.2). A is the intuition the arithmetic reverses.
+C sets a defensible-sounding but wrong condition: at 56,400 records and 320 an error the case
+tolerates an automated rate up to **4.9050 %**, nearly double the 2.60 % modelled, because
+volume and consequence decide the comparison and not the rate alone. D compares 1.04 with 13.60
+and so omits the error-cost term from both sides: the defect that makes automation look
 **20.3822 %** better than it is.
 
 **MCQ 16.1-H `[16.1.1 · Comprehension]`** A data spine has four properties: grain, golden source, lineage
@@ -484,33 +473,35 @@ and a definitional layer. Which statement best explains what the **definitional 
 three do not?
 - A. it stores the finance documents beside the data, so a defined term can be looked up whenever a figure is
   questioned
-- B. it implements each defined term once, as code, with its clause reference, so a term means in the data
-  what it means in the document instead of being re-implemented — and drifting — wherever it is needed ✅
+- B. it implements each defined term once, as code, with its clause reference, so a term means
+  in the data what it means in the document instead of being re-implemented, and drifting,
+  wherever it is needed ✅
 - C. it lets every reported figure be traced back to the transactions beneath it without human reconstruction
 - D. it names the one system that is authoritative for each fact, so that all others are derived
 
-*Rationale:* C and D are the spine's other two properties — lineage and golden source — and neither prevents
-`CFADS` from being implemented differently in nine systems; the definitional layer is the finance-specific
-property, and it is why a divergence worth 600,000 of reported cash does not misreport once but every period
-until somebody finds it (16.1.1). A describes a document repository, which resolves nothing: a term that can
-be looked up is still implemented separately wherever it is used.
+*Rationale:* C and D are the spine's other two properties (lineage and golden source), and
+neither prevents `CFADS` from being implemented differently in nine systems; the definitional
+layer is the finance-specific property, and it is why a divergence worth 600,000 of reported
+cash does not misreport once but every period until somebody finds it (16.1.1). A describes a
+document repository, which resolves nothing: a term that can be looked up is still implemented
+separately wherever it is used.
 
 ### Self-check — KA 16.1
 
-1. *Why does the automation breakeven rise as the consequence of an undetected error rises?* —
+1. *Why does the automation breakeven rise as the consequence of an undetected error rises?*
    Because the automated process has the higher residual error rate, so a larger consequence
    penalises it more than the manual process, eroding the per-item advantage: 14,800 records at
    USD 320 an error, 50,000 at USD 1,200.
-2. *State the one-line decision rule for acting on an alert, and the test that locates the optimal
-   threshold.* — Act when the probability the item is real exceeds the false-positive cost divided
-   by the false-negative cost (here 12.5 per cent, one in eight); the optimum is where the
-   **marginal** precision of loosening crosses that figure, not where average precision or accuracy
-   looks best.
-3. *What does a data spine actually buy in a financing, beyond hours?* — One implementation of each
-   defined term, so `CFADS` means in the data what it means in the document; the 600,000
+2. *State the one-line decision rule for acting on an alert, and the test that locates the
+   optimal threshold.* Act when the probability the item is real exceeds the false-positive cost
+   divided by the false-negative cost (here 12.5 per cent, one in eight); the optimum is where
+   the **marginal** precision of loosening crosses that figure, not where average precision or
+   accuracy looks best.
+3. *What does a data spine actually buy in a financing, beyond hours?* One implementation of
+   each defined term, so `CFADS` means in the data what it means in the document; the 600,000
    definitional divergence of Domain 2 is 1.6110 times Kestrel's annual covenant headroom, and
-   because a mis-implemented definition recurs every period it is worth 4,026,049 in present value
-   over the ten-year appraisal — 3.2955 times the whole labour case.
+   because a mis-implemented definition recurs every period it is worth 4,026,049 in present
+   value over the ten-year appraisal — 3.2955 times the whole labour case.
 
 ---
 
@@ -522,11 +513,12 @@ load-bearing subset · 16.2.3 model assistance and the verification that must re
 ### 16.2.1 Scenario generation and the coverage question
 
 **Definition.** **Scenario generation** is the machine production of many coherent states of the
-world — price paths, demand paths, availability profiles, macro sets — for evaluation through the
-financial model. It is genuinely valuable and genuinely easy to misreport, because a generated set
-answers a different question from a **defined case**. Domain 6 (KA 6.4.2) distinguished sensitivity
-from scenario and Domain 7 built the revenue stresses; neither is re-derived here. What is new is
-the question a generated set forces: **how many scenarios, and what does the worst one mean?**
+world (price paths, demand paths, availability profiles, macro sets) for evaluation through the
+financial model. It is genuinely valuable and genuinely easy to misreport, because a generated
+set answers a different question from a **defined case**. Domain 6 (KA 6.4.2) distinguished
+sensitivity from scenario and Domain 7 built the revenue stresses; neither is re-derived here.
+What is new is the question a generated set forces: **how many scenarios, and what does the
+worst one mean?**
 
 **Worked example 16.2.1 — coverage, and the worst case that is not a stress.**
 
@@ -541,37 +533,38 @@ the question a generated set forces: **how many scenarios, and what does the wor
 3. **Substitution.** `1 − 0.95⁴⁰`; then `ln(0.05) ÷ ln(0.95)`; then `ln(0.10) ÷ ln(0.99)`; then
    `1 ÷ 501`.
 4. **Result.** A 40-scenario set contains at least one instance of a 5 per cent mode with
-   probability **0.871488** — so "three of our forty breached" is close to the expected outcome and
-   carries almost no information. To be **95 per cent** confident of surfacing a 5 per cent mode
-   requires **59** scenarios; to be **90 per cent** confident of surfacing a **1 per cent** mode
-   requires **230**. The minimum of 500 draws sits at about the **0.1996th percentile**.
+   probability **0.871488**, so "three of our forty breached" is close to the expected outcome
+   and carries almost no information. To be **95 per cent** confident of surfacing a 5 per cent
+   mode requires **59** scenarios; to be **90 per cent** confident of surfacing a **1 per cent**
+   mode requires **230**. The minimum of 500 draws sits at about the **0.1996th percentile**.
 5. **Interpretation.** Two errors are being made, and they are opposite. The first analyst has
    **under-covered and over-interpreted**: forty scenarios cannot demonstrate the absence of a
    1-in-100 mode (which needs 230 for even 90 per cent confidence), and the presence of three
    breaches is unsurprising rather than alarming. The second has **mislabelled a percentile as a
    stress**: the minimum of 500 draws is a 1-in-500 event whose value depends almost entirely on
    the tail of the input distributions, which is the part of a generated model nobody has
-   validated. A defined bank case is a different object — it is a *chosen* set of assumptions with
-   an owner, which is exactly why lenders insist on it (Domain 6, KA 6.4.1b: the flat case is
-   demanded not because anyone believes it but because it is the case that finds the defect). The
-   professional discipline follows in three parts. **Report `k` with every scenario statement**, and
-   report the *share* of scenarios that breach rather than the count, because a count without `k` is
-   meaningless. **Choose `k` from the smallest probability you need to see**, not from a run time —
-   `ln(α) ÷ ln(1 − p)` takes ten seconds and settles the argument. And **never let a generated
-   minimum replace a defined case in a credit paper**; present both, labelled, with the generated
-   set describing shape and the defined case carrying the covenant test. The standing caution: the
-   independence this arithmetic assumes is usually false. Scenarios drawn from one correlated
-   generator explore less of the space than their count suggests, so `k` computed this way is a
-   **floor**, and Domain 11 (KA 11.4.1) already priced what a correlation assumption is worth when
-   it is wrong.
+   validated. A defined bank case is a different object. It is a *chosen* set of assumptions
+   with an owner, which is exactly why lenders insist on it (Domain 6, KA 6.4.1b: the flat case
+   is demanded not because anyone believes it but because it is the case that finds the defect).
+   The professional discipline follows in three parts. **Report `k` with every scenario
+   statement**, and report the *share* of scenarios that breach rather than the count, because a
+   count without `k` is meaningless. **Choose `k` from the smallest probability you need to
+   see**, not from a run time: `ln(α) ÷ ln(1 − p)` takes ten seconds and settles the argument.
+   And **never let a generated minimum replace a defined case in a credit paper**; present both,
+   labelled, with the generated set describing shape and the defined case carrying the covenant
+   test. The standing caution: the independence this arithmetic assumes is usually false.
+   Scenarios drawn from one correlated generator explore less of the space than their count
+   suggests, so `k` computed this way is a **floor**, and Domain 11 (KA 11.4.1) already priced
+   what a correlation assumption is worth when it is wrong.
 
 ### 16.2.2 Document review and the load-bearing subset
 
-**Definition.** **Machine document review** extracts structured facts — defined terms, thresholds,
-test dates, notice periods, caps — from long agreements. On a project financing this is among the
-most valuable applications available, because the documents are long, the terms are numerous and
-the consequences of missing one are quantified elsewhere in this book. It is also the application
-with the most misleading performance statistics, and the reason is combinatorial.
+**Definition.** **Machine document review** extracts structured facts (defined terms,
+thresholds, test dates, notice periods, caps) from long agreements. On a project financing this
+is among the most valuable applications available, because the documents are long, the terms are
+numerous and the consequences of missing one are quantified elsewhere in this book. It is also
+the application with the most misleading performance statistics, and the reason is
+combinatorial.
 
 **Worked example 16.2.2 — why 92 per cent per item is worthless, and what to do instead.**
 
@@ -584,79 +577,82 @@ with the most misleading performance statistics, and the reason is combinatorial
    `a ≥ c^(1/m)`.
 3. **Substitution.** `0.92²⁶`; then `0.95^(1/26)`.
 4. **Result.** The probability that all 26 load-bearing definitions are extracted correctly is
-   **0.114415** — so there is an **88.5585 per cent** chance that at least one is wrong. Across all
-   340 terms the expected number of errors is **27.2**. To be **95 per cent** confident of a clean
-   sweep of 26 items, per-item accuracy must reach **99.8029 per cent**.
+   **0.114415**, so there is an **88.5585 per cent** chance that at least one is wrong. Across
+   all 340 terms the expected number of errors is **27.2**. To be **95 per cent** confident of a
+   clean sweep of 26 items, per-item accuracy must reach **99.8029 per cent**.
 5. **Interpretation.** This is the single most important arithmetic in the domain for anyone
-   tempted to rely on an extraction, and it generalises: **per-item accuracy is the wrong statistic
-   whenever the deliverable requires every item to be right.** A tool reported as "92 per cent
-   accurate" delivers a correct 26-item summary about one time in nine. And the required 99.8029
-   per cent is not a procurement target — no honest vendor will offer it, and no buyer should
-   believe it — so the resolution is not a better model. It is a **change of scope**: do not
-   require the machine to be right, require the load-bearing subset to be **verified**. Price that.
-   Twenty-six definitions at half an hour each of a legal-and-finance specialist at USD 240.00 an
-   hour is **USD 3,120**. Set it against one known consequence: Domain 2's working-capital
-   treatment of `CFADS` is worth **600,000** of reported cash, which is **1.6110 times** Kestrel's
-   annual covenant headroom of 372,438, and the verification is **192.3077 times** cheaper than
-   that single error. The professional posture that follows is precise rather than pious. Let the
-   tool read all 340 terms and produce the register — that is real and large value, because a human
-   reading 340 terms will also miss some and will take days. Then **verify the 26 against the
-   document, by a named person, with the date recorded**, and treat the other 314 as indicative
-   until one of them becomes load-bearing. Two cautions. **The subset must be chosen before the
-   tool runs**, or the tool's own confidence scores will choose it, and a model is least confident
-   where it is wrong in ways it can detect — not where it is wrong in ways it cannot. And
-   **superseded drafts are the commonest failure mode in practice**, not misreading: an extraction
-   from the wrong version is 100 per cent accurate against the wrong document, which no accuracy
-   statistic can see. Case study B is that failure, priced.
+   tempted to rely on an extraction, and it generalises: **per-item accuracy is the wrong
+   statistic whenever the deliverable requires every item to be right.** A tool reported as "92
+   per cent accurate" delivers a correct 26-item summary about one time in nine. And the
+   required 99.8029 per cent is not a procurement target (no honest vendor will offer it, and no
+   buyer should believe it), so the resolution is not a better model. It is a **change of
+   scope**: do not require the machine to be right, require the load-bearing subset to be
+   **verified**. Price that. Twenty-six definitions at half an hour each of a legal-and-finance
+   specialist at USD 240.00 an hour is **USD 3,120**. Set it against one known consequence:
+   Domain 2's working-capital treatment of `CFADS` is worth **600,000** of reported cash, which
+   is **1.6110 times** Kestrel's annual covenant headroom of 372,438, and the verification is
+   **192.3077 times** cheaper than that single error. The professional posture that follows is
+   precise rather than pious. Let the tool read all 340 terms and produce the register. That is
+   real and large value, because a human reading 340 terms will also miss some and will take
+   days. Then **verify the 26 against the document, by a named person, with the date recorded**,
+   and treat the other 314 as indicative until one of them becomes load-bearing. Two cautions.
+   **The subset must be chosen before the tool runs**, or the tool's own confidence scores will
+   choose it, and a model is least confident where it is wrong in ways it can detect — not where
+   it is wrong in ways it cannot. And **superseded drafts are the commonest failure mode in
+   practice**, not misreading: an extraction from the wrong version is 100 per cent accurate
+   against the wrong document, which no accuracy statistic can see. Case study B is that
+   failure, priced.
 
 ### 16.2.3 Model assistance and the verification that must replace the build
 
-**Definition.** **Model assistance** is machine help in constructing a financial model — formula
-generation, schedule construction, restructuring a workbook, writing the check block, translating a
-term sheet into a debt module. Domain 6 built the model and its six invariants; this topic asks only
-what changes when the model is built with assistance, and the answer is that **the verification
-burden moves and grows.**
+**Definition.** **Model assistance** is machine help in constructing a financial model, formula
+generation, schedule construction, restructuring a workbook, writing the check block,
+translating a term sheet into a debt module. Domain 6 built the model and its six invariants;
+this topic asks only what changes when the model is built with assistance, and the answer is
+that **the verification burden moves and grows.**
 
 The mechanism is worth stating precisely, because it is usually described as a productivity gain
 and it is really a redistribution. A modeller who builds a schedule by hand acquires, as a
-by-product, a mental model of how it works — where the circularity sits, which cell drives which,
+by-product, a mental model of how it works, where the circularity sits, which cell drives which,
 what a wrong answer would look like. A reviewer of a machine-built schedule has none of that, so
-review must reconstruct it, and reconstruction is slower than construction was for the person who
-did it. The saving is real; it is just much smaller than the build-time comparison suggests.
+review must reconstruct it, and reconstruction is slower than construction was for the person
+who did it. The saving is real; it is just much smaller than the build-time comparison suggests.
 
 **Worked example 16.2.3 — the real saving, the apparent saving, and the price of the difference.**
 
 1. **Setup.** A sculpted debt module. **Hand-built:** 40 hours to build, 8 hours to review.
-   **Machine-assisted:** 6 hours to produce, and — because the reviewer must reconstruct the
-   construction logic — **26** hours to review properly. A senior modeller or reviewer costs
+   **Machine-assisted:** 6 hours to produce, and, because the reviewer must reconstruct the
+   construction logic, **26** hours to review properly. A senior modeller or reviewer costs
    **USD 150.00** an hour. The organisation's observed record is that an *unreviewed*
-   machine-assisted module carries a material defect with probability **0.35**; Domain 6 (KA 6.4.1)
-   priced one such defect — a one-cell tax error — at **USD 3,250,352** of lost debt capacity.
+   machine-assisted module carries a material defect with probability **0.35**; Domain 6 (KA
+   6.4.1) priced one such defect, a one-cell tax error, at **USD 3,250,352** of lost debt
+   capacity.
 2. **Formula.** Cost = hours × rate. `EMV` = probability × consequence (the registered
    expected-monetary-value form, PML-AI KA 8.2).
 3. **Substitution.** Hand `(40 + 8) × 150`; machine with full review `(6 + 26) × 150`; machine with
    the habitual 8-hour review `(6 + 8) × 150`. `EMV = 0.35 × 3,250,352`.
-4. **Result.** Hand-built **USD 7,200**; machine-assisted with proper review **USD 4,800** — a
-   **real saving of USD 2,400, or 33.3333 per cent**. Reviewed at the habitual 8 hours the cost is
-   **USD 2,100**, an **apparent saving of 70.8333 per cent**. The omitted 18 hours of review are
-   worth **USD 2,700**. The expected cost of the defect they would have caught is
-   **USD 1,137,623.20** — **421.3419 times** the review.
+4. **Result.** Hand-built **USD 7,200**; machine-assisted with proper review **USD 4,800** (a
+   **real saving of USD 2,400, or 33.3333 per cent**). Reviewed at the habitual 8 hours the cost
+   is **USD 2,100**, an **apparent saving of 70.8333 per cent**. The omitted 18 hours of review
+   are worth **USD 2,700**. The expected cost of the defect they would have caught is **USD
+   1,137,623.20**, **421.3419 times** the review.
 5. **Interpretation.** The number to carry into a management conversation is **a third, not two
    thirds**. An organisation that books the 70.8333 per cent has not made a saving; it has
-   converted USD 2,700 of certain cost into USD 1,137,623.20 of expected cost, and it has done so
-   invisibly, because the omission leaves no artefact. Three consequences follow. **Fund the review
-   explicitly, as a line, at the ratio the organisation has measured** — here roughly four hours of
-   review per hour of assisted build, against one per five hand-built; the ratio is the governable
-   quantity and it should be in the model-governance standard, not left to the reviewer's diary.
-   **Require the assistant to produce the audit trail, not just the model**: a written statement of
-   what each block does, the invariants it should satisfy, and the check block itself, which is
-   work a machine does well and which cuts reconstruction time — this is the single most effective
-   way to make the 26 hours smaller honestly. **And keep the accountability where Domain 6 put it**:
-   the modeller who ships the module owns its defects regardless of who typed the formulae, and the
-   organisation that treats "the tool built it" as mitigation has no model governance. The caution
-   worth stating plainly: the 0.35 defect probability is this organisation's measured figure on its
-   own work, not a general property of assisted modelling, and a firm that has not measured its own
-   should assume a figure high enough to make the review unarguable and then measure.
+   converted USD 2,700 of certain cost into USD 1,137,623.20 of expected cost, and it has done
+   so invisibly, because the omission leaves no artefact. Three consequences follow. **Fund the
+   review explicitly, as a line, at the ratio the organisation has measured**: here roughly four
+   hours of review per hour of assisted build, against one per five hand-built; the ratio is the
+   governable quantity and it should be in the model-governance standard, not left to the
+   reviewer's diary. **Require the assistant to produce the audit trail, not just the model**: a
+   written statement of what each block does, the invariants it should satisfy, and the check
+   block itself, which is work a machine does well and which cuts reconstruction time. This is
+   the single most effective way to make the 26 hours smaller honestly. **And keep the
+   accountability where Domain 6 put it**: the modeller who ships the module owns its defects
+   regardless of who typed the formulae, and the organisation that treats "the tool built it" as
+   mitigation has no model governance. The caution worth stating plainly: the 0.35 defect
+   probability is this organisation's measured figure on its own work, not a general property of
+   assisted modelling, and a firm that has not measured its own should assume a figure high
+   enough to make the review unarguable and then measure.
 
 ### AI in this KA
 
@@ -678,13 +674,14 @@ established that there is nothing, and treating a silent critique as assurance i
 failure in this knowledge area.
 
 **Verification, concretely.** Recompute `aᵐ` for the actual subset size before relying on any
-extraction summary — one line of arithmetic that reframes the whole procurement. Diff the
-extraction against the executed document's defined-terms clause, not against a data room copy, and
-record the version identifier. For scenario work, publish `k`, the share of scenarios breaching,
-and the defined case separately. For assisted models, run Domain 6's six invariants plus the
-effective-tax-rate check before any output is quoted, and record the review hours actually spent
-against the standard's ratio — an unfunded review is the defect this knowledge area exists to
-prevent. **AI proposes; the professional verifies, decides and remains accountable.**
+extraction summary (one line of arithmetic that reframes the whole procurement). Diff the
+extraction against the executed document's defined-terms clause, not against a data room copy,
+and record the version identifier. For scenario work, publish `k`, the share of scenarios
+breaching, and the defined case separately. For assisted models, run Domain 6's six invariants
+plus the effective-tax-rate check before any output is quoted, and record the review hours
+actually spent against the standard's ratio; an unfunded review is the defect this knowledge
+area exists to prevent. **AI proposes; the professional verifies, decides and remains
+accountable.**
 
 ### Key terms — KA 16.2
 
@@ -707,9 +704,10 @@ Twenty-six of them are load-bearing. The probability that all 26 are correct is 
 - C. 88.56 %
 - D. 99.80 %
 
-*Rationale:* `0.92²⁶ = 0.114415`. A mistakes per-item accuracy for deliverable accuracy — the
-error the topic exists to correct. C is the complement, the probability that at least one is wrong.
-D is the per-item accuracy that *would* be required for a 95 % clean sweep, `0.95^(1/26)`.
+*Rationale:* `0.92²⁶ = 0.114415`. A mistakes per-item accuracy for deliverable accuracy, the
+error the topic exists to correct. C is the complement, the probability that at least one is
+wrong. D is the per-item accuracy that *would* be required for a 95 % clean sweep,
+`0.95^(1/26)`.
 
 **MCQ 16.2-B `[16.2.2 · Analysis]`** Given that result, the defensible professional response is:
 - A. reject machine extraction and read all 340 terms manually
@@ -725,7 +723,9 @@ cannot.
 
 **MCQ 16.2-C `[16.2.1 · Analysis]`** An analyst reports "40 scenarios run, 3 breached, worst-case
 `DSCR` 1.04". The soundest critique is:
-- A. 40 is too few to demonstrate the absence of a low-probability mode — 230 are needed for 90 % confidence on a 1 % mode — and the worst of 40 draws is a percentile, not a defined stress case ✅
+- A. 40 is too few to demonstrate the absence of a low-probability mode (230 are needed for 90 %
+  confidence on a 1 % mode), and the worst of 40 draws is a percentile, not a defined stress
+  case ✅
 - B. 3 breaches out of 40 is a 7.5 % breach probability, which should be reported as the covenant risk
 - C. the run is adequate; scenario counts above 30 are conventionally sufficient
 - D. the analyst should have reported the mean `DSCR` across the 40 scenarios
@@ -743,30 +743,34 @@ or 6 hours assisted with 26 hours of review. At USD 150 an hour, the saving from
 - D. nil, since total hours are similar
 
 *Rationale:* `(48 − 32) × 150 = 2,400` on 7,200, or 33.3333 %. A is the apparent saving when the
-review is left at the hand-built 8 hours — the omission worth 2,700 of review against 1,137,623.20
-of expected defect cost. C compares build hours only (6 against 40). D ignores the 16-hour
-difference.
+review is left at the hand-built 8 hours: the omission worth 2,700 of review against
+1,137,623.20 of expected defect cost. C compares build hours only (6 against 40). D ignores the
+16-hour difference.
 
 **MCQ 16.2-E `[16.2.1 · Evaluation]`** A credit paper is being assembled. One analyst offers the
 **minimum `DSCR` across 500 generated scenarios** as the downside case; another offers the lenders'
 defined flat case. Which should carry the covenant test?
-- A. the generated minimum — a 1-in-500 outcome is a more conservative test than any case somebody chose
-- B. the defined case — the generated minimum is about the 0.1996th percentile of input tails nobody has validated, while a defined case is a chosen set of assumptions with an owner; the generated set belongs in the paper, labelled, describing shape ✅
+- A. the generated minimum; a 1-in-500 outcome is a more conservative test than any case
+  somebody chose
+- B. the defined case; the generated minimum is about the 0.1996th percentile of input tails
+  nobody has validated, while a defined case is a chosen set of assumptions with an owner; the
+  generated set belongs in the paper, labelled, describing shape ✅
 - C. the generated minimum, provided `k` is reported alongside it so the reader can judge coverage
-- D. neither — the mean `DSCR` across the 500 scenarios is the balanced figure to test
+- D. neither: the mean `DSCR` across the 500 scenarios is the balanced figure to test
 
 *Rationale:* Conservatism located in an unvalidated tail is not conservatism, and a generated
 extreme is a percentile rather than a stress (16.2.1). A is the more seductive error precisely
-because it sounds prudent. C is the right discipline applied to the wrong sentence: reporting `k`
-repairs a coverage claim, but no value of `k` converts a percentile into a case with an owner. D
-reports the statistic covenants never test — Domain 10 tests the period, not the average.
+because it sounds prudent. C is the right discipline applied to the wrong sentence: reporting
+`k` repairs a coverage claim, but no value of `k` converts a percentile into a case with an
+owner. D reports the statistic covenants never test (Domain 10 tests the period, not the
+average).
 
 **MCQ 16.2-F `[16.2.3 · Evaluation]`** A modelling team reports a **70.8333 %** saving from machine-assisted
 construction of a sculpted debt module: 40 hours of build replaced by 6, with review left at the 8 hours the
 hand-built module carried. Reviewing a machine-built module properly takes **26** hours, because the reviewer
 must reconstruct construction logic nobody holds. The soundest response is to:
-- A. accept the 70.8333 % — the 8 hours were sized for this module, and an assisted module is no harder to
-  read than a hand-built one
+- A. accept the 70.8333 %; the 8 hours were sized for this module, and an assisted module is no
+  harder to read than a hand-built one
 - B. book a third rather than two thirds: the honest comparison is 32 hours against 48, and the 18 omitted
   review hours cost 2,700 against an expected defect cost of 1,137,623.20 — a certain cost converted into an
   expected one, invisibly, because the omission leaves no artefact ✅
@@ -775,13 +779,14 @@ must reconstruct construction logic nobody holds. The soundest response is to:
 - D. stop using assistance on financing models: a 0.35 probability of a material defect is not an acceptable
   exposure on a debt module
 
-*Rationale:* Assistance moves the verification burden rather than removing it, and the governable quantity is
-the review ratio — here about **4.3333** review hours per assisted build hour, against one per five
-hand-built (16.2.3). A assumes the reviewer holds knowledge only the builder acquires. C is the seductive
-half-truth: requiring the assistant to state what each block does, the invariants it should satisfy and the
-check block itself is exactly how the 26 hours are made smaller *honestly*, but it shortens reconstruction
-rather than removing the review. D discards a real **33.3333 %** saving, and the 0.35 is the defect
-probability of an **unreviewed** module — the figure the review exists to remove.
+*Rationale:* Assistance moves the verification burden rather than removing it, and the
+governable quantity is the review ratio — here about **4.3333** review hours per assisted build
+hour, against one per five hand-built (16.2.3). A assumes the reviewer holds knowledge only the
+builder acquires. C is the seductive half-truth: requiring the assistant to state what each
+block does, the invariants it should satisfy and the check block itself is exactly how the 26
+hours are made smaller *honestly*, but it shortens reconstruction rather than removing the
+review. D discards a real **33.3333 %** saving, and the 0.35 is the defect probability of an
+**unreviewed** module, the figure the review exists to remove.
 
 **MCQ 16.2-G `[16.2.2 · Comprehension]`** An extraction of a facility agreement's **340** defined terms is
 reported at 92 % per-item accuracy, and **26** of the terms are load-bearing. Which statement best explains
@@ -793,24 +798,25 @@ the **superseded-draft** failure mode and why no accuracy statistic can see it?
 - C. it is the risk that a term the tool marked low-confidence is not checked
 - D. it is the risk that the load-bearing subset is chosen after the tool has run
 
-*Rationale:* Accuracy is measured against the source the tool was given, so an extraction from a data-room
-draft rather than the executed agreement scores perfectly while being wrong throughout — which is why the
-verification of the 26 load-bearing terms, about **3,120** of specialist time and **192.3077 times** cheaper
-than one 600,000 definitional error, must be against the **executed** document with its version identifier
-recorded (16.2.2). C and D are the topic's other two cautions, and both are real: a model is least confident
-where it can detect its own error, and a subset chosen after the run is chosen by the tool. A describes a
+*Rationale:* Accuracy is measured against the source the tool was given, so an extraction from a
+data-room draft rather than the executed agreement scores perfectly while being wrong
+throughout, which is why the verification of the 26 load-bearing terms, about **3,120** of
+specialist time and **192.3077 times** cheaper than one 600,000 definitional error, must be
+against the **executed** document with its version identifier recorded (16.2.2). C and D are the
+topic's other two cautions, and both are real: a model is least confident where it can detect
+its own error, and a subset chosen after the run is chosen by the tool. A describes a
 mis-citation, which a reconciliation to the clause would catch.
 
 ### Self-check — KA 16.2
 
-1. *Why is per-item extraction accuracy the wrong statistic?* — Because the deliverable needs every
-   load-bearing item right: 92 per cent per item gives 0.114415 for 26 items, and a 95 per cent
-   sweep would need 99.8029 per cent per item.
-2. *How is `k` chosen for a scenario run?* — From the smallest probability the run must be able to
-   surface: `k ≥ ln(α) ÷ ln(1 − p)` — 59 for a 5 per cent mode at 95 per cent confidence, 230 for a
-   1 per cent mode at 90 per cent — and the result is a floor, because correlated generators
-   explore less than their count implies.
-3. *What does machine assistance do to a model's total cost?* — It moves cost from build to review
+1. *Why is per-item extraction accuracy the wrong statistic?* Because the deliverable needs
+   every load-bearing item right: 92 per cent per item gives 0.114415 for 26 items, and a 95 per
+   cent sweep would need 99.8029 per cent per item.
+2. *How is `k` chosen for a scenario run?* — From the smallest probability the run must be able
+   to surface: `k ≥ ln(α) ÷ ln(1 − p)` — 59 for a 5 per cent mode at 95 per cent confidence, 230
+   for a 1 per cent mode at 90 per cent, and the result is a floor, because correlated
+   generators explore less than their count implies.
+3. *What does machine assistance do to a model's total cost?* It moves cost from build to review
    and reduces the total by about a third, not two thirds; booking the larger figure converts
    USD 2,700 of review into USD 1,137,623.20 of expected defect cost.
 
@@ -830,24 +836,24 @@ of the output, adding up. A global statement about which inputs matter in genera
 *interpretability* and is useful for design. What a decision, an audit or a lender's question
 requires is a **local, additive attribution** of this period's number.
 
-The test is therefore one the book already owns. PML-AI's **hundred-per-cent rule** — Σ children −
-parent = 0 at every level — applies unchanged: an explanation whose components do not reconcile to
-the output is not an explanation, it is a commentary. Suppose an automated forecast publishes
-`CFADS` of **6,384,000** and attributes it across drivers — volume, tariff, escalation, cash
-operating cost, cash tax, working-capital movement — summing to **6,190,000**. The residual is
-**USD 194,000**: **3.0388 per cent** of the forecast, and **52.0892 per cent** of Kestrel's annual
-covenant headroom of 372,438. The professional reading is exact: **the model has an unexplained
-component larger than half the project's covenant headroom**, so any conclusion drawn from the
-attribution about which driver to manage is unsafe, and the correct response is to find the
-residual, not to describe it as model complexity. Three further disciplines belong here.
-**Attribution must be in currency, not in importance scores** — a ranking cannot be reconciled and
-therefore cannot be audited. **The counterfactual must be stated**: "volume contributed 1.2m"
-means nothing without "relative to what", and the baseline is a choice with an owner. And
-**explanation is not justification**: a faithful account of how a model reached a number says
-nothing about whether the number is right, which is 16.3.2's job. Where a model cannot be given an
-additive local attribution at all, the honest options are to use it only for triage and never for
-a reported figure, or to replace it with one that can — and for a covenant-relevant number the
-second is usually the right answer.
+The test is therefore one the book already owns. PML-AI's **hundred-per-cent rule** (Σ children
+− parent = 0 at every level) applies unchanged: an explanation whose components do not reconcile
+to the output is not an explanation, it is a commentary. Suppose an automated forecast publishes
+`CFADS` of **6,384,000** and attributes it across drivers (volume, tariff, escalation, cash
+operating cost, cash tax, working-capital movement) summing to **6,190,000**. The residual is
+**USD 194,000**: **3.0388 per cent** of the forecast, and **52.0892 per cent** of Kestrel's
+annual covenant headroom of 372,438. The professional reading is exact: **the model has an
+unexplained component larger than half the project's covenant headroom**, so any conclusion
+drawn from the attribution about which driver to manage is unsafe, and the correct response is
+to find the residual, not to describe it as model complexity. Three further disciplines belong
+here. **Attribution must be in currency, not in importance scores** (a ranking cannot be
+reconciled and therefore cannot be audited). **The counterfactual must be stated**: "volume
+contributed 1.2m" means nothing without "relative to what", and the baseline is a choice with an
+owner. And **explanation is not justification**: a faithful account of how a model reached a
+number says nothing about whether the number is right, which is 16.3.2's job. Where a model
+cannot be given an additive local attribution at all, the honest options are to use it only for
+triage and never for a reported figure, or to replace it with one that can, and for a
+covenant-relevant number the second is usually the right answer.
 
 ### 16.3.2 Validation — how many test cases, honestly derived
 
@@ -877,39 +883,40 @@ cases are enough, and it has a derivable answer under stated assumptions.
    "below 1 per cent" and used 56,400 times a year is consistent with **564 errors a year**; to
    bound expected production errors at **10** a year the defect rate must be below
    **0.017730 per cent**, which requires **16,895** passing test cases.
-5. **Interpretation.** The ladder is the useful artefact — it converts an unbounded argument into a
-   choice — but the honest content of this example is the last line, and it is uncomfortable. **The
-   test suite an organisation can afford proves far less than the assurance it wants.** Nobody is
-   going to construct 16,895 representative test cases for a covenant-certificate assembler; 299 is
-   already a serious programme. So pre-deployment testing cannot be the control that makes a
-   high-volume model safe, and an organisation that behaves as though it were has mis-sited its
-   assurance. The load must be carried by three things instead: **continuous monitoring** of the
-   production error rate, which accumulates evidence at production volume rather than at test
-   volume and reaches 16,895 observations in **about four months** (16,895 ÷ 56,400 of a year,
-   109 days), against the years a test programme would need; **human approval** at the points where
-   consequence is concentrated (KA 16.4.3, and the tiering of 16.3.4, which is how one decides
-   where); and **rollback**, because the realistic response to a discovered defect is to stop, not
-   to have prevented it. Four cautions on the arithmetic itself, all of which a reviewer should
-   press. The formula assumes **independence** — 299 near-duplicate cases are not 299 tests, and
-   the commonest inflation of a validation claim is a suite generated from one template. It assumes
-   **representativeness** — a suite drawn from historical cases cannot bound the error rate on the
-   cases the model will actually meet, which is 16.3.3's problem. It gives a **one-sided bound on a
-   binary outcome**, so it says nothing about the *size* of a defect: 299 passes are consistent
-   with a rare but catastrophic failure, which is why tiering is by consequence and not by rate.
-   And a single failure moves the requirement from 299 to **473** — a **58.19 per cent** increase —
-   which is the arithmetic reason "we fixed it and re-ran the failing case" is not a validation:
-   the suite must grow, not be repaired.
+5. **Interpretation.** The ladder is the useful artefact (it converts an unbounded argument into
+   a choice), but the honest content of this example is the last line, and it is uncomfortable.
+   **The test suite an organisation can afford proves far less than the assurance it wants.**
+   Nobody is going to construct 16,895 representative test cases for a covenant-certificate
+   assembler; 299 is already a serious programme. So pre-deployment testing cannot be the
+   control that makes a high-volume model safe, and an organisation that behaves as though it
+   were has mis-sited its assurance. The load must be carried by three things instead:
+   **continuous monitoring** of the production error rate, which accumulates evidence at
+   production volume rather than at test volume and reaches 16,895 observations in **about four
+   months** (16,895 ÷ 56,400 of a year, 109 days), against the years a test programme would
+   need; **human approval** at the points where consequence is concentrated (KA 16.4.3, and the
+   tiering of 16.3.4, which is how one decides where); and **rollback**, because the realistic
+   response to a discovered defect is to stop, not to have prevented it. Four cautions on the
+   arithmetic itself, all of which a reviewer should press. The formula assumes
+   **independence**; 299 near-duplicate cases are not 299 tests, and the commonest inflation of
+   a validation claim is a suite generated from one template. It assumes **representativeness**:
+   a suite drawn from historical cases cannot bound the error rate on the cases the model will
+   actually meet, which is 16.3.3's problem. It gives a **one-sided bound on a binary outcome**,
+   so it says nothing about the *size* of a defect: 299 passes are consistent with a rare but
+   catastrophic failure, which is why tiering is by consequence and not by rate. And a single
+   failure moves the requirement from 299 to **473** (a **58.19 per cent** increase), which is
+   the arithmetic reason "we fixed it and re-ran the failing case" is not a validation: the
+   suite must grow, not be repaired.
 
 ### 16.3.3 Bias in a finance model
 
 **Definition.** **Bias**, in this domain, is a systematic difference between what a model was
-trained or calibrated on and what it is used on. It is a measurable property, not a moral one, and
-in project finance it takes four concrete forms worth naming. **Training-period bias** — a demand
-model calibrated on a period whose conditions no longer hold, which Domain 7's demand work must
-guard against. **Survivorship bias** — a comparables set of completed, financed, surviving projects,
-which systematically overstates achievable performance because the failures are absent.
-**Label bias** — a detector trained on the errors a previous process happened to find, so it
-inherits that process's blind spots. And **attribute bias with legal exposure** — a
+trained or calibrated on and what it is used on. It is a measurable property, not a moral one,
+and in project finance it takes four concrete forms worth naming. **Training-period bias**: a
+demand model calibrated on a period whose conditions no longer hold, which Domain 7's demand
+work must guard against. **Survivorship bias**: a comparables set of completed, financed,
+surviving projects, which systematically overstates achievable performance because the failures
+are absent. **Label bias**, a detector trained on the errors a previous process happened to
+find, so it inherits that process's blind spots. And **attribute bias with legal exposure** — a
 counterparty- or location-derived score that operates as a proxy for a protected characteristic;
 what is lawful here differs materially between jurisdictions and this book does not state any
 jurisdiction's position, but the professional obligation is constant: know which attributes the
@@ -933,35 +940,36 @@ in every metric the model reports.
 3. **Substitution.** `17 ÷ 1,000 = 1.70 per cent`; `46,090 × 0.0170`; then `960 ÷ 1,744`; then
    `950 × 40 + 784 × 320`; and for the sample size `1.96² × 0.025 × 0.975 ÷ 0.01²`.
 4. **Result.** Extrapolated missed errors **784**, against the 240 the model's own arithmetic
-   assumed. True anomaly population **1,744**, **45.3333 per cent** above the assumed 1,200. True
-   recall **55.0459 per cent**, not 80. Restated total cost **USD 288,880** against the reported
-   114,800 — a factor of **2.5164** — with the false-negative cost understated by **USD 174,080**.
-   The audit that revealed this cost **USD 13,600** — 1,000 items re-reviewed at 8.5 minutes each,
-   **USD 13.60** at the loaded analyst rate, a desk re-review rather than the 25-minute
-   investigation an alert requires — and identified missed errors worth **USD 250,880** a year, a
-   return of **18.4471 times**. A sample of **937** would
-   have sufficed for a ±1 percentage-point bound at 95 per cent confidence on a 2.5 per cent rate.
+   assumed. True anomaly population **1,744**, **45.3333 per cent** above the assumed 1,200.
+   True recall **55.0459 per cent**, not 80. Restated total cost **USD 288,880** against the
+   reported 114,800 (a factor of **2.5164**) with the false-negative cost understated by **USD
+   174,080**. The audit that revealed this cost **USD 13,600** — 1,000 items re-reviewed at 8.5
+   minutes each, **USD 13.60** at the loaded analyst rate, a desk re-review rather than the
+   25-minute investigation an alert requires — and identified missed errors worth **USD
+   250,880** a year, a return of **18.4471 times**. A sample of **937** would have sufficed for
+   a ±1 percentage-point bound at 95 per cent confidence on a 2.5 per cent rate.
 5. **Interpretation.** The mechanism deserves stating slowly, because it is the most
    under-appreciated failure in automated controls. **A detector trained on a prior process's
    findings learns to reproduce that process, including what it could not see.** Its measured
-   recall is recall *against the labels*, and if the labels are 60 per cent complete then a bounding
-   estimate of true recall is `0.80 × 0.60 = 48 per cent` — the audit's 55.0459 per cent sits
-   between that bound and the claim, which is what one should expect. Every metric in 16.1.3's table
-   was computed correctly and every one was measuring the wrong population. Three consequences.
-   **No threshold change fixes this.** If the 784 missed errors are precisely the kinds the old
-   process could not detect, loosening the threshold does not reach them: scaling the T4-to-T5
-   marginal benefit by the 1.4533 population factor gives **USD 55,808** against an unchanged
-   USD 78,000 of investigation cost, so T4 remains optimal and the answer is a **model change** —
-   new features, and the audit's 17 confirmed errors as a new label source — not a tuning change.
-   **The blind audit is the only instrument that measures this, and it must be blind**: a sample
-   drawn from items the model scored highly, or reviewed by the people who set the labels,
-   reproduces the bias. Budget it as a permanent line, sized by `z²p(1 − p)/e²` for the precision
-   the decision needs, and re-run it annually. **And restate the business case afterwards.** The
-   automation's claimed saving in 16.1.2 was computed on assumed error rates; the audit is how those
-   become measured, and a case that is never restated is a case that was never governed. The
-   standing caution: extrapolating 17 findings to 784 carries real sampling error — the 95 per cent
-   interval around a 1.70 per cent rate on 1,000 draws is wide enough that the point estimate should
-   be reported with its bound, and the decision should be robust to the low end of it.
+   recall is recall *against the labels*, and if the labels are 60 per cent complete then a
+   bounding estimate of true recall is `0.80 × 0.60 = 48 per cent`: the audit's 55.0459 per cent
+   sits between that bound and the claim, which is what one should expect. Every metric in
+   16.1.3's table was computed correctly and every one was measuring the wrong population. Three
+   consequences. **No threshold change fixes this.** If the 784 missed errors are precisely the
+   kinds the old process could not detect, loosening the threshold does not reach them: scaling
+   the T4-to-T5 marginal benefit by the 1.4533 population factor gives **USD 55,808** against an
+   unchanged USD 78,000 of investigation cost, so T4 remains optimal and the answer is a **model
+   change** (new features, and the audit's 17 confirmed errors as a new label source), not a
+   tuning change. **The blind audit is the only instrument that measures this, and it must be
+   blind**: a sample drawn from items the model scored highly, or reviewed by the people who set
+   the labels, reproduces the bias. Budget it as a permanent line, sized by `z²p(1 − p)/e²` for
+   the precision the decision needs, and re-run it annually. **And restate the business case
+   afterwards.** The automation's claimed saving in 16.1.2 was computed on assumed error rates;
+   the audit is how those become measured, and a case that is never restated is a case that was
+   never governed. The standing caution: extrapolating 17 findings to 784 carries real sampling
+   error — the 95 per cent interval around a 1.70 per cent rate on 1,000 draws is wide enough
+   that the point estimate should be reported with its bound, and the decision should be robust
+   to the low end of it.
 
 ### 16.3.4 Model-risk governance: inventory, tiering, revalidation
 
@@ -1001,23 +1009,23 @@ organisation is willing to accumulate between validations, and the interval foll
 
 4. **Interpretation.** The instrument's value is that it produces a **calendar an auditor can
    challenge on its inputs** rather than a tier label nobody can argue with. Read three results.
-   **M4's interval of 8.59 days is shorter than the interval between its uses** — four facilities a
-   year, roughly 91 days apart — which means the rule's own arithmetic says the model must be
+   **M4's interval of 8.59 days is shorter than the interval between its uses** (four facilities
+   a year, roughly 91 days apart), which means the rule's own arithmetic says the model must be
    verified at **every** use. That is exactly the conclusion 16.2.2 reached from the
    combinatorics of a 26-item sweep, arrived at independently from a governance rule, and the
    agreement of two derivations is the strongest evidence in this domain that the conclusion is
    right. **The high-volume model is the low-tier one.** M2 touches 48,000 items but each defect
-   costs 320, so its expected annual loss is the smallest in the inventory and annual revalidation
-   is generous — while M1 and M3, used twelve times a year each, need quarterly attention because
-   one bad output consumes a covenant headroom. The instinct to govern by volume is precisely
-   inverted. **And the policy floor matters as much as the formula.** M2 and M5 compute to intervals
-   above a year, and the standard should nonetheless cap the interval at twelve months, because the
-   formula prices *known* failure modes and a year of undetected drift is the unpriced one. Two
-   cautions. The tolerance of 50,000 is a policy parameter with an owner, and halving it halves
-   every interval, so it belongs in the standard and not in a spreadsheet. And each `p` is an
-   estimate that the monitoring of 16.3.2 should be replacing with a measurement — the inventory is
-   a living instrument, and a model whose `p` has never been measured should carry the pessimistic
-   figure until it has.
+   costs 320, so its expected annual loss is the smallest in the inventory and annual
+   revalidation is generous, while M1 and M3, used twelve times a year each, need quarterly
+   attention because one bad output consumes a covenant headroom. The instinct to govern by
+   volume is precisely inverted. **And the policy floor matters as much as the formula.** M2 and
+   M5 compute to intervals above a year, and the standard should nonetheless cap the interval at
+   twelve months, because the formula prices *known* failure modes and a year of undetected
+   drift is the unpriced one. Two cautions. The tolerance of 50,000 is a policy parameter with
+   an owner, and halving it halves every interval, so it belongs in the standard and not in a
+   spreadsheet. And each `p` is an estimate that the monitoring of 16.3.2 should be replacing
+   with a measurement. The inventory is a living instrument, and a model whose `p` has never
+   been measured should carry the pessimistic figure until it has.
 
 ### AI in this KA
 
@@ -1028,22 +1036,22 @@ columns from the monitoring feed so the calendar updates itself; producing the a
 of 16.3.1 for every published figure; and diffing a model's behaviour between versions so a change
 that alters an output nobody expected to change is surfaced before release rather than after.
 
-**Where it must not go.** A model may not validate itself, in any of the several forms this takes:
-generating its own test cases from its own training distribution, scoring its own explanations for
-plausibility, or setting the `p` in its own tier. It may not decide the tolerance, the tier or the
-interval, which are risk-appetite decisions. And an explanation must never be **generated as
-narrative** — a fluent paragraph describing why a model produced a figure, unconstrained by the
-additive reconciliation of 16.3.1, is the most dangerous artefact in this knowledge area, because
-it is persuasive precisely where it is unverifiable.
+**Where it must not go.** A model may not validate itself, in any of the several forms this
+takes: generating its own test cases from its own training distribution, scoring its own
+explanations for plausibility, or setting the `p` in its own tier. It may not decide the
+tolerance, the tier or the interval, which are risk-appetite decisions. And an explanation must
+never be **generated as narrative**: a fluent paragraph describing why a model produced a
+figure, unconstrained by the additive reconciliation of 16.3.1, is the most dangerous artefact
+in this knowledge area, because it is persuasive precisely where it is unverifiable.
 
-**Verification, concretely.** Reconcile every attribution to its output and require the residual to
-be nil or explained, in currency (16.3.1). Recompute the validation sample size from the stated
-bound and confidence, and check the suite for independence by asking how many distinct templates
-generated it. Confirm the audit sample of 16.3.3 was drawn from unflagged items and reviewed by
-people outside the labelling process. Recompute one row of the inventory's `EMV` and interval by
-hand. And require that every `p` in the inventory names its source — measured, estimated, or
-inherited — because an inventory of estimates presented as measurements is worse than no inventory.
-**AI proposes; the professional verifies, decides and remains accountable.**
+**Verification, concretely.** Reconcile every attribution to its output and require the residual
+to be nil or explained, in currency (16.3.1). Recompute the validation sample size from the
+stated bound and confidence, and check the suite for independence by asking how many distinct
+templates generated it. Confirm the audit sample of 16.3.3 was drawn from unflagged items and
+reviewed by people outside the labelling process. Recompute one row of the inventory's `EMV` and
+interval by hand. And require that every `p` in the inventory names its source (measured,
+estimated, or inherited), because an inventory of estimates presented as measurements is worse
+than no inventory. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 16.3
 
@@ -1066,9 +1074,9 @@ passing, are needed to be 95 % confident that a model's defect rate is below 1 %
 - C. 95
 - D. 459
 
-*Rationale:* `n ≥ ln(0.05) ÷ ln(0.99) = 298.0729`, so 299 — the "rule of three" at `3/p`. A is the
-reciprocal of the bound, which gives only a 63 % confidence. C confuses the confidence level with a
-count. D is the requirement at 99 % confidence, not 95 %.
+*Rationale:* `n ≥ ln(0.05) ÷ ln(0.99) = 298.0729`, so 299 (the "rule of three" at `3/p`). A is
+the reciprocal of the bound, which gives only a 63 % confidence. C confuses the confidence level
+with a count. D is the requirement at 99 % confidence, not 95 %.
 
 **MCQ 16.3-B `[16.3.2 · Analysis]`** That model passes its 299 cases and is then used 56,400 times
 a year. The correct statement is:
@@ -1078,34 +1086,37 @@ a year. The correct statement is:
 - D. the validation guarantees a 99 % success rate in production
 
 *Rationale:* A 1 % bound at 56,400 uses admits `0.01 × 56,400 = 564` errors; bounding expected
-errors at 10 would need 16,895 passing cases. A inverts the bound. C misstates the requirement —
-test volume need not match production volume, it must be independent and representative. D reads a
-one-sided confidence bound as a point guarantee.
+errors at 10 would need 16,895 passing cases. A inverts the bound. C misstates the requirement:
+test volume need not match production volume, it must be independent and representative. D reads
+a one-sided confidence bound as a point guarantee.
 
 **MCQ 16.3-C `[16.3.3 · Analysis]`** A detector reports 80 % recall at a total cost of 114,800. A
 blind audit of 1,000 of the 46,090 unflagged items finds 17 genuine errors. The most important
 consequence is:
 - A. the threshold should be loosened until recall reaches 90 %
-- B. the true anomaly population is about 1,744 rather than 1,200, true recall is 55.0459 %, and the restated cost is 288,880 — the missed errors are the kinds the labels never contained, so the answer is a model change, not a threshold change ✅
+- B. the true anomaly population is about 1,744 rather than 1,200, true recall is 55.0459 %, and
+  the restated cost is 288,880. The missed errors are the kinds the labels never contained, so
+  the answer is a model change, not a threshold change ✅
 - C. the audit sample is too small to act on
 - D. the detector should be withdrawn
 
-*Rationale:* Extrapolating 1.70 % over 46,090 gives 784 missed errors; recall and cost restate to
-55.0459 % and 288,880. Loosening (A) does not reach errors the model cannot see — scaling the
+*Rationale:* Extrapolating 1.70 % over 46,090 gives 784 missed errors; recall and cost restate
+to 55.0459 % and 288,880. Loosening (A) does not reach errors the model cannot see: scaling the
 T4→T5 benefit by 1.4533 gives 55,808 against 78,000 of cost, so T4 remains optimal. C is wrong:
-937 would suffice for a ±1-point bound at 95 % confidence. D discards a control that still avoids
-substantial loss.
+937 would suffice for a ±1-point bound at 95 % confidence. D discards a control that still
+avoids substantial loss.
 
 **MCQ 16.3-D `[16.3.4 · Application]`** A model is used 4 times a year, fails with probability
 0.885585 per use, and a failure costs 600,000. With a tolerance of 50,000 of accumulated expected
 loss between validations, the revalidation interval is:
 - A. annual, since four uses a year is low volume
-- B. about 8.59 days — shorter than the interval between uses, so the model must be verified at every use ✅
+- B. about 8.59 days: shorter than the interval between uses, so the model must be verified at
+  every use ✅
 - C. quarterly, matching the use frequency
 - D. about 3.26 years, since the annual `EMV` is small
 
-*Rationale:* `EMV = 4 × 0.885585 × 600,000 = 2,125,404`; `50,000 ÷ 2,125,404 = 0.023525`
-years. A and C tier by volume or convenience rather than by expected loss — the inversion the topic
+*Rationale:* `EMV = 4 × 0.885585 × 600,000 = 2,125,404`; `50,000 ÷ 2,125,404 = 0.023525` years.
+A and C tier by volume or convenience rather than by expected loss, the inversion the topic
 exists to correct. D is the interval for the payment detector (M2), whose `EMV` is 15,360.
 
 **MCQ 16.3-E `[16.3.1 · Comprehension]`** Which restatement best captures the distinction 16.3.1
@@ -1117,59 +1128,65 @@ draws between an explanation and a justification?
 
 *Rationale:* Faithfulness and correctness are separate properties, and conflating them is how a
 persuasive account of a wrong number survives review (16.3.1, 16.3.2). D describes an importance
-ranking, which the topic rejects for a different reason again — a ranking cannot be reconciled to the
-output and so cannot be audited. A and C invent a form and an audience the distinction does not turn
-on.
+ranking, which the topic rejects for a different reason again (a ranking cannot be reconciled to
+the output and so cannot be audited). A and C invent a form and an audience the distinction does
+not turn on.
 
 **MCQ 16.3-F `[16.3.2 · Evaluation]`** A validation suite of **299** cases returns **one** failure.
 The team fixes the defect, re-runs the failing case so that all 299 now pass, and proposes to deploy.
 Assess the proposal.
-- A. acceptable — the defect is fixed and 299 passing cases meet the stated 1 % bound at 95 % confidence
-- B. not acceptable — permitting one observed failure at the same bound and confidence requires 473 cases, **58.19 %** more, so the suite must grow rather than be repaired; and even 299 clean passes admit about 564 errors a year at 56,400 uses ✅
-- C. not acceptable — one failure in 299 shows the defect rate exceeds 1 %, so the model should be withdrawn
+- A. acceptable; the defect is fixed and 299 passing cases meet the stated 1 % bound at 95 %
+  confidence
+- B. not acceptable: permitting one observed failure at the same bound and confidence requires
+  473 cases, **58.19 %** more, so the suite must grow rather than be repaired; and even 299
+  clean passes admit about 564 errors a year at 56,400 uses ✅
+- C. not acceptable: one failure in 299 shows the defect rate exceeds 1 %, so the model should
+  be withdrawn
 - D. acceptable, provided the failing case joins a regression set and the production error rate is monitored
 
 *Rationale:* The 299 figure is the size of a **zero-failure** sample; once a failure has been
-observed, the evidence the claim rests on is a different calculation, and repairing the case does not
-restore it (16.3.2). A is the standard move and the specific error the topic names. C over-reads: one
-failure in 299 does not establish a rate above 1 %, it enlarges the sample the claim needs. D
-prescribes exactly where the assurance should sit — monitoring reaches 16,895 observations in about
-four months, which no test programme will — but it does not license a validation claim the sample no
-longer supports, and the two are separate questions.
+observed, the evidence the claim rests on is a different calculation, and repairing the case
+does not restore it (16.3.2). A is the standard move and the specific error the topic names. C
+over-reads: one failure in 299 does not establish a rate above 1 %, it enlarges the sample the
+claim needs. D prescribes exactly where the assurance should sit (monitoring reaches 16,895
+observations in about four months, which no test programme will), but it does not license a
+validation claim the sample no longer supports, and the two are separate questions.
 
-**MCQ 16.3-G `[16.3.1 · Evaluation]`** An automated forecast publishes `CFADS` of **6,384,000** and
-attributes it across drivers summing to **6,190,000**. The modelling team proposes labelling the
-**194,000** residual "other — model complexity" and proceeding to a recommendation about which driver to
-manage. The soundest position is to:
-- A. accept it — at **3.0388 %** of the forecast the residual is within any reasonable reporting tolerance,
-  and no attribution reconciles perfectly
+**MCQ 16.3-G `[16.3.1 · Evaluation]`** An automated forecast publishes `CFADS` of **6,384,000**
+and attributes it across drivers summing to **6,190,000**. The modelling team proposes labelling
+the **194,000** residual "other (model complexity" and proceeding to a recommendation about
+which driver to manage). The soundest position is to:
+- A. accept it: at **3.0388 %** of the forecast the residual is within any reasonable reporting
+  tolerance, and no attribution reconciles perfectly
 - B. refuse the attribution until the residual is found: 194,000 is **52.0892 %** of the annual covenant
   headroom of 372,438, so no conclusion about which driver to manage is safe, and an explanation whose
   components do not reconcile to the output is a commentary rather than an explanation ✅
 - C. replace the currency attribution with ranked driver-importance scores, which convey the same management
   message without needing to reconcile
-- D. accept it — explanation is not justification, so the completeness of the attribution is a separate
-  question from whether the forecast is right
+- D. accept it; explanation is not justification, so the completeness of the attribution is a
+  separate question from whether the forecast is right
 
-*Rationale:* The hundred-per-cent rule applies unchanged, and the residual has to be measured against the
-quantity the project is judged on rather than against the forecast's own size (16.3.1). A is the tolerance
-argument, and it fails on the denominator rather than on the principle. C is the commonest substitution and
-is worse than the defect: a ranking cannot be reconciled and therefore cannot be audited, which is why
-attribution must be in currency. D quotes a true statement of the topic — a faithful account of how a model
-reached a number says nothing about whether the number is right — and uses it to excuse the opposite
-failure, an account that is not faithful.
+*Rationale:* The hundred-per-cent rule applies unchanged, and the residual has to be measured
+against the quantity the project is judged on rather than against the forecast's own size
+(16.3.1). A is the tolerance argument, and it fails on the denominator rather than on the
+principle. C is the commonest substitution and is worse than the defect: a ranking cannot be
+reconciled and therefore cannot be audited, which is why attribution must be in currency. D
+quotes a true statement of the topic (a faithful account of how a model reached a number says
+nothing about whether the number is right), and uses it to excuse the opposite failure, an
+account that is not faithful.
 
 ### Self-check — KA 16.3
 
-1. *What makes an explanation auditable?* — Local additive attribution in the output's own units,
+1. *What makes an explanation auditable?* Local additive attribution in the output's own units,
    reconciling to the output; a 194,000 residual on a 6,384,000 forecast is 52.0892 per cent of
    covenant headroom and disqualifies any conclusion drawn from the attribution.
-2. *Why can pre-deployment testing not make a high-volume model safe?* — 299 passing cases bound
-   the defect rate below 1 per cent, which at 56,400 uses still admits 564 errors a year; bounding
-   at 10 would need 16,895 cases, so monitoring, human approval and rollback carry the load.
-3. *What does a blind audit measure that no model metric can?* — The errors absent from the labels:
-   1,000 unflagged items yielding 17 findings restated the population from 1,200 to 1,744, recall
-   from 80 to 55.0459 per cent, and cost from 114,800 to 288,880.
+2. *Why can pre-deployment testing not make a high-volume model safe?* 299 passing cases bound
+   the defect rate below 1 per cent, which at 56,400 uses still admits 564 errors a year;
+   bounding at 10 would need 16,895 cases, so monitoring, human approval and rollback carry the
+   load.
+3. *What does a blind audit measure that no model metric can?* The errors absent from the
+   labels: 1,000 unflagged items yielding 17 findings restated the population from 1,200 to
+   1,744, recall from 80 to 55.0459 per cent, and cost from 114,800 to 288,880.
 
 ---
 
@@ -1181,23 +1198,23 @@ governance frame.*
 
 ### 16.4.1 Confidentiality, privacy and the deployment choice
 
-**Definitions.** A project financing generates three distinguishable classes of sensitive data, and
-conflating them produces bad controls. **Commercially confidential information** — the financial
-model, the price deck, the bank case, draft documents, the offtaker's consumption profile — is
-protected by contract, and its disclosure damages a live negotiation immediately and irreversibly.
-**Personal data** — employee, contractor and sometimes customer information — is protected by law
-that differs materially between jurisdictions; this book does not state any jurisdiction's
-requirements, and the professional obligation is to establish which regimes apply to each data set
-before it is processed, and to take advice. **Statutorily or contractually restricted
-information** — price-sensitive information about a listed sponsor, or data whose location is
-restricted by a licence or a concession — carries its own consequences independent of the other
-two.
+**Definitions.** A project financing generates three distinguishable classes of sensitive data,
+and conflating them produces bad controls. **Commercially confidential information** (the
+financial model, the price deck, the bank case, draft documents, the offtaker's consumption
+profile) is protected by contract, and its disclosure damages a live negotiation immediately and
+irreversibly. **Personal data** (employee, contractor and sometimes customer information) is
+protected by law that differs materially between jurisdictions; this book does not state any
+jurisdiction's requirements, and the professional obligation is to establish which regimes apply
+to each data set before it is processed, and to take advice. **Statutorily or contractually
+restricted information** (price-sensitive information about a listed sponsor, or data whose
+location is restricted by a licence or a concession) carries its own consequences independent of
+the other two.
 
-Two practical rules cut across all three. **Minimisation beats protection**: the surest control on
-a diligence data set is that the personal data was never loaded, and redaction at ingestion is
-cheaper than every control downstream. And **retention by a processor is the risk that gets
-missed** — whether a service retains inputs, for how long, whether they train on them, and in which
-jurisdiction they rest are contractual questions to settle before use, not afterwards.
+Two practical rules cut across all three. **Minimisation beats protection**: the surest control
+on a diligence data set is that the personal data was never loaded, and redaction at ingestion
+is cheaper than every control downstream. And **retention by a processor is the risk that gets
+missed**, whether a service retains inputs, for how long, whether they train on them, and in
+which jurisdiction they rest are contractual questions to settle before use, not afterwards.
 
 **Worked example 16.4.1 — the deployment choice, and the number at which it flips.**
 
@@ -1212,27 +1229,28 @@ jurisdiction they rest are contractual questions to settle before use, not after
    differential. Breakeven consequence = cost differential ÷ probability differential.
 3. **Substitution.** `(0.008 − 0.0015) × 6,500,000`; `410,000 − 148,000`;
    `262,000 ÷ 0.0065`.
-4. **Result.** `EMV` avoided **USD 42,250** a year against a cost differential of
-   **USD 262,000** — so on these figures the private deployment is **not** justified, by
-   USD 219,750 a year. The breakeven consequence is **USD 40,307,692**.
-5. **Interpretation.** The value of this calculation is not its answer but the sentence it forces:
-   **state the consequence at which your choice flips, then argue about whether the consequence is
-   really that large.** USD 40.3 million is a large number for a routine operating pipeline, which
-   is why the managed service is defensible for one — and it is *not* an implausible number for the
-   information set of a live acquisition, a refinancing at scale or a competitive bid, where the
-   loss is the transaction rather than the data. So the professionally correct architecture is
-   usually neither of the two options as posed: **segment the data**, run the high-volume operating
-   pipeline on the managed service, and keep the live-transaction information set — model, price
-   deck, bank case, draft documents — inside the private environment, where the volume is low and
-   the 262,000 differential applies to a fraction of the work. Three cautions. The probabilities
-   are **assessments, not measurements**, and no organisation has enough breach history to measure
-   them, so the arithmetic's honest role is to structure the judgment rather than to settle it —
-   present it as a breakeven, never as an `NPV`. The consequence is **not fully monetisable**: a
-   breach that costs a licence, or a regulatory consequence in one jurisdiction, is not on this
-   scale at all, and where that is possible the calculation should not be run — the answer is the
+4. **Result.** `EMV` avoided **USD 42,250** a year against a cost differential of **USD
+   262,000**, so on these figures the private deployment is **not** justified, by USD 219,750 a
+   year. The breakeven consequence is **USD 40,307,692**.
+5. **Interpretation.** The value of this calculation is not its answer but the sentence it
+   forces: **state the consequence at which your choice flips, then argue about whether the
+   consequence is really that large.** USD 40.3 million is a large number for a routine
+   operating pipeline, which is why the managed service is defensible for one, and it is *not*
+   an implausible number for the information set of a live acquisition, a refinancing at scale
+   or a competitive bid, where the loss is the transaction rather than the data. So the
+   professionally correct architecture is usually neither of the two options as posed: **segment
+   the data**, run the high-volume operating pipeline on the managed service, and keep the
+   live-transaction information set (model, price deck, bank case, draft documents) inside the
+   private environment, where the volume is low and the 262,000 differential applies to a
+   fraction of the work. Three cautions. The probabilities are **assessments, not
+   measurements**, and no organisation has enough breach history to measure them, so the
+   arithmetic's honest role is to structure the judgment rather than to settle it — present it
+   as a breakeven, never as an `NPV`. The consequence is **not fully monetisable**: a breach
+   that costs a licence, or a regulatory consequence in one jurisdiction, is not on this scale
+   at all, and where that is possible the calculation should not be run — the answer is the
    private deployment regardless of arithmetic. And a private deployment is **not automatically
-   safer**: it moves the risk from a specialist provider's controls to the organisation's own, and
-   an under-resourced private environment can carry the higher probability, which is a real
+   safer**: it moves the risk from a specialist provider's controls to the organisation's own,
+   and an under-resourced private environment can carry the higher probability, which is a real
    inversion and should be tested rather than assumed.
 
 ### 16.4.2 Cybersecurity of an automated finance function
@@ -1243,16 +1261,17 @@ risk with the same shape as any outage. This topic addresses the different expos
 automating the **finance** function, which is not availability but **integrity and authority**:
 the risk that money moves, or a figure is reported, on an instruction nobody competent gave.
 
-Three attack surfaces are specific to an automated finance function and none of them existed in a
-manual one. **Instruction injection through ingested content**: an assistant that reads supplier
-invoices, emails or documents will read whatever is in them, including text crafted to look like
-instructions, so any pipeline that both reads external content and can act must treat ingested text
-as data and never as direction. **Label and data poisoning**: an adversary who can influence what a
-detector learns — by shaping which items get labelled, or by operating just below a known
-threshold — degrades the control quietly, and 16.3.3's blind audit is the only routine instrument
-that would notice. **Authority accumulation**: automation tends to concentrate permissions, because
-it is easier to give a pipeline broad access than to scope it, and the result is a single identity
-that can read the ledger, initiate a payment and update the record of what it did.
+Three attack surfaces are specific to an automated finance function and none of them existed in
+a manual one. **Instruction injection through ingested content**: an assistant that reads
+supplier invoices, emails or documents will read whatever is in them, including text crafted to
+look like instructions, so any pipeline that both reads external content and can act must treat
+ingested text as data and never as direction. **Label and data poisoning**: an adversary who can
+influence what a detector learns (by shaping which items get labelled, or by operating just
+below a known threshold) degrades the control quietly, and 16.3.3's blind audit is the only
+routine instrument that would notice. **Authority accumulation**: automation tends to
+concentrate permissions, because it is easier to give a pipeline broad access than to scope it,
+and the result is a single identity that can read the ledger, initiate a payment and update the
+record of what it did.
 
 The control that answers the third is separation of duties, and it should be sized rather than
 declared.
@@ -1260,48 +1279,49 @@ declared.
 **Worked example 16.4.2 — the dual-approval threshold, derived.**
 
 1. **Setup.** The estate makes **4,800** payments a year totalling **USD 68,000,000**. A second
-   approver costs **15 minutes** at **USD 1.60** a minute — **USD 24.00** a payment. **0.20 per
-   cent** of payments are erroneous or fraudulent, and a second approval catches **85 per cent** of
-   those, so **0.17 per cent** of payment value is protected per payment reviewed. **1,150**
-   payments, worth **USD 63,400,000**, exceed the threshold derived below; the remaining **3,650**,
-   worth **USD 4,600,000**, fall under it.
+   approver costs **15 minutes** at **USD 1.60** a minute, **USD 24.00** a payment. **0.20 per
+   cent** of payments are erroneous or fraudulent, and a second approval catches **85 per cent**
+   of those, so **0.17 per cent** of payment value is protected per payment reviewed. **1,150**
+   payments, worth **USD 63,400,000**, exceed the threshold derived below; the remaining
+   **3,650**, worth **USD 4,600,000**, fall under it.
 2. **Formula.** Expected loss avoided on one payment = caught rate × payment value. The control
    pays where that exceeds the approver's cost, so the threshold is
    `V* = approver cost ÷ caught rate`. Net value of a policy = `caught rate × value reviewed −
    approver cost × payments reviewed`.
 3. **Substitution.** `24.00 ÷ 0.0017`; then the two policies on the value and count above and
    below.
-4. **Result.** **Threshold `V*` = USD 14,117.65**, so dual approval pays on any payment above about
-   **USD 14,118**. **Blanket dual approval on all 4,800 payments** costs **USD 115,200** and avoids
-   **USD 115,600** — a net value of **USD 400 a year**. **Thresholded dual approval on the 1,150
-   payments above 14,118** costs **USD 27,600** and avoids **USD 107,780** — a net value of
-   **USD 80,180**. The 3,650 small payments cost **USD 87,600** to approve and avoid **USD 7,820**,
-   destroying **USD 79,780**, which reconciles exactly to the difference between the two policies.
-5. **Interpretation.** The blanket rule — the rule almost every finance function actually has — is
+4. **Result.** **Threshold `V*` = USD 14,117.65**, so dual approval pays on any payment above
+   about **USD 14,118**. **Blanket dual approval on all 4,800 payments** costs **USD 115,200**
+   and avoids **USD 115,600** (a net value of **USD 400 a year**). **Thresholded dual approval
+   on the 1,150 payments above 14,118** costs **USD 27,600** and avoids **USD 107,780** (a net
+   value of **USD 80,180**). The 3,650 small payments cost **USD 87,600** to approve and avoid
+   **USD 7,820**, destroying **USD 79,780**, which reconciles exactly to the difference between
+   the two policies.
+5. **Interpretation.** The blanket rule, the rule almost every finance function actually has, is
    **value-neutral to three significant figures**, and it achieves that by combining a strongly
    positive control on large payments with a strongly negative one on small ones. That is the
    general lesson of this domain restated in a third setting: **the value of a control, like the
-   value of a looser alert threshold and the value of a verification step, is a marginal quantity,
-   and averaging destroys the information.** Four practical consequences. **Derive the threshold and
-   put it in the policy**, with its two inputs visible — the approver's cost and the caught rate —
-   because both are arguable and neither is usually written down. **Spend the released capacity on
-   the exposure that has no control**: 87,600 a year of approver time bought 7,820 of protection,
-   and the same money spent on the blind audit of 16.3.3 bought a 18.4471-times return. **Do not
-   read this as an argument against controls on small payments** — a *sampling* control on the
-   sub-threshold population costs a fraction of blanket approval and preserves deterrence, which the
-   arithmetic above does not model and which matters, because a published threshold is an
-   instruction to an adversary to stay below it. That last point is the professional caution, and it
-   is why the threshold should be reviewed against the observed distribution of attempts, not set
-   once. **And the caught rate is the input to defend**: at 85 per cent the control is strong; a
-   second approver who signs without looking has a caught rate near nil, at which point the whole
-   115,200 is waste and the arithmetic says so.
+   value of a looser alert threshold and the value of a verification step, is a marginal
+   quantity, and averaging destroys the information.** Four practical consequences. **Derive the
+   threshold and put it in the policy**, with its two inputs visible, the approver's cost and
+   the caught rate, because both are arguable and neither is usually written down. **Spend the
+   released capacity on the exposure that has no control**: 87,600 a year of approver time
+   bought 7,820 of protection, and the same money spent on the blind audit of 16.3.3 bought a
+   18.4471-times return. **Do not read this as an argument against controls on small payments**:
+   a *sampling* control on the sub-threshold population costs a fraction of blanket approval and
+   preserves deterrence, which the arithmetic above does not model and which matters, because a
+   published threshold is an instruction to an adversary to stay below it. That last point is
+   the professional caution, and it is why the threshold should be reviewed against the observed
+   distribution of attempts, not set once. **And the caught rate is the input to defend**: at 85
+   per cent the control is strong; a second approver who signs without looking has a caught rate
+   near nil, at which point the whole 115,200 is waste and the arithmetic says so.
 
 ### 16.4.3 Human approval — what it is, and what it costs
 
-**Definition.** **Human approval** is a named person taking responsibility for an output before it
-has an effect. It has three levels that must not be confused. **Review** — a person examines the
-output and can stop it. **Approval** — a person is accountable for it having proceeded.
-**Certification** — a person makes a representation to a third party, with the consequences that
+**Definition.** **Human approval** is a named person taking responsibility for an output before
+it has an effect. It has three levels that must not be confused. **Review**: a person examines
+the output and can stop it. **Approval**; a person is accountable for it having proceeded.
+**Certification**: a person makes a representation to a third party, with the consequences that
 attach; Domain 14's treatment of draw-request certifications stands, and nothing in an automated
 pipeline may generate a representation.
 
@@ -1320,26 +1340,26 @@ decision is `E[wait] = M/2 + L`, for a meeting interval `M` and a paper lead tim
 3. **Substitution.** `60/2 + 10 = 40` days; `7/2 + 2 = 5.5` days; `416,000 ÷ 365 = 1,139.7260` a
    day.
 4. **Result.** The committee design forgoes **USD 45,589.04** of value per change; the delegated
-   panel forgoes **USD 6,268.49**. The difference — **USD 39,320.55 per change** — is the price of
+   panel forgoes **USD 6,268.49**. The difference (**USD 39,320.55 per change**) is the price of
    the governance design, paid whether or not the committee changes the decision.
 5. **Interpretation.** The point is emphatically **not** that approval should be removed. It is
-   that **approval must be tiered by consequence, because the tier is where the cost sits**, and an
-   organisation that routes every model change to one quarterly committee is paying roughly 39,000
-   a change for assurance it does not need on most of them while giving inadequate attention to the
-   few that matter. The design this domain endorses has three tiers derived from the instruments
-   already built. Changes to a model in the **top tier** of 16.3.4's inventory — M1 and M3, where
-   one bad output consumes a covenant headroom — go to the committee, and the 45,589 is well spent
-   because the exposure is 372,438 a year of headroom. Changes to **threshold parameters** go to a
-   delegated panel with a written mandate, because 16.1.3 showed the decision is a cost-ratio
-   judgment that a small standing group can take competently and repeatedly. Changes that alter
-   **what is reported to a lender** go nowhere near either: they are an information-covenant matter
-   (Domain 10, KA 10.4.1) and require the finance director's own decision. Two cautions worth
-   holding. **Latency is not the only cost of a gate** — PML-AI's gate-net-value form prices the
-   defect the gate catches against the delay it imposes, and a gate whose catch rate is nil is pure
-   cost — so measure what the committee actually changes. And **the delegated mandate must be
-   written**, naming which parameters may move, within what bounds, and what triggers escalation,
-   because an undocumented delegation is not a tier, it is an absence of control that will be
-   described as one after an incident.
+   that **approval must be tiered by consequence, because the tier is where the cost sits**, and
+   an organisation that routes every model change to one quarterly committee is paying roughly
+   39,000 a change for assurance it does not need on most of them while giving inadequate
+   attention to the few that matter. The design this domain endorses has three tiers derived
+   from the instruments already built. Changes to a model in the **top tier** of 16.3.4's
+   inventory (M1 and M3, where one bad output consumes a covenant headroom) go to the committee,
+   and the 45,589 is well spent because the exposure is 372,438 a year of headroom. Changes to
+   **threshold parameters** go to a delegated panel with a written mandate, because 16.1.3
+   showed the decision is a cost-ratio judgment that a small standing group can take competently
+   and repeatedly. Changes that alter **what is reported to a lender** go nowhere near either:
+   they are an information-covenant matter (Domain 10, KA 10.4.1) and require the finance
+   director's own decision. Two cautions worth holding. **Latency is not the only cost of a
+   gate** — PML-AI's gate-net-value form prices the defect the gate catches against the delay it
+   imposes, and a gate whose catch rate is nil is pure cost — so measure what the committee
+   actually changes. And **the delegated mandate must be written**, naming which parameters may
+   move, within what bounds, and what triggers escalation, because an undocumented delegation is
+   not a tier, it is an absence of control that will be described as one after an incident.
 
 ### 16.4.4 The AI governance frame
 
@@ -1350,39 +1370,69 @@ effect**, and **who is accountable for the decision it informs**. A programme th
 those three for every entry in its inventory does not have governance, whatever documentation it
 holds.
 
-Six components carry the weight, and each has been derived rather than asserted in this domain. The
-**inventory and tiering** of 16.3.4, with intervals that follow from expected loss and a policy
-floor. The **validation and monitoring** regime of 16.3.2, with monitoring sized to carry the
-assurance that testing cannot. The **human-approval architecture** of 16.4.3, tiered so that its
-latency cost is spent where consequence is. The **audit trail**: for every published figure, the
-model version, the input data version, the attribution (16.3.1), and the named verifier with a
-date — which is what makes an output defensible a year later, when the person has moved on.
-**Incident response and rollback**, including the number nobody computes: 16.A.2 prices a quarter's
-suspension of the estate's pipeline at **USD 141,000**, and a rollback plan without that figure has
-not been tested. And **disclosure**, which is the component most often forgotten in a financing:
-where a model materially affects a reported figure or a covenant certificate, whether and how that
-is disclosed to lenders is an information-covenant question, and a sponsor who is asked about it for
-the first time during a waiver negotiation has lost the initiative Domain 10 (KA 10.4.4) identified
-as the most valuable asset in a covenant relationship.
+Six components carry the weight, and each has been derived rather than asserted in this domain.
+The **inventory and tiering** of 16.3.4, with intervals that follow from expected loss and a
+policy floor. The **validation and monitoring** regime of 16.3.2, with monitoring sized to carry
+the assurance that testing cannot. The **human-approval architecture** of 16.4.3, tiered so that
+its latency cost is spent where consequence is. The **audit trail**: for every published figure,
+the model version, the input data version, the attribution (16.3.1), and the named verifier with
+a date, which is what makes an output defensible a year later, when the person has moved on.
+**Incident response and rollback**, including the number nobody computes: 16.A.2 prices a
+quarter's suspension of the estate's pipeline at **USD 141,000**, and a rollback plan without
+that figure has not been tested. And **disclosure**, which is the component most often forgotten
+in a financing: where a model materially affects a reported figure or a covenant certificate,
+whether and how that is disclosed to lenders is an information-covenant question, and a sponsor
+who is asked about it for the first time during a waiver negotiation has lost the initiative
+Domain 10 (KA 10.4.4) identified as the most valuable asset in a covenant relationship.
+
+**Retention: the component that turns an audit trail into a record.** The trail above exists to
+make an output defensible a year later. A year is the wrong horizon: the artefacts of a project
+financing must survive a facility of twenty-five years, a limitation period that can run from
+events late in that life, and several changes of personnel. Section 16.4.1 correctly identifies a
+*processor's* retention (whether a service keeps inputs, for how long, whether it trains on them
+and where they rest) as a contractual question to settle before use. The mirror obligation is
+the organisation's own, and it is stated here.
+
+The rule: retain for **the longest of** the applicable limitation period for claims under the
+relevant documents, the life of the facility plus its tail, and any statutory tax, accounting or
+regulatory requirement the organisation has established. Three disciplines make the period
+meaningful. **Retain the model version, the input data version and the attribution alongside the
+output**, not in three systems on three schedules, because an output whose inputs have been aged
+out cannot be reconstructed and therefore cannot be defended; the audit trail's four elements
+are one record. **Retain in a form that opens without the toolchain that produced it** and that
+reproduces the figure from its own trail: a vendor platform whose licence lapses, or whose
+export format is proprietary, is not a retention arrangement, and the exit and export terms
+belong in the contract negotiated at 16.4.1 rather than in a renewal discussion. And **name a
+custodian**, with custody transferred by recorded handover, since the person who ran the model
+is precisely the person who will have moved on.
+
+Two cautions, and they pull in opposite directions. Retention periods **differ by jurisdiction
+and by document type and change over time**; they are established for the specific entity with
+counsel and the reporting accountants, and this book states the rule rather than any period. And
+where retained material contains information about identified individuals, a **minimisation or
+deletion obligation may cut directly across the retention rule**; the two are reconciled with
+the organisation's data-protection adviser when the arrangement is designed, not when a request
+arrives, and the reconciliation is recorded in the inventory (Toolkit 16.T.3) as a decision with
+an owner.
 
 **On external frameworks, accurately.** Several published frameworks are useful reference points
 and are named here in the book's own words, with no text reproduced. **ISO/IEC 42001** specifies
-requirements for an artificial-intelligence management system, in the same management-system idiom
-as ISO/IEC 27001 for information security, and is therefore the natural home for the inventory,
-tiering and approval arrangements above. **ISO/IEC 23894** offers guidance on managing risk in
-artificial-intelligence systems. The **NIST AI Risk Management Framework**, published by the United
-States National Institute of Standards and Technology, is a voluntary, function-based framework
-widely used as a structuring device. The **European Union's Artificial Intelligence Act** is a
-risk-tiered regulatory regime whose obligations depend on how a system is classified and on the
-role a party plays in relation to it, applying in phases; whether and how it reaches a particular
-project company is a legal question that depends on facts and jurisdiction, and it is not answered
-in this book. In addition, banking supervisors in several jurisdictions publish model-risk
-management expectations for regulated lenders. A project company is not usually within their scope
-— but **its lenders are**, and the expectation therefore propagates to the borrower through
-diligence questionnaires and information covenants, which is why a sponsor with a defensible model
-inventory has a commercial advantage and not merely a tidy file. None of these frameworks is
-endorsed by the Institute, none is reproduced, and none substitutes for advice on the law
-applicable to a specific project.
+requirements for an artificial-intelligence management system, in the same management-system
+idiom as ISO/IEC 27001 for information security, and is therefore the natural home for the
+inventory, tiering and approval arrangements above. **ISO/IEC 23894** offers guidance on
+managing risk in artificial-intelligence systems. The **NIST AI Risk Management Framework**,
+published by the United States National Institute of Standards and Technology, is a voluntary,
+function-based framework widely used as a structuring device. The **European Union's Artificial
+Intelligence Act** is a risk-tiered regulatory regime whose obligations depend on how a system
+is classified and on the role a party plays in relation to it, applying in phases; whether and
+how it reaches a particular project company is a legal question that depends on facts and
+jurisdiction, and it is not answered in this book. In addition, banking supervisors in several
+jurisdictions publish model-risk management expectations for regulated lenders. A project
+company is not usually within their scope, but **its lenders are**, and the expectation
+therefore propagates to the borrower through diligence questionnaires and information covenants,
+which is why a sponsor with a defensible model inventory has a commercial advantage and not
+merely a tidy file. None of these frameworks is endorsed by the Institute, none is reproduced,
+and none substitutes for advice on the law applicable to a specific project.
 
 ### AI in this KA
 
@@ -1394,12 +1444,13 @@ time, because an audit trail assembled later is an assertion; tracking approvals
 and flagging the ones that exceeded them; and drafting the disclosure language a lender pack needs,
 for a human to settle.
 
-**Where it must not go.** No model may approve, certify or disclose. No model may set its own tier,
-tolerance or mandate. And no model may write the governance framework it will be governed by — a
-recursion that sounds absurd and is nonetheless the most likely way an organisation ends up with a
-policy that reads well, cites the right frameworks, and imposes no constraint anyone has costed.
-The test to apply to any such document is the one this domain has applied throughout: **which
-number in it would change a decision?** A governance document with no numbers governs nothing.
+**Where it must not go.** No model may approve, certify or disclose. No model may set its own
+tier, tolerance or mandate. And no model may write the governance framework it will be governed
+by: a recursion that sounds absurd and is nonetheless the most likely way an organisation ends
+up with a policy that reads well, cites the right frameworks, and imposes no constraint anyone
+has costed. The test to apply to any such document is the one this domain has applied
+throughout: **which number in it would change a decision?** A governance document with no
+numbers governs nothing.
 
 **Verification, concretely.** Reconcile the inventory against production access logs and require
 the difference to be nil. Sample five published figures and attempt to reproduce each from the
@@ -1422,6 +1473,9 @@ remains accountable.**
 | **Dual-approval threshold** | Approver cost ÷ caught rate; the value above which a second approval pays. |
 | **Review / approval / certification** | Can stop it · accountable for it · represents it to a third party. |
 | **Governance latency** | `E[wait] = M/2 + L`; the value forgone while a gate waits. |
+| **Retention horizon (AI trail)** | The longest of the applicable limitation period, the facility's life and tail, and any statutory requirement the organisation has established; jurisdiction-specific and established rather than assumed. |
+| **Unretained model** | A model whose audit trail cannot be produced in readable form once the platform that ran it has been replaced; a finding, not a housekeeping note. |
+| **Custodian handover** | The recorded transfer of custody of a record set, as distinct from custody inherited by whoever now has access. |
 
 ### Sample MCQs — KA 16.4
 
@@ -1433,10 +1487,10 @@ approval pays is closest to:
 - C. USD 120,000
 - D. USD 80,000
 
-*Rationale:* Caught rate `0.0020 × 0.85 = 0.0017`; `24.00 ÷ 0.0017 = 14,117.65`. A omits the catch
-rate and divides by 0.0020. C misplaces a decimal in the bad-payment rate, using 0.02 % rather than
-0.20 % (`24.00 ÷ 0.0002`). D uses the **15 %** a second approval misses instead of the 85 % it
-catches (`24.00 ÷ 0.0003`) — the sign-of-the-control error.
+*Rationale:* Caught rate `0.0020 × 0.85 = 0.0017`; `24.00 ÷ 0.0017 = 14,117.65`. A omits the
+catch rate and divides by 0.0020. C misplaces a decimal in the bad-payment rate, using 0.02 %
+rather than 0.20 % (`24.00 ÷ 0.0002`). D uses the **15 %** a second approval misses instead of
+the 85 % it catches (`24.00 ÷ 0.0003`), the sign-of-the-control error.
 
 **MCQ 16.4-B `[16.4.2 · Analysis]`** On the same figures, 4,800 payments a year total 68,000,000,
 of which 1,150 payments worth 63,400,000 exceed the threshold. Comparing blanket dual approval with
@@ -1446,16 +1500,18 @@ thresholded dual approval:
 - C. thresholded is worth 80,180 a year against blanket's 400, because the 3,650 small payments cost 87,600 to approve and protect only 7,820 ✅
 - D. neither is worthwhile, since the blanket policy nets only 400
 
-*Rationale:* Blanket costs 115,200 and avoids 115,600; thresholded costs 27,600 and avoids 107,780.
-A is true and irrelevant — the extra catches cost more than they save. B ignores that the value
-protected varies with payment size while the approver's cost does not. D draws the wrong conclusion
-from the blanket result: the control is strongly positive where it is targeted.
+*Rationale:* Blanket costs 115,200 and avoids 115,600; thresholded costs 27,600 and avoids
+107,780. A is true and irrelevant: the extra catches cost more than they save. B ignores that
+the value protected varies with payment size while the approver's cost does not. D draws the
+wrong conclusion from the blanket result: the control is strongly positive where it is targeted.
 
 **MCQ 16.4-C `[16.4.1 · Analysis]`** A managed service costs 148,000 a year with an assessed 0.80 %
 annual breach probability; a private deployment costs 410,000 at 0.15 %. The most defensible use of
 the arithmetic is:
 - A. compute the `EMV` avoided of 42,250, conclude the managed service wins, and close the question
-- B. state the breakeven consequence of 40,307,692 and then debate whether the information at risk is worth that — which segments the answer: operating pipeline managed, live-transaction data private ✅
+- B. state the breakeven consequence of 40,307,692 and then debate whether the information at
+  risk is worth that, which segments the answer: operating pipeline managed, live-transaction
+  data private ✅
 - C. choose the private deployment, because confidentiality cannot be quantified
 - D. choose the managed service, because the probability differential is only 0.65 percentage points
 
@@ -1470,34 +1526,36 @@ to:
 - A. USD 6,268
 - B. USD 45,589 ✅
 - C. USD 68,384
-- D. nil — the benefit accrues once approved
+- D. nil (the benefit accrues once approved)
 
 *Rationale:* `E[wait] = 60/2 + 10 = 40` days at `416,000 ÷ 365 = 1,139.7260` a day. A is the
 delegated panel's 5.5-day wait. C prices the full 60-day meeting interval in place of `M/2 + L`,
 dropping both the expected-half rule and the paper lead time. D ignores that a delayed benefit is a
 forgone benefit.
 
-**MCQ 16.4-E `[16.4.2 · Evaluation]`** The finance director accepts the derived **14,118** threshold
-— worth **80,180** a year against the blanket rule's **400** — and proposes to remove dual approval
-from the 3,650 sub-threshold payments altogether and publish the threshold in the payments policy.
-Assess the proposal.
-- A. sound as it stands — the arithmetic is unambiguous and it removes 79,780 of destroyed value
+**MCQ 16.4-E `[16.4.2 · Evaluation]`** The finance director accepts the derived **14,118**
+threshold (worth **80,180** a year against the blanket rule's **400**), and proposes to remove
+dual approval from the 3,650 sub-threshold payments altogether and publish the threshold in the
+payments policy. Assess the proposal.
+- A. sound as it stands; the arithmetic is unambiguous and it removes 79,780 of destroyed value
 - B. sound in its main move but incomplete: a published threshold is an instruction to an adversary to stay below it, so the sub-threshold population needs a sampling control the arithmetic does not model, and the released 87,600 of approver time is better spent on the blind audit that returned 18.4471 times its cost ✅
-- C. unsound — the blanket rule nets a positive 400 a year and should be retained
-- D. unsound — the 85 % caught rate is an assessment rather than a measurement, so no threshold derived from it can be relied on
+- C. unsound: the blanket rule nets a positive 400 a year and should be retained
+- D. unsound; the 85 % caught rate is an assessment rather than a measurement, so no threshold
+  derived from it can be relied on
 
-*Rationale:* The calculation is right and is not a complete policy: it prices detection and is silent
-on deterrence, which is precisely what publishing a threshold changes (16.4.2). A treats a correct
-figure as a finished decision. C defends a control that is value-neutral to three significant figures
-by combining a strongly positive rule on large payments with a strongly negative one on small. D
-raises the input that most deserves defending — a second approver who signs without looking makes the
-whole 115,200 waste — but at any plausible caught rate the blanket rule remains the weaker policy, so
-uncertainty in that input is a reason to test it, not to abandon the derivation.
+*Rationale:* The calculation is right and is not a complete policy: it prices detection and is
+silent on deterrence, which is precisely what publishing a threshold changes (16.4.2). A treats
+a correct figure as a finished decision. C defends a control that is value-neutral to three
+significant figures by combining a strongly positive rule on large payments with a strongly
+negative one on small. D raises the input that most deserves defending (a second approver who
+signs without looking makes the whole 115,200 waste), but at any plausible caught rate the
+blanket rule remains the weaker policy, so uncertainty in that input is a reason to test it, not
+to abandon the derivation.
 
 **MCQ 16.4-F `[16.4.3 · Evaluation]`** Shown that the quarterly AI governance committee forgoes
-**45,589.04** of value per change against the delegated panel's **6,268.49** — a difference of
-**39,320.55** a change — the head of finance proposes abolishing the committee and routing every model
-change to the weekly panel. The soundest recommendation is to:
+**45,589.04** of value per change against the delegated panel's **6,268.49** (a difference of
+**39,320.55** a change) the head of finance proposes abolishing the committee and routing every
+model change to the weekly panel. The soundest recommendation is to:
 - A. abolish the committee: at 39,320.55 a change its latency destroys more value than its scrutiny creates,
   and the panel can escalate anything it finds
 - B. tier the approvals rather than remove them: changes to the models where one bad output consumes the
@@ -1521,16 +1579,30 @@ made with the tiering in place.
 
 ### Self-check — KA 16.4
 
-1. *How is a dual-approval threshold derived, and what does a blanket rule do?* — Approver cost ÷
-   caught rate: USD 24.00 ÷ 0.0017 = USD 14,118. A blanket rule nets USD 400 a year by combining a
-   strongly positive control above the threshold with an USD 79,780 loss below it.
-2. *What does the deployment breakeven of USD 40,307,692 tell a director?* — That the managed
-   service is defensible for a routine operating pipeline and indefensible for a live-transaction
-   information set, so the answer is to segment the data rather than to choose once.
-3. *What are the three levels of human involvement, and which may never be automated?* — Review
+1. *How is a dual-approval threshold derived, and what does a blanket rule do?* Approver cost ÷
+   caught rate: USD 24.00 ÷ 0.0017 = USD 14,118. A blanket rule nets USD 400 a year by combining
+   a strongly positive control above the threshold with an USD 79,780 loss below it.
+2. *What does the deployment breakeven of USD 40,307,692 tell a director?* That the managed
+   service is defensible for a routine operating pipeline and indefensible for a
+   live-transaction information set, so the answer is to segment the data rather than to choose
+   once.
+3. *What are the three levels of human involvement, and which may never be automated?* Review
    (can stop it), approval (accountable for it), certification (represents it to a third party).
    Certification may never be generated by a model; a pipeline produces a draft for a person to
    verify and sign.
+4. *How long is an audit trail kept, and in what form?* For the longest of the applicable
+   limitation period, the facility's life and tail, and any statutory requirement the
+   organisation has established; with model version, input data version, attribution and
+   verifier retained *together*; in a form that opens without the toolchain that produced it;
+   under a named custodian. The periods are jurisdiction-specific and established with counsel
+   and the reporting accountants.
+5. *What is the mirror of the processor-retention question?* The organisation's own retention
+   duty for what it creates. Section 16.4.1 settles what the service keeps; this settles what the
+   organisation must keep, and the second is the one that survives the vendor.
+6. *What cuts against retention, and how is it resolved?* A minimisation or deletion obligation
+   over information about identified individuals. It is reconciled with the retention period
+   when the arrangement is designed, with the data-protection adviser, and recorded in the
+   inventory as a decision with an owner.
 
 ---
 
@@ -1539,50 +1611,50 @@ made with the tiering in place.
 ### 16.A.1 Agentic automation and the authorisation boundary
 
 An **agent** differs from an assistant in one respect that changes every calculation in this
-domain: it can **act**, not merely propose. The temptation is obvious — the 16.4.2 pipeline already
-identifies which payments are sound, so allowing it to release them removes the approver's cost
-entirely. Price that. Removing the thresholded human approval saves **USD 27,600** of approver time
-and adds **USD 107,780** of expected loss, a net destruction of **USD 80,180** a year, which is
-precisely the value of the control. Removing approval altogether takes expected loss from
-**USD 20,400** (0.20 per cent of value, 15 per cent of it uncaught) to **USD 136,000**. The
-inversion is exact and general: **an agent that replaces a control does not inherit the control's
-effect, it inherits its absence**, and the saving it books is the control's cost while the loss it
-creates is the control's benefit.
+domain: it can **act**, not merely propose. The temptation is obvious: the 16.4.2 pipeline
+already identifies which payments are sound, so allowing it to release them removes the
+approver's cost entirely. Price that. Removing the thresholded human approval saves **USD
+27,600** of approver time and adds **USD 107,780** of expected loss, a net destruction of **USD
+80,180** a year, which is precisely the value of the control. Removing approval altogether takes
+expected loss from **USD 20,400** (0.20 per cent of value, 15 per cent of it uncaught) to **USD
+136,000**. The inversion is exact and general: **an agent that replaces a control does not
+inherit the control's effect, it inherits its absence**, and the saving it books is the
+control's cost while the loss it creates is the control's benefit.
 
 Three design rules follow, each with an arithmetic basis in this domain. **Scope authority by
 consequence, using the threshold that already exists**: an agent may release below the 14,118
-threshold, where human approval was destroying value anyway, and may only *prepare* above it. **Keep
-the recording separate from the acting** — an identity that can both move money and amend the record
-of having moved it defeats reconstruction, and 16.4.4's audit trail is the control being defeated.
-And **treat every ingested document as data**: an agent with release authority that reads supplier
-correspondence has an instruction-injection surface directly onto the payment run, which is the
-single most consequential new exposure in an automated finance function. The honest summary is that
-agentic automation is defensible exactly where the human control was uneconomic, and nowhere else —
-which is a narrower claim than the technology's advocates make and a broader one than its sceptics
-allow.
+threshold, where human approval was destroying value anyway, and may only *prepare* above it.
+**Keep the recording separate from the acting**: an identity that can both move money and amend
+the record of having moved it defeats reconstruction, and 16.4.4's audit trail is the control
+being defeated. And **treat every ingested document as data**: an agent with release authority
+that reads supplier correspondence has an instruction-injection surface directly onto the
+payment run, which is the single most consequential new exposure in an automated finance
+function. The honest summary is that agentic automation is defensible exactly where the human
+control was uneconomic, and nowhere else, which is a narrower claim than the technology's
+advocates make and a broader one than its sceptics allow.
 
 ### 16.A.2 The automation you cannot switch off
 
 Every automation case in this domain is a comparison with a manual process, and the comparison
-assumes the manual process still exists. It does not, after about a year. The **fallback capacity**
-question is therefore part of the case, and it is a staffing lead-time question rather than a cost
-question. Restoring manual review over the estate's **56,400** records at **8.5 minutes** each
-requires **7,990 hours** a year — **4.99375 full-time equivalents** at 1,600 productive hours — and
-that capability cannot be assembled inside a reporting cycle, whatever the budget.
+assumes the manual process still exists. It does not, after about a year. The **fallback
+capacity** question is therefore part of the case, and it is a staffing lead-time question
+rather than a cost question. Restoring manual review over the estate's **56,400** records at
+**8.5 minutes** each requires **7,990 hours** a year (**4.99375 full-time equivalents** at 1,600
+productive hours), and that capability cannot be assembled inside a reporting cycle, whatever
+the budget.
 
 The number that belongs in the rollback plan is the cost of a **suspension**, because the fixed
 cost is committed while the manual cost returns. Suspending the pipeline for one quarter means
-paying the quarter's committed fixed cost of **USD 37,000** *and* reviewing 14,100 records manually
-at 19.36 all-in — **USD 272,976** — for a total of **USD 309,976**, against the automated quarter's
-**USD 168,976**: an incremental **USD 141,000** for one quarter's suspension. Two consequences.
-**Rollback is a funded option, not a right**, and a plan that does not name its cost has not been
-tested — the 141,000 should sit in the incident procedure beside the technical steps. And
-**capability decay should be resisted deliberately**: retaining each pipeline's manual procedure as
-documented, exercised work — a blind sample reviewed manually every period, which the audit
-discipline of 16.3.3 already requires and prices — keeps the fallback real at almost no marginal
-cost. That is the rare control
-that satisfies two purposes at once, and it is the strongest argument for the audit line surviving
-its first budget round.
+paying the quarter's committed fixed cost of **USD 37,000** *and* reviewing 14,100 records
+manually at 19.36 all-in (**USD 272,976**) for a total of **USD 309,976**, against the automated
+quarter's **USD 168,976**: an incremental **USD 141,000** for one quarter's suspension. Two
+consequences. **Rollback is a funded option, not a right**, and a plan that does not name its
+cost has not been tested. The 141,000 should sit in the incident procedure beside the technical
+steps. And **capability decay should be resisted deliberately**: retaining each pipeline's
+manual procedure as documented, exercised work (a blind sample reviewed manually every period,
+which the audit discipline of 16.3.3 already requires and prices) keeps the fallback real at
+almost no marginal cost. That is the rare control that satisfies two purposes at once, and it is
+the strongest argument for the audit line surviving its first budget round.
 
 ### 16.A.3 The reviewer's automation eye
 
@@ -1592,7 +1664,7 @@ Invariants to test on any automation, model or governance claim in a finance fun
   rates are measured rather than assumed; omitting them flatters automation by 20.3822 per cent on
   16.1.2's figures.
 - The **breakeven volume** is stated, and the case is assessed at the volume the entity actually
-  has — 9,400 records is a 54,000 loss where 56,400 is a 416,000 gain.
+  has; 9,400 records is a 54,000 loss where 56,400 is a 416,000 gain.
 - The breakeven is **recomputed at the consequence cost the work actually carries**; a case built at
   320 an error does not transfer to work worth 1,200 an error.
 - Any threshold is justified by **total misclassification cost**, never by accuracy; and the
@@ -1629,19 +1701,20 @@ Invariants to test on any automation, model or governance claim in a finance fun
   conditions on data location rather than by the arithmetic. Regulatory reset cycles break the
   training period, so the training-period bias of 16.3.3 is structural: a consumption model
   calibrated across a reset is calibrated on two different worlds.
-- **Contracted power and availability payments.** Revenue is formulaic, so forecast automation is
-  the easiest win in the estate and the anomaly detector's prevalence is low — which raises the
-  false-positive burden at any recall, because a low base rate means most alerts are false however
-  good the model. Threshold economics dominate, and the 16.1.3 arithmetic is the whole discussion.
+- **Contracted power and availability payments.** Revenue is formulaic, so forecast automation
+  is the easiest win in the estate and the anomaly detector's prevalence is low, which raises
+  the false-positive burden at any recall, because a low base rate means most alerts are false
+  however good the model. Threshold economics dominate, and the 16.1.3 arithmetic is the whole
+  discussion.
 - **Transport concessions.** Patronage data is high-volume, granular and genuinely
   non-stationary, so 56,400-record-scale automation pays easily while forecast automation is the
   hardest case in the book: the model that fitted last year's ramp is the model that will mislead
   through the next disruption, and validation must be on out-of-period data or it proves nothing.
 - **Digital infrastructure.** Contract terms are numerous, bespoke and frequently amended, which
   makes document review the highest-value application and the superseded-draft failure of 16.2.2
-  the highest-probability one — Case study B is drawn from this sector for that reason. Tenant data
-  is commercially sensitive third-party data, so minimisation is a contractual obligation, not a
-  preference.
+  the highest-probability one. Case study B is drawn from this sector for that reason. Tenant
+  data is commercially sensitive third-party data, so minimisation is a contractual obligation,
+  not a preference.
 - **Mining and resources.** Price-deck scenario generation is central and the sign-change appraisal
   pathologies of Domain 4 make generated-scenario reporting especially treacherous; a generated
   minimum across a commodity path distribution is a statement about the tail of an assumed price
@@ -1663,34 +1736,35 @@ saving. It carried no error-cost line for either process.
 
 **What happened.** Three things, in sequence, each worth a number.
 
-*The volume error.* At Kestrel's **9,400** records a year the platform cost **USD 235,984** against
-the manual process's **USD 181,984** — **USD 54,000 a year more**, not less. Restated properly, with
-the manual undetected-error rate measured at **1.80 per cent** and the automated at **2.60 per
-cent** against a consequence of **USD 320**, the all-in costs are **19.36** and **9.36** a record
-and the breakeven is **14,800 records a year**. The original case, omitting error costs, had implied
-a breakeven of **11,783** — **20.3822 per cent** flattering — and even that was above Kestrel's
-volume. The programme was rescoped to the six-asset estate's **56,400** records, where it saves
-**USD 416,000 a year**. The rescoping was the right answer arrived at for the wrong reason: nobody
-had computed a breakeven at all.
+*The volume error.* At Kestrel's **9,400** records a year the platform cost **USD 235,984**
+against the manual process's **USD 181,984** (**USD 54,000 a year more**, not less). Restated
+properly, with the manual undetected-error rate measured at **1.80 per cent** and the automated
+at **2.60 per cent** against a consequence of **USD 320**, the all-in costs are **19.36** and
+**9.36** a record and the breakeven is **14,800 records a year**. The original case, omitting
+error costs, had implied a breakeven of **11,783** (**20.3822 per cent** flattering), and even
+that was above Kestrel's volume. The programme was rescoped to the six-asset estate's **56,400**
+records, where it saves **USD 416,000 a year**. The rescoping was the right answer arrived at
+for the wrong reason: nobody had computed a breakeven at all.
 
 *The threshold error.* The payment-and-journal detector deployed alongside it was tuned, on the
-vendor's recommendation, to maximise accuracy: **98.5729 per cent** at threshold T2, with **925**
-alerts a year and a total misclassification cost of **USD 161,800**. Recomputed on the estate's own
-costs — **USD 40** to investigate a false positive, **USD 320** for a missed error — the
-cost-minimising threshold is **T4**, at **USD 114,800**, with **1,910** alerts and precision of
-only **50.2618 per cent**. Moving the threshold saved **USD 47,000 a year** and was resisted for two
-quarters by the team working the queue, whose objection — that half the alerts were now false — was
-factually correct and economically irrelevant, since the break-even posterior is `40 ÷ 320 =
-12.5 per cent`.
+vendor's recommendation, to maximise accuracy: **98.5729 per cent** at threshold T2, with
+**925** alerts a year and a total misclassification cost of **USD 161,800**. Recomputed on the
+estate's own costs (**USD 40** to investigate a false positive, **USD 320** for a missed error)
+the cost-minimising threshold is **T4**, at **USD 114,800**, with **1,910** alerts and precision
+of only **50.2618 per cent**. Moving the threshold saved **USD 47,000 a year** and was resisted
+for two quarters by the team working the queue, whose objection, that half the alerts were now
+false, was factually correct and economically irrelevant, since the break-even posterior is `40
+÷ 320 = 12.5 per cent`.
 
-*The label-bias discovery.* In the second year the finance director commissioned a **blind audit**
-of the items the detector had *not* flagged: **1,000** of **46,090**, reviewed independently of the
-labelling team at 8.5 minutes an item, a cost of **USD 13,600**. It found **17** genuine errors — a **1.70 per cent**
-rate, extrapolating to **784** missed errors a year against the **240** the detector's own
-arithmetic assumed. The true anomaly population was therefore about **1,744**, not 1,200 — **45.3333
-per cent** higher — the detector's true recall was **55.0459 per cent**, not 80, and the restated
-total cost at T4 was **USD 288,880**, a factor of **2.5164** on the reported figure. The
-false-negative cost had been understated by **USD 174,080** a year.
+*The label-bias discovery.* In the second year the finance director commissioned a **blind
+audit** of the items the detector had *not* flagged: **1,000** of **46,090**, reviewed
+independently of the labelling team at 8.5 minutes an item, a cost of **USD 13,600**. It found
+**17** genuine errors: a **1.70 per cent** rate, extrapolating to **784** missed errors a year
+against the **240** the detector's own arithmetic assumed. The true anomaly population was
+therefore about **1,744**, not 1,200 (**45.3333 per cent** higher) the detector's true recall
+was **55.0459 per cent**, not 80, and the restated total cost at T4 was **USD 288,880**, a
+factor of **2.5164** on the reported figure. The false-negative cost had been understated by
+**USD 174,080** a year.
 
 **How it resolved.** The estate adopted four changes, each traceable to one of the numbers above.
 The business case is now restated annually on measured error rates rather than assumed ones. The
@@ -1704,14 +1778,14 @@ confirmed findings as a new label source, because scaling the T4-to-T5 marginal 
 1.4533 population factor gives **USD 55,808** against an unchanged **USD 78,000** of investigation
 cost — no threshold reaches errors the labels never contained.
 
-**What the domain teaches here.** Three failures, one cause. The volume error, the threshold error
-and the label bias were all failures to compute something computable, and each was defended with a
-qualitative argument — the platform is strategic, accuracy is the standard metric, the model reports
-80 per cent recall. **Every one of those arguments dissolved on contact with arithmetic that took
-under an hour.** The programme's total annual improvement from arithmetic alone, before any
-technology changed, was **USD 470,000** of rescoping and **USD 47,000** of retuning, against a
-restated loss estimate that was **USD 174,080** worse than believed — and the honesty of the third
-number is what made the first two credible to the board.
+**What the domain teaches here.** Three failures, one cause. The volume error, the threshold
+error and the label bias were all failures to compute something computable, and each was
+defended with a qualitative argument; the platform is strategic, accuracy is the standard
+metric, the model reports 80 per cent recall. **Every one of those arguments dissolved on
+contact with arithmetic that took under an hour.** The programme's total annual improvement from
+arithmetic alone, before any technology changed, was **USD 470,000** of rescoping and **USD
+47,000** of retuning, against a restated loss estimate that was **USD 174,080** worse than
+believed, and the honesty of the third number is what made the first two credible to the board.
 
 ## Case study B — Domain 16: the definition read from the wrong draft (digital infrastructure)
 
@@ -1721,30 +1795,29 @@ lock-up. The borrower's finance team used a document-extraction tool to build it
 from the facility agreement's **340** defined terms, and reported the first annual compliance
 certificate on that register.
 
-**What happened.** The register's `CFADS` definition had been extracted from a **late negotiation
-draft** rather than the executed agreement. In the executed version, **capitalised maintenance** was
-struck **above** `CFADS`; in the draft it sat below. The reported `CFADS` was
-**USD 22,780,000** and the reported `DSCR` **1.3400** — comfortably inside covenant. On the executed
-definition, `CFADS` was **USD 20,230,000**, a difference of **USD 2,550,000**, and the `DSCR` was
-**1.1900**.
+**What happened.** The register's `CFADS` definition had been extracted from a **late
+negotiation draft** rather than the executed agreement. In the executed version, **capitalised
+maintenance** was struck **above** `CFADS`; in the draft it sat below. The reported `CFADS` was
+**USD 22,780,000** and the reported `DSCR` **1.3400**, comfortably inside covenant. On the
+executed definition, `CFADS` was **USD 20,230,000**, a difference of **USD 2,550,000**, and the
+`DSCR` was **1.1900**.
 
-The consequences followed mechanically. The **1.25× covenant** required `CFADS` of
-**USD 21,250,000**, so the project was short by **USD 1,020,000** and in breach from the first test
-date. The **1.20× lock-up** trigger of **USD 20,400,000** was also crossed, by **USD 170,000**, so
-distributions were trapped — and the sponsor had already declared a dividend against the 1.3400
-figure. The tool's per-item accuracy was never the issue: the extraction was faithful to the
-document it was given, which is the failure mode no accuracy statistic can detect, and the
+The consequences followed mechanically. The **1.25× covenant** required `CFADS` of **USD
+21,250,000**, so the project was short by **USD 1,020,000** and in breach from the first test
+date. The **1.20× lock-up** trigger of **USD 20,400,000** was also crossed, by **USD 170,000**,
+so distributions were trapped, and the sponsor had already declared a dividend against the
+1.3400 figure. The tool's per-item accuracy was never the issue: the extraction was faithful to
+the document it was given, which is the failure mode no accuracy statistic can detect, and the
 combinatorial arithmetic of 16.2.2 had already said what to expect — at 92 per cent per-item
 accuracy the probability that all **26** load-bearing definitions were right was **0.114415**.
 
 **How it resolved.** The sponsors injected an equity cure of **USD 1,020,000** to restore the
-covenant, and paid a waiver fee of **25 basis points** on the outstanding **USD 130,000,000** —
-**USD 325,000** — for the historic breach and the mis-stated certificate. Total direct cost
+covenant, and paid a waiver fee of **25 basis points** on the outstanding **USD 130,000,000**
+(**USD 325,000**) for the historic breach and the mis-stated certificate. Total direct cost
 **USD 1,345,000**, before the declared dividend was reversed and before the lenders moved the
-facility to monthly reporting for a year. The verification that would have prevented it —
-**26** load-bearing definitions at half an hour each of a legal-and-finance specialist at
-**USD 240.00** an hour — costs **USD 3,120**. The direct cost was **431.0897 times** the
-verification.
+facility to monthly reporting for a year. The verification that would have prevented it (**26**
+load-bearing definitions at half an hour each of a legal-and-finance specialist at **USD
+240.00** an hour) costs **USD 3,120**. The direct cost was **431.0897 times** the verification.
 
 **What the domain teaches here.** The extraction was accurate, the arithmetic was correct, and the
 certificate was false. **The only control that would have caught it operates on the executed
@@ -1761,51 +1834,50 @@ loss, converge on the same instruction, and the borrower had implemented neither
 
 What a project finance director cannot delegate in this domain:
 
-- **The error-cost line in every automation case.** Not the labour saving — the two error rates and
-  the consequence per error. Their omission flattered Case study A's breakeven by 20.3822 per cent
-  and hid a 54,000 annual loss at the asset that sponsored the programme.
+- **The error-cost line in every automation case.** Not the labour saving (the two error rates
+  and the consequence per error). Their omission flattered Case study A's breakeven by 20.3822
+  per cent and hid a 54,000 annual loss at the asset that sponsored the programme.
 - **The threshold, because it encodes what a missed error costs us.** The number is a cost-ratio
   judgment with an owner, not a model setting: 12.5 per cent break-even posterior, T4 not T2,
   47,000 a year.
 - **The blind audit, and its permanence.** It is the only instrument that measures what the model
   cannot see, and it is the first line cut in a budget round. It restated a claimed 114,800 loss to
   288,880 and returned 18.4471 times its cost.
-- **The verification scope on load-bearing items.** Twenty-six definitions, named verifier, recorded
-  date, executed document, version identifier — USD 3,120 against the 431.0897 multiple Case study B
-  paid.
+- **The verification scope on load-bearing items.** Twenty-six definitions, named verifier,
+  recorded date, executed document, version identifier (USD 3,120 against the 431.0897 multiple
+  Case study B paid).
 - **The approval architecture and its price.** 45,589 a change through a quarterly committee against
   6,268 through a mandated panel: tier it by consequence, write the mandate, and keep certification
   and lender disclosure to the director's own hand.
 - **The rollback, funded and exercised.** USD 141,000 for a quarter's suspension and 4.99375
-  full-time equivalents to restore manual capacity — figures that must exist before an incident, not
-  after.
+  full-time equivalents to restore manual capacity: figures that must exist before an incident,
+  not after.
 
 ## Calculation exercises — Domain 16
 
-**Exercise 16.1** Manual review takes 7 minutes a record at a loaded USD 96.00 an hour and leaves
-2.20 per cent of records with an undetected error. An automated pipeline costs USD 0.95 a record in
-processing and leaves 3.50 per cent undetected, on a committed fixed cost of USD 96,000 a year. An
-undetected error costs USD 500. Find the breakeven volume.
-*Solution.* Manual `7 × 1.60 = 11.20` plus `0.022 × 500 = 11.00`, total **USD 22.20**. Automated
-`0.95` plus `0.035 × 500 = 17.50`, total **USD 18.45**. Advantage **USD 3.75**; breakeven
-`96,000 ÷ 3.75 =` **25,600 records a year**. *Common error:* omitting the error-cost terms, which
-gives an advantage of `11.20 − 0.95 = 10.25` and an apparent breakeven of 9,366 records — 63.4 per
-cent too low, and the specific defect of 16.1.2.
+**Exercise 16.1** Manual review takes 7 minutes a record at a loaded USD 96.00 an hour and
+leaves 2.20 per cent of records with an undetected error. An automated pipeline costs USD 0.95 a
+record in processing and leaves 3.50 per cent undetected, on a committed fixed cost of USD
+96,000 a year. An undetected error costs USD 500. Find the breakeven volume. *Solution.* Manual
+`7 × 1.60 = 11.20` plus `0.022 × 500 = 11.00`, total **USD 22.20**. Automated `0.95` plus `0.035
+× 500 = 17.50`, total **USD 18.45**. Advantage **USD 3.75**; breakeven `96,000 ÷ 3.75 =`
+**25,600 records a year**. *Common error:* omitting the error-cost terms, which gives an
+advantage of `11.20 − 0.95 = 10.25` and an apparent breakeven of 9,366 records (63.4 per cent
+too low, and the specific defect of 16.1.2).
 
 **Exercise 16.2** A detector screens 30,000 items a year of which 900 are genuinely erroneous. A
 false positive costs USD 60 to investigate; a missed error costs USD 900. Three thresholds give:
-A — 450 true positives, 90 false; B — 675 true positives, 300 false; C — 855 true positives, 1,500
-false. Compute accuracy and total cost at each, choose the threshold, and confirm the choice
-marginally.
-*Solution.* Accuracy: A `(450 + 29,010)/30,000 =` **98.2000 %**; B `(675 + 28,800)/30,000 =`
-**98.2500 %**; C `(855 + 27,600)/30,000 =` **94.8500 %**. Total cost: A `90 × 60 + 450 × 900 =`
-**410,400**; B `300 × 60 + 225 × 900 =` **220,500**; C `1,500 × 60 + 45 × 900 =` **130,500**.
-**Choose C** — accuracy is maximised at B, and choosing B would cost **USD 90,000 a year**.
-Marginal confirmation: B to C adds 180 true and 1,200 false positives, marginal precision
-`180/1,380 =` **13.0435 %**, above the break-even posterior `60 ÷ 900 =` **6.6667 %** (one in 15);
-benefit `180 × 900 = 162,000` against cost `1,200 × 60 = 72,000`, net **+90,000**, which reconciles
-exactly to the fall in total cost. *Common error:* selecting B on accuracy — the 90,000 mistake this
-domain exists to prevent.
+A — 450 true positives, 90 false; B — 675 true positives, 300 false; C (855 true positives,
+1,500 false). Compute accuracy and total cost at each, choose the threshold, and confirm the
+choice marginally. *Solution.* Accuracy: A `(450 + 29,010)/30,000 =` **98.2000 %**; B `(675 +
+28,800)/30,000 =` **98.2500 %**; C `(855 + 27,600)/30,000 =` **94.8500 %**. Total cost: A `90 ×
+60 + 450 × 900 =` **410,400**; B `300 × 60 + 225 × 900 =` **220,500**; C `1,500 × 60 + 45 × 900
+=` **130,500**. **Choose C**; accuracy is maximised at B, and choosing B would cost **USD 90,000
+a year**. Marginal confirmation: B to C adds 180 true and 1,200 false positives, marginal
+precision `180/1,380 =` **13.0435 %**, above the break-even posterior `60 ÷ 900 =` **6.6667 %**
+(one in 15); benefit `180 × 900 = 162,000` against cost `1,200 × 60 = 72,000`, net **+90,000**,
+which reconciles exactly to the fall in total cost. *Common error:* selecting B on accuracy, the
+90,000 mistake this domain exists to prevent.
 
 **Exercise 16.3** How many independent, representative test cases, all passing, are needed to be
 95 per cent confident that a model's defect rate is below 2 per cent? And at 99 per cent
@@ -1816,43 +1888,55 @@ cases. At 99 per cent: `ln(0.01) ÷ ln(0.98) = 227.9482`, so **228**. *Common er
 95 per cent confidence, not `1/p`, and the difference between 50 and 149 is the difference between a
 claim and evidence.
 
-**Exercise 16.4** An extraction tool is 95 per cent accurate per item. Eighteen extracted terms are
-load-bearing. What is the probability the deliverable is entirely correct, and what per-item
-accuracy would a 99 per cent clean sweep require?
-*Solution.* `0.95¹⁸ =` **0.397214**, so a **39.7214 per cent** chance all eighteen are right and a
-**60.2786 per cent** chance at least one is wrong. For a 99 per cent sweep,
-`a ≥ 0.99^(1/18) =` **99.9442 per cent** per item. *Common error:* reporting the tool's 95 per cent
-as the reliability of the register — the mistake that produced Case study B's false certificate.
+**Exercise 16.4** An extraction tool is 95 per cent accurate per item. Eighteen extracted terms
+are load-bearing. What is the probability the deliverable is entirely correct, and what per-item
+accuracy would a 99 per cent clean sweep require? *Solution.* `0.95¹⁸ =` **0.397214**, so a
+**39.7214 per cent** chance all eighteen are right and a **60.2786 per cent** chance at least
+one is wrong. For a 99 per cent sweep, `a ≥ 0.99^(1/18) =` **99.9442 per cent** per item.
+*Common error:* reporting the tool's 95 per cent as the reliability of the register (the mistake
+that produced Case study B's false certificate).
 
-**Exercise 16.5** An estate makes 3,600 payments a year totalling USD 52,000,000. A second approver
-costs 12.5 minutes at USD 96.00 an hour. 0.25 per cent of payments are bad and a second approval
-catches 80 per cent of them. Derive the dual-approval threshold, then value blanket against
-thresholded approval given that 820 payments worth USD 48,900,000 exceed the threshold.
-*Solution.* Approver cost `12.5 × 1.60 =` **USD 20.00**; caught rate `0.0025 × 0.80 =` **0.0020**;
-threshold `20.00 ÷ 0.0020 =` **USD 10,000**. Blanket: cost `3,600 × 20 =` **72,000**, avoided
-`0.0020 × 52,000,000 =` **104,000**, net **+32,000**. Thresholded: cost `820 × 20 =` **16,400**,
-avoided `0.0020 × 48,900,000 =` **97,800**, net **+81,400**. The 2,780 sub-threshold payments cost
-**55,600** and avoid **6,200**, destroying **49,400** — exactly the difference between the two
-policies. *Common error:* concluding from the blanket policy's positive 32,000 that the policy is
-sound; the control is strongly positive above the threshold and strongly negative below it, and only
-the marginal view shows it.
+**Exercise 16.5** An estate makes 3,600 payments a year totalling USD 52,000,000. A second
+approver costs 12.5 minutes at USD 96.00 an hour. 0.25 per cent of payments are bad and a second
+approval catches 80 per cent of them. Derive the dual-approval threshold, then value blanket
+against thresholded approval given that 820 payments worth USD 48,900,000 exceed the threshold.
+*Solution.* Approver cost `12.5 × 1.60 =` **USD 20.00**; caught rate `0.0025 × 0.80 =`
+**0.0020**; threshold `20.00 ÷ 0.0020 =` **USD 10,000**. Blanket: cost `3,600 × 20 =`
+**72,000**, avoided `0.0020 × 52,000,000 =` **104,000**, net **+32,000**. Thresholded: cost `820
+× 20 =` **16,400**, avoided `0.0020 × 48,900,000 =` **97,800**, net **+81,400**. The 2,780
+sub-threshold payments cost **55,600** and avoid **6,200**, destroying **49,400** (exactly the
+difference between the two policies). *Common error:* concluding from the blanket policy's
+positive 32,000 that the policy is sound; the control is strongly positive above the threshold
+and strongly negative below it, and only the marginal view shows it.
 
 ## Practitioner's toolkit — Domain 16
 
-*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable.*
+*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable, and set a
+retention period against each. These registers are the evidence that a decision was taken
+properly, so each is retained at least as long as the obligation it supports, in a form that
+opens without the tool that created it, with a named custodian who holds it once the engagement
+ends. The applicable minimum periods are set by the organisation's own policy and by
+jurisdiction-specific statutory, tax and limitation requirements, which this book does not
+state. Where a register holds information about identified individuals, the retention period and
+any minimisation or deletion obligation that cuts across it are settled with the organisation's
+data-protection adviser before the register is adopted.*
 
 ### Toolkit 16.T.1 — The automation business case, on one page
 
-Mandatory lines, in this order, with no line permitted to be blank: the task and the **volume** the
-deciding entity actually has (asset, estate, group); **manual cost per item** = minutes × loaded
-rate, with the rate stated; **measured manual undetected-error rate** and its source; **consequence
-per undetected error** and its derivation; **manual all-in cost per item**; **automated committed
-fixed cost** a year; **automated processing cost per item**, including the referral rate and
-adjudication time; **measured or assumed automated undetected-error rate**, flagged as which;
-**automated all-in cost per item**; **advantage per item**; **breakeven volume**; **net annual
-value at the actual volume**; the **automated error rate** and the **consequence cost** at which the
-case reverses; the **rollback cost** for one period's suspension; and the **fallback capacity**
-in full-time equivalents and lead time. Rule: a case with no error-cost line is returned unread.
+Mandatory lines, in this order, with no line permitted to be blank: the task and the **volume**
+the deciding entity actually has (asset, estate, group); **manual cost per item** = minutes ×
+loaded rate, with the rate stated; **measured manual undetected-error rate** and its source;
+**consequence per undetected error** and its derivation; **manual all-in cost per item**;
+**automated committed fixed cost** a year; **automated processing cost per item**, including the
+referral rate and adjudication time; **measured or assumed automated undetected-error rate**,
+flagged as which; **automated all-in cost per item**; **advantage per item**; **breakeven
+volume**; **net annual value at the actual volume**; the **automated error rate** and the
+**consequence cost** at which the case reverses; the **rollback cost** for one period's
+suspension; and the **fallback capacity** in full-time equivalents and lead time. Rule: a case
+with no error-cost line is returned unread. *Retention:* held by a named custodian with the
+measurements the error rates came from, for as long as the automation runs plus the applicable
+limitation period. The case is the record of what was promised, and it is what a
+post-implementation review is read against.
 
 ### Toolkit 16.T.2 — Threshold and alert-queue sheet (per detector, per review)
 
@@ -1863,20 +1947,39 @@ false-positive cost and the false-negative cost, each with its owner and derivat
 benefit, cost and net for each step, with the arithmetic check that each row's net reconciles to the
 change in total cost. Footer lines: the operating threshold and who approved it; the date of the last
 **blind audit** of unflagged items, its sample size, findings, extrapolated missed errors and
-restated cost; and the prevalence in use, marked *labelled* or *audited*.
+restated cost; and the prevalence in use, marked *labelled* or *audited*. *Retention:* each review
+is kept as issued, by a named custodian, with the labelled sample it was computed from, for as long
+as the detector operates plus the applicable limitation period — a superseded threshold sheet is the
+record of what the organisation was choosing between, and overwriting it destroys the reasoning.
+Where the sample contains information about identified individuals, the retention position is
+reconciled with the organisation's data-protection adviser before the sample is stored.
 
 ### Toolkit 16.T.3 — Model inventory, tier and approval record
 
-One row per model in production, reconciled quarterly to production access logs — an unreconciled
-inventory is the governance failure this artefact exists to prevent. Columns: model and version ·
-purpose · owner · inputs and their golden sources · outputs and the decisions they touch · whether
-any output reaches a lender or a certificate · **uses a year** · **defect probability `p`**, marked
-*measured / estimated / inherited* · **consequence per defect** and its derivation · **annual
-`EMV`** · **revalidation interval** = tolerance ÷ `EMV`, with the policy cap applied · date last
-validated, sample size, confidence and bound · monitoring in place and the drift trigger ·
-**approval tier and written mandate reference** · attribution method and the last reconciliation
-residual · rollback procedure, its cost, and the date it was last exercised · named verifier for the
-current period. Header: the tolerance parameter and its owner.
+One row per model in production, reconciled quarterly to production access logs. An unreconciled
+inventory is the governance failure this artefact exists to prevent. Columns: model and version
+· purpose · owner · inputs and their golden sources · outputs and the decisions they touch ·
+whether any output reaches a lender or a certificate · **uses a year** · **defect probability
+`p`**, marked *measured / estimated / inherited* · **consequence per defect** and its derivation
+· **annual `EMV`** · **revalidation interval** = tolerance ÷ `EMV`, with the policy cap applied
+· date last validated, sample size, confidence and bound · monitoring in place and the drift
+trigger · **approval tier and written mandate reference** · attribution method and the last
+reconciliation residual · rollback procedure, its cost, and the date it was last exercised ·
+named verifier for the current period. Header: the tolerance parameter and its owner.
+
+*Retention and custody row, per model.* The **retention period** for that model's audit trail and
+its basis (limitation period, facility life and tail, or a statutory requirement the organisation
+has established, whichever is longest); confirmation that **model version, input data version,
+attribution and named verifier are retained together** rather than on separate schedules; the
+**export format and the evidence that it opens without the platform**, with the date that was last
+demonstrated; the **processor's** retention, training and location terms for any externally hosted
+component, with the contract reference (16.4.1); the **named custodian** and the date custody was
+last transferred; and, where the model's inputs or outputs contain information about identified
+individuals, the **minimisation or deletion position** reconciled against the retention period, with
+its owner and date. Rule: a model whose trail cannot be produced, in a readable form, after the
+platform that ran it has been replaced is recorded as **unretained**, and that is a finding rather
+than a housekeeping note. The periods themselves are jurisdiction-specific and are established with
+counsel and the reporting accountants rather than assumed.
 
 ## Exam preparation — Domain 16
 
@@ -1929,62 +2032,65 @@ that a blanket control is sound because its net is positive (Exercise 16.5, MCQ 
 approval gate at zero (MCQ 16.4-D) · and assuming an agent inherits the effect of the control it
 replaces rather than its absence (16.A.1).
 
-**How the domain connects.** Domain 2 supplied the definitional exposure — 600,000 of `CFADS` on one
-working-capital treatment — that makes the definitional layer of 16.1.1 and the verification scope
-of 16.2.2 worth their cost. Domain 6 built the model, its six invariants and the effective-rate
-check that 16.2.3's review must run, and supplied the 3,250,352 defect consequence that prices it.
-Domain 10 supplied `CFADS`, the debt service, the 1.20× covenant and the 372,438 of annual headroom
-that every data-quality figure in this domain is measured against, and the information covenants
-that make model disclosure a contractual matter. Domain 11 established model risk as a priced
-register line whose probability is a function of governance, which is the claim 16.3.4 turns into a
-calendar. Domain 13's model audit is the external counterpart of 16.3.2's validation, and Domain 14
-established that no pipeline may generate a representation. PML-AI supplied three registered forms
-used unchanged: the mesh-versus-layer interface count, `EMV`, and governance latency. Backwards,
-this domain gives every earlier **AI in this KA** section its arithmetic; forwards, it is the last
-domain, and what it hands on is not another technique but a standard of proof — that a claim about
+**How the domain connects.** Domain 2 supplied the definitional exposure (600,000 of `CFADS` on
+one working-capital treatment) that makes the definitional layer of 16.1.1 and the verification
+scope of 16.2.2 worth their cost. Domain 6 built the model, its six invariants and the
+effective-rate check that 16.2.3's review must run, and supplied the 3,250,352 defect
+consequence that prices it. Domain 10 supplied `CFADS`, the debt service, the 1.20× covenant and
+the 372,438 of annual headroom that every data-quality figure in this domain is measured
+against, and the information covenants that make model disclosure a contractual matter. Domain
+11 established model risk as a priced register line whose probability is a function of
+governance, which is the claim 16.3.4 turns into a calendar. Domain 13's model audit is the
+external counterpart of 16.3.2's validation, and Domain 14 established that no pipeline may
+generate a representation. PML-AI supplied three registered forms used unchanged: the
+mesh-versus-layer interface count, `EMV`, and governance latency. Backwards, this domain gives
+every earlier **AI in this KA** section its arithmetic; forwards, it is the last domain, and
+what it hands on is not another technique but a standard of proof: that a claim about
 automation, like a claim about coverage, is worth exactly what its arithmetic can carry.
 
 ## Domain 16 summary
-Responsible AI in finance is a quantitative discipline, and its four central results all contradict
-a common belief. **Automation is decided by error costs, not labour.** Manual review of the estate's
-consumption-and-billing records costs **USD 13.60** a record plus **1.80 per cent** of undetected
-errors at **USD 320** — **USD 19.36** all-in — against the pipeline's **USD 1.04** plus **2.60 per
-cent**, or **USD 9.36**, so on a committed **USD 148,000** the breakeven is **14,800 records a
-year**: a **USD 54,000** annual loss at Kestrel's 9,400 and a **USD 416,000** annual gain across the
-estate's 56,400. Omitting the error terms moves the apparent breakeven to **11,783** and flatters
-automation by **20.3822 per cent**; repricing an undetected error at **USD 1,200** moves the real
-breakeven to **50,000** and leaves the whole programme worth **USD 18,944** — so the more
-consequential the work, the more volume automation needs, and the rule is to automate high-volume,
-low-consequence work rather than important work. **Accuracy is the wrong objective for a detector.**
-Over 48,000 payments and journals at a 2.5 per cent anomaly rate, with a false positive costing
-**USD 40** and a missed error **USD 320**, cost is minimised at **USD 114,800** (threshold T4,
-80 per cent recall, precision only **50.2618 per cent**) while accuracy peaks at **98.5729 per
-cent** two thresholds away, where cost is **USD 161,800** — a **USD 47,000** annual price for a
-metric choice. The rule is a **12.5 per cent** break-even posterior, one in eight, tested on
-*marginal* precision: **17.9104 per cent** from T3 to T4 earns 16,400 and **5.7971 per cent** from
-T4 to T5 loses 39,600. **Validation proves less than it appears.** **299** passing independent cases
-bound a defect rate below 1 per cent at 95 per cent confidence — and at 56,400 uses a year that
-still admits **564** errors; bounding expected errors at ten would need **16,895** cases, and one
-observed failure raises the 299 to **473** — which is why monitoring, tiered human approval and a
-funded rollback carry the assurance, not testing. **And controls, thresholds and verification are
-marginal quantities.** Blanket dual approval nets **USD 400** a year; the same control above a
-derived **USD 14,118** threshold nets **USD 80,180**, because 3,650 small payments cost 87,600 to
-approve and protect 7,820. Around those four results sit the domain's other derivations: a data
-spine costing **USD 900,000** returns an `NPV` of **+USD 1,221,674** on hours while its real value
-is the single implementation of `CFADS` whose divergence is worth **1.6110** times Kestrel's annual
-covenant headroom of **372,438**; a 92 per cent-accurate extractor gets all **26** load-bearing
+Responsible AI in finance is a quantitative discipline, and its four central results all
+contradict a common belief. **Automation is decided by error costs, not labour.** Manual review
+of the estate's consumption-and-billing records costs **USD 13.60** a record plus **1.80 per
+cent** of undetected errors at **USD 320** (**USD 19.36** all-in) against the pipeline's **USD
+1.04** plus **2.60 per cent**, or **USD 9.36**, so on a committed **USD 148,000** the breakeven
+is **14,800 records a year**: a **USD 54,000** annual loss at Kestrel's 9,400 and a **USD
+416,000** annual gain across the estate's 56,400. Omitting the error terms moves the apparent
+breakeven to **11,783** and flatters automation by **20.3822 per cent**; repricing an undetected
+error at **USD 1,200** moves the real breakeven to **50,000** and leaves the whole programme
+worth **USD 18,944**, so the more consequential the work, the more volume automation needs, and
+the rule is to automate high-volume, low-consequence work rather than important work. **Accuracy
+is the wrong objective for a detector.** Over 48,000 payments and journals at a 2.5 per cent
+anomaly rate, with a false positive costing **USD 40** and a missed error **USD 320**, cost is
+minimised at **USD 114,800** (threshold T4, 80 per cent recall, precision only **50.2618 per
+cent**) while accuracy peaks at **98.5729 per cent** two thresholds away, where cost is **USD
+161,800** — a **USD 47,000** annual price for a metric choice. The rule is a **12.5 per cent**
+break-even posterior, one in eight, tested on *marginal* precision: **17.9104 per cent** from T3
+to T4 earns 16,400 and **5.7971 per cent** from T4 to T5 loses 39,600. **Validation proves less
+than it appears.** **299** passing independent cases bound a defect rate below 1 per cent at 95
+per cent confidence — and at 56,400 uses a year that still admits **564** errors; bounding
+expected errors at ten would need **16,895** cases, and one observed failure raises the 299 to
+**473** — which is why monitoring, tiered human approval and a funded rollback carry the
+assurance, not testing. **And controls, thresholds and verification are marginal quantities.**
+Blanket dual approval nets **USD 400** a year; the same control above a derived **USD 14,118**
+threshold nets **USD 80,180**, because 3,650 small payments cost 87,600 to approve and protect
+7,820. Around those four results sit the domain's other derivations: a data spine costing **USD
+900,000** returns an `NPV` of **+USD 1,221,674** on hours while its real value is the single
+implementation of `CFADS` whose divergence is worth **1.6110** times Kestrel's annual covenant
+headroom of **372,438**; a 92 per cent-accurate extractor gets all **26** load-bearing
 definitions right **11.4415 per cent** of the time, so a 95 per cent sweep would demand
-**99.8029 per cent** per item and the answer is **USD 3,120** of human verification instead — the
-control Case study B omitted at a cost of **USD 1,345,000**, or **431.0897** times; machine-assisted
-model building saves a real **33.3333 per cent**, not the apparent 70.8333, and the omitted 18 hours
-of review are **USD 2,700** against **USD 1,137,623.20** of expected defect cost; a blind audit of
-**1,000** unflagged items restated the detector's recall from 80 to **55.0459 per cent** and its cost
-from 114,800 to **USD 288,880**, returning **18.4471** times its cost; a model inventory tiered on
-`uses × p × consequence` gives the defined-term extractor an annual `EMV` of **USD 2,125,404** and an
-**8.59-day** interval that independently reproduces "verify every use"; a deployment choice turns on
-a breakeven consequence of **USD 40,307,692** rather than on an `EMV`; and an approval gate costs
-**USD 45,589.04** a change through a quarterly committee against **USD 6,268.49** through a mandated
-panel. Every one of those verification steps returns between eighteen and four hundred and thirty
-times its cost, which is the domain's real finding and the one that survives every disagreement about the
-technology: **AI proposes; the professional verifies, decides and remains accountable — and the
-verification is the cheapest line in the budget.**
+**99.8029 per cent** per item and the answer is **USD 3,120** of human verification instead —
+the control Case study B omitted at a cost of **USD 1,345,000**, or **431.0897** times;
+machine-assisted model building saves a real **33.3333 per cent**, not the apparent 70.8333, and
+the omitted 18 hours of review are **USD 2,700** against **USD 1,137,623.20** of expected defect
+cost; a blind audit of **1,000** unflagged items restated the detector's recall from 80 to
+**55.0459 per cent** and its cost from 114,800 to **USD 288,880**, returning **18.4471** times
+its cost; a model inventory tiered on `uses × p × consequence` gives the defined-term extractor
+an annual `EMV` of **USD 2,125,404** and an **8.59-day** interval that independently reproduces
+"verify every use"; a deployment choice turns on a breakeven consequence of **USD 40,307,692**
+rather than on an `EMV`; and an approval gate costs **USD 45,589.04** a change through a
+quarterly committee against **USD 6,268.49** through a mandated panel. Every one of those
+verification steps returns between eighteen and four hundred and thirty times its cost, which is
+the domain's real finding and the one that survives every disagreement about the technology:
+**AI proposes; the professional verifies, decides and remains accountable — and the verification
+is the cheapest line in the budget.**

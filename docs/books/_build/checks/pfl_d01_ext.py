@@ -38,7 +38,7 @@ Five engines carry the new material:
                 crossover is solved from the identity rather than read off the table, and both
                 equity cliffs and the covenant threshold are solved as cash levels.
 
-  ethics        (WE 1.3.2, WE 1.3.3, 1.A.2, MCQ 1.3-D/E, Case study B) three breakeven
+  ethics        (WE 1.3.3, WE 1.3.4, 1.A.2, MCQ 1.3-D/E, Case study B) three breakeven
                 probabilities of the same shape — a spend divided by what it avoids or buys — plus
                 the contingent-claim valuation of sponsor support against cap and expected draw.
 
@@ -479,49 +479,49 @@ def run(ctx):
     # ============================================================================== ethics ====
     FEE_AT_RISK = D(250000)
     FRANCHISE = D(3) * D(850000) * D(5)
-    check("WE 1.3.2 step 3 jurisdictional franchise loss", FRANCHISE, D(12750000))
+    check("WE 1.3.3 step 3 jurisdictional franchise loss", FRANCHISE, D(12750000))
     LOSS = D(900000) + FRANCHISE + D(400000)
-    check("WE 1.3.2 Result loss on discovery to the firm", LOSS, D(14050000))
-    check("WE 1.3.2 Result breakeven discovery probability",
+    check("WE 1.3.3 Result loss on discovery to the firm", LOSS, D(14050000))
+    check("WE 1.3.3 Result breakeven discovery probability",
           (FEE_AT_RISK / LOSS * 100).quantize(D("0.0001")), D("1.7794"))
     ABORT = D(3) * D(1800000)
     check("Case study B abortive bid costs across three bidders", ABORT, D(5400000))
     OTHERS = D(1100000) + D(2100000) + ABORT
-    check("WE 1.3.2 Result cost imposed on others", OTHERS, D(8600000))
-    check("WE 1.3.2 Result total value destroyed", LOSS + OTHERS, D(22650000))
-    check("WE 1.3.2 Result ratio of value destroyed to the saving",
+    check("WE 1.3.3 Result cost imposed on others", OTHERS, D(8600000))
+    check("WE 1.3.3 Result total value destroyed", LOSS + OTHERS, D(22650000))
+    check("WE 1.3.3 Result ratio of value destroyed to the saving",
           ((LOSS + OTHERS) / FEE_AT_RISK).quantize(D("0.0001")), D("90.6000"))
     for p, printed in [("0.10", "-1155000"), ("0.25", "-3262500"), ("0.50", "-6775000")]:
-        check(f"WE 1.3.2 Result expected value of concealment at a {p} discovery probability",
+        check(f"WE 1.3.3 Result expected value of concealment at a {p} discovery probability",
               (FEE_AT_RISK - D(p) * LOSS).quantize(D("0.01")), D(printed))
-    check("INVARIANT 1.3.2 the concealment EV is negative at every probability above the breakeven",
+    check("INVARIANT 1.3.3 the concealment EV is negative at every probability above the breakeven",
           D(1) if all(FEE_AT_RISK - D(p) * LOSS < 0 for p in ("0.02", "0.10", "0.25", "0.50"))
           else D(0), D(1))
-    check("INVARIANT 1.3.2 what concealment buys is bounded by the fee at risk — no upside term",
+    check("INVARIANT 1.3.3 what concealment buys is bounded by the fee at risk — no upside term",
           D(1) if FEE_AT_RISK < LOSS and FEE_AT_RISK < FRANCHISE else D(0), D(1))
     check("MCQ 1.3-D distractor B (forfeited fees only, franchise dropped)",
           (FEE_AT_RISK / D(900000) * 100).quantize(D("0.0001")), D("27.7778"))
     check("MCQ 1.3-D distractor C (franchise only, fees and legal cost dropped)",
           (FEE_AT_RISK / FRANCHISE * 100).quantize(D("0.0001")), D("1.9608"))
 
-    # WE 1.3.3 — the cost of delay is DERIVED from ctx, not re-typed from Domain 13.
+    # WE 1.3.4 — the cost of delay is DERIVED from ctx, not re-typed from Domain 13.
     COD_DAY = CFADS / 360                          # Domain 5 KA 5.4.2, 30/360 basis
     COD_WEEK = COD_DAY * 7
-    check("WE 1.3.3 step 1 forgone CFADS per day on a 30/360 basis (Domain 5)",
+    check("WE 1.3.4 step 1 forgone CFADS per day on a 30/360 basis (Domain 5)",
           COD_DAY.quantize(D("0.01")), D("17733.33"))
-    check("WE 1.3.3 step 1 cost of delay per calendar week (Domain 13 KA 13.1.3)",
+    check("WE 1.3.4 step 1 cost of delay per calendar week (Domain 13 KA 13.1.3)",
           COD_WEEK.quantize(D("0.01")), D("124133.33"))
     COST9 = 9 * COD_WEEK
-    check("WE 1.3.3 Result cost of the nine weeks", COST9.quantize(D("1")), D(1117200))
+    check("WE 1.3.4 Result cost of the nine weeks", COST9.quantize(D("1")), D(1117200))
     MG = (D("0.0235") - D("0.0175")) * DEBT
-    check("WE 1.3.3 step 3 annual value of the 60-basis-point difference",
+    check("WE 1.3.4 step 3 annual value of the 60-basis-point difference",
           MG.quantize(D("0.01")), D(252000))
     PRIZE = MG * AF_PF
-    check("WE 1.3.3 Result present value of the prize, had it been real",
+    check("WE 1.3.4 Result present value of the prize, had it been real",
           PRIZE.quantize(D("1")), D(2112729))
-    check("WE 1.3.3 Result breakeven negotiating-success probability",
+    check("WE 1.3.4 Result breakeven negotiating-success probability",
           (COST9 / PRIZE * 100).quantize(D("0.0001")), D("52.8795"))
-    check("WE 1.3.3 Interpretation that breakeven printed to two decimals",
+    check("WE 1.3.4 Interpretation that breakeven printed to two decimals",
           (COST9 / PRIZE * 100).quantize(D("0.01")), D("52.88"))
     check("MCQ 1.3-E distractor C (one year of the margin difference, undiscounted)",
           MG.quantize(D("1")), D(252000))

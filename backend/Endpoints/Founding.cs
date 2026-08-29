@@ -13,7 +13,7 @@ namespace PCI.Backend.Endpoints;
 /// memberships + exam_entitlements), so BookingBlockers, /api/me, invoices and the one-attempt rule
 /// apply unchanged, and the credential is still EARNED by passing the real exam — no code path here
 /// ever writes issued_credentials. (The separate honorary recognition lives in Honorary.cs and is
-/// never a PCP-AI credential.)
+/// never a PCL-AI credential.)
 /// </summary>
 public static class Founding
 {

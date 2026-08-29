@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble the PCP-AI Body of Knowledge Markdown chapters into one styled, print-ready HTML.
+"""Assemble the PCL-AI Body of Knowledge Markdown chapters into one styled, print-ready HTML.
 Usage: python3 bok_build.py <out.html>   (chapters read from ../docs/bok)"""
 import sys, os, re, glob, html
 import markdown
@@ -67,7 +67,7 @@ for dnum, ka, title, chtml in chapters:
 all_text = "\n".join(open(f, encoding="utf-8").read() for d in domain_dirs
                      for f in glob.glob(os.path.join(BOK, d, "*.md")))
 
-# Appendix A — master formula & symbol sheet (authoritative, from the style spine §5)
+# Appendix A — master formula & symbol sheet (authoritative, from the style spine section 5)
 APPENDIX_A_MD = """# Appendix A — Master Formula & Symbol Sheet
 
 This sheet consolidates the canonical symbols and formulae used identically throughout the Body of
@@ -196,9 +196,9 @@ h1,h2,h3,h4{page-break-after:avoid;}
 COVER = """
 <div class="cover">
   <div class="kicker">Project Controls Institute</div>
-  <h1>Certified Project Controls Professional&nbsp;— AI<br>Body of Knowledge</h1>
+  <h1>PCI AI Project Controls Leader<br>Body of Knowledge</h1>
   <div class="rule"></div>
-  <div class="sub">The authoritative reference defining what a Certified Project Controls Professional (AI) must know — financial reporting &amp; accounting, project management, and the governed application of AI.</div>
+  <div class="sub">The authoritative reference defining what a PCI AI Project Controls Leader must know — financial reporting &amp; accounting, project management, and the governed application of AI.</div>
   <div class="foot">Version 1 · SME-verifiable draft<br>An AI first draft is a strong starting point, not the final certified text — every worked number, standard reference and AI claim must be checked by a qualified subject-matter expert before finalisation.</div>
 </div>
 """

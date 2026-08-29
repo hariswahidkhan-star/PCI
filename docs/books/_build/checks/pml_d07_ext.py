@@ -322,6 +322,12 @@ def run(ctx):
     check("7.3.3 price of schedule pressure, (c) - (b)", q(EACc - EACb, 0), 191389)
     check("7.3.3 efficiency (c) demands beyond budget", q((1 - CPI * SPI) * 100, 2), D("16.40"))
     check("7.3.3 efficiency already lost", q((1 - CPI) * 100, 2), D("9.43"))
+    # The 16.40 above is the TOTAL shortfall against the budgeted rate, not a further loss on top of
+    # the 9.43 already demonstrated. The incremental claim method (c) makes is the difference.
+    check("7.3.3 further efficiency (c) demands beyond today's rate, in points",
+          q((CPI - CPI * SPI) * 100, 2), D("6.97"))
+    check("7.3.3 INVARIANT already-lost + further = total shortfall",
+          q((1 - CPI) * 100 + (CPI - CPI * SPI) * 100, 2), D("16.40"))
     check("7.3.3b (b) - (a) forecast difference", q(EACb - EACa, 0), 216667)
 
     for nm, E, etc_p in (("a", EACa, 2080000), ("b", EACb, 2296667), ("c", EACc, 2488056)):

@@ -1,291 +1,665 @@
-/* PCP-AI Body of Knowledge — premium print stylesheet (A4 certification handbook)
-   Typography: IBM Plex Serif (body) + Inter (display/labels). Brand: #1D4ED8 / #0F172A / #C13329. */
+/* ============================================================================================
+   PCI publication stylesheet — the one type system for every PCI volume.
 
+   Governed by docs/books/_build/DESIGN_SYSTEM.md. This file is the single source of truth for
+   the three Bodies of Knowledge (PCL-AI, PFL-AI, PML-AI), the PCI Standards volume and the
+   programme reports. docs/bok/build/print.css imports it; the Standards and report builders
+   read it and append only their own cover.
+
+   Type   Linux Libertine superfamily — text / display / Biolinum sans / Libertine Mono.
+   Colour One accent: PCI green #14432E. Amber #8A5A00 for cautions only.
+   Page   A4, mirrored asymmetric margins, folio and running head on the outer edge.
+   ============================================================================================ */
+
+:root {
+  --ink:        #1A1A1A;   /* body text — soft black; pure black vibrates on paper */
+  --green:      #14432E;   /* the single accent: headings, rules, the Standards mark */
+  --green-mid:  #2D6A4F;   /* secondary marks, identifiers */
+  --tint:       #F2F6F3;   /* call-out ground — a tint you notice is too strong */
+  --rule:       #C8CFC9;   /* hairlines */
+  --muted:      #5A6560;   /* folios, captions, apparatus */
+  --amber:      #8A5A00;   /* cautions only — a caution that shares the accent stops being one */
+  --amber-tint: #FAF5EA;
+
+  --text:    "Linux Libertine O", "Bitstream Charter", "EB Garamond 12", serif;
+  --display: "Linux Libertine Display O", "Linux Libertine O", serif;
+  --sans:    "Linux Biolinum O", "Linux Libertine O", sans-serif;
+  /* DejaVu Sans Mono is a last-resort fallback only, never a design choice: the corpus contains
+     box-drawing diagrams inside preformatted blocks and Libertine Mono does not cover that block.
+     A diagram of blank boxes would be worse than a diagram in the fallback face. */
+  --mono:    "Linux Libertine Mono O", "DejaVu Sans Mono", monospace;
+
+  /* Feature sets. font-feature-settings replaces rather than accumulates, so every rule that
+     touches it must restate the whole set. Prose gets old-style figures; anything columnar or
+     computational gets lining tabular figures, which align on the digit. */
+  --feat-prose: "onum" 1, "liga" 1, "kern" 1, "dlig" 0;
+  --feat-lining: "lnum" 1, "tnum" 1, "liga" 1, "kern" 1, "dlig" 0;
+  --feat-smallcaps: "smcp" 1, "onum" 1, "liga" 1, "kern" 1;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   1. The page
+
+   Asymmetric and mirrored: the inner margin is smaller because facing pages share the gutter,
+   and the bottom is deeper than the top because a page's optical centre sits above its
+   geometric one. Running head verso = volume, recto = the current domain or part, in real small
+   caps under a hairline. Folio on the outer edge, old-style figures.
+   --------------------------------------------------------------------------------------------- */
+/* On the horizontal, the system's two numbers cannot both be met: 22 mm inner + 30 mm outer leaves
+   a 158 mm block, which in Linux Libertine at book size sets ~100 characters — half as long again
+   as the ~66 the same section asks for. Since the margins' stated reason is asymmetry (the gutter
+   is shared, the optical centre is high) while the measure's stated reason is an absolute limit of
+   the eye, the asymmetry is kept and the numbers move: inner 30 mm, outer 48 mm, the same 1:1.6
+   relationship, giving a 132 mm block at ~78 characters. Top and bottom are the system's own. */
 @page {
   size: A4;
-  margin: 21mm 17mm 19mm 17mm;
-  @bottom-center {
-    content: counter(page);
-    font-family: Inter, sans-serif; font-size: 8pt; color: #475569;
-    border-top: 0.4pt solid #CBD5E1; padding-top: 1.6mm; margin-bottom: 7mm; width: 100%;
-  }
-  @top-left {
-    content: string(booktitle);
-    font-family: Inter, sans-serif; font-size: 6.8pt; letter-spacing: 0.14em;
-    text-transform: uppercase; color: #94A3B8;
-  }
-  @top-right {
+  margin: 24mm 48mm 28mm 30mm;   /* top / outer / bottom / inner, as for a recto */
+}
+
+@page :right {
+  margin-left: 30mm; margin-right: 48mm;
+  @top-center {
     content: string(chaptertitle);
-    font-family: Inter, sans-serif; font-size: 6.8pt; letter-spacing: 0.1em;
-    text-transform: uppercase; color: #1D4ED8;
+    width: 100%; text-align: right;
+    font-family: "Linux Biolinum O", "Linux Libertine O", sans-serif; font-size: 7.8pt;
+    font-variant-caps: small-caps; font-feature-settings: "smcp" 1, "onum" 1;
+    letter-spacing: 0.07em; color: #5A6560;
+    border-bottom: 0.4pt solid #C8CFC9; padding-bottom: 1.8mm; margin-top: 9mm;
+  }
+  @bottom-right {
+    content: counter(page);
+    font-family: "Linux Biolinum O", "Linux Libertine O", sans-serif; font-size: 9pt;
+    font-feature-settings: "onum" 1; color: #5A6560; margin-bottom: 12mm;
   }
 }
-@page :first { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
-@page plain { @top-left { content: none; } @top-right { content: none; } }
 
-
-
-body {
-  font-family: "IBM Plex Serif", Georgia, serif;
-  font-size: 9.4pt; line-height: 1.52; color: #1E293B;
-  text-align: justify; hyphens: auto;
-  font-variant-numeric: proportional-nums;
+@page :left {
+  margin-left: 48mm; margin-right: 30mm;
+  @top-center {
+    content: string(booktitle);
+    width: 100%; text-align: left;
+    font-family: "Linux Biolinum O", "Linux Libertine O", sans-serif; font-size: 7.8pt;
+    font-variant-caps: small-caps; font-feature-settings: "smcp" 1, "onum" 1;
+    letter-spacing: 0.07em; color: #5A6560;
+    border-bottom: 0.4pt solid #C8CFC9; padding-bottom: 1.8mm; margin-top: 9mm;
+  }
+  @bottom-left {
+    content: counter(page);
+    font-family: "Linux Biolinum O", "Linux Libertine O", sans-serif; font-size: 9pt;
+    font-feature-settings: "onum" 1; color: #5A6560; margin-bottom: 12mm;
+  }
 }
 
-/* ---------- Title page ---------- */
-.titlepage { page: plain; page-break-after: always; text-align: left; padding-top: 52mm; }
+/* Pages that carry no apparatus: the cover, the title page, part dividers, chapter openers.
+   A chapter opener is a page of its own and wears nothing but its own title. */
+@page :first,
+       cover, cover:left, cover:right,
+       title, title:left, title:right,
+       divider, divider:left, divider:right {
+  @top-center { content: none; border: none; }
+  @bottom-left { content: none; } @bottom-right { content: none; } @bottom-center { content: none; }
+}
+/* A chapter opener drops the running head — it announces itself — but keeps its folio, because a
+   reference whose openers cannot be cited by page is a reference with sixteen holes in it. */
+@page opener, opener:left, opener:right { @top-center { content: none; border: none; } }
+
+/* The cover is full-bleed. A named page selector outranks :left/:right, so the margin holds. */
+@page cover, cover:left, cover:right { margin: 0; }
+
+/* ---------------------------------------------------------------------------------------------
+   2. Running text
+   --------------------------------------------------------------------------------------------- */
+body {
+  font-family: var(--text);
+  font-size: 10.4pt; line-height: 1.5; color: var(--ink);
+  font-feature-settings: var(--feat-prose);
+  text-align: justify; hyphens: auto; hyphenate-limit-chars: 6 3 3;
+  widows: 2; orphans: 2;
+}
+
+p { margin: 0 0 2.6mm 0; widows: 2; orphans: 2; }
+p:last-child { margin-bottom: 0; }
+
+strong { font-weight: bold; color: var(--ink); }
+em { font-style: italic; color: inherit; }
+a { color: inherit; text-decoration: none; }
+sub, sup { line-height: 0; }
+
+/* Emphasis is never underlined and body copy is never centred: both are forbidden by the system. */
+u { text-decoration: none; font-style: italic; }
+
+hr { border: none; border-top: 0.4pt solid var(--rule); margin: 7mm 0; }
+
+/* ---------------------------------------------------------------------------------------------
+   3. Headings
+
+   Display cut for titles, Libertine for the working hierarchy. The display optical size ships in
+   one weight only, which is correct — a display cut set large needs no bold, and synthesising one
+   would be a faux weight.
+   --------------------------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--green); text-align: left; hyphens: none;
+  break-after: avoid; page-break-after: avoid; break-inside: avoid;
+}
+
+h1 {                                   /* standalone h1s: appendices, glossary, back matter */
+  string-set: chaptertitle content();
+  page-break-before: always;
+  font-family: var(--display); font-weight: normal; font-size: 25pt; line-height: 1.16;
+  letter-spacing: -0.005em; font-feature-settings: var(--feat-prose);
+  margin: 0 0 8mm 0; padding-bottom: 3.2mm; border-bottom: 0.6pt solid var(--rule);
+}
+
+h2 {
+  font-family: var(--text); font-weight: bold; font-size: 12.6pt; line-height: 1.28;
+  color: var(--green); margin: 9mm 0 2.8mm 0;
+  font-feature-settings: var(--feat-prose);
+}
+
+h3 {
+  font-family: var(--text); font-weight: bold; font-size: 10.8pt; line-height: 1.3;
+  color: var(--ink); margin: 6.5mm 0 2.2mm 0;
+  font-feature-settings: var(--feat-prose);
+}
+
+h4 {
+  font-family: var(--text); font-weight: normal; font-style: italic; font-size: 10.4pt;
+  color: var(--ink); margin: 5mm 0 1.8mm 0;
+}
+
+/* Knowledge-area openers: the number in small caps, the title in the display cut, a hairline to
+   close the block. The rule sits below, not above, so a KA that falls at the top of a page does
+   not stack a second rule directly under the running head's. */
+h2.ka {
+  border-bottom: 0.6pt solid var(--green); padding: 0 0 2.6mm 0; margin: 12mm 0 4.5mm 0;
+}
+h2.ka .kanum {
+  display: block; font-family: var(--sans); font-size: 8.4pt; font-weight: normal;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.13em; color: var(--muted); margin-bottom: 1.6mm;
+}
+h2.ka .katitle {
+  display: block; font-family: var(--display); font-weight: normal; font-size: 16pt;
+  line-height: 1.2; letter-spacing: -0.005em; color: var(--green);
+}
+
+/* Recurring apparatus headings (key terms, sample MCQs, self-check). Real small caps, so the
+   source string must stay mixed case — never uppercase input, never text-transform. */
+h3.minihead {
+  font-family: var(--sans); font-size: 9pt; font-weight: normal;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.11em; color: var(--muted);
+  margin: 7.5mm 0 2.6mm 0; padding-bottom: 1.4mm; border-bottom: 0.4pt solid var(--rule);
+}
+
+/* ---------------------------------------------------------------------------------------------
+   4. Openers
+
+   A chapter opener earns a page: the top third empty, the number large in the display cut and
+   muted, the title beneath it, a hairline to close. No rule above, no box, no reversed panel.
+   --------------------------------------------------------------------------------------------- */
+/* Openers are set flush left. They are divs, not headings, so without this they inherit the body's
+   justification and a three-word part title opens up into a line of word spaces. */
+.chapter {
+  page: opener; page-break-before: always; page-break-after: always;
+  padding-top: 66mm; text-align: left; hyphens: none;
+}
+.chapter .chapkicker {
+  font-family: var(--sans); font-size: 9pt; font-weight: normal;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.2em; color: var(--muted); margin-bottom: 3mm;
+}
+.chapter .chapnum {
+  font-family: var(--display); font-weight: normal; font-size: 62pt; line-height: 0.92;
+  color: var(--muted); letter-spacing: -0.02em;
+  font-feature-settings: "lnum" 1, "kern" 1; margin: 0 0 6mm 0;
+}
+.chapter h1 {
+  font-family: var(--display); font-weight: normal; font-size: 27pt; line-height: 1.16;
+  letter-spacing: -0.005em; color: var(--green);
+  border: none; padding: 0; margin: 0 0 6mm 0;
+  page-break-before: avoid; string-set: chaptertitle content();
+}
+.chapter .chaprule { border-top: 0.8pt solid var(--green); width: 100%; }
+.chapter .chaprule2 { display: none; }   /* one hairline closes the block; a second is ornament */
+
+/* Part dividers: number, title, one line of orientation, nothing else. */
+.partpage {
+  page: divider; page-break-before: always; page-break-after: always;
+  padding-top: 78mm; text-align: left; hyphens: none;
+}
+.partpage .partghost { display: none; }  /* a ghost numeral is ornament, not space */
+.partpage .partnum {
+  font-family: var(--sans); font-size: 9.6pt; font-weight: normal;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.22em; color: var(--muted); margin-bottom: 7mm;
+}
+.partpage .parttitle {
+  font-family: var(--display); font-weight: normal; font-size: 30pt; line-height: 1.14;
+  letter-spacing: -0.01em; color: var(--green); margin-bottom: 8mm;
+  text-align: left; hyphens: none; max-width: 118mm;
+}
+.partpage .partdesc {
+  font-family: var(--text); font-size: 10.4pt; line-height: 1.55; color: var(--muted);
+  max-width: 118mm; text-align: left; hyphens: none;
+}
+.partpage .partbar { display: none; }
+
+/* ---------------------------------------------------------------------------------------------
+   5. Title page and front matter
+   --------------------------------------------------------------------------------------------- */
+.titlepage { page: title; page-break-after: always; text-align: left; padding-top: 62mm; }
+.titlepage .kicker {
+  font-family: var(--sans); font-size: 9pt; font-variant-caps: small-caps;
+  font-feature-settings: var(--feat-smallcaps); letter-spacing: 0.22em;
+  color: var(--muted); margin-bottom: 12mm;
+}
 .titlepage h1 {
-  font-family: Inter, sans-serif; font-weight: 800; font-size: 34pt; letter-spacing: -0.025em;
-  line-height: 1.08; color: #0F172A; border: none; margin: 0 0 6mm 0; page-break-before: avoid; padding: 0;
+  font-family: var(--display); font-weight: normal; font-size: 36pt; line-height: 1.1;
+  letter-spacing: -0.012em; color: var(--green);
+  border: none; padding: 0; margin: 0 0 7mm 0; page-break-before: avoid;
 }
 .titlepage h1::before { content: none; }
 .titlepage .subtitle {
-  font-family: Inter, sans-serif; font-size: 11.5pt; font-weight: 500; color: #1D4ED8;
-  line-height: 1.55; margin-bottom: 12mm; max-width: 130mm;
+  font-family: var(--text); font-size: 12.4pt; font-style: italic; color: var(--ink);
+  line-height: 1.45; margin-bottom: 12mm; max-width: 128mm; text-align: left; hyphens: none;
 }
-.titlepage .rule { width: 40mm; height: 1.5mm; background: #C13329; margin: 12mm 0; }
+.titlepage .rule { width: 34mm; border-top: 0.8pt solid var(--green); height: 0; margin: 12mm 0; }
 .titlepage .meta {
-  font-family: Inter, sans-serif; font-size: 8.6pt; color: #64748B; line-height: 1.9;
-  letter-spacing: 0.04em;
+  font-family: var(--sans); font-size: 9pt; color: var(--muted); line-height: 1.85;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.08em;
 }
+.titlepage .meta em { font-style: italic; font-variant-caps: normal; letter-spacing: 0; }
 
-/* ---------- Front matter ---------- */
-.frontmatter { page: plain; }
-.frontmatter h2 { margin-top: 0; }
-.frontmatter p { text-align: left; }
+.frontmatter h2 {
+  margin-top: 0; font-family: var(--display); font-weight: normal; font-size: 19pt;
+  line-height: 1.2; padding-bottom: 2.8mm; border-bottom: 0.6pt solid var(--rule);
+  margin-bottom: 6mm; string-set: chaptertitle content();
+}
+.frontmatter p { text-align: justify; }
 
-/* ---------- Part dividers ---------- */
-.partpage {
-  page: plain; page-break-before: always; page-break-after: always;
-  padding-top: 58mm;
-}
-.partpage .partghost {
-  font-family: Inter, sans-serif; font-weight: 800; font-size: 112pt; line-height: 0.82;
-  color: #EEF2F7; letter-spacing: -0.04em; margin: 0 0 6mm -2mm;
-}
-.partpage .partnum {
-  font-family: Inter, sans-serif; font-size: 10pt; font-weight: 700; letter-spacing: 0.32em;
-  text-transform: uppercase; color: #C13329; margin-bottom: 6mm;
-}
-.partpage .parttitle {
-  font-family: Inter, sans-serif; font-size: 24pt; font-weight: 800; letter-spacing: -0.015em;
-  color: #0F172A; line-height: 1.2; margin-bottom: 7mm;
-}
-.partpage .partdesc { font-family: Inter, sans-serif; font-size: 10pt; color: #64748B; max-width: 118mm; line-height: 1.65; }
-.partpage .partbar { width: 44mm; height: 1.6mm; background: #1D4ED8; margin-top: 9mm; }
+/* ---------------------------------------------------------------------------------------------
+   6. Tables
 
-/* ---------- Chapter (domain) openers ---------- */
-.chapter { page-break-before: always; margin-bottom: 9mm; }
-.chapter .chapnum {
-  font-family: Inter, sans-serif; font-weight: 800; font-size: 56pt; line-height: 0.9;
-  color: #EEF2F7; letter-spacing: -0.04em; margin: 0 0 3mm -1mm;
-}
-.chapter .chapkicker {
-  font-family: Inter, sans-serif; font-size: 9pt; font-weight: 700; letter-spacing: 0.3em;
-  text-transform: uppercase; color: #C13329; margin-bottom: 3mm;
-}
-.chapter h1 {
-  font-family: Inter, sans-serif; font-weight: 800; font-size: 21pt; letter-spacing: -0.015em;
-  line-height: 1.22; color: #0F172A; border: none; padding: 0; margin: 0 0 4mm 0;
-  page-break-before: avoid; string-set: chaptertitle content();
-}
-.chapter .chaprule { height: 1.5mm; width: 34mm; background: #C13329; margin-bottom: 2mm; }
-.chapter .chaprule2 { height: 0.5mm; width: 100%; background: #1D4ED8; }
-
-/* ---------- Headings ---------- */
-h1, h2, h3, h4 { font-family: Inter, sans-serif; color: #0F172A; text-align: left; page-break-after: avoid; }
-h1 {  /* non-domain h1s (Style Spine, Appendices) */
-  string-set: chaptertitle content();
-  page-break-before: always; font-size: 19pt; font-weight: 800; letter-spacing: -0.015em;
-  line-height: 1.25; border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin: 0 0 7mm 0;
-}
-h2 {
-  font-size: 12.5pt; font-weight: 700; color: #0F172A; margin: 8.5mm 0 3mm 0;
-  border-bottom: 0.5pt solid #DBEAFE; padding-bottom: 1.4mm;
-}
-h2::before { content: ""; display: inline-block; width: 5.2mm; height: 1.1mm; background: #C13329; margin-right: 2.4mm; vertical-align: 0.55mm; }
-h3 { font-size: 10.3pt; font-weight: 700; margin: 6mm 0 2.2mm 0; }
-h4 { font-size: 9.4pt; font-weight: 600; }
-
-/* Knowledge-area openers: kicker line + title line, framed by an ink rule. */
-h2.ka {
-  border-bottom: none; border-top: 1.3pt solid #0F172A;
-  padding: 2.4mm 0 0 0; margin: 10mm 0 3.6mm 0;
-}
-h2.ka::before { content: none; }
-h2.ka .kanum {
-  display: block; font-size: 8pt; font-weight: 700; letter-spacing: 0.24em;
-  text-transform: uppercase; color: #C13329; margin-bottom: 1.3mm;
-}
-h2.ka .katitle { display: block; font-size: 13.5pt; font-weight: 800; letter-spacing: -0.01em; }
-
-/* Recurring apparatus headings (key terms, MCQs, self-checks). */
-h3.minihead {
-  font-size: 8.6pt; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-  color: #334155; margin: 6.5mm 0 2.4mm 0;
-}
-h3.minihead::before {
-  content: ""; display: inline-block; width: 2.1mm; height: 2.1mm; background: #C13329;
-  margin-right: 2.2mm; vertical-align: -0.1mm;
-}
-
-p { margin: 0 0 2.3mm 0; orphans: 2; widows: 2; }
-strong { color: #0F172A; }
-em { color: inherit; }
-
-/* ---------- Tables ---------- */
+   Space and hairlines, never fills. No zebra (a screen convention that stripes the page), no
+   filled header, no vertical rules. Header in Biolinum small caps between two hairlines; one
+   closing rule at the foot; numeric columns right-aligned on lining tabular figures.
+   --------------------------------------------------------------------------------------------- */
+/* A long table breaks across pages and repeats its header rather than leaving a hole at the foot
+   of the page before it; no row ever splits. */
 table {
-  border-collapse: collapse; width: 100%; margin: 3mm 0 4.2mm 0;
-  font-family: Inter, sans-serif; font-size: 8.1pt; line-height: 1.42; page-break-inside: avoid;
+  border-collapse: collapse; width: 100%; margin: 4.5mm 0 5.5mm 0;
+  font-family: var(--sans); font-size: 8.8pt; line-height: 1.36;
+  font-feature-settings: var(--feat-lining);
+  break-inside: auto; page-break-inside: auto; text-align: left;
 }
+thead { display: table-header-group; break-inside: avoid; break-after: avoid; }
 th {
-  background: #1D4ED8; color: #FFFFFF; font-weight: 600; letter-spacing: 0.01em;
-  border: none; border-bottom: 1pt solid #1E40AF; padding: 1.8mm 2.2mm; text-align: left;
+  background: none; border: none; color: var(--green); font-weight: normal;
+  font-variant-caps: small-caps; font-feature-settings: "smcp" 1, "lnum" 1, "tnum" 1, "kern" 1;
+  letter-spacing: 0.06em; font-size: 9pt;
+  border-top: 0.8pt solid var(--green); border-bottom: 0.4pt solid var(--rule);
+  padding: 2.1mm 3.4mm; text-align: left; vertical-align: bottom;
+  hyphens: none; overflow-wrap: break-word;
 }
-td { border: none; border-bottom: 0.4pt solid #E2E8F0; padding: 1.6mm 2.2mm; text-align: left; vertical-align: top; }
-tr:nth-child(even) td { background: #F8FAFC; }
-tbody tr:last-child td { border-bottom: 0.8pt solid #CBD5E1; }
+th.nosc { font-variant-caps: normal; font-feature-settings: var(--feat-lining); font-size: 8.4pt; }
+/* Cells do not hyphenate: a narrow column turns "programme" into "pro-gramme" on every other row.
+   A word longer than its column breaks instead, so a long identifier can never overflow. */
+td {
+  background: none; border: none; padding: 1.8mm 3.4mm; text-align: left; vertical-align: top;
+  overflow-wrap: break-word; word-break: break-word; hyphens: none;
+}
+th:first-child, td:first-child { padding-left: 0; }
+th:last-child,  td:last-child  { padding-right: 0; }
+tbody tr:last-child td { border-bottom: 0.8pt solid var(--green); }
+/* Columns of numbers align on the digit and hang to the right; the builders tag them. */
+th.num, td.num { text-align: right; font-feature-settings: var(--feat-lining); }
+/* A short identifier is one word however many hyphens it contains: PCI-FND-STD-01 broken after
+   the second hyphen costs the reader a line and a double-take. The builders only tag cells short
+   enough that holding them whole cannot widen the table past the measure. */
+td.id, td.id code, th.id, th.id code { white-space: nowrap; }
+table tr { break-inside: avoid; }
+table p { margin: 0 0 1.4mm 0; text-align: left; }
+table code { font-size: 0.88em; }
+/* A table that outruns the measure loses its outer padding before it loses its content. */
+table.wide { font-size: 8.2pt; }
 
-/* ---------- Formula / code panels ---------- */
+caption {
+  caption-side: bottom; font-family: var(--sans); font-size: 8.4pt; color: var(--muted);
+  text-align: left; padding-top: 1.8mm;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   7. Identifiers, code and formulas — the mono cut of the same skeleton, lining tabular figures
+   --------------------------------------------------------------------------------------------- */
+code, kbd, samp {
+  /* Libertine Mono runs wide and optically large; at 0.92em it broke the colour of the text block
+     and sprawled formulas across extra lines. 0.84em sits it back into the line. */
+  font-family: var(--mono); font-size: 0.84em; font-weight: normal;
+  font-feature-settings: var(--feat-lining);
+  background: none; padding: 0; color: var(--green-mid);
+  overflow-wrap: break-word; word-break: break-word;
+}
 pre {
-  background: #F8FAFC; border: 0.4pt solid #E2E8F0; border-left: 2.6pt solid #1D4ED8;
-  border-radius: 1.2mm; padding: 2.6mm 3.6mm; font-size: 8.3pt; line-height: 1.5;
-  page-break-inside: avoid; white-space: pre-wrap; margin: 3mm 0;
+  font-family: var(--mono); font-size: 9pt; line-height: 1.45;
+  font-feature-settings: var(--feat-lining);
+  background: none; border: none; border-left: 0.8pt solid var(--rule);
+  padding: 1mm 0 1mm 4mm; margin: 4mm 0; white-space: pre-wrap;
+  page-break-inside: avoid; text-align: left; color: var(--ink);
 }
-code {
-  font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace; font-size: 0.88em;
-  background: none; padding: 0; color: #1E40AF; font-weight: 500;
-}
-pre code { background: none; padding: 0; color: #334155; }
+pre code { color: var(--ink); font-size: 1em; }
 
-/* ---------- Figure-spec boxes ---------- */
-blockquote {
-  border: 0.5pt solid #BFDBFE; background: #F5F8FF; border-radius: 1.6mm;
-  padding: 3mm 4mm 2.6mm 4mm; margin: 3.5mm 0; font-size: 8.4pt; line-height: 1.5;
-  page-break-inside: avoid;
-}
-/* Figure production specs stay in the source corpus but are not printed —
-   the reader sees the rendered figure and its caption only. */
-blockquote.figspec { display: none; }
-blockquote p { text-align: left; margin-bottom: 1.6mm; }
-
-/* ---------- Rendered figures ---------- */
-figure { text-align: center; margin: 4.5mm 0 2mm 0; page-break-inside: avoid; }
+/* ---------------------------------------------------------------------------------------------
+   8. Figures
+   --------------------------------------------------------------------------------------------- */
+figure { text-align: center; margin: 6mm 0 3mm 0; page-break-inside: avoid; }
 img { max-width: 100%; }
 figcaption {
-  font-family: Inter, sans-serif; font-size: 8pt; font-weight: 600; color: #334155; margin-top: 2mm;
+  font-family: var(--sans); font-size: 8.6pt; color: var(--muted); margin-top: 2.6mm;
+  text-align: center; font-feature-settings: var(--feat-lining);
 }
-figcaption::before { content: ""; display: block; width: 14mm; height: 0.7mm; background: #C13329; margin: 0 auto 1.6mm auto; }
+figcaption::before { content: none; }
 
-/* ---------- Worked-example panels ---------- */
+/* Figure production specs stay in the corpus but are not printed: the reader sees the artwork. */
+blockquote.figspec { display: none; }
+
+blockquote {
+  margin: 4mm 0 4mm 0; padding: 0 0 0 5mm; border: none; border-left: 0.8pt solid var(--rule);
+  background: none; font-size: 9.8pt; line-height: 1.48; page-break-inside: avoid;
+}
+blockquote p { text-align: left; margin-bottom: 1.8mm; }
+
+/* ---------------------------------------------------------------------------------------------
+   9. Worked examples and exercises
+
+   The spine of the books. Found by a rule and a label, not by a panel — a filled panel every
+   third page is what makes a technical book look like a slide deck.
+   --------------------------------------------------------------------------------------------- */
+/* A worked example may run over a page turn: holding one whole leaves half-page holes wherever a
+   long one meets the foot of a page, and half a blank page is a worse fault than a break. */
 .wex {
-  background: #FAFBFE; border: 0.5pt solid #E2E8F0; border-left: 2.6pt solid #C13329;
-  border-radius: 1.4mm; padding: 3mm 4mm 2.4mm 4mm; margin: 3.6mm 0;
-  page-break-inside: avoid;
+  margin: 5.5mm 0; padding: 3mm 0 3.4mm 0;
+  border-top: 0.8pt solid var(--green); border-bottom: 0.4pt solid var(--rule);
+  break-inside: auto; page-break-inside: auto; orphans: 3; widows: 3; text-align: justify;
 }
 .wex::before {
-  content: "WORKED EXAMPLE";
-  display: block; font-family: Inter, sans-serif; font-size: 6.4pt; font-weight: 700;
-  letter-spacing: 0.22em; color: #C13329; margin-bottom: 1.5mm;
+  content: "worked example";
+  display: block; font-family: var(--sans); font-size: 8.2pt;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.16em; color: var(--green); margin-bottom: 1.8mm;
 }
-.wex .wexhead { text-align: left; margin-bottom: 1.8mm; }
-.wex ol { margin-bottom: 0.6mm; }
-.wex li { margin-bottom: 1.1mm; }
+.wex .wexhead { text-align: left; margin-bottom: 2mm; break-after: avoid; }
+.wex ol { margin-bottom: 0; }
+.wex li { margin-bottom: 1.3mm; }
+.wex > *:last-child { margin-bottom: 0; }
 
-/* Exercise problem statements. */
 p.exhead {
-  border-left: 2.6pt solid #1D4ED8; padding: 1.2mm 0 1.2mm 3.2mm; margin: 4.5mm 0 2.3mm 0;
-  text-align: left;
+  border-left: 1.6pt solid var(--green); padding: 0.8mm 0 0.8mm 4mm;
+  margin: 5.5mm 0 2.6mm 0; text-align: left;
 }
 
-/* ---------- Lists ---------- */
-ul, ol { margin: 1.4mm 0 2.8mm 0; padding-left: 5.6mm; }
-li { margin-bottom: 0.9mm; }
-li p { margin-bottom: 1mm; }
+/* ---------------------------------------------------------------------------------------------
+   10. Lists
+   --------------------------------------------------------------------------------------------- */
+ul, ol { margin: 2mm 0 3.2mm 0; padding-left: 6.4mm; }
+li { margin-bottom: 1.1mm; }
+li p { margin-bottom: 1.2mm; }
+ul li::marker { color: var(--muted); }
+ol { font-feature-settings: var(--feat-lining); }
+ol > li { font-feature-settings: var(--feat-prose); }
 
-hr { border: none; border-top: 0.5pt solid #CBD5E1; margin: 6mm 0; }
-a { color: #1D4ED8; text-decoration: none; }
+/* Multiple-choice options carry their own A./B./C./D. labels: no bullet, one option per line,
+   wrapped lines hanging under the label. */
+ul.mcqopts { list-style: none; padding-left: 6.4mm; margin: 2.2mm 0 3mm 0; }
+ul.mcqopts li {
+  padding-left: 6.8mm; text-indent: -6.8mm; margin-bottom: 1.3mm;
+  text-align: left; page-break-inside: avoid;
+}
+/* The answer key. A written word in real small caps inside a hairline — no glyph, so nothing can
+   fall back to a blank box, and it survives greyscale without depending on colour. */
+.mcq-key {
+  font-family: var(--sans); font-size: 7.6pt;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.14em; color: var(--green);
+  border: 0.4pt solid var(--green); padding: 0.2mm 1.6mm 0.4mm 1.6mm;
+  margin-left: 2.2mm; white-space: nowrap;
+}
 
-/* ---------- Table of contents ---------- */
-nav#TOC { page: plain; page-break-before: always; page-break-after: always; }
+/* ---------------------------------------------------------------------------------------------
+   11. Call-outs
+
+   Four classes, each with its written label and its own border treatment, so they stay
+   distinguishable in greyscale, in monochrome print and to a screen reader. Colour is never the
+   only distinction. No section signs and no pictographic markers: the label and the identifier
+   carry the meaning, and a glyph that renders as a blank box somewhere is worse than no glyph.
+   --------------------------------------------------------------------------------------------- */
+.pci-standard, .ext-ref, .pci-guidance, .pci-caution {
+  margin: 5mm 0; padding: 3.4mm 0 3.4mm 5mm; border-radius: 0;
+  page-break-inside: auto; text-align: justify;
+}
+.pci-standard > *:last-child, .ext-ref > *:last-child,
+.pci-guidance > *:last-child, .pci-caution > *:last-child { margin-bottom: 0; }
+.pci-standard p, .ext-ref p, .pci-guidance p, .pci-caution p,
+.pci-standard li, .ext-ref li, .pci-guidance li, .pci-caution li { color: var(--ink); }
+
+.pci-standard::before, .ext-ref::before, .pci-guidance::before, .pci-caution::before {
+  display: block; font-family: var(--sans); font-size: 8.2pt; font-weight: normal;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.16em; margin-bottom: 2mm;
+}
+
+.pci-standard {
+  background: var(--tint); border-left: 2pt solid var(--green); padding-right: 4mm;
+}
+.pci-standard::before { content: "PCI standard"; color: var(--green); }
+
+.ext-ref { background: none; border-left: 2.8pt double var(--green); }
+.ext-ref::before { content: "external standard or framework"; color: var(--green); }
+
+.pci-guidance { background: none; border-left: 1pt dashed var(--green-mid); }
+.pci-guidance::before { content: "PCI recommended practice"; color: var(--green-mid); }
+
+.pci-caution {
+  background: var(--amber-tint); border-left: 1pt dotted var(--amber); padding-right: 4mm;
+}
+.pci-caution::before { content: "caution"; color: var(--amber); }
+
+/* A call-out nested inside a standard sits tighter, and the two that carry no ground of their own
+   stay groundless. The caution keeps its amber: inside a green-tinted standard it is the one place
+   the warm tint has work to do, and it is faint enough not to re-tint the page. */
+.pci-standard .ext-ref, .pci-standard .pci-guidance {
+  margin: 3mm 0; padding: 2.4mm 0 2.4mm 4mm; background: none;
+}
+.pci-standard .pci-caution { margin: 3mm 0; padding: 2.4mm 3mm 2.4mm 4mm; }
+/* `field` marks a call-out that is one of a standard's numbered elements. It keeps the border
+   treatment and drops the class label, because the element's own numbered name is the label — and
+   printing both would say the same thing twice on every standard in the corpus. */
+.ext-ref.field::before, .pci-caution.field::before,
+.pci-guidance.field::before, .pci-standard.field::before { content: none; }
+.field { margin: 4mm 0; }
+.field > p:first-child { margin-top: 0; }
+
+/* ---------------------------------------------------------------------------------------------
+   12. Contents
+   --------------------------------------------------------------------------------------------- */
+nav#TOC {
+  page-break-before: always; page-break-after: always;
+  string-set: chaptertitle "Contents";
+}
 nav#TOC::before {
   content: "Contents";
-  display: block; font-family: Inter, sans-serif; font-size: 19pt; font-weight: 800;
-  color: #0F172A; border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin-bottom: 6mm;
+  display: block; font-family: var(--display); font-weight: normal; font-size: 25pt;
+  line-height: 1.16; color: var(--green);
+  padding-bottom: 3.2mm; border-bottom: 0.6pt solid var(--rule); margin-bottom: 7mm;
 }
 nav#TOC ul { list-style: none; padding-left: 0; margin: 0; }
 nav#TOC > ul > li {
-  font-family: Inter, sans-serif; font-weight: 700; font-size: 9.6pt; color: #0F172A; margin-top: 3mm;
+  font-family: var(--text); font-size: 10.2pt; color: var(--green); margin-top: 4mm;
+  font-weight: bold;
 }
-nav#TOC > ul > li li { font-weight: 400; font-size: 8.6pt; color: #334155; margin-top: 1mm; padding-left: 5mm; }
-nav#TOC a { color: inherit; display: block; }
+nav#TOC > ul > li li {
+  font-weight: normal; font-size: 9.4pt; color: var(--ink); margin-top: 1.2mm; padding-left: 6mm;
+}
+/* A contents line has to survive a title longer than the measure: the entry wraps, the leader and
+   the folio stay together on the last line, the right-hand gutter is reserved so a three-digit
+   folio is never pushed onto a line of its own, and an entry never splits across a page. */
+nav#TOC li { break-inside: avoid; page-break-inside: avoid; }
+nav#TOC a {
+  color: inherit; display: block; text-align: left;
+  padding-right: 12mm; hyphens: auto; overflow-wrap: break-word;
+}
 nav#TOC a::after {
   content: leader(".") " " target-counter(attr(href url), page);
-  font-weight: 400; color: #64748B; font-size: 8.2pt;
+  font-weight: normal; color: var(--muted); font-size: 9pt;
+  font-feature-settings: "onum" 1; white-space: nowrap;
 }
 
-/* ---------- Alphabetical index ---------- */
-.bookindex { page: plain; page-break-before: always; }
+/* ---------------------------------------------------------------------------------------------
+   13. Back matter — index, glossary, appendices
+   --------------------------------------------------------------------------------------------- */
+.bookindex { page-break-before: always; }
 .bookindex .ixtitle {
-  font-family: Inter, sans-serif; font-size: 19pt; font-weight: 800; color: #0F172A;
-  border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin-bottom: 6mm;
+  font-family: var(--display); font-weight: normal; font-size: 25pt; line-height: 1.16;
+  color: var(--green); padding-bottom: 3.2mm; border-bottom: 0.6pt solid var(--rule);
+  margin-bottom: 7mm;
 }
-.bookindex .ixcols { column-count: 2; column-gap: 8mm; }
+.bookindex .ixcols { column-count: 2; column-gap: 9mm; }
 .bookindex .ixl {
-  font-family: Inter, sans-serif; font-weight: 800; font-size: 10.5pt; color: #C13329;
-  margin: 3mm 0 1.2mm 0; column-span: none;
+  font-family: var(--display); font-weight: normal; font-size: 14pt; color: var(--green);
+  margin: 5mm 0 1.8mm 0; break-after: avoid;
 }
-.bookindex .ixe { font-family: Inter, sans-serif; font-size: 8.2pt; color: #334155; margin-bottom: 0.9mm; }
+.bookindex .ixe {
+  font-family: var(--text); font-size: 9pt; color: var(--ink); margin-bottom: 1mm;
+  text-align: left; hyphens: auto; break-inside: avoid;
+}
+/* No dot leaders in an index. Leaders belong to a contents page, where entries are few and the eye
+   travels a long way to the folio; in a two-column index they stripe the page, and any entry that
+   wraps sends its leader across a line of its own. The folio simply follows the term, as it does
+   in every printed index. */
 .bookindex .ixe a { color: inherit; display: block; }
 .bookindex .ixe a::after {
-  content: leader(".") " " target-counter(attr(href url), page);
-  color: #64748B; font-size: 7.8pt;
+  content: "  " target-counter(attr(href url), page);
+  color: var(--muted); font-size: 8.6pt; font-feature-settings: "onum" 1; white-space: nowrap;
 }
 
-/* ---- Back matter: derived glossary ------------------------------------------------ */
 .backmatter { page-break-before: always; }
+/* Back matter sets its own running head: without this the appendices, the standards, the glossary
+   and the index all run under the last domain's title, which lies about where the reader is. */
+.backmatter .bmtitle,
+.backmatter .stdstitle,
+.appendices h2.apptitle,
+.stdspart h2.stdset,
+.bookindex .ixtitle { string-set: chaptertitle content(); }
+
 .backmatter .bmtitle {
-  font-family: "IBM Plex Serif", Georgia, serif; font-size: 30pt; font-weight: 600;
-  color: #0F172A; margin: 0 0 2mm 0; letter-spacing: -0.4pt;
+  font-family: var(--display); font-weight: normal; font-size: 30pt; line-height: 1.14;
+  color: var(--green); margin: 0 0 4mm 0; letter-spacing: -0.008em; border: none; padding: 0;
 }
 .backmatter .bmnote {
-  font-family: Inter, sans-serif; font-size: 9pt; color: #64748B; line-height: 1.6;
-  max-width: 120mm; margin: 0 0 7mm 0; padding-bottom: 4mm; border-bottom: 0.5mm solid #1D4ED8;
+  font-family: var(--text); font-size: 9.8pt; color: var(--muted); line-height: 1.5;
+  max-width: 128mm; margin: 0 0 8mm 0; padding-bottom: 4mm;
+  border-bottom: 0.6pt solid var(--rule); text-align: left;
 }
-.glossary { column-count: 2; column-gap: 8mm; column-fill: auto; }
+
+.glossary { column-count: 2; column-gap: 9mm; column-fill: auto; }
 .glossary .bmtitle, .glossary .bmnote { column-span: all; }
 .glossary .glossletter {
-  font-family: Inter, sans-serif; font-size: 13pt; font-weight: 800; color: #1D4ED8;
-  margin: 5mm 0 2mm 0; padding-bottom: 1mm; border-bottom: 0.3mm solid #E2E8F0;
+  font-family: var(--display); font-weight: normal; font-size: 14pt; color: var(--green);
+  margin: 5mm 0 2mm 0; padding-bottom: 1.2mm; border-bottom: 0.4pt solid var(--rule);
   break-after: avoid; break-inside: avoid;
 }
 .glossary p.glossentry {
-  font-family: Inter, sans-serif; font-size: 8.4pt; line-height: 1.5; color: #0F172A;
-  margin: 0 0 2.4mm 0; text-align: left; break-inside: avoid; orphans: 2; widows: 2;
+  font-family: var(--text); font-size: 9pt; line-height: 1.42; color: var(--ink);
+  margin: 0 0 2.6mm 0; text-align: left; break-inside: avoid; orphans: 2; widows: 2; hyphens: auto;
 }
-.glossary p.glossentry strong { color: #0F172A; font-weight: 700; }
-.glossary p.glossentry em { color: #64748B; font-style: italic; }
+.glossary p.glossentry em { color: var(--muted); font-style: italic; }
 
-/* ---- Back matter: derived appendices ---------------------------------------------- */
 .appendices { page-break-before: always; }
 .appendices h2.apptitle {
-  font-family: "IBM Plex Serif", Georgia, serif; font-size: 21pt; font-weight: 600;
-  color: #0F172A; margin: 0 0 4mm 0; padding-bottom: 2.5mm;
-  border-bottom: 0.5mm solid #1D4ED8; break-after: avoid; page-break-before: always;
+  font-family: var(--display); font-weight: normal; font-size: 25pt; line-height: 1.16;
+  color: var(--green); margin: 0 0 6mm 0; padding-bottom: 3.2mm;
+  border-bottom: 0.6pt solid var(--rule); break-after: avoid; page-break-before: always;
 }
 .appendices h2.apptitle:first-of-type { page-break-before: avoid; }
 .appendices h3 {
-  font-family: Inter, sans-serif; font-size: 11.5pt; font-weight: 700; color: #1D4ED8;
-  margin: 6mm 0 2mm 0; break-after: avoid;
+  font-family: var(--text); font-weight: bold; font-size: 11.4pt; color: var(--green);
+  margin: 7mm 0 2.4mm 0; break-after: avoid;
 }
-.appendices p { font-family: Inter, sans-serif; font-size: 9.2pt; line-height: 1.62; color: #0F172A; }
-.appendices table { font-size: 8.2pt; width: 100%; border-collapse: collapse; margin: 3mm 0 5mm 0; }
-.appendices th {
-  font-family: Inter, sans-serif; font-size: 7.8pt; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.3pt; color: #64748B; text-align: left; border-bottom: 0.4mm solid #0F172A;
-  padding: 1.4mm 2mm;
-}
-.appendices td {
-  padding: 1.2mm 2mm; border-bottom: 0.15mm solid #E2E8F0; vertical-align: top; line-height: 1.45;
-}
+.appendices table { margin: 4mm 0 6mm 0; }
 .appendices tr { break-inside: avoid; }
+
+/* ---------------------------------------------------------------------------------------------
+   14. The PCI Standards part
+   --------------------------------------------------------------------------------------------- */
+.stdspart h2.stdset {
+  font-family: var(--display); font-weight: normal; font-size: 25pt; line-height: 1.16;
+  color: var(--green); margin: 0 0 6mm 0; padding-bottom: 3.2mm;
+  border-bottom: 0.6pt solid var(--rule); break-after: avoid; page-break-before: always;
+}
+.stdspart h3.stdgroup {
+  font-family: var(--display); font-weight: normal; font-size: 16pt; color: var(--green);
+  margin: 10mm 0 3.5mm 0; padding-bottom: 1.6mm; border-bottom: 0.4pt solid var(--rule);
+  break-after: avoid;
+}
+.pci-standard .stdhead { margin-bottom: 2.6mm; break-after: avoid; }
+.pci-standard .stdid {
+  display: block; font-family: var(--mono); font-size: 8.6pt; letter-spacing: 0.05em;
+  font-feature-settings: var(--feat-lining); color: var(--green-mid); margin-bottom: 1mm;
+  white-space: nowrap; overflow-wrap: break-word;
+}
+.pci-standard .stdname {
+  display: block; font-family: var(--display); font-weight: normal; font-size: 14pt;
+  line-height: 1.2; color: var(--green);
+}
+.stdspart .pci-standard p { margin-bottom: 2.2mm; }
+
+/* ---------------------------------------------------------------------------------------------
+   15. Cover
+
+   Deep forest field, cream ink, one hairline, one mark. The volume's device is drawn in the same
+   two inks as the type: on a professional body's reference the cover is a title, not a poster.
+   --------------------------------------------------------------------------------------------- */
+.cover {
+  page: cover; page-break-after: always;
+  width: 210mm; height: 297mm; background: #14432E; color: #F2EFE7;
+  text-align: left; font-family: var(--text); overflow: hidden;
+}
+.cover .coverhead { padding: 40mm 30mm 0 30mm; }
+.cover .coverkicker {
+  font-family: var(--sans); font-size: 9.4pt;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.24em; color: #9DB3A5; margin-bottom: 16mm;
+}
+.cover .covercode {
+  font-family: var(--display); font-weight: normal; font-size: 62pt; line-height: 1;
+  letter-spacing: -0.015em; color: #F2EFE7;
+}
+.cover .coverbook {
+  font-family: var(--display); font-weight: normal; font-size: 25pt; line-height: 1.15;
+  color: #9DB3A5; margin-top: 3mm;
+}
+.cover .coverrule { width: 34mm; border-top: 0.8pt solid #9DB3A5; height: 0; margin: 11mm 0 9mm 0; }
+.cover .covercred { font-size: 13pt; font-style: italic; color: #F2EFE7; line-height: 1.4; }
+.cover .coverthemes {
+  font-family: var(--sans); font-size: 10pt; color: #9DB3A5; margin-top: 3mm; line-height: 1.45;
+}
+.cover .coverband { margin: 14mm 0 0 0; padding: 0 30mm; }
+.cover .coverchart { width: 100%; height: 52mm; }
+.cover .coverfoot { padding: 14mm 30mm 0 30mm; }
+.cover .coverprinciple {
+  font-size: 12pt; font-style: italic; color: #F2EFE7; line-height: 1.45;
+  padding-top: 6mm; border-top: 0.8pt solid #3C6B54;
+}
+.cover .coverbadge { display: block; margin: 10mm 0 0 0; }
+.cover .coverbadge .cbmain {
+  display: block; font-family: var(--sans); font-size: 10pt;
+  font-variant-caps: small-caps; font-feature-settings: var(--feat-smallcaps);
+  letter-spacing: 0.18em; color: #F2EFE7;
+}
+.cover .coverbadge .cbsub {
+  display: block; font-family: var(--sans); font-size: 8.8pt; color: #9DB3A5; margin-top: 1.6mm;
+}
+.cover .covertag {
+  font-family: var(--sans); font-size: 9pt; color: #93AC9E; margin-top: 12mm;
+}

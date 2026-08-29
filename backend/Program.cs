@@ -2154,6 +2154,15 @@ app.UseStaticFiles(new StaticFileOptions
     {
         var path = sf.Context.Request.Path.Value ?? "";
         var h = sf.Context.Response.Headers;
+        // Server-side templates are fetchable simply because they sit in wwwroot, but they are not
+        // pages: the backend reads them and substitutes {{CANONICAL}} and the rest before writing a
+        // real page. Fetched raw they would be indexed carrying an unsubstituted token, so they are
+        // marked noindex here. The rendered pages are written by middleware that runs before
+        // UseStaticFiles and short-circuits, so they never reach this callback and never inherit it.
+        if (path.Equals("/blog-shell.html", StringComparison.OrdinalIgnoreCase)
+            || path.Equals("/careers-detail.html", StringComparison.OrdinalIgnoreCase)
+            || path.Equals("/certification-detail.html", StringComparison.OrdinalIgnoreCase))
+            h["X-Robots-Tag"] = "noindex, follow";
         if (path.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
             h.CacheControl = "no-cache";
         else if (path.StartsWith("/app/assets/", StringComparison.OrdinalIgnoreCase) ||

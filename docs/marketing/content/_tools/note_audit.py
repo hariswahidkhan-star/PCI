@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+"""Audit the trailing internal-linking NOTES, not the bodies.
+
+link_audit.py checks what is published. This checks the note attached to it, which was a real
+exposure while the notes were INSTRUCTIONS: a note telling a publisher to add three links to one
+domain becomes three links to one domain the moment someone follows it, and the body audit
+cannot see it coming.
+
+SCOPE, and it narrowed once the remediation run finished. The notes are now mostly RECORDS —
+they say what was placed, what was dropped and why, and where the canonical points. A record
+mentions URLs it is not proposing, and no reliable rule separates "link to this" from "we
+dropped this" or "the canonical points here" in prose. Counting mentions therefore over-reports
+badly: blogger-post.md places exactly one link per domain, exactly as its note describes, and a
+mention-count still called it three links to the hub.
+
+So the counting checks are advisory and print under ADVISORY. The one finding this script makes
+that is always true is the broken URL: a note naming a page that does not exist is wrong whether
+it is proposing that link, describing it, or reserving it for a reply. That prints as an issue.
+
+Whether a note's instructions are actually compliant is an editorial question, and it belongs to
+a reader who can tell an instruction from a record. That is what the judging pass is for.
+"""
+import json, re, sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+DOMAINS = ["projectcontrolsinstitute.org", "pciai.org", "pciglobal.ai",
+           "pciworld.org", "credentialfinder.org"]
+FM_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
+# The trailing publisher note goes by several labels. It was headed "Links:" in a handful of
+# flagship files, which this pattern did not match, so their instruction sheets were read as
+# body links and the files were reported as over-linked when they were not.
+# Labels the trailing publisher note goes by. Agents keep coining new ones — "Internal links",
+# "**Linking note.**", "Internal links, as placed in the body", and now "Estate links" — and a
+# missed label makes that file's instruction sheet read as body links, which is what put files
+# on the over-linked list that were never over-linked. A general "any phrase containing link"
+# pattern was tried and is worse: it matches ordinary prose ("a party to link", "calendar link")
+# while still missing "Internal links now in the body:", where words sit between the label and
+# its colon. So the list is explicit, and adding to it is the maintenance cost.
+NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal[- ]?links?|Estate[- ]?links?|Internal linking note|Linking note|Links?\s*[:(.,])", re.I | re.M)
+URL_RE = re.compile(r"https?://[^\s)\"'`<>]+")
+
+try:
+    VALID = set(json.load(open(ROOT / "_tools/valid_urls.json")))
+except Exception:
+    VALID = set()
+
+
+def host_of(text):
+    m = FM_RE.match(text)
+    if not m:
+        return None
+    p = re.search(r"^platform:\s*(.+)$", m.group(1), re.M)
+    if not p:
+        return None
+    h = re.match(r"Own site\s*[—\-–]\s*([a-z0-9.]+)", p.group(1).strip(), re.I)
+    return h.group(1).lower() if h else None
+
+
+def domain_of(url):
+    u = re.sub(r"^https?://", "", url).split("/")[0].lower()
+    u = u[4:] if u.startswith("www.") else u
+    return next((d for d in DOMAINS if u == d or u.endswith("." + d)), None)
+
+
+def audit(path):
+    text = path.read_text(encoding="utf-8")
+    n = NOTE_RE.search(text)
+    if not n:
+        return None
+    note, host = text[n.start():], host_of(text)
+
+    # A note holds two different kinds of link, and counting them together is wrong.
+    # Some are to be PLACED ("this should link to A, to B and to C") — those are the piece's
+    # links and the caps apply. Others are CONDITIONAL alternatives for a reply or a comment
+    # ("if a reply asks about cut-off, answer with X"), where exactly one is ever used and
+    # often none is. Bluesky's note names three hub pages and puts one link in the post.
+    # Only the first kind is counted.
+    COND = re.compile(r"\b(if (a |an |someone|somebody|anyone|the )?(reply|repl|comment|question|thread|asks?|turns?|wants?)"
+                      r"|if asked|should (?:anyone|someone)|in the (?:thread|comments)|per reply|one link per)", re.I)
+    per, broken, conditional = {}, [], set()
+    # split on sentence boundaries so a conditional clause does not suppress the whole note
+    for sent in re.split(r"(?<=[.;])\s+", note):
+        cond = bool(COND.search(sent))
+        for raw in URL_RE.findall(sent):
+            u = raw.rstrip(".,;:)`*")
+            d = domain_of(u)
+            if not d:
+                continue
+            if cond:
+                conditional.add(u)
+                continue
+            per.setdefault(d, set()).add(u)
+    # broken-link checking still covers conditional targets: a reply link that 404s is a
+    # broken link whoever eventually posts it.
+    for u in sorted(conditional):
+        if VALID:
+            stem = u.rstrip("/")
+            pp = re.sub(r"^https?://[^/]+", "", stem)
+            if pp and stem not in VALID and stem + "/" not in VALID:
+                broken.append(u)
+        if VALID:
+            stem = u.rstrip("/")
+            path_part = re.sub(r"^https?://[^/]+", "", stem)
+            if path_part and stem not in VALID and stem + "/" not in VALID:
+                broken.append(u)
+
+    cross = {d: v for d, v in per.items() if d != host}
+    issues, advisory = [], []
+    if len(per) == 5:
+        advisory.append("note mentions all five domains")
+    for d, v in cross.items():
+        if len(v) > 1:
+            advisory.append(f"note mentions {len(v)} URLs on {d}")
+    if sum(len(v) for v in cross.values()) > 3:
+        advisory.append(f"note mentions {sum(len(v) for v in cross.values())} cross-estate URLs")
+    for b in sorted(set(broken)):
+        issues.append(f"note proposes BROKEN {b}")
+    for d, v in per.items():
+        for u in v:
+            if VALID:
+                stem = u.rstrip("/")
+                pp = re.sub(r"^https?://[^/]+", "", stem)
+                if pp and stem not in VALID and stem + "/" not in VALID:
+                    issues.append(f"note proposes BROKEN {u}")
+    return {"file": str(path.relative_to(ROOT)), "host": host,
+            "proposed": {d: sorted(v) for d, v in per.items()},
+            "conditional": sorted(conditional), "issues": issues, "advisory": advisory}
+
+
+def main():
+    rows = []
+    for t in (sys.argv[1:] or ["flagship", "articles", "social"]):
+        for f in sorted((ROOT / t).glob("*.md")):
+            if f.name.startswith("_") or f.name == "INDEX.md":
+                continue
+            r = audit(f)
+            if r:
+                rows.append(r)
+    bad = [r for r in rows if r["issues"]]
+    adv = [r for r in rows if r["advisory"] and not r["issues"]]
+    print(f"notes found {len(rows)} | issues {len(bad)} | advisory {len(adv)}")
+    for r in bad:
+        print(f"  {r['file']}: {'; '.join(r['issues'])}")
+    print(f"\n  ADVISORY (mention counts, not violations — a note that records a dropped link"
+          f"\n  mentions its URL; only a reader can tell an instruction from a record):")
+    for r in adv[:10]:
+        print(f"    {r['file']}: {'; '.join(r['advisory'])}")
+    if len(adv) > 10:
+        print(f"    ... and {len(adv)-10} more")
+    (ROOT / "_tools" / "note_audit.json").write_text(json.dumps(rows, indent=1))
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

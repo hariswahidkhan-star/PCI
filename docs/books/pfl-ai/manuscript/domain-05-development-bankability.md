@@ -1,27 +1,15 @@
 # Domain 5 — Project Development and Bankability
 
-> **Group:** Structuring and modelling (Domain 5 of 5 in Part Two). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of **bankability**, the **special-purpose
-> vehicle** and the development option premium. It consumes Domain 4's appraisal verdict and hands
-> Domain 6 a structure to model. Coverage machinery (`DSCR`, `LLCR`, max debt capacity) is **cited
-> from Domain 10, never re-derived here.** British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`).
-> Tax, accounting and legal treatments described here are **illustrative and
-> jurisdiction-specific**; none is presented as universal. In particular, whether a
-> liquidated-damages rate or cap, a dilution or conversion mechanic, or a stated liability basis is
-> enforceable as drafted is a matter for qualified counsel in the governing jurisdiction, and
-> nothing in this domain is legal advice.
-
 ## Why this domain exists
 
-Domain 4 established that Kestrel Water SPC is **valuable** — `NPV` +USD 16,179,360 at 8 %, `IRR`
-12.19 %, `PI` 1.270. It left open the question that decides whether the project happens: **is it
-financeable?** A valuable project with an unsigned offtake, an unregistered corridor, an unproven
-technology or an unfundable minority sponsor does not get built, and no positive `NPV` repairs any of
-those. Bankability is not a stronger form of value but a different test, and it is **conjunctive** —
-every condition must pass, because lenders lending against project cash alone have no balance sheet to
-fall back on and therefore no appetite for one unresolved fatal condition.
+Domain 4 established that Kestrel Water SPC is **valuable** (`NPV` +USD 16,179,360 at 8 %, `IRR`
+12.19 %, `PI` 1.270). It left open the question that decides whether the project happens: **is
+it financeable?** A valuable project with an unsigned offtake, an unregistered corridor, an
+unproven technology or an unfundable minority sponsor does not get built, and no positive `NPV`
+repairs any of those. Bankability is not a stronger form of value but a different test, and it
+is **conjunctive**. Every condition must pass, because lenders lending against project cash
+alone have no balance sheet to fall back on and therefore no appetite for one unresolved fatal
+condition.
 
 That structure is the domain's central claim, and it has three computable consequences. **The weakest
 condition governs the whole:** six conditions each around 90 % likely give a joint probability of close
@@ -67,32 +55,33 @@ option premium · 5.1.3 the feasibility gate and the kill decision.*
 
 ### 5.1.1 The development lifecycle and where its gates belong
 
-**Definition.** Project development is the pre-financial-close work that converts an opportunity into a
-financeable transaction — identifying the payer, securing site and consents, selecting technology and
-contractors, negotiating the revenue contract, structuring the financing, satisfying every condition
-precedent. It runs through origination and screening, concept and prefeasibility, feasibility,
-transaction and bid, and close, with spend intensity rising by roughly an order of magnitude at each
-step while information improves only gradually. That asymmetry — **commitment rising faster than
-knowledge** — is the economics of the whole phase, and everything before close is spent at sponsors'
-risk with no financing to reimburse it.
+**Definition.** Project development is the pre-financial-close work that converts an opportunity
+into a financeable transaction, identifying the payer, securing site and consents, selecting
+technology and contractors, negotiating the revenue contract, structuring the financing,
+satisfying every condition precedent. It runs through origination and screening, concept and
+prefeasibility, feasibility, transaction and bid, and close, with spend intensity rising by
+roughly an order of magnitude at each step while information improves only gradually. That
+asymmetry, **commitment rising faster than knowledge**, is the economics of the whole phase, and
+everything before close is spent at sponsors' risk with no financing to reimburse it.
 
-Gates belong where **irreversibility steps up** — before feasibility spend, before bid submission,
-before signature — not on the calendar; the design rule and its failure mode (gates that have never
-stopped anything) are PML-AI Domain 3's, KA 3.3.1. What differs in finance is the *price of holding the
-gate*: in delivery it is elapsed time against a cost of delay, while in development it is a **forgone
-option** — a bid window that closes, a site optioned by a competitor, a procurement that runs without
-you. The budget must also separate **pursuit costs** (expensed, belonging to the programme), **study and
-adviser costs** (often capitalisable at close where the framework and the facility permit — Domain 2's
-rules, jurisdiction-sensitive) and **at-risk commitments** (option premiums, bid bonds, long-lead
-reservations: cash forfeited if the project dies), because without that split a kill decision cannot
-answer its only question — *how much of this is already gone?*
+Gates belong where **irreversibility steps up** (before feasibility spend, before bid
+submission, before signature), not on the calendar; the design rule and its failure mode (gates
+that have never stopped anything) are PML-AI Domain 3's, KA 3.3.1. What differs in finance is
+the *price of holding the gate*: in delivery it is elapsed time against a cost of delay, while
+in development it is a **forgone option** — a bid window that closes, a site optioned by a
+competitor, a procurement that runs without you. The budget must also separate **pursuit costs**
+(expensed, belonging to the programme), **study and adviser costs** (often capitalisable at
+close where the framework and the facility permit — Domain 2's rules, jurisdiction-sensitive)
+and **at-risk commitments** (option premiums, bid bonds, long-lead reservations: cash forfeited
+if the project dies), because without that split a kill decision cannot answer its only question
+— *how much of this is already gone?*
 
 ### 5.1.2 Development spend as an option premium
 
-**Definition.** Each stage of development spend buys a **real option**: the right, not the obligation,
-to spend the next and larger tranche. It must therefore be evaluated as a **portfolio** — the closes pay
-for the abandonments — and the correct unit is the **cost per closed project across everything
-pursued**, not the cost of the deal that closed.
+**Definition.** Each stage of development spend buys a **real option**: the right, not the
+obligation, to spend the next and larger tranche. It must therefore be evaluated as a
+**portfolio** (the closes pay for the abandonments), and the correct unit is the **cost per
+closed project across everything pursued**, not the cost of the deal that closed.
 
 **Worked example 5.1.2 — what did Kestrel's financing actually cost to originate?**
 
@@ -107,23 +96,24 @@ pursued**, not the cost of the deal that closed.
 3. **Substitution.** `40 × 25,000 = 1,000,000`; `12 × 250,000 = 3,000,000`; `5 × 1,200,000 =
    6,000,000`; `2 × 2,400,000 = 4,800,000`; per close `= 14,800,000/2`; breakeven
    `= 14,800,000/16,179,360`.
-4. **Result.** Programme spend **USD 14,800,000**; **cost per closed project USD 7,400,000**; close rate
-   **5.0 %** (stage conversions 30.0 %, 41.67 %, 40.0 %); portfolio value **32,358,720**, net
-   **+17,558,720**, value multiple **2.1864×**; **breakeven at 0.9147 closes — a breakeven close rate of
-   2.29 %**.
-5. **Interpretation.** The honest cost of Kestrel's financing is **7,400,000, not the 2,400,000** on its
-   own charge code, and the difference is the premium paid for having found it at all; a sponsor that
-   measures only the winners under-prices development, under-resources screening and is annually
-   surprised by the expense line. The **breakeven close rate of 2.29 % against an achieved 5.0 %** gives
-   the programme **2.19× of margin** — it could halve its hit rate and still create value — which converts
-   "development is expensive" into "development stops paying below one close in 44 screenings", the
-   sentence a budget is actually defended with (the exact breakeven is one close in 43.73). And
-   sensitivity runs through value per close and late-stage conversion, not screening cost: the
-   1,000,000 of screening is 6.8 % of programme spend and
-   buys the whole funnel, while one lost late-stage project costs 2,400,000 outright — so the governance
-   conclusion is counter-intuitive and consistent, **screen more widely and kill earlier**. The caution:
-   value per close is a forecast (Domain 4, KA 4.3.3), so a programme justified on optimistic deal
-   `NPV`s has hidden its true breakeven and must be re-tested against **realised** value.
+4. **Result.** Programme spend **USD 14,800,000**; **cost per closed project USD 7,400,000**;
+   close rate **5.0 %** (stage conversions 30.0 %, 41.67 %, 40.0 %); portfolio value
+   **32,358,720**, net **+17,558,720**, value multiple **2.1864×**; **breakeven at 0.9147
+   closes, a breakeven close rate of 2.29 %**.
+5. **Interpretation.** The honest cost of Kestrel's financing is **7,400,000, not the
+   2,400,000** on its own charge code, and the difference is the premium paid for having found
+   it at all; a sponsor that measures only the winners under-prices development, under-resources
+   screening and is annually surprised by the expense line. The **breakeven close rate of 2.29 %
+   against an achieved 5.0 %** gives the programme **2.19× of margin** (it could halve its hit
+   rate and still create value), which converts "development is expensive" into "development
+   stops paying below one close in 44 screenings", the sentence a budget is actually defended
+   with (the exact breakeven is one close in 43.73). And sensitivity runs through value per
+   close and late-stage conversion, not screening cost: the 1,000,000 of screening is 6.8 % of
+   programme spend and buys the whole funnel, while one lost late-stage project costs 2,400,000
+   outright, so the governance conclusion is counter-intuitive and consistent, **screen more
+   widely and kill earlier**. The caution: value per close is a forecast (Domain 4, KA 4.3.3),
+   so a programme justified on optimistic deal `NPV`s has hidden its true breakeven and must be
+   re-tested against **realised** value.
 
 > **Fig 5.1.1 — The development funnel as an option premium.** Four-band funnel diagram, band width
 > proportional to count: Screening 40 at 25,000 each (stage spend 1,000,000; cumulative 1,000,000) ·
@@ -161,36 +151,38 @@ transaction budget plus abortive adviser fees.
    `= P(window missed) × value per close`.
 3. **Substitution.** Without: `0.40 × 3,300,000`. With: `180,000 + 0.40 × 0.25 × 3,300,000`. Breakeven
    `p = 1 − (1,320,000 − 180,000)/(0.40 × 3,300,000)`. Window: `0.10 × 16,179,360`.
-4. **Result.** Expected waste **1,320,000** without the gate, **510,000** with it — **gate net value
-   USD 810,000 per project entering feasibility**, or **4,050,000** across five. The gate pays down to a
-   **detection probability of 13.64 %**. But the bid-window option cost is **1,617,936**, so net value
-   becomes **−USD 807,936**, and the **breakeven window-miss probability is 5.01 %**.
-5. **Interpretation.** The same gate is worth +810,000 in a bilateral negotiation and −807,936 in a
-   competitive tender, and nothing about the gate changed — only what the delay costs. That is the
-   finance-specific lesson: **in development, elapsed time is priced as a lost option, not as a carrying
-   cost**, and the option can be worth nine times the study fee. The **13.64 % breakeven detection rate**
-   is a very low bar, which is why conditions reviews almost always pay *when they run in parallel*: a
-   reviewer who can read a title register, a grid-queue position and an offtaker's credit standing inside
-   the existing timetable is close to free money. The **5.01 % breakeven window-miss probability** is what
-   the gate's *design* is negotiated with — run the review concurrently, stage it behind a two-week
-   fatal-flaw screen, or bid conditionally; a gate whose delay risk is left unquantified will be
-   abolished by the first commercial team that misses a deadline, taking the 810,000 with it. The
-   caution: the 40 % flaw rate and 0.75 detection rate are **empirical claims about your own pipeline**,
-   so a programme that has never recorded why its abandoned projects died cannot populate them — which
-   makes the abandoned-project post-mortem the first artefact to build.
+4. **Result.** Expected waste **1,320,000** without the gate, **510,000** with it (**gate net
+   value USD 810,000 per project entering feasibility**, or **4,050,000** across five). The gate
+   pays down to a **detection probability of 13.64 %**. But the bid-window option cost is
+   **1,617,936**, so net value becomes **−USD 807,936**, and the **breakeven window-miss
+   probability is 5.01 %**.
+5. **Interpretation.** The same gate is worth +810,000 in a bilateral negotiation and −807,936
+   in a competitive tender, and nothing about the gate changed, only what the delay costs. That
+   is the finance-specific lesson: **in development, elapsed time is priced as a lost option,
+   not as a carrying cost**, and the option can be worth nine times the study fee. The **13.64 %
+   breakeven detection rate** is a very low bar, which is why conditions reviews almost always
+   pay *when they run in parallel*: a reviewer who can read a title register, a grid-queue
+   position and an offtaker's credit standing inside the existing timetable is close to free
+   money. The **5.01 % breakeven window-miss probability** is what the gate's *design* is
+   negotiated with: run the review concurrently, stage it behind a two-week fatal-flaw screen,
+   or bid conditionally; a gate whose delay risk is left unquantified will be abolished by the
+   first commercial team that misses a deadline, taking the 810,000 with it. The caution: the 40
+   % flaw rate and 0.75 detection rate are **empirical claims about your own pipeline**, so a
+   programme that has never recorded why its abandoned projects died cannot populate them —
+   which makes the abandoned-project post-mortem the first artefact to build.
 
 ### AI in this KA
 
-Screening is the strongest legitimate machine application here: assembling opportunity long lists,
-extracting site and consent facts from public registers, tabulating comparables, first-pass filtering.
-Two boundaries. **A machine must never own the kill decision** — a kill destroys an option irreversibly
-and the model cannot see the strategic value the funnel exists to build; automated rejections above a
-materiality line get a named human reviewer. And **a model will report a condition as satisfied when it
-has found a document that mentions it**: the 40 % flaw rate of 5.1.3 is populated by exactly those
-conditions — an easement that stops 200 metres short, a permit issued to a predecessor entity, an
-offtaker whose credit sits in another group company. Verification runs to the primary source on every
-fatal condition, sampled and signed. **AI proposes; the professional verifies, decides and remains
-accountable.**
+Screening is the strongest legitimate machine application here: assembling opportunity long
+lists, extracting site and consent facts from public registers, tabulating comparables,
+first-pass filtering. Two boundaries. **A machine must never own the kill decision**: a kill
+destroys an option irreversibly and the model cannot see the strategic value the funnel exists
+to build; automated rejections above a materiality line get a named human reviewer. And **a
+model will report a condition as satisfied when it has found a document that mentions it**: the
+40 % flaw rate of 5.1.3 is populated by exactly those conditions — an easement that stops 200
+metres short, a permit issued to a predecessor entity, an offtaker whose credit sits in another
+group company. Verification runs to the primary source on every fatal condition, sampled and
+signed. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 5.1
 
@@ -285,12 +277,13 @@ conclusion is to screen more widely and kill earlier.
 
 ### Self-check — KA 5.1
 
-1. *Why measure development spend per closed project?* — The spend buys options across a portfolio, so
-   closes must repay abandonments: 7,400,000, not 2,400,000, is Kestrel's origination cost.
-2. *What replaces "cost of delay" as the price of a development gate?* — The forgone option: 5.01 % of
-   value per close is Kestrel's breakeven window-miss probability.
-3. *Where do development gates belong?* — Where irreversibility steps up: before feasibility spend,
-   before bid submission, before signature.
+1. *Why measure development spend per closed project?* The spend buys options across a
+   portfolio, so closes must repay abandonments: 7,400,000, not 2,400,000, is Kestrel's
+   origination cost.
+2. *What replaces "cost of delay" as the price of a development gate?* The forgone option: 5.01
+   % of value per close is Kestrel's breakeven window-miss probability.
+3. *Where do development gates belong?* Where irreversibility steps up: before feasibility
+   spend, before bid submission, before signature.
 
 ---
 
@@ -302,21 +295,22 @@ bridge.*
 
 ### 5.2.1 Sponsors and what each brings
 
-**Definition.** A **sponsor** in this book's project-finance sense is an equity investor promoting the
-project — distinct from PML-AI's use of the word for the accountable owner of a business case
-(terminology registry). Sponsors contribute four separable things, and a group is assembled to assemble
-them: **capital**, **capability** (operating, technical or construction competence lenders will
-underwrite), **access** (market position, offtake relationships, host-country standing) and **credit**
-(a balance sheet able to stand behind the support obligations of 5.2.3). Each archetype supplies some
-and lacks others: an **industrial** sponsor brings technology and O&M capability but raises conflict
-questions where it also supplies the EPC or O&M contract; a **fund** brings capital and structuring
-discipline with a finite life and no operating capability; a **contractor** brings completion commitment
-and the suspicion that its equity is a device to win the works; a **host-country partner** brings
-consents and durability and is usually the smallest and least creditworthy holder (Case study B). The
-task at group formation is to state in the shareholders' agreement **what each sponsor is relied on
-for**, because that is what is tested at close — and a group whose only creditworthy member is also the
-contractor will find its completion support discounted for correlation, since the party guaranteeing
-completion is the party whose failure causes the claim.
+**Definition.** A **sponsor** in this book's project-finance sense is an equity investor
+promoting the project, distinct from PML-AI's use of the word for the accountable owner of a
+business case (terminology registry). Sponsors contribute four separable things, and a group is
+assembled to assemble them: **capital**, **capability** (operating, technical or construction
+competence lenders will underwrite), **access** (market position, offtake relationships,
+host-country standing) and **credit** (a balance sheet able to stand behind the support
+obligations of 5.2.3). Each archetype supplies some and lacks others: an **industrial** sponsor
+brings technology and O&M capability but raises conflict questions where it also supplies the
+EPC or O&M contract; a **fund** brings capital and structuring discipline with a finite life and
+no operating capability; a **contractor** brings completion commitment and the suspicion that
+its equity is a device to win the works; a **host-country partner** brings consents and
+durability and is usually the smallest and least creditworthy holder (Case study B). The task at
+group formation is to state in the shareholders' agreement **what each sponsor is relied on
+for**, because that is what is tested at close, and a group whose only creditworthy member is
+also the contractor will find its completion support discounted for correlation, since the party
+guaranteeing completion is the party whose failure causes the claim.
 
 ### 5.2.2 The SPV and the limits of its ring-fence
 
@@ -335,25 +329,27 @@ vehicle's own decisions.
 - It does not survive **contractual reach-through**: completion guarantees, cost-overrun support, equity
   commitment letters, O&M performance guarantees and EPC parent guarantees each puncture the fence
   deliberately, and their aggregate is the sponsor's real exposure (5.2.3).
-- It does not decide **accounting consolidation**, which turns on control and the applicable reporting
-  framework — a jurisdiction-specific question for the sponsor's own auditors — nor simplify **tax**,
-  since an added entity brings withholding questions and thin-capitalisation limits that can cap
-  deductible interest, all for qualified tax counsel and all capable of changing after-tax cash.
+- It does not decide **accounting consolidation**, which turns on control and the applicable
+  reporting framework, a jurisdiction-specific question for the sponsor's own auditors, nor
+  simplify **tax**, since an added entity brings withholding questions and thin-capitalisation
+  limits that can cap deductible interest, all for qualified tax counsel and all capable of
+  changing after-tax cash.
 - It does not remove **reputational exposure**, nor by itself deliver **bankruptcy remoteness**, which is
   engineered by restrictions in the constitutional and finance documents.
 
 ### 5.2.3 The shareholders' agreement: shares, support and dilution
 
-**Definition.** The shareholders' agreement fixes the vehicle's economics and control: each sponsor's
-**equity share**, the **funding obligation** for base equity and support commitments, the **liability
-basis** for those commitments, reserved matters, transfer restrictions, deadlock resolution and the
-**default and dilution mechanics** applied when a shareholder fails to fund. The most consequential term
-is the liability basis: under **several** liability each sponsor owes its own share and no more, while
-under **joint and several** liability each may be pursued for the whole. Lenders prefer the latter
-because it converts a group of commitments into one strong one; sponsors resist it because it makes each
-of them the backstop for the least creditworthy member. Most limited-recourse structures land on several
-liability with **credit support** — a bank letter of credit or acceptable parent guarantee — required from
-any sponsor whose own credit falls below the lenders' threshold.
+**Definition.** The shareholders' agreement fixes the vehicle's economics and control: each
+sponsor's **equity share**, the **funding obligation** for base equity and support commitments,
+the **liability basis** for those commitments, reserved matters, transfer restrictions, deadlock
+resolution and the **default and dilution mechanics** applied when a shareholder fails to fund.
+The most consequential term is the liability basis: under **several** liability each sponsor
+owes its own share and no more, while under **joint and several** liability each may be pursued
+for the whole. Lenders prefer the latter because it converts a group of commitments into one
+strong one; sponsors resist it because it makes each of them the backstop for the least
+creditworthy member. Most limited-recourse structures land on several liability with **credit
+support**, a bank letter of credit or acceptable parent guarantee, required from any sponsor
+whose own credit falls below the lenders' threshold.
 
 **Worked example 5.2.3 — what each Kestrel sponsor has actually committed.**
 
@@ -376,22 +372,98 @@ any sponsor whose own credit falls below the lenders' threshold.
 
    Group committed capital is **40.0 % of capital cost**, not the 30 % headline; every sponsor is
    committed **33.3 %** beyond its equity share.
-5. **Interpretation.** The gap between the **30 % headline and the 40 % commitment** is where sponsor
-   boards are most reliably surprised, and it matters three ways. For **capital planning**, the fund's
-   board approved 6,300,000 and is exposed to 8,400,000 — a difference that belongs in its own commitment
-   register, not a footnote. For **credit**, the partner's 2,400,000 is the smallest number in the table
-   and the likeliest to fail: a 10 % holder is frequently the least creditworthy member, so lenders will
-   require its support to be backed by a letter of credit as a condition precedent — a **timetable risk**
-   outside the sponsors' control, which Case study B prices at eleven weeks. For **negotiation**, each
-   point of support costs the group 600,000, so a lender's move from 10 % to 15 % is a 3,000,000 increase
-   worth pricing against a coverage or tenor concession (Domain 10's four levers). The professional
-   caution is the liability basis: make the support **joint and several** and
-   each sponsor's worst case becomes its own equity plus the **whole** 6,000,000 pool, so the partner's
-   exposure rises from 2,400,000 to **7,800,000** — a factor of **3.25** — while the operator's rises only
-   from 13,200,000 to **15,900,000**, or **20.5 %**. Two words in one clause transfer most of the small
-   holder's protection to the large ones, which is why lenders ask for them and why a small holder must
-   not sign them lightly. It is a question for qualified counsel in the governing jurisdiction, not a
-   modelling assumption.
+5. **Interpretation.** The gap between the **30 % headline and the 40 % commitment** is where
+   sponsor boards are most reliably surprised, and it matters three ways. For **capital
+   planning**, the fund's board approved 6,300,000 and is exposed to 8,400,000: a difference
+   that belongs in its own commitment register, not a footnote. For **credit**, the partner's
+   2,400,000 is the smallest number in the table and the likeliest to fail: a 10 % holder is
+   frequently the least creditworthy member, so lenders will require its support to be backed by
+   a letter of credit as a condition precedent — a **timetable risk** outside the sponsors'
+   control, which Case study B prices at eleven weeks. For **negotiation**, each point of
+   support costs the group 600,000, so a lender's move from 10 % to 15 % is a 3,000,000 increase
+   worth pricing against a coverage or tenor concession (Domain 10's four levers). The
+   professional caution is the liability basis: make the support **joint and several** and each
+   sponsor's worst case becomes its own equity plus the **whole** 6,000,000 pool, so the
+   partner's exposure rises from 2,400,000 to **7,800,000** (a factor of **3.25**), while the
+   operator's rises only from 13,200,000 to **15,900,000**, or **20.5 %**. Two words in one
+   clause transfer most of the small holder's protection to the large ones, which is why lenders
+   ask for them and why a small holder must not sign them lightly. It is a question for
+   qualified counsel in the governing jurisdiction, not a modelling assumption.
+
+**Control: reserved matters, transfers and deadlock.** The liability basis decides what each sponsor
+*owes*. The rest of the agreement decides what each sponsor can *stop*, and that is the half most
+often left to the lawyers and discovered afterwards. A 10 % industrial partner whose consent is
+needed to approve the annual budget is a completely different counterparty from a 10 % partner whose
+consent is not, and nothing in the commitment table above tells the two apart.
+
+*Reserved matters.* A **reserved matter** is a decision the board may not take alone: it
+requires a supermajority or unanimity of shareholders, or the affirmative vote of a named
+holder. The classes recur because the underlying logic recurs: **anything that changes the risk
+the minority underwrote when it subscribed**. In practice that means the annual budget and
+business plan; additional indebtedness, refinancing and any change to the security package; a
+variation or a capital commitment above a stated threshold; a change to the scope, the
+technology or the operating regime; entry into or amendment of a **related-party contract**
+(Domain 12, KA 12.1.4); disposal of a material asset or of the concession itself; distributions
+policy; a change to the constitutional documents or the share capital; the appointment or
+replacement of the operator and of the auditors; the commencement or settlement of material
+litigation; and any step towards a solvent or insolvent reorganisation. Two working rules
+follow. **The threshold is as important as the list**: a matter reserved to a 75 % vote is
+controlled by any holder above 25 %, so the veto map is arithmetic and should be drawn as one.
+And **the list is a risk-allocation document, not boilerplate**: a sponsor contributing
+technology and a sponsor contributing money want different matters reserved, and a list copied
+from a previous deal reserves the previous deal's concerns.
+
+*The interaction with the finance documents — the two-approval problem.* Several of those
+matters also require **lender or agent consent** under the finance documents: additional debt, a
+change to the business plan the base case was built on, a disposal, a variation above a
+threshold, a change of operator. A decision can therefore need **two independent approvals**, on
+two different timetables, with two different consequences for failure, and each of them can be
+given subject to conditions the other has not seen. The sponsor register must show both, per
+decision class, or the project team will schedule one and be surprised by the other. This is the
+commonest cause of a "board-approved" variation sitting unexecutable for a month.
+
+*Transfer restrictions, and why lenders care.* Transfers are usually restricted through
+construction and for a period after completion, a **lock-in**, because the lenders' credit case
+rests on the sponsors who signed the support obligations, not on whoever buys the shares
+afterwards. Beyond the lock-in, the standard machinery is **pre-emption** (a selling shareholder
+must first offer to the others, at a price set by a stated mechanism), sometimes with tag-along
+and drag-along rights, plus **change-of-control consent** under the concession or the offtake,
+and consent under the finance documents. The bankability point is structural and easily missed:
+the lenders take security over shares that are **not freely transferable**, so what enforcement
+actually delivers depends on the consents that survive it. A share pledge over a company whose
+concession terminates on an unconsented change of control is worth what the grantor agrees it is
+worth, which is precisely what a direct agreement (KA 5.A.2, Domain 12) is negotiated to fix.
+
+*Deadlock.* Reserving matters manufactures deadlock, so the agreement must say how deadlock
+breaks. The usual mechanisms: escalation to the sponsors' senior executives, an expert or
+chairman's casting vote, a put or call between the parties, a shoot-out (one side names a price,
+the other chooses to buy or sell at it), or dissolution — are not neutral procedure. **The
+choice of mechanism decides who effectively controls the vehicle.** A shoot-out favours the
+party with the deeper balance sheet and the readier access to consents; a casting vote hands
+control to whoever appoints the chair; escalation with no terminal step favours whoever prefers
+the status quo, which in a project under construction is rarely the party that wants the
+decision. Read the mechanism as a control term, not as a dispute clause, and read it before the
+shares are subscribed.
+
+*Default and dilution.* The mechanic that gives all of this teeth is what happens when a
+shareholder fails to fund a call on the obligations priced above: interest on the unpaid amount,
+suspension of voting rights and of the reserved-matter veto, funding by the other shareholders
+as loan or as equity, and **dilution on a formula that is often deliberately punitive** so that
+declining a call is the expensive option. Case study B computes the cost of declining a
+representative call; the point here is that the dilution formula and the reserved-matter list
+are one design. A defaulting shareholder that keeps its veto has not been penalised, and a
+punitive formula attached to a call the minority never agreed to is how a minority is squeezed
+out, which is why the *funding obligation*, the *reserved matters* and the *default mechanic*
+are negotiated together or not properly at all.
+
+*The standing caution, extended.* As with the liability basis, every term in this paragraph is a
+matter of drafting and of the governing law of the agreement: whether a veto is effective, how a
+pre-emption or a shoot-out operates, whether a dilution formula is enforceable as drafted, and
+what a minority's position is if it is not, are questions for qualified counsel in the governing
+jurisdiction. Nothing here states the position under any of them, and none of it is a modelling
+assumption. What the professional owes is the **decision-rights map**: recorded in Toolkit
+5.T.2, maintained as the documents change, and shown to the board before the shares are
+subscribed.
 
 ### 5.2.4 Funding the equity, and the equity bridge
 
@@ -400,36 +472,37 @@ risk before theirs), **back-ended** (sponsors' preference, permitted only agains
 through an **equity bridge loan** that funds the equity portion during construction and is repaid by the
 sponsors at completion against their commitment letters.
 
-Price the bridge on Kestrel. Construction runs **two years**; pro rata the sponsors would contribute
-**9,000,000 at close** and **9,000,000 a year later**; a bridge at **5.5 %** funds both and is repaid at
-t = 2. Bridge interest is `9,000,000 × (1.055² − 1) = 1,017,225` plus `9,000,000 × 0.055 = 495,000` =
-**1,512,225**, so the repayment is **19,512,225**. Discounted at the bridge rate the two profiles are
-**identical at USD 17,530,806** (`19,512,225/1.055²` against `9,000,000 + 9,000,000/1.055`) — a
-difference of **zero**. At the sponsors' **12 %** equity requirement — an indicative sponsor hurdle used
-for illustration here, not a derived cost of equity; Domain 9 (KA 9.1.3) builds Kestrel's `k_e` up from
-its components — the bridge profile is worth **15,555,026** against **17,035,714**, a **saving of
-USD 1,480,688**, or **8.69 %**.
+Price the bridge on Kestrel. Construction runs **two years**; pro rata the sponsors would
+contribute **9,000,000 at close** and **9,000,000 a year later**; a bridge at **5.5 %** funds
+both and is repaid at t = 2. Bridge interest is `9,000,000 × (1.055² − 1) = 1,017,225` plus
+`9,000,000 × 0.055 = 495,000` = **1,512,225**, so the repayment is **19,512,225**. Discounted at
+the bridge rate the two profiles are **identical at USD 17,530,806** (`19,512,225/1.055²`
+against `9,000,000 + 9,000,000/1.055`) (a difference of **zero**). At the sponsors' **12 %**
+equity requirement — an indicative sponsor hurdle used for illustration here, not a derived cost
+of equity; Domain 9 (KA 9.1.3) builds Kestrel's `k_e` up from its components — the bridge
+profile is worth **15,555,026** against **17,035,714**, a **saving of USD 1,480,688**, or **8.69
+%**.
 
-The identity is the point: **an equity bridge creates no project value.** It is an arbitrage between the
-bridge rate and the sponsors' required return — a 6.5-point spread over an average deferral of about
-eighteen months — so the saving is **a financing return, not a project return**, and the equity `IRR`
-uplift it produces is exactly the flattery Domain 4 (KA 4.1.2) warned about, since the money simply went
-in later. Two further consequences: the bridge is **only available against firm commitments**, converting
-an equity-timing preference into a credit-quality test the group may fail; and it **adds 1,512,225 to
-project cost**, which if capitalised into senior debt consumes coverage by the mechanism 5.4.2
-quantifies.
+The identity is the point: **an equity bridge creates no project value.** It is an arbitrage
+between the bridge rate and the sponsors' required return (a 6.5-point spread over an average
+deferral of about eighteen months), so the saving is **a financing return, not a project
+return**, and the equity `IRR` uplift it produces is exactly the flattery Domain 4 (KA 4.1.2)
+warned about, since the money simply went in later. Two further consequences: the bridge is
+**only available against firm commitments**, converting an equity-timing preference into a
+credit-quality test the group may fail; and it **adds 1,512,225 to project cost**, which if
+capitalised into senior debt consumes coverage by the mechanism 5.4.2 quantifies.
 
 ### AI in this KA
 
-**Strong:** extracting funding obligations, liability bases, reserved matters, transfer restrictions and
-default mechanics from a shareholders' agreement into a structured commitment register — the artefact
-5.2.3 shows most sponsor boards lack — and reconciling it to the finance documents' conditions precedent
-so no support obligation is discovered late; and maintaining per-sponsor exposure across a portfolio of
-vehicles, where one sponsor's aggregate several commitments across ten SPVs is a number no single project
-team can see. **Not here:** liability basis and default consequences are **legal conclusions**, and a
-summary reporting "several" where the clause says otherwise misstates a balance sheet by a factor. Every
-such reading is verified against the executed document by qualified counsel, with verifier and date
-recorded.
+**Strong:** extracting funding obligations, liability bases, reserved matters, transfer
+restrictions and default mechanics from a shareholders' agreement into a structured commitment
+register (the artefact 5.2.3 shows most sponsor boards lack), and reconciling it to the finance
+documents' conditions precedent so no support obligation is discovered late; and maintaining
+per-sponsor exposure across a portfolio of vehicles, where one sponsor's aggregate several
+commitments across ten SPVs is a number no single project team can see. **Not here:** liability
+basis and default consequences are **legal conclusions**, and a summary reporting "several"
+where the clause says otherwise misstates a balance sheet by a factor. Every such reading is
+verified against the executed document by qualified counsel, with verifier and date recorded.
 
 ### Key terms — KA 5.2
 
@@ -441,6 +514,14 @@ recorded.
 | **Cost-overrun support** | A sponsor commitment to fund construction cost above budget, up to a cap. |
 | **Committed capital** | Base equity + support commitments; the real exposure (40.0 % of capex for Kestrel). |
 | **Equity bridge loan** | Construction-period facility funding equity, repaid by sponsors at completion. |
+| **Reserved matter** | A decision the board may not take alone, requiring a stated shareholder majority or a named holder's consent; the list is a risk-allocation document, and the threshold decides who holds the veto. |
+| **Veto map** | The arithmetic of the reserved-matter thresholds: for each holder, the matters it can block alone. |
+| **Two-approval problem** | A decision needing both a shareholder approval and a lender or agent consent, on different timetables and with different consequences for failure. |
+| **Lock-in** | The period, usually through construction and beyond completion, in which shares may not be transferred, because the lenders' credit case rests on the sponsors who signed the support obligations. |
+| **Pre-emption** | The requirement that a selling shareholder first offer its shares to the others at a price set by a stated mechanism. |
+| **Change-of-control consent** | The concession's or offtake's requirement that a change in the SPV's ownership be consented to; the reason security over shares delivers what the consents allow it to deliver. |
+| **Deadlock mechanism** | The route out of a refused reserved matter — escalation, casting vote, put/call, shoot-out or dissolution; a control term rather than a dispute clause, because the choice decides who effectively controls the vehicle. |
+| **Default and dilution mechanic** | What follows a failure to fund a call: interest, suspension of voting rights, funding by the others, and dilution on a formula designed to make declining the expensive option. |
 
 ### Sample MCQs — KA 5.2
 
@@ -452,16 +533,17 @@ committed capital is:
 - C. USD 2,100,000
 - D. USD 12,300,000
 
-*Rationale:* `18,000,000 × 0.35 = 6,300,000` plus `6,000,000 × 0.35 = 2,100,000`. A is base equity only,
-**25.0 % below** the committed figure — the omission the example corrects, and the same gap seen the other
-way round as the 33.3 % that support adds to every sponsor's equity share; C is the support alone; D reads
-the support as joint and several, adding the whole 6,000,000 pool.
+*Rationale:* `18,000,000 × 0.35 = 6,300,000` plus `6,000,000 × 0.35 = 2,100,000`. A is base
+equity only, **25.0 % below** the committed figure: the omission the example corrects, and the
+same gap seen the other way round as the 33.3 % that support adds to every sponsor's equity
+share; C is the support alone; D reads the support as joint and several, adding the whole
+6,000,000 pool.
 
 **MCQ 5.2-B `[5.2.3 · Analysis]`** The 55 % sponsor holds 9,900,000 of an 18,000,000 equity ticket and
 subscribes pro rata to a 6,000,000 cost-overrun support pool. The agreement is amended from several to
 joint and several liability for that support. The 55 % sponsor's worst-case exposure becomes:
 - A. unchanged at 13,200,000
-- B. 15,900,000 — its own 9,900,000 of equity plus the whole 6,000,000 pool ✅
+- B. 15,900,000: its own 9,900,000 of equity plus the whole 6,000,000 pool ✅
 - C. 24,000,000
 - D. 6,000,000
 
@@ -484,34 +566,35 @@ the identity beyond the rate at which it holds.
 
 **MCQ 5.2-D `[5.2.2 · Analysis]`** A sponsor states that the SPV caps its exposure at its equity
 subscription. The most accurate correction is:
-- A. correct — that is the purpose of the ring-fence
+- A. correct; that is the purpose of the ring-fence
 - B. the fence is punctured by every support obligation given, and consolidation, tax and reputational consequences are decided outside it ✅
-- C. incorrect — sponsors are always liable for all project debt
+- C. incorrect; sponsors are always liable for all project debt
 - D. correct, provided the vehicle is bankruptcy-remote
 
 *Rationale:* committed capital, not subscribed equity, is the exposure (5.2.3), and consolidation and tax
 turn on control and framework. C describes full recourse, which limited-recourse structures exist to
 avoid; D confuses insolvency engineering with the scope of contractual support.
 
-**MCQ 5.2-E `[5.2.3 · Evaluation]`** Kestrel's lenders ask that the several cost-overrun support rise from
-10 % to 15 % of the 60,000,000 capital cost, taking group committed capital from 24,000,000 (40.0 % of
-capex) to 27,000,000 (45.0 %) and the industrial partner's commitment from 2,400,000 to 2,700,000 — an
-amount its own credit already requires to be backed by a letter of credit. The best recommendation to the
-sponsor board is:
+**MCQ 5.2-E `[5.2.3 · Evaluation]`** Kestrel's lenders ask that the several cost-overrun support
+rise from 10 % to 15 % of the 60,000,000 capital cost, taking group committed capital from
+24,000,000 (40.0 % of capex) to 27,000,000 (45.0 %) and the industrial partner's commitment from
+2,400,000 to 2,700,000: an amount its own credit already requires to be backed by a letter of
+credit. The best recommendation to the sponsor board is:
 - A. accept the 15 %, since the liability basis is unchanged and each sponsor still funds only its own share
 - B. accept it only against a priced concession on coverage, tenor or margin, because the 3,000,000 is 600,000 a support point and is worth trading against the levers the lenders control ✅
 - C. offer joint and several liability over the existing 6,000,000 pool instead, holding group committed capital at 40.0 % of capital cost
 - D. refuse, since committed capital above 40 % of capital cost makes a limited-recourse structure uncommercial
 
-*Rationale:* the request is a transfer of construction risk to the sponsors whose price is exactly
-knowable — 600,000 a point (5.2.3) — which makes it tradeable against the coverage, tenor, margin and
-sizing levers of Domain 10; conceding 3,000,000 unpriced is the failure. A is true, and is why the request
-reads as modest, but treating an unpriced 3,000,000 as costless is the error. C is genuinely defensible and
-some lenders prefer it, but it holds the pool flat by moving the partner's worst case from 2,400,000 to
-7,800,000, a 3.25× rise on the least creditworthy member whose letter of credit is already a timetable
-risk, while the operator's rises only 20.5 % — and the liability basis it trades away is a term for
-qualified counsel in the governing jurisdiction, not a modelling choice (5.2.3). D invents a threshold:
-45.0 % is high and negotiable, not uncommercial.
+*Rationale:* the request is a transfer of construction risk to the sponsors whose price is
+exactly knowable — 600,000 a point (5.2.3) — which makes it tradeable against the coverage,
+tenor, margin and sizing levers of Domain 10; conceding 3,000,000 unpriced is the failure. A is
+true, and is why the request reads as modest, but treating an unpriced 3,000,000 as costless is
+the error. C is genuinely defensible and some lenders prefer it, but it holds the pool flat by
+moving the partner's worst case from 2,400,000 to 7,800,000, a 3.25× rise on the least
+creditworthy member whose letter of credit is already a timetable risk, while the operator's
+rises only 20.5 %, and the liability basis it trades away is a term for qualified counsel in the
+governing jurisdiction, not a modelling choice (5.2.3). D invents a threshold: 45.0 % is high
+and negotiable, not uncommercial.
 
 **MCQ 5.2-F `[5.2.4 · Evaluation]`** Kestrel's equity bridge at 5.5 % adds 1,512,225 of interest to
 project cost and lifts the sponsors' equity `IRR`, because their money goes in later. The finance
@@ -524,20 +607,20 @@ lead is asked how to put it to the investment committee. The soundest presentati
 - C. omits the bridge from the return presentation altogether, because it creates no project value
 - D. adds the 1,480,688 to the project `NPV` as a financing benefit
 
-*Rationale:* the two funding profiles are identical in present value at the bridge rate — 17,530,806
-either way — so the bridge is an arbitrage between that rate and the sponsors' 12 % requirement, and
-it is reported as what it is (5.2.4). A presents a change in timing as project performance, the
-flattery Domain 4 (KA 4.1.2) warns of. C suppresses a real cost that consumes coverage if it is
-capitalised. D books a financing return inside a project measure, which is the same error with a
-decimal point.
+*Rationale:* the two funding profiles are identical in present value at the bridge rate
+(17,530,806 either way), so the bridge is an arbitrage between that rate and the sponsors' 12 %
+requirement, and it is reported as what it is (5.2.4). A presents a change in timing as project
+performance, the flattery Domain 4 (KA 4.1.2) warns of. C suppresses a real cost that consumes
+coverage if it is capitalised. D books a financing return inside a project measure, which is the
+same error with a decimal point.
 
 **MCQ 5.2-G `[5.2.2 · Comprehension]`** An `SPV` is said to deliver both **credit separation** and
 **bankruptcy remoteness**. The two differ in that:
 - A. they are one property, described from the lender's side and the sponsor's side
-- B. credit separation is an outcome of how the project is underwritten — on its own contracts rather
-  than on the weakest sponsor's rating — while bankruptcy remoteness has to be built into the
-  vehicle's constitution and its finance documents, and incorporating a single-purpose entity does
-  not deliver it ✅
+- B. credit separation is an outcome of how the project is underwritten (on its own contracts
+  rather than on the weakest sponsor's rating), while bankruptcy remoteness has to be built into
+  the vehicle's constitution and its finance documents, and incorporating a single-purpose
+  entity does not deliver it ✅
 - C. credit separation is a legal state and bankruptcy remoteness is a rating outcome
 - D. credit separation applies during construction and bankruptcy remoteness during operations
 
@@ -546,14 +629,44 @@ remoteness among the things it does **not** achieve by itself. A and C collapse 
 assessment into a documentary construct, and it is the confusion behind the belief that a
 single-purpose entity is insolvency-proof; D invents a timing distinction the structure does not make.
 
+**MCQ 5.2-H `[5.2.3 · Analysis]`** Kestrel's shareholders' agreement reserves approval of the annual
+budget to a 75 % shareholder vote. The industrial partner holds 10 %, the fund 35 %, the operator
+55 %. The project team schedules a budget approval for the June board. The most important thing the
+decision-rights map should tell them is:
+- A. nothing new: at 10 % the industrial partner cannot block a 75 % vote, so the operator and
+  the fund carry it between them
+- B. that the fund alone can block the budget at this threshold, that the same budget change may separately require lender or agent consent under the finance documents on its own timetable, and what deadlock mechanism applies if either is refused ✅
+- C. that the threshold should be renegotiated to a simple majority, since a 75 % reserved matter is unworkable in a three-sponsor vehicle
+- D. that lender consent is unnecessary, because the budget is an internal shareholder matter and the reserved-matter list governs it
+
+*Rationale:* a 75 % threshold hands a veto to any holder above 25 % (the fund at 35 %), so the
+veto map, not the shareholding table, is what the team needs (5.2.3); and a change to the
+business plan the base case was built on is characteristically also a lender consent, which is
+the two-approval problem. A reads the shareholding and not the threshold. C is a negotiating
+opinion offered instead of the map, and it is being offered after subscription, when the term is
+fixed. D is the assumption that leaves a board-approved decision unexecutable.
+
 ### Self-check — KA 5.2
 
-1. *State Kestrel's per-sponsor committed capital and the group total.* — 13,200,000 / 8,400,000 /
-   2,400,000, totalling 24,000,000 — 40.0 % of capital cost against a 30 % headline.
-2. *Name three things an SPV does not achieve.* — It does not defeat contractual support, does not decide
-   accounting consolidation, and does not remove tax or reputational exposure.
-3. *What is an equity bridge worth, and to whom?* — Nothing to the project; to the sponsors, 1,480,688 —
-   8.69 % — the spread between the 5.5 % bridge rate and their 12 % requirement over the deferral.
+1. *State Kestrel's per-sponsor committed capital and the group total.* (13,200,000 / 8,400,000
+   / 2,400,000, totalling 24,000,000) 40.0 % of capital cost against a 30 % headline.
+2. *Name three things an SPV does not achieve.* It does not defeat contractual support, does not
+   decide accounting consolidation, and does not remove tax or reputational exposure.
+3. *What is an equity bridge worth, and to whom?* — Nothing to the project; to the sponsors,
+   1,480,688 — 8.69 % (the spread between the 5.5 % bridge rate and their 12 % requirement over
+   the deferral).
+4. *What does a reserved-matter list actually allocate?* Risk, not procedure: it reserves
+   anything that changes the risk the minority underwrote. And the threshold matters as much as
+   the list. A 75 % matter is controlled by any holder above 25 %.
+5. *Why can a board-approved variation still be unexecutable?* Because several reserved matters
+   are also lender or agent consents under the finance documents, on a separate timetable; the
+   decision-rights map records both approvals per decision class or the project schedules one.
+6. *Why is a share pledge not the same as control on enforcement?* The shares are not freely
+   transferable: lock-in, pre-emption and change-of-control consent under the concession all
+   bear on what enforcement delivers, which is what a direct agreement is negotiated to fix.
+7. *Why read a deadlock clause as a control term?* Because the mechanism decides who effectively
+   controls the vehicle: a shoot-out favours the deeper balance sheet, a casting vote favours
+   whoever appoints the chair, and open-ended escalation favours whoever prefers the status quo.
 
 ---
 
@@ -584,27 +697,30 @@ the timetable, in documents. The structural consequence is that bankability comp
 3. **Substitution.** `0.92 × 0.90 × 0.95 × 0.88 × 0.93 × 0.85`; weakest lift `× 0.95/0.85`; strongest
    lift `× 0.98/0.95`; continue test `0.547190 × 16,179,360 − 2,400,000`; uniform requirement
    `0.90^(1/6)`.
-4. **Result.** Joint probability of close **0.5472 (54.72 %)** — against an **arithmetic mean of the six
-   conditions of 90.5 %**. Lifting the **weakest** (financing, 0.85 → 0.95) gives **61.16 %**, a gain of
-   **6.4375 points**; lifting the **strongest** (land, 0.95 → 0.98) gives **56.45 %**, a gain of
-   **1.7280 points** — the weakest link is worth **3.7255×** more. Six conditions all at 0.98 still give
-   only **88.58 %**; a **90 % joint probability requires every condition at 98.26 %**. Expected value of
-   continuing `= 8,853,191 − 2,400,000 =` **+6,453,191**; the **breakeven close probability is 14.83 %**.
-5. **Interpretation.** The 54.72 % changes behaviour because almost every development team reports the
-   90.5 %: asked how the project is looking, they average their conditions and answer "about 90 per
-   cent", wrong by 36 points. Three professional uses follow. **Resource allocation inverts:** the
-   ranking of conditions by marginal gain — not by importance or by who is shouting — is the work plan,
-   and 3.7× more value sits in the financing condition than in the land condition. **The continue/kill
-   test separates from the condition test:** at a breakeven close probability of only **14.83 %**,
-   expected value says "continue" on almost anything, which is precisely why a development programme
-   cannot be governed by expected value alone and needs the *fatal condition* rule of 5.1.3. And the
-   **uniform requirement of 98.26 %** explains what practitioners observe without deriving: bankable
-   projects are not projects with good conditions, they are projects with **no open condition** — what
-   conditions precedent (5.A.2) exist to enforce. The professional caution is independence: these
-   conditions are correlated, usually positively (a supportive host government helps permits, land and
-   financing together), which makes the true joint probability **higher** than the product, while
-   clustered failures fatten the downside. Report the **ranking**, which is robust, and treat 54.72 % as
-   a disciplined lower bound with its assumption stated — never as a forecast.
+4. **Result.** Joint probability of close **0.5472 (54.72 %)**: against an **arithmetic mean of
+   the six conditions of 90.5 %**. Lifting the **weakest** (financing, 0.85 → 0.95) gives
+   **61.16 %**, a gain of **6.4375 points**; lifting the **strongest** (land, 0.95 → 0.98) gives
+   **56.45 %**, a gain of **1.7280 points**. The weakest link is worth **3.7255×** more. Six
+   conditions all at 0.98 still give only **88.58 %**; a **90 % joint probability requires every
+   condition at 98.26 %**. Expected value of continuing `= 8,853,191 − 2,400,000 =`
+   **+6,453,191**; the **breakeven close probability is 14.83 %**.
+5. **Interpretation.** The 54.72 % changes behaviour because almost every development team
+   reports the 90.5 %: asked how the project is looking, they average their conditions and
+   answer "about 90 per cent", wrong by 36 points. Three professional uses follow. **Resource
+   allocation inverts:** the ranking of conditions by marginal gain, not by importance or by who
+   is shouting, is the work plan, and 3.7× more value sits in the financing condition than in
+   the land condition. **The continue/kill test separates from the condition test:** at a
+   breakeven close probability of only **14.83 %**, expected value says "continue" on almost
+   anything, which is precisely why a development programme cannot be governed by expected value
+   alone and needs the *fatal condition* rule of 5.1.3. And the **uniform requirement of 98.26
+   %** explains what practitioners observe without deriving: bankable projects are not projects
+   with good conditions, they are projects with **no open condition** — what conditions
+   precedent (5.A.2) exist to enforce. The professional caution is independence: these
+   conditions are correlated, usually positively (a supportive host government helps permits,
+   land and financing together), which makes the true joint probability **higher** than the
+   product, while clustered failures fatten the downside. Report the **ranking**, which is
+   robust, and treat 54.72 % as a disciplined lower bound with its assumption stated — never as
+   a forecast.
 
 > **Fig 5.3.1 — Bankability as a conjunction.** Combined bar-and-line chart, y-axis probability 0–1, six
 > categories: Offtake 0.92 · Permits 0.90 · Land 0.95 · Technology 0.88 · EPC wrap 0.93 · Financing 0.85
@@ -633,9 +749,9 @@ them?"** Domain 7 builds the taxonomy; the development-stage test has five compo
 | **Termination and change in law** | Does termination compensation repay outstanding debt in non-default scenarios? | Debt sized on that assumption but documented without it is unbankable at close, not at signature |
 
 The recurring error sits in the third row: teams treat signature as satisfaction of the revenue
-condition when the lenders' condition is a creditworthy payer. The remedy is structural — a guarantee,
-letter of credit or escrow, or resizing to what the weaker credit supports — and it must be established
-**before** debt is sized, because every ratio in Domain 10 assumes it.
+condition when the lenders' condition is a creditworthy payer. The remedy is structural (a
+guarantee, letter of credit or escrow, or resizing to what the weaker credit supports), and it
+must be established **before** debt is sized, because every ratio in Domain 10 assumes it.
 
 ### 5.3.3 Permits, land and consents
 
@@ -645,14 +761,15 @@ list of rights to occupy, cross and use land for the asset and all its corridors
 conditions, because security over a project that may not lawfully operate or remain where it is built is
 worthless.
 
-Two artefacts organise the work. **The consent register** lists every permission with issuing authority,
-statutory basis, lead time, dependency, expiry, transferability to the SPV and attached conditions —
-because a permit with unsatisfiable conditions is a refusal with a delay — and identifies which consents
-drive the critical path, since consents are the development activities least susceptible to acceleration
-by money. **The land register** does the same for freehold, leasehold, easements, rights of way,
-wayleaves and access, and its characteristic failure is the **linear asset**: the plant sits on one
-parcel, but the pipeline, cable, access road or outfall crosses many, and a single unregistered easement
-over a few hundred metres can stop an otherwise complete project (Case study A).
+Two artefacts organise the work. **The consent register** lists every permission with issuing
+authority, statutory basis, lead time, dependency, expiry, transferability to the SPV and
+attached conditions (because a permit with unsatisfiable conditions is a refusal with a delay),
+and identifies which consents drive the critical path, since consents are the development
+activities least susceptible to acceleration by money. **The land register** does the same for
+freehold, leasehold, easements, rights of way, wayleaves and access, and its characteristic
+failure is the **linear asset**: the plant sits on one parcel, but the pipeline, cable, access
+road or outfall crosses many, and a single unregistered easement over a few hundred metres can
+stop an otherwise complete project (Case study A).
 
 Environmental and social consent deserves separate naming. Lenders on limited-recourse infrastructure
 commonly require environmental and social risk to be assessed and managed to a defined standard, and
@@ -667,10 +784,11 @@ resettlement process to a completed design is the most expensive rework in infra
 
 ### 5.3.4 Technology, the bankable track record and its price
 
-**Definition.** A technology is **bankable** when lenders will lend against its performance without
-recourse to sponsors — which requires operating references at comparable scale and duty, a supplier able
-to stand behind performance guarantees, and an independent technical adviser's opinion the lenders
-accept. **First-of-a-kind** is not a technical description but a financing category, and it has a price.
+**Definition.** A technology is **bankable** when lenders will lend against its performance
+without recourse to sponsors, which requires operating references at comparable scale and duty,
+a supplier able to stand behind performance guarantees, and an independent technical adviser's
+opinion the lenders accept. **First-of-a-kind** is not a technical description but a financing
+category, and it has a price.
 
 Price it on Kestrel. The proven process was sized at a target `DSCR` of **1.30×** on `CFADS` of
 **6,384,000** over 12 years at 6.0 %. A variant using a novel membrane arrangement would cut operating
@@ -681,20 +799,34 @@ supports **USD 41,171,123**; at 1.45×, `6,384,000/1.45 = 4,402,759` supports **
 **capacity loss is USD 4,259,082**, gearing falls from 68.6 % to **61.5 %** of capital cost, and the
 4,259,082 must be found as **additional equity**.
 
-The variant must therefore save more than the cost of 4,259,082 of equity displacing debt, and since
-equity is the more expensive money the threshold is high: at a 12 % equity requirement against 6 % debt
-the annual pre-tax cost of that substitution is about **255,545** (4,259,082 × 6 points of spread),
-which the operating saving must beat *before* any allowance for the technology's own performance risk.
-That is the arithmetic behind a maxim — **project finance is a poor place to innovate** — and two
-refinements keep it honest. The coverage premium is not the only lever: an extended supplier guarantee, a
-larger maintenance reserve, output insurance, or a first-loss contribution from a development-finance or
-concessional lender (Domain 9, KA 9.3–9.4) can each buy the ratio back down, and pricing those against
-4,259,082 *is* the negotiation. And the premium is **not permanent** — the same technology at its fourth
-installation is a different credit. The caution runs the other way too: bankable is not the same as
-good, and a leader who lets the lenders' comfort choose the engineering has outsourced a 25-year
-lifecycle decision to a credit committee whose horizon is 12 years (Domain 8).
+The variant must therefore save more than the cost of 4,259,082 of equity displacing debt, and
+since equity is the more expensive money the threshold is high: at a 12 % equity requirement
+against 6 % debt the annual pre-tax cost of that substitution is about **255,545** (4,259,082 ×
+6 points of spread), which the operating saving must beat *before* any allowance for the
+technology's own performance risk. That is the arithmetic behind a maxim (**project finance is a
+poor place to innovate**), and two refinements keep it honest. The coverage premium is not the
+only lever: an extended supplier guarantee, a larger maintenance reserve, output insurance, or a
+first-loss contribution from a development-finance or concessional lender (Domain 9, KA 9.3–9.4)
+can each buy the ratio back down, and pricing those against 4,259,082 *is* the negotiation. And
+the premium is **not permanent**: the same technology at its fourth installation is a different
+credit. The caution runs the other way too: bankable is not the same as good, and a leader who
+lets the lenders' comfort choose the engineering has outsourced a 25-year lifecycle decision to
+a credit committee whose horizon is 12 years (Domain 8).
 
 ### AI in this KA
+
+**Before any of it: the data question, which comes first.** Consent registers, offtake drafts
+and unsigned project documents are the most confidential material a development team holds. They
+are processed **only in an environment approved for that data classification and permitted by
+the confidentiality undertakings that cover them**, the project non-disclosure agreement, the
+shareholders' agreement, the adviser's engagement terms and any grantor-imposed restriction on
+tender material. Establishing that permission is a *precondition of the task, not a review of
+it*, and it is usually a **permitted-recipient** question rather than a tool-quality one: a tool
+the organisation has approved, used outside the disclosure the undertaking permits, is still a
+disclosure. Where the material identifies individuals (landowners in a corridor, named officials
+in a consent chain) the data-protection position is settled before the extraction runs, not
+after. Domain 1, KA 1.3.4 states the rule ("confidentiality travels with the data"); Domain 16
+builds the machinery that makes it checkable.
 
 **Earns:** building and maintaining the consent and land registers from source documents; extracting
 defined terms, tenors, indexation formulae, termination provisions and conditions precedent into a
@@ -728,15 +860,16 @@ person, probabilities carry the assessor's name and date, and extraction is samp
 - C. 85.0 %
 - D. 43.0 %
 
-*Rationale:* the product is 0.5472. A is the arithmetic mean — the error the example corrects; C quotes
-the weakest condition as though the others were certain; D sums the six shortfalls (0.57) and subtracts
-the total from one, over-counting the failures by treating them as mutually exclusive.
+*Rationale:* the product is 0.5472. A is the arithmetic mean: the error the example corrects; C
+quotes the weakest condition as though the others were certain; D sums the six shortfalls (0.57)
+and subtracts the total from one, over-counting the failures by treating them as mutually
+exclusive.
 
 **MCQ 5.3-B `[5.3.1 · Analysis]`** In a six-condition set whose joint probability is 0.5472, one week of
 effort can lift either the financing condition from 0.85 to 0.95 or the land condition from 0.95 to 0.98.
 The value-maximising choice is:
 - A. land, because 0.98 is the higher absolute probability
-- B. financing, which adds 6.44 points against land's 1.73 — a factor of 3.73 ✅
+- B. financing, which adds 6.44 points against land's 1.73, a factor of 3.73 ✅
 - C. either, since both raise one condition by a similar amount
 - D. neither, because correlation makes the calculation meaningless
 
@@ -759,7 +892,7 @@ service; D is the maximum debt *service* at 1.30×, a per-period figure mistaken
 
 **MCQ 5.3-D `[5.3.2 · Analysis]`** A project has a signed 20-year offtake with a counterparty whose
 payment obligations are unsupported and whose credit lenders assess as weak. The correct conclusion is:
-- A. bankable — a signed long-tenor offtake is the strongest possible condition
+- A. bankable: a signed long-tenor offtake is the strongest possible condition
 - B. the revenue condition fails on counterparty credit; it is repaired by credit support or by resizing, not by the contract's length ✅
 - C. bankable if the tariff is indexed
 - D. unbankable permanently
@@ -776,16 +909,17 @@ Each of the four observations below is defensible. Which should the reviewer pre
 - C. the expected-value verdict, because a 14.83 % breakeven makes "continue" the answer on almost anything, so the decision actually turns on whether any of the six conditions is fatal and unresolvable ✅
 - D. the independence assumption, since these six conditions are positively correlated
 
-*Rationale:* A and B are both right and both must be corrected, but neither can change the decision the
-paper asks for — A changes what is reported and B changes the work plan, and on either the arithmetic still
-says continue. Only C reaches the commitment of the remaining 2,400,000, which expected value cannot govern
-in a conjunctive test and which the fatal-condition rule exists to decide (5.1.3, 5.3.1). D points the
-wrong way: positive correlation raises the true joint probability above the product, so it strengthens the
-case for continuing rather than weakening it.
+*Rationale:* A and B are both right and both must be corrected, but neither can change the
+decision the paper asks for; A changes what is reported and B changes the work plan, and on
+either the arithmetic still says continue. Only C reaches the commitment of the remaining
+2,400,000, which expected value cannot govern in a conjunctive test and which the
+fatal-condition rule exists to decide (5.1.3, 5.3.1). D points the wrong way: positive
+correlation raises the true joint probability above the product, so it strengthens the case for
+continuing rather than weakening it.
 
-**MCQ 5.3-F `[5.3.4 · Comprehension]`** A supplier describes its new membrane arrangement as "fully
-proven — three pilot units have run for two years". A colleague asks what more the word bankable could
-require. The best restatement is:
+**MCQ 5.3-F `[5.3.4 · Comprehension]`** A supplier describes its new membrane arrangement as
+"fully proven. Three pilot units have run for two years". A colleague asks what more the word
+bankable could require. The best restatement is:
 - A. bankable means technically demonstrated, so a two-year pilot record settles it
 - B. bankable is a financing category rather than a technical description: it is the state in which lenders will lend against the technology's performance without recourse to the sponsors ✅
 - C. bankable means the technology is the lowest lifecycle-cost option available
@@ -821,12 +955,13 @@ output of the credit — the references are missing whatever the sponsors would 
 
 ### Self-check — KA 5.3
 
-1. *Why does averaging bankability conditions mislead?* — Conditions compose multiplicatively: six
+1. *Why does averaging bankability conditions mislead?* Conditions compose multiplicatively: six
    averaging 90.5 % give a 54.72 % joint probability, a 36-point error.
-2. *What uniform per-condition probability does a 90 % joint probability require over six conditions?* —
-   0.90^(1/6) = **98.26 %**, which is why bankable projects have no open condition rather than good ones.
-3. *State Kestrel's first-of-a-kind premium in money.* — 1.45× instead of 1.30× costs 4,259,082 of debt
-   capacity, payable as equity, at an annual substitution cost of about 255,545.
+2. *What uniform per-condition probability does a 90 % joint probability require over six
+   conditions?* 0.90^(1/6) = **98.26 %**, which is why bankable projects have no open condition
+   rather than good ones.
+3. *State Kestrel's first-of-a-kind premium in money.* 1.45× instead of 1.30× costs 4,259,082 of
+   debt capacity, payable as equity, at an annual substitution cost of about 255,545.
 
 ---
 
@@ -842,38 +977,40 @@ the performance the financing was sized on. It dominates limited-recourse struct
 construction the project has **all** the debt and **none** of the cash flow: nothing absorbs a shock, and
 every day of delay is financed.
 
-The standard mitigation is the **EPC wrap**: one contractor takes **fixed-price, date-certain, turnkey**
-responsibility for the whole works, so interface risk sits with the contractor rather than the SPV. Its
-components are each a bankability condition — a fixed lump-sum price with defined change mechanics; a
-date certain with **delay liquidated damages** (5.4.2); **performance guarantees** with performance
-damages or **buy-down** (5.4.3); performance security sized to the residual exposure; a
-defects-liability period; and a parent guarantee where the contracting entity is thinly capitalised
-(Domain 12 drafts these; Domain 11 allocates the risks behind them). Whether a given damages rate, cap or
-security instrument is enforceable as drafted is jurisdiction-specific and belongs to counsel, not to the
-model; what this domain computes is the **cash** each provision would have to deliver to be adequate. The
-wrap's price is the **wrap premium** — a contractor pricing interface and schedule risk it does not
-control charges for it, and the charge is material enough that a multi-package alternative must be
-compared against it on interface exposure and price together, never on price alone — and its two failure
-modes are **multi-package delivery without a wrap**, where the SPV holds every interface dispute, and
-**a wrap exceeding the contractor's
-capacity to stand behind it**, since damages and guarantees are worth only the guarantor's balance sheet.
+The standard mitigation is the **EPC wrap**: one contractor takes **fixed-price, date-certain,
+turnkey** responsibility for the whole works, so interface risk sits with the contractor rather
+than the SPV. Its components are each a bankability condition: a fixed lump-sum price with
+defined change mechanics; a date certain with **delay liquidated damages** (5.4.2);
+**performance guarantees** with performance damages or **buy-down** (5.4.3); performance
+security sized to the residual exposure; a defects-liability period; and a parent guarantee
+where the contracting entity is thinly capitalised (Domain 12 drafts these; Domain 11 allocates
+the risks behind them). Whether a given damages rate, cap or security instrument is enforceable
+as drafted is jurisdiction-specific and belongs to counsel, not to the model; what this domain
+computes is the **cash** each provision would have to deliver to be adequate. The wrap's price
+is the **wrap premium**: a contractor pricing interface and schedule risk it does not control
+charges for it, and the charge is material enough that a multi-package alternative must be
+compared against it on interface exposure and price together, never on price alone, and its two
+failure modes are **multi-package delivery without a wrap**, where the SPV holds every interface
+dispute, and **a wrap exceeding the contractor's capacity to stand behind it**, since damages
+and guarantees are worth only the guarantor's balance sheet.
 
 ### 5.4.2 The cost of a slip in the commercial operations date
 
-**Definition.** The **commercial operations date (COD)** is the contractual date from which the project is
-treated as operating: revenue begins, the operating-period covenant regime starts, and construction debt
-converts to term debt. A slip costs money in two distinct and frequently confused ways — **extra interest
-during construction** on debt already drawn, and **forgone `CFADS`** — and the whole delay-damages
-negotiation is an attempt to price them.
+**Definition.** The **commercial operations date (COD)** is the contractual date from which the
+project is treated as operating: revenue begins, the operating-period covenant regime starts,
+and construction debt converts to term debt. A slip costs money in two distinct and frequently
+confused ways (**extra interest during construction** on debt already drawn, and **forgone
+`CFADS`**), and the whole delay-damages negotiation is an attempt to price them.
 
 **Worked example 5.4.2 — Kestrel's COD slips 180 days.**
 
-1. **Setup.** At the scheduled COD the facility is fully drawn at **42,000,000** at **6.0 %**; operating
-   `CFADS` would have been **6,384,000** per year; the EPC contract carries **delay liquidated damages of
-   USD 20,000 per day** capped at **10 % of the 48,000,000 EPC price**. Interest and daily rates use a
-   **30/360** basis (a common convention; the applicable basis is a negotiated term, and actual/360 or
-   actual/365 would shift these figures slightly). The concession's expiry was fixed at award — **27 years
-   from scheduled financial close** — so a slip **shortens operations rather than extending the term.**
+1. **Setup.** At the scheduled COD the facility is fully drawn at **42,000,000** at **6.0 %**;
+   operating `CFADS` would have been **6,384,000** per year; the EPC contract carries **delay
+   liquidated damages of USD 20,000 per day** capped at **10 % of the 48,000,000 EPC price**.
+   Interest and daily rates use a **30/360** basis (a common convention; the applicable basis is
+   a negotiated term, and actual/360 or actual/365 would shift these figures slightly). The
+   concession's expiry was fixed at award (**27 years from scheduled financial close**), so a
+   slip **shortens operations rather than extending the term.**
 2. **Formula.** Daily extra interest = drawn debt × rate ÷ 360; daily forgone `CFADS` = annual `CFADS` ÷
    360; damages coverage = daily damages ÷ daily economic cost; cap-binding day = cap ÷ daily damages.
    Coverage consequence: new instalment = new debt ÷ `AF(0.06, 12)`, then `DSCR` and the covenant trigger
@@ -895,45 +1032,48 @@ negotiation is an attempt to price them.
    falls from 1.2743 to **1.2372**, the covenant cash trigger rises to **6,191,909**, and annual headroom
    falls from **372,438 to 192,090.85** — **51.6 %** of what it was. Funded as equity instead, equity rises
    to **19,260,000** and gearing moves from 70.0/30.0 to **68.6/31.4** (`D/E` 2.1807).
-5. **Interpretation.** Three conclusions live in that table. **The damages rate is mis-calibrated, by a
-   knowable amount.** A rate of 20,000 against a daily cost of 24,733.33 leaves equity carrying 4,733.33
-   per day, and the negotiating position is not "higher damages" but "damages calibrated to interest plus
-   forgone `CFADS`" — a computation the contractor can check and therefore argue about honestly. The
-   commonest calibration error is to size on the **forgone `CFADS` alone**, which covers only 71.7 % of
-   the cost; the omitted 7,000 per day is 28.3 % and the most certain component of all, because it accrues
-   whether or not the plant would have run well. **The cap is where the structure actually breaks.**
-   Below day 240 damages absorb most of the pain; beyond it every further day costs the SPV the full
-   24,733.33, so a 360-day slip leaves **4,104,000** uncovered — which is why lenders test the delay
-   scenario against the cap rather than the rate, and why cost-overrun support (5.2.3) and contingency
-   (Domain 8, KA 8.3) exist for the tail the cap does not reach. **A construction event becomes a
-   permanent operating constraint:** capitalising 1,260,000 of interest halves the covenant headroom
-   Domain 10 measured, for the whole 12-year loan life, on a project otherwise exactly as forecast. The
-   structural choice — capitalise into debt or fund with equity — is therefore a choice about **where the
-   slip lands**, on coverage or on equity return, and it belongs to the sponsors before the event, in the
-   funding documents.
+5. **Interpretation.** Three conclusions live in that table. **The damages rate is
+   mis-calibrated, by a knowable amount.** A rate of 20,000 against a daily cost of 24,733.33
+   leaves equity carrying 4,733.33 per day, and the negotiating position is not "higher damages"
+   but "damages calibrated to interest plus forgone `CFADS`": a computation the contractor can
+   check and therefore argue about honestly. The commonest calibration error is to size on the
+   **forgone `CFADS` alone**, which covers only 71.7 % of the cost; the omitted 7,000 per day is
+   28.3 % and the most certain component of all, because it accrues whether or not the plant
+   would have run well. **The cap is where the structure actually breaks.** Below day 240
+   damages absorb most of the pain; beyond it every further day costs the SPV the full
+   24,733.33, so a 360-day slip leaves **4,104,000** uncovered, which is why lenders test the
+   delay scenario against the cap rather than the rate, and why cost-overrun support (5.2.3) and
+   contingency (Domain 8, KA 8.3) exist for the tail the cap does not reach. **A construction
+   event becomes a permanent operating constraint:** capitalising 1,260,000 of interest halves
+   the covenant headroom Domain 10 measured, for the whole 12-year loan life, on a project
+   otherwise exactly as forecast. The structural choice, capitalise into debt or fund with
+   equity, is therefore a choice about **where the slip lands**, on coverage or on equity
+   return, and it belongs to the sponsors before the event, in the funding documents.
 
-   **The value view answers a different question.** The cash table is the right basis for calibrating
-   damages; it is *not* the sponsors' loss. Discounting quarterly at Domain 4's 8 % (quarterly rate
-   **1.942655 %**, `CFADS` 1,596,000 per quarter, concession 108 quarters from close), the operating
-   stream is worth **60,150,401** at close on time and **57,491,504** if COD slips 180 days — a
-   **present-value loss of 2,658,897**, *less* than the naive 3,192,000 of "six months of `CFADS`",
-   because what is truly lost is the *final* half-year of a 25-year stream discounted 27 years, while the
-   rest is merely deferred by two quarters. Adding the 1,260,000 of interest gives a total value loss of
-   **3,918,897** — **24.2 %** of Domain 4's entire `NPV` of 16,179,360, destroyed by six months. Against
-   that, 3,600,000 of damages received at the delayed COD is worth **2,969,909** at close, leaving a net
-   loss of **948,988**, or **5.9 %** of the project `NPV`. That pair — 24.2 % gross, 5.9 % net — is the
+   **The value view answers a different question.** The cash table is the right basis for
+   calibrating damages; it is *not* the sponsors' loss. Discounting quarterly at Domain 4's 8 %
+   (quarterly rate **1.942655 %**, `CFADS` 1,596,000 per quarter, concession 108 quarters from
+   close), the operating stream is worth **60,150,401** at close on time and **57,491,504** if
+   COD slips 180 days: a **present-value loss of 2,658,897**, *less* than the naive 3,192,000 of
+   "six months of `CFADS`", because what is truly lost is the *final* half-year of a 25-year
+   stream discounted 27 years, while the rest is merely deferred by two quarters. Adding the
+   1,260,000 of interest gives a total value loss of **3,918,897** (**24.2 %** of Domain 4's
+   entire `NPV` of 16,179,360, destroyed by six months). Against that, 3,600,000 of damages
+   received at the delayed COD is worth **2,969,909** at close, leaving a net loss of
+   **948,988**, or **5.9 %** of the project `NPV`. That pair (24.2 % gross, 5.9 % net) is the
    most useful single statement of what an EPC delay-damages regime is *for*.
 
 ### 5.4.3 Completion tests, performance guarantees and buy-down
 
-**Definition.** Completion is not a date but a **test**. Financing documents distinguish **mechanical
-completion** (built and safe to commission), **provisional or substantial completion** (defined
-performance demonstrated, triggering COD and often conversion to term debt) and **final completion**
-(punch list cleared, reliability run passed, documentation delivered). Lenders' test is usually the
-strictest, and it commonly includes a **reliability run** — sustained output over a continuous period —
-because a single-point test can be passed by a plant that cannot hold it. Where the plant completes but
-**underperforms**, the remedy is **performance liquidated damages** or a **buy-down**: a payment
-calibrated so that coverage returns to the sized level, usually applied to prepay debt.
+**Definition.** Completion is not a date but a **test**. Financing documents distinguish
+**mechanical completion** (built and safe to commission), **provisional or substantial
+completion** (defined performance demonstrated, triggering COD and often conversion to term
+debt) and **final completion** (punch list cleared, reliability run passed, documentation
+delivered). Lenders' test is usually the strictest, and it commonly includes a **reliability
+run**, sustained output over a continuous period, because a single-point test can be passed by a
+plant that cannot hold it. Where the plant completes but **underperforms**, the remedy is
+**performance liquidated damages** or a **buy-down**: a payment calibrated so that coverage
+returns to the sized level, usually applied to prepay debt.
 
 **Worked example 5.4.3 — sizing the buy-down for a 3 % output shortfall.**
 
@@ -949,62 +1089,68 @@ calibrated so that coverage returns to the sized level, usually applied to prepa
 3. **Substitution.** `12,000,000 × 0.97 = 11,640,000`; `3,825,000 + 675,000 × 0.97 = 4,479,750`;
    `EBITDA = 7,160,250`; `7,160,250 − 2,400,000 − 2,520,000 = 2,240,250`; tax `× 0.20 = 448,050`;
    `CFADS = 7,160,250 − 448,050 − 600,000`; buy-down `= 42,000,000 × (6,384,000 − 6,112,200)/6,384,000`.
-4. **Result.** `EBITDA` falls to **7,160,250** — a fall of **339,750**, or **4.53 %**, on a 3 % output
-   shortfall (**operating leverage 1.510×**). `CFADS` falls to **6,112,200** and `DSCR` to **1.2201**;
-   covenant headroom collapses from 372,438 to **100,638**, so a 3 % shortfall consumes **73.0 %** of it.
-   The buy-down restoring sized coverage is **USD 1,788,158**, reducing debt to **40,211,842**.
-5. **Interpretation.** The **1.510× operating leverage** is what sponsors most often fail to carry into a
-   performance-guarantee negotiation: because most of a plant's cash operating cost is fixed, a small
-   output shortfall produces a proportionately larger cash shortfall, so a guarantee negotiated in
-   **output percentage** must be converted into **cash** before anyone agrees it is adequate. The **73 %
-   of headroom consumed by a 3 % shortfall** is the sentence for the board paper: a shortfall well inside
-   most people's intuition of "close enough" leaves the project 100,638 of annual cash from a covenant
-   breach, with all the lock-up consequences of Domain 10 (KA 10.4.2). And the **1,788,158 buy-down**
-   demonstrates an identity worth carrying: at constant coverage **debt scales linearly with `CFADS`**, so
-   the buy-down is simply debt times the proportional `CFADS` shortfall — computable in a negotiation, on
-   one line, without a model. Two cautions: a buy-down restores the *lenders'* position, not the
-   *sponsors'* — equity has permanently lost 271,800 of annual cash and gained only a smaller loan — and
-   performance damages are **capped** like delay damages, so establish the shortfall at which the cap is
-   exhausted and check the project is still bankable there.
+4. **Result.** `EBITDA` falls to **7,160,250**: a fall of **339,750**, or **4.53 %**, on a 3 %
+   output shortfall (**operating leverage 1.510×**). `CFADS` falls to **6,112,200** and `DSCR`
+   to **1.2201**; covenant headroom collapses from 372,438 to **100,638**, so a 3 % shortfall
+   consumes **73.0 %** of it. The buy-down restoring sized coverage is **USD 1,788,158**,
+   reducing debt to **40,211,842**.
+5. **Interpretation.** The **1.510× operating leverage** is what sponsors most often fail to
+   carry into a performance-guarantee negotiation: because most of a plant's cash operating cost
+   is fixed, a small output shortfall produces a proportionately larger cash shortfall, so a
+   guarantee negotiated in **output percentage** must be converted into **cash** before anyone
+   agrees it is adequate. The **73 % of headroom consumed by a 3 % shortfall** is the sentence
+   for the board paper: a shortfall well inside most people's intuition of "close enough" leaves
+   the project 100,638 of annual cash from a covenant breach, with all the lock-up consequences
+   of Domain 10 (KA 10.4.2). And the **1,788,158 buy-down** demonstrates an identity worth
+   carrying: at constant coverage **debt scales linearly with `CFADS`**, so the buy-down is
+   simply debt times the proportional `CFADS` shortfall (computable in a negotiation, on one
+   line, without a model). Two cautions: a buy-down restores the *lenders'* position, not the
+   *sponsors'* (equity has permanently lost 271,800 of annual cash and gained only a smaller
+   loan), and performance damages are **capped** like delay damages, so establish the shortfall
+   at which the cap is exhausted and check the project is still bankable there.
 
 ### 5.4.4 Operational readiness
 
-**Definition.** **Operational readiness** is the state in which the project can be operated to the
-standard the revenue contract requires from the first day of the operating period. It is a bankability
-condition that is systematically under-managed, because the construction contract has an owner with a
-deadline and readiness usually does not. The readiness set, each item with an owner, a date and evidence:
-an **operating organisation** (O&M contract with a creditworthy operator, or an in-house team recruited
-and trained); **permits to operate**, distinct from permits to construct, frequently issued later and
-occasionally conditional on demonstrated performance, so the consent register must separate the two;
-**spares, consumables and supply** with tenor matching the offtake; **metering** on which the revenue
-contract pays, calibrated and accepted by both parties, since a tariff paying on measured availability is
-only as good as the meter and the dispute process behind it; **insurance transition**, construction cover
-replaced by operating cover with lender endorsements in force on day one, a gap being both an uninsured
-exposure and an event of default; **reporting readiness** — model updated to actuals, first covenant test
-date and compliance certificate scheduled, reserve accounts funded (Domain 10, KA 10.3), because a first
-covenant test failed for want of a report is a breach on a performing project; and **handover of the
-record** — as-built documentation, warranties, manuals and a defect list with owners and dates.
+**Definition.** **Operational readiness** is the state in which the project can be operated to
+the standard the revenue contract requires from the first day of the operating period. It is a
+bankability condition that is systematically under-managed, because the construction contract
+has an owner with a deadline and readiness usually does not. The readiness set, each item with
+an owner, a date and evidence: an **operating organisation** (O&M contract with a creditworthy
+operator, or an in-house team recruited and trained); **permits to operate**, distinct from
+permits to construct, frequently issued later and occasionally conditional on demonstrated
+performance, so the consent register must separate the two; **spares, consumables and supply**
+with tenor matching the offtake; **metering** on which the revenue contract pays, calibrated and
+accepted by both parties, since a tariff paying on measured availability is only as good as the
+meter and the dispute process behind it; **insurance transition**, construction cover replaced
+by operating cover with lender endorsements in force on day one, a gap being both an uninsured
+exposure and an event of default; **reporting readiness** — model updated to actuals, first
+covenant test date and compliance certificate scheduled, reserve accounts funded (Domain 10, KA
+10.3), because a first covenant test failed for want of a report is a breach on a performing
+project; and **handover of the record** (as-built documentation, warranties, manuals and a
+defect list with owners and dates).
 
-The financing consequence is direct: the covenant regime starts at COD, so a project reaching COD
-operationally unready spends its first test period generating exactly the shortfall 5.4.3 priced, with no
-track record and no goodwill. Readiness therefore runs as a **separate workstream with its own gate**,
-held before COD is declared — and the uncomfortable implication is accepted: **declaring COD early to
-start revenue can be the most expensive decision in the project**, because it converts a construction
-problem the contractor owns and damages cover into an operating problem equity owns and nothing covers.
+The financing consequence is direct: the covenant regime starts at COD, so a project reaching
+COD operationally unready spends its first test period generating exactly the shortfall 5.4.3
+priced, with no track record and no goodwill. Readiness therefore runs as a **separate
+workstream with its own gate**, held before COD is declared, and the uncomfortable implication
+is accepted: **declaring COD early to start revenue can be the most expensive decision in the
+project**, because it converts a construction problem the contractor owns and damages cover into
+an operating problem equity owns and nothing covers.
 
 ### AI in this KA
 
 The strong application is **readiness and completion evidence assembly**: tracking hundreds of
-completion-test, permit-to-operate, insurance, spares and documentation items against owners and dates,
-reconciling the punch list to defects-liability obligations, and flagging items whose evidence is missing
-before COD is declared — list discipline at a scale humans do badly, and cheap to verify because each item
-resolves to a document. Machine-assisted **COD forecasting** is legitimate with one non-negotiable
-control: the forecast COD drives the arithmetic of 5.4.2, so a model-produced date entering a lender
-report has become a representation and must carry the named person who owns it. **Where it must not go:**
-declaring a completion test passed, or the project ready to operate, is a professional certification with
-contractual and safety consequences — a machine may assemble the evidence and must never make the call;
-and attributing a 3 % shortfall to design, construction, operation or feed conditions decides who pays
-under which contract. **AI proposes; the professional verifies, decides and remains accountable.**
+completion-test, permit-to-operate, insurance, spares and documentation items against owners and
+dates, reconciling the punch list to defects-liability obligations, and flagging items whose
+evidence is missing before COD is declared — list discipline at a scale humans do badly, and
+cheap to verify because each item resolves to a document. Machine-assisted **COD forecasting**
+is legitimate with one non-negotiable control: the forecast COD drives the arithmetic of 5.4.2,
+so a model-produced date entering a lender report has become a representation and must carry the
+named person who owns it. **Where it must not go:** declaring a completion test passed, or the
+project ready to operate, is a professional certification with contractual and safety
+consequences. A machine may assemble the evidence and must never make the call; and attributing
+a 3 % shortfall to design, construction, operation or feed conditions decides who pays under
+which contract. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 5.4
 
@@ -1029,14 +1175,14 @@ under which contract. **AI proposes; the professional verifies, decides and rema
 - C. USD 7,000.00
 - D. USD 26,400.00
 
-*Rationale:* `42,000,000 × 0.06/360 = 7,000` of interest plus `6,384,000/360 = 17,733.33` of forgone
-`CFADS`. A is the forgone-`CFADS` side alone — the calibration error leaving 28.3 % uncovered; C is the
-interest alone; D uses the pre-working-capital `CFADS` of 6,984,000 (Domain 2's other definition, 19,400
-per day).
+*Rationale:* `42,000,000 × 0.06/360 = 7,000` of interest plus `6,384,000/360 = 17,733.33` of
+forgone `CFADS`. A is the forgone-`CFADS` side alone: the calibration error leaving 28.3 %
+uncovered; C is the interest alone; D uses the pre-working-capital `CFADS` of 6,984,000 (Domain
+2's other definition, 19,400 per day).
 
 **MCQ 5.4-B `[5.4.2 · Analysis]`** The daily economic cost of a COD slip is 24,733.33. Delay damages are
 20,000 per day, capped at 10 % of a 48,000,000 EPC price. For a 360-day slip the SPV bears:
-- A. nothing — the damages cover the delay
+- A. nothing (the damages cover the delay)
 - B. USD 4,104,000, because the cap binds at day 240 against an economic cost of 8,904,000 ✅
 - C. USD 1,704,000
 - D. USD 8,904,000
@@ -1049,7 +1195,7 @@ payable (7,200,000) and subtracts; D omits recovery altogether.
 a 1.20× cash covenant against `CFADS` of 6,384,000, leaving annual headroom of 372,438. 1,260,000 of extra
 construction interest is capitalised, taking debt to 43,260,000 at the same tenor and rate. The most
 important consequence for the operating period is:
-- A. none — the debt is repaid over the same period
+- A. none; the debt is repaid over the same period
 - B. annual covenant headroom falls from 372,438 to 192,090.85, roughly halving it for the whole loan life ✅
 - C. the loan tenor extends
 - D. `CFADS` falls by 1,260,000
@@ -1069,26 +1215,27 @@ against debt of 42,000,000. The buy-down restoring the originally sized coverage
 271,800/6,384,000`. A is the annual `CFADS` shortfall, not the debt adjustment; C is the COD-slip
 interest of 5.4.2; D is the technology premium of 5.3.4 — correct numbers in the wrong place.
 
-**MCQ 5.4-E `[5.4.2 · Evaluation]`** Kestrel's daily economic cost of delay is 24,733.33 against delay
-damages of 20,000 per day capped at 4,800,000, so damages recover 80.86 % of the daily cost and the cap
-binds on day 240. Lenders stress a 360-day slip, in which the SPV bears 4,104,000 — 1,704,000 of daily
-shortfall plus 2,400,000 for the 120 days beyond the cap. The contractor will concede either the rate or
-the cap, not both. The better recommendation is:
+**MCQ 5.4-E `[5.4.2 · Evaluation]`** Kestrel's daily economic cost of delay is 24,733.33 against
+delay damages of 20,000 per day capped at 4,800,000, so damages recover 80.86 % of the daily
+cost and the cap binds on day 240. Lenders stress a 360-day slip, in which the SPV bears
+4,104,000 (1,704,000 of daily shortfall plus 2,400,000 for the 120 days beyond the cap). The
+contractor will concede either the rate or the cap, not both. The better recommendation is:
 - A. take the rate to 24,733.33, removing the 4,733.33 per day the calibration analysis identifies
 - B. take the cap, because with the cap held at 4,800,000 a full-cost daily rate merely brings the cap forward from day 240 to day 194.07 and recovers not one dollar more in the 360-day case the lenders test ✅
 - C. take neither and rely on the 6,000,000 of cost-overrun support, which covers the 4,104,000
 - D. take the rate, since a damages cap is a matter for counsel and cannot be priced
 
-*Rationale:* `4,800,000/24,733.33 = 194.07` days, so at 360 days recovery is the cap on either concession
-and the uncovered 4,104,000 does not move; the rate helps only for slips shorter than 194 days. A is the
-right calibration aimed at the wrong lever for the scenario the credit committee actually runs — a
-defensible answer that buys nothing in the case being tested. C is available and is part of what the support
-exists for, but it converts a contractor obligation into sponsor cash at par and consumes 68.4 % of a pool
-that must also absorb overruns (5.2.3). D is false as stated: the cap's *economic effect* is a number,
-and it has just been priced. Whether a given rate or cap is enforceable as drafted — as liquidated
-damages rather than as a penalty — is indeed a question for qualified counsel in the governing
-jurisdiction, and it is a question worth asking; but it is not a reason to leave the cap unpriced, and
-it is the cap rather than the rate that the 360-day case turns on.
+*Rationale:* `4,800,000/24,733.33 = 194.07` days, so at 360 days recovery is the cap on either
+concession and the uncovered 4,104,000 does not move; the rate helps only for slips shorter than
+194 days. A is the right calibration aimed at the wrong lever for the scenario the credit
+committee actually runs: a defensible answer that buys nothing in the case being tested. C is
+available and is part of what the support exists for, but it converts a contractor obligation
+into sponsor cash at par and consumes 68.4 % of a pool that must also absorb overruns (5.2.3). D
+is false as stated: the cap's *economic effect* is a number, and it has just been priced.
+Whether a given rate or cap is enforceable as drafted, as liquidated damages rather than as a
+penalty, is indeed a question for qualified counsel in the governing jurisdiction, and it is a
+question worth asking; but it is not a reason to leave the cap unpriced, and it is the cap
+rather than the rate that the 360-day case turns on.
 
 **MCQ 5.4-F `[5.4.4 · Evaluation]`** COD falls due in 30 days. The readiness gate reports the revenue
 meter not yet accepted by the offtaker and the permit to operate outstanding. The commercial team wants to
@@ -1100,14 +1247,15 @@ with the SPV. The better recommendation is:
 - C. declare COD and agree with the contractor that delay damages continue to accrue until the readiness items close
 - D. hold COD and capitalise the 210,000 of construction interest into the facility, so equity funds nothing
 
-*Rationale:* `30 × 24,733.33 = 742,000` against `30 × 20,000 = 600,000` leaves 142,000, while an unaccepted
-meter and a missing permit to operate put the tariff and the first covenant test at risk on a plant that is
-otherwise performing (5.4.4). A compares the revenue with a cost the contractor is largely paying, which is
-the arithmetic that makes early declaration look attractive. C is the incoherent option: damages run to
-COD, so declaring it extinguishes the recovery being relied on. D is a real structural choice and the
-weaker one — capitalising 210,000 lifts the instalment to 5,034,683.41, takes `DSCR` from 1.2743 to
-1.2680 and cuts annual covenant headroom from 372,438 to 342,380, a loss of 30,058 a year for the whole
-twelve-year loan life, to avoid a one-off 142,000.
+*Rationale:* `30 × 24,733.33 = 742,000` against `30 × 20,000 = 600,000` leaves 142,000, while an
+unaccepted meter and a missing permit to operate put the tariff and the first covenant test at
+risk on a plant that is otherwise performing (5.4.4). A compares the revenue with a cost the
+contractor is largely paying, which is the arithmetic that makes early declaration look
+attractive. C is the incoherent option: damages run to COD, so declaring it extinguishes the
+recovery being relied on. D is a real structural choice and the weaker one: capitalising 210,000
+lifts the instalment to 5,034,683.41, takes `DSCR` from 1.2743 to 1.2680 and cuts annual
+covenant headroom from 372,438 to 342,380, a loss of 30,058 a year for the whole twelve-year
+loan life, to avoid a one-off 142,000.
 
 **MCQ 5.4-G `[5.4.3 · Evaluation]`** Kestrel completes at 97 % of guaranteed output: `CFADS` falls
 from 6,384,000 to 6,112,200, `DSCR` to 1.2201, and a buy-down of 1,788,158 restores the originally
@@ -1130,9 +1278,9 @@ a breach, 73.0 % of its headroom consumed, with the cap question unasked.
 **MCQ 5.4-H `[5.4.1 · Comprehension]`** A sponsor asks what an EPC wrap changes, given that the same
 works are being built either way. The best statement of what it achieves is that it:
 - A. reduces the cost of the works, because one contractor buys the packages more cheaply
-- B. makes completion risk bankable by placing fixed-price, date-certain responsibility for the whole
-  works with one contractor, so interface risk sits there rather than with the SPV — at the price of
-  a wrap premium for risk the contractor does not wholly control ✅
+- B. makes completion risk bankable by placing fixed-price, date-certain responsibility for the
+  whole works with one contractor, so interface risk sits there rather than with the SPV: at the
+  price of a wrap premium for risk the contractor does not wholly control ✅
 - C. removes completion risk from the project entirely
 - D. transfers completion risk to the lenders, who price it in the margin
 
@@ -1146,15 +1294,15 @@ out.
 
 ### Self-check — KA 5.4
 
-1. *What two costs make up a COD slip, and which is more often omitted?* — Extra interest on drawn debt
-   (7,000 per day) and forgone `CFADS` (17,733.33 per day); the interest is omitted, and it is the more
-   certain of the two.
+1. *What two costs make up a COD slip, and which is more often omitted?* Extra interest on drawn
+   debt (7,000 per day) and forgone `CFADS` (17,733.33 per day); the interest is omitted, and it
+   is the more certain of the two.
 2. *Why does a 3 % output shortfall cut `EBITDA` by 4.53 %?* — Operating leverage: 85 % of cash operating
    cost is fixed, so `EBITDA` falls faster than output (1.510×), and `CFADS` with it — by 4.26 % once tax
    and working capital are taken.
-3. *Why can declaring COD early be the most expensive decision in a project?* — It converts a construction
-   problem the contractor owns and damages cover into an operating problem equity owns and nothing covers,
-   at the moment the covenant regime begins.
+3. *Why can declaring COD early be the most expensive decision in a project?* It converts a
+   construction problem the contractor owns and damages cover into an operating problem equity
+   owns and nothing covers, at the moment the covenant regime begins.
 
 ---
 
@@ -1176,56 +1324,63 @@ expected value.**
 
 ### 5.A.2 Conditions precedent: the bankability list made contractual
 
-The conditions of KA 5.3 become **conditions precedent** (CPs) in the finance documents — the itemised,
-evidenced list satisfied before first drawdown — and reading a CP schedule as the bankability test in
-contractual form converts judgment into a critical path with named owners. **CPs are ordered by
-dependency, not importance:** a permit requiring a land instrument, requiring a board resolution,
-requiring a shareholders' agreement amendment is a four-link chain whose duration is the sum, so the close
-date is set by the longest chain rather than the hardest item. **The categories behave differently:**
-sponsor CPs (corporate authorisations, equity commitments, credit support) are within the group's control
-and therefore forgivable in timetable terms, while third-party CPs (permits, offtaker approvals, letters
-of credit from banks that are not the lenders) are not — each is the kind of timetable risk that made Case
-study B's eleven weeks. And **waived CPs are not satisfied CPs:** a condition waived to permit close, or
-converted into a post-close undertaking, remains open with a deadline and a consequence, and the register
-must track it past close, because Domain 10's covenant regime will test it and Domain 13's close checklist
-will be audited against it.
+The conditions of KA 5.3 become **conditions precedent** (CPs) in the finance documents (the
+itemised, evidenced list satisfied before first drawdown), and reading a CP schedule as the
+bankability test in contractual form converts judgment into a critical path with named owners.
+**CPs are ordered by dependency, not importance:** a permit requiring a land instrument,
+requiring a board resolution, requiring a shareholders' agreement amendment is a four-link chain
+whose duration is the sum, so the close date is set by the longest chain rather than the hardest
+item. **The categories behave differently:** sponsor CPs (corporate authorisations, equity
+commitments, credit support) are within the group's control and therefore forgivable in
+timetable terms, while third-party CPs (permits, offtaker approvals, letters of credit from
+banks that are not the lenders) are not; each is the kind of timetable risk that made Case study
+B's eleven weeks. And **waived CPs are not satisfied CPs:** a condition waived to permit close,
+or converted into a post-close undertaking, remains open with a deadline and a consequence, and
+the register must track it past close, because Domain 10's covenant regime will test it and
+Domain 13's close checklist will be audited against it.
 
 ### 5.A.3 The reviewer's bankability eye
 
-Invariants to test on any development or bankability paper. **The conjunction is computed, not averaged**,
-with its independence assumption stated (5.3.1). **The weakest condition is identified and resourced** —
-the marginal-gain ranking exists, is current, and matches the work plan. **Development cost is stated per
-closed project across the portfolio**, with the breakeven close rate on the page (5.1.2). **Every gate's
-option cost is quantified**, not just its study cost (5.1.3). **Committed capital, not subscribed equity,
-is the exposure figure**, with the liability basis in the document's own words (5.2.3). **Contracted
-revenue tenor exceeds loan tenor with margin**, and the offtaker's credit — not merely its signature — has
-been assessed (5.3.2). **The consent and land registers cover corridors, not only the site**, and permits
-to operate are separated from permits to construct (5.3.3, 5.4.4). **Delay damages are calibrated to
-interest plus forgone `CFADS` on the facility's day-count convention**, with the cap-binding day stated
-(5.4.2). **Performance guarantees are converted from output percentages into cash through operating
-leverage**, and the buy-down is computed as debt × the proportional `CFADS` shortfall (5.4.3). **Every
-capitalised construction cost is traced to its coverage consequence** — headroom after the event, not
-before. And **every condition has an owner, a date, an evidence reference and a named verifier**, the
-single discipline separating a bankability assessment from an opinion.
+Invariants to test on any development or bankability paper. **The conjunction is computed, not
+averaged**, with its independence assumption stated (5.3.1). **The weakest condition is
+identified and resourced**: the marginal-gain ranking exists, is current, and matches the work
+plan. **Development cost is stated per closed project across the portfolio**, with the breakeven
+close rate on the page (5.1.2). **Every gate's option cost is quantified**, not just its study
+cost (5.1.3). **Committed capital, not subscribed equity, is the exposure figure**, with the
+liability basis in the document's own words (5.2.3). **Contracted revenue tenor exceeds loan
+tenor with margin**, and the offtaker's credit, not merely its signature, has been assessed
+(5.3.2). **The consent and land registers cover corridors, not only the site**, and permits to
+operate are separated from permits to construct (5.3.3, 5.4.4). **Delay damages are calibrated
+to interest plus forgone `CFADS` on the facility's day-count convention**, with the cap-binding
+day stated (5.4.2). **Performance guarantees are converted from output percentages into cash
+through operating leverage**, and the buy-down is computed as debt × the proportional `CFADS`
+shortfall (5.4.3). **Every capitalised construction cost is traced to its coverage consequence**
+(headroom after the event, not before). And **every condition has an owner, a date, an evidence
+reference and a named verifier**, the single discipline separating a bankability assessment from
+an opinion.
 
 ---
 
 ## Industry variations — Domain 5
 
-- **Water and desalination (Kestrel's sector).** Availability-based offtakes with a public or utility payer
-  make the revenue condition strong and move the battle to **consents, water source and discharge rights,
-  and linear assets** — intake, outfall and pipeline corridors, where Case study A's tenure failure lives.
-  Technology is usually proven, so the first-of-a-kind premium is rare and expensive when it appears.
-- **Contracted power and renewables.** The binding conditions are **grid connection and curtailment
-  terms** — a queue position is a development asset with a value and a date — and increasingly storage and
-  shaping obligations that turn a simple offtake into an availability product. Portfolios are large and
-  cheap per pursuit, so the funnel of 5.1.2 runs at far higher screened counts and lower close rates.
-- **Transport concessions.** Land assembly and route consent dominate the timetable; **traffic and demand
-  studies** substitute for the offtake and are diligenced as such; and public procurement makes the **bid
-  window a hard date** — the case in which 5.1.3's option cost most often defeats a good gate.
-- **Digital infrastructure.** Power availability and grid capacity are the critical consents, tenant credit
-  is the offtake condition, and **short asset lives** thin the tail Domain 10's `PLCR` measures. Sponsor
-  groups are frequently three-party with a thin local holder — Case study B's shape.
+- **Water and desalination (Kestrel's sector).** Availability-based offtakes with a public or
+  utility payer make the revenue condition strong and move the battle to **consents, water
+  source and discharge rights, and linear assets** (intake, outfall and pipeline corridors,
+  where Case study A's tenure failure lives). Technology is usually proven, so the
+  first-of-a-kind premium is rare and expensive when it appears.
+- **Contracted power and renewables.** The binding conditions are **grid connection and
+  curtailment terms** (a queue position is a development asset with a value and a date), and
+  increasingly storage and shaping obligations that turn a simple offtake into an availability
+  product. Portfolios are large and cheap per pursuit, so the funnel of 5.1.2 runs at far higher
+  screened counts and lower close rates.
+- **Transport concessions.** Land assembly and route consent dominate the timetable; **traffic
+  and demand studies** substitute for the offtake and are diligenced as such; and public
+  procurement makes the **bid window a hard date**: the case in which 5.1.3's option cost most
+  often defeats a good gate.
+- **Digital infrastructure.** Power availability and grid capacity are the critical consents,
+  tenant credit is the offtake condition, and **short asset lives** thin the tail Domain 10's
+  `PLCR` measures. Sponsor groups are frequently three-party with a thin local holder (Case
+  study B's shape).
 - **Oil, gas and mining.** Resource definition replaces the offtake as the primary condition, revenue is
   usually **merchant**, and social licence and closure obligations extend the consent set decades beyond
   the loan. Development spend per pursuit is an order of magnitude larger and close rates correspondingly
@@ -1239,31 +1394,34 @@ single discipline separating a bankability assessment from an opinion.
 
 ## Case study — Domain 5: the easement nobody registered (water)
 
-**Situation.** Kestrel's feasibility study cleared the plant site — a 14-hectare coastal parcel on a long
-lease — and reported the **land and site tenure condition satisfied at 0.95**. The project's 4.6 km
-product-water pipeline crossed eleven third-party parcels under easements granted to the host municipality
-in an earlier scheme. Nine were registered. Two, covering **1.8 km through a single agricultural
-holding**, existed only as a decades-old exchange of letters, and the holding had since been sold twice.
-The bid was submitted, preferred-bidder status awarded, and the defect surfaced in **lender legal
-diligence eleven weeks before scheduled close.**
+**Situation.** Kestrel's feasibility study cleared the plant site (a 14-hectare coastal parcel
+on a long lease), and reported the **land and site tenure condition satisfied at 0.95**. The
+project's 4.6 km product-water pipeline crossed eleven third-party parcels under easements
+granted to the host municipality in an earlier scheme. Nine were registered. Two, covering **1.8
+km through a single agricultural holding**, existed only as a decades-old exchange of letters,
+and the holding had since been sold twice. The bid was submitted, preferred-bidder status
+awarded, and the defect surfaced in **lender legal diligence eleven weeks before scheduled
+close.**
 
-**What happened.** The transaction stopped: lenders would not treat an unregistered corridor right as
-security-worthy, and no title insurance was available on terms the credit committee would accept. Three
-options existed — negotiate fresh easements with an owner who now knew the project's position, pursue a
-statutory route through the municipality in an election period, or **re-route** the 1.8 km along an
-existing road reserve. The sponsors re-routed, at an additional capital cost of **1,400,000** and a
-**nine-month** delay to close and therefore to COD. The concession's expiry had been fixed at award, so
-the operating period shortened rather than shifting.
+**What happened.** The transaction stopped: lenders would not treat an unregistered corridor
+right as security-worthy, and no title insurance was available on terms the credit committee
+would accept. Three options existed, negotiate fresh easements with an owner who now knew the
+project's position, pursue a statutory route through the municipality in an election period, or
+**re-route** the 1.8 km along an existing road reserve. The sponsors re-routed, at an additional
+capital cost of **1,400,000** and a **nine-month** delay to close and therefore to COD. The
+concession's expiry had been fixed at award, so the operating period shortened rather than
+shifting.
 
-**The arithmetic.** Discounting quarterly at 8 % (quarterly rate 1.942655 %, `CFADS` 1,596,000 per
-quarter, concession 108 quarters from the original scheduled close), the operating stream was worth
-**60,150,401** on the original timetable and **56,199,935** with COD nine months later — a present-value
-loss of **3,950,466**, or **6.57 %** of the stream. The 3,600,000 of feasibility and transaction spend
-already at risk was carried nine months at the sponsors' 12 %, costing **319,368**. With the re-route,
-the defect cost **USD 5,669,834** — **35.0 %** of Domain 4's entire project `NPV`. A title-and-consents
-review at the feasibility gate, of exactly the kind priced in Worked example 5.1.3, would have cost
-**180,000**: the defect cost **31.5 times** the review that would have found it, and would have found it
-while re-routing was a design choice rather than a crisis.
+**The arithmetic.** Discounting quarterly at 8 % (quarterly rate 1.942655 %, `CFADS` 1,596,000
+per quarter, concession 108 quarters from the original scheduled close), the operating stream
+was worth **60,150,401** on the original timetable and **56,199,935** with COD nine months later
+(a present-value loss of **3,950,466**, or **6.57 %** of the stream). The 3,600,000 of
+feasibility and transaction spend already at risk was carried nine months at the sponsors' 12 %,
+costing **319,368**. With the re-route, the defect cost **USD 5,669,834** (**35.0 %** of Domain
+4's entire project `NPV`). A title-and-consents review at the feasibility gate, of exactly the
+kind priced in Worked example 5.1.3, would have cost **180,000**: the defect cost **31.5 times**
+the review that would have found it, and would have found it while re-routing was a design
+choice rather than a crisis.
 
 **How it resolved.** Close occurred nine months late on the original 42,000,000 / 18,000,000 structure,
 the 1,400,000 re-route being absorbed by construction contingency inside the unchanged 60,000,000 capital
@@ -1274,21 +1432,22 @@ review for every linear asset, run **concurrently** with technical feasibility s
 time (the 5.1.3 remedy), and the bankability register stopped recording "land" as one condition, splitting
 it into **site tenure** and **corridor tenure** with separate probabilities and owners.
 
-**What the domain teaches here.** A condition assessed at 0.95 was two conditions, one of them near zero,
-and the conjunction (5.3.1) could not reveal that because the register's granularity was wrong.
-Bankability failures are rarely failures of judgment about a known condition; they are failures to have
-decomposed a condition into the things that must independently be true. And the gate arithmetic of 5.1.3
-is vindicated as such arithmetic usually is — not by the gates held, but by the 5,669,834 paid for the one
-that was not.
+**What the domain teaches here.** A condition assessed at 0.95 was two conditions, one of them
+near zero, and the conjunction (5.3.1) could not reveal that because the register's granularity
+was wrong. Bankability failures are rarely failures of judgment about a known condition; they
+are failures to have decomposed a condition into the things that must independently be true. And
+the gate arithmetic of 5.1.3 is vindicated as such arithmetic usually is, not by the gates held,
+but by the 5,669,834 paid for the one that was not.
 
 ## Case study B — Domain 5: the ten per cent that could not fund (digital infrastructure)
 
 **Situation.** A **240,000,000** hyperscale data-centre campus was developed by a three-sponsor
-consortium: an anchor operator at **55 %**, an infrastructure fund at **35 %** and a local partner at
-**10 %** contributing land assembly, grid liaison and permitting. Funding was **70/30** —
-**168,000,000** of senior debt and **72,000,000** of equity — with a **several cost-overrun support of
-10 % of capital cost** subscribed pro rata, so committed capital was **52,800,000 / 33,600,000 /
-9,600,000**, the local partner's comprising 7,200,000 of base equity and **2,400,000** of support.
+consortium: an anchor operator at **55 %**, an infrastructure fund at **35 %** and a local
+partner at **10 %** contributing land assembly, grid liaison and permitting. Funding was
+**70/30** (**168,000,000** of senior debt and **72,000,000** of equity) with a **several
+cost-overrun support of 10 % of capital cost** subscribed pro rata, so committed capital was
+**52,800,000 / 33,600,000 / 9,600,000**, the local partner's comprising 7,200,000 of base equity
+and **2,400,000** of support.
 
 **What happened.** Grid works and a mid-construction shift to higher-density cooling, to meet the anchor
 tenant's revised rack plan, produced a **16,000,000** overrun. Support was called pro rata: **8,800,000**
@@ -1298,33 +1457,36 @@ on a parent undertaking rather than a bank letter of credit. Under the sharehold
 operator funded the partner's share, credited at a **punitive 1.25× conversion**.
 
 **The arithmetic.** Post-overrun equity became **50,400,000** (operator: 39,600,000 + 8,800,000 +
-1,600,000 × 1.25), **30,800,000** (fund) and **7,200,000** (partner), totalling **88,400,000** — so shares
-moved from 55/35/10 to **57.0136 % / 34.8416 / 8.1448**. The overrun bought no additional revenue, so
-equity value (the present value of distributions, **96,000,000**) was unchanged by it. Had the partner
-funded, it would hold 10 % of 96,000,000 = 9,600,000 having paid 1,600,000, a net **8,000,000**; having
-declined, it holds 8.1448 % = **7,819,005** and kept its cash. **Declining therefore cost it 180,995 —
-11.3 % of the 1,600,000 it withheld**; at a par conversion the cost would have been **145,455**. For
-dilution to price the default at the full 1,600,000 the multiplier would have to be **13.50×** — far
-outside the range such clauses use, and at that level a conversion whose enforceability counsel would have
-to test before anyone relied on it. The conclusion is uncomfortable and general: **in a small-stake
-structure, dilution cannot price a funding default.** It is a discount, not a deterrent.
+1,600,000 × 1.25), **30,800,000** (fund) and **7,200,000** (partner), totalling
+**88,400,000**, so shares moved from 55/35/10 to **57.0136 % / 34.8416 / 8.1448**. The overrun
+bought no additional revenue, so equity value (the present value of distributions,
+**96,000,000**) was unchanged by it. Had the partner funded, it would hold 10 % of 96,000,000 =
+9,600,000 having paid 1,600,000, a net **8,000,000**; having declined, it holds 8.1448 % =
+**7,819,005** and kept its cash. **Declining therefore cost it 180,995: 11.3 % of the 1,600,000
+it withheld**; at a par conversion the cost would have been **145,455**. For dilution to price
+the default at the full 1,600,000 the multiplier would have to be **13.50×**: far outside the
+range such clauses use, and at that level a conversion whose enforceability counsel would have
+to test before anyone relied on it. The conclusion is uncomfortable and general: **in a
+small-stake structure, dilution cannot price a funding default.** It is a discount, not a
+deterrent.
 
-**How it resolved.** The operator funded, took the dilution credit and — because dilution was inadequate —
-invoked the agreement's alternative remedy, converting the shortfall into a **shareholder loan at 15 %**,
-so the partner owed **1,840,000** after one year, **2,116,000** after two and **2,433,400** after three,
-subordinated to senior debt and repayable from its distributions. The lenders, exposed to the support
-commitment rather than to the sponsors' internal arrangements, required for the remainder of construction
-that the partner's undrawn support be **backed by a bank letter of credit**; arranging it took **eleven
-weeks**, during which the next drawdown was blocked — and that delay was the practical cost of the whole
-episode.
+**How it resolved.** The operator funded, took the dilution credit and (because dilution was
+inadequate) invoked the agreement's alternative remedy, converting the shortfall into a
+**shareholder loan at 15 %**, so the partner owed **1,840,000** after one year, **2,116,000**
+after two and **2,433,400** after three, subordinated to senior debt and repayable from its
+distributions. The lenders, exposed to the support commitment rather than to the sponsors'
+internal arrangements, required for the remainder of construction that the partner's undrawn
+support be **backed by a bank letter of credit**; arranging it took **eleven weeks**, during
+which the next drawdown was blocked, and that delay was the practical cost of the whole episode.
 
-**What the domain teaches here.** The 10 % holder is the structural weak point of a sponsor group (5.2.3):
-smallest number, likeliest to be least creditworthy, able to stop a drawdown for a sum trivial against
-the project. **Credit support belongs at close, not at default** — the eleven weeks were available at
-close for a letter-of-credit fee and were paid for in full later. And **remedies must be priced, not
-assumed:** a group that had computed the 180,995 against 1,600,000 before signing would have known its
-dilution clause was decorative, and would have negotiated the shareholder-loan remedy, a drag-along or a
-call option on the defaulting share instead.
+**What the domain teaches here.** The 10 % holder is the structural weak point of a sponsor
+group (5.2.3): smallest number, likeliest to be least creditworthy, able to stop a drawdown for
+a sum trivial against the project. **Credit support belongs at close, not at default**. The
+eleven weeks were available at close for a letter-of-credit fee and were paid for in full later.
+And **remedies must be priced, not assumed:** a group that had computed the 180,995 against
+1,600,000 before signing would have known its dilution clause was decorative, and would have
+negotiated the shareholder-loan remedy, a drag-along or a call option on the defaulting share
+instead.
 
 ---
 
@@ -1337,8 +1499,9 @@ What a project finance director cannot delegate in this domain:
   cent" from six 90 per cent conditions has accepted a 36-point error (5.3.1).
 - **The fatal-condition kill.** Expected value justifies continuing almost anything at a 14.83 %
   breakeven; only a categorical rule kills a project with an unresolvable condition (5.A.1).
-- **The development portfolio's economics.** Cost per closed project (7,400,000, not 2,400,000), the close
-  rate and the breakeven close rate — the numbers a development budget is defended with (5.1.2).
+- **The development portfolio's economics.** Cost per closed project (7,400,000, not 2,400,000),
+  the close rate and the breakeven close rate: the numbers a development budget is defended with
+  (5.1.2).
 - **Committed capital and the liability basis.** What the group has actually promised (24,000,000, 40 % of
   capex, not the 30 % headline), on what basis, and whether the weakest sponsor's share is
   credit-supported *at close* (5.2.3, Case study B).
@@ -1350,27 +1513,27 @@ What a project finance director cannot delegate in this domain:
 
 ## Calculation exercises — Domain 5
 
-**Exercise 5.1** A programme screens 60 opportunities at 30,000 each; 15 advance to concept at 200,000
-each; 6 enter feasibility and bid at 900,000 each; 3 are carried to close at 1,800,000 each. Each close
-delivers sponsor value of 11,000,000. Compute programme spend, cost per close, the close rate, the value
-multiple and the breakeven close rate.
-*Solution.* Stage spend `1,800,000 + 3,000,000 + 5,400,000 + 5,400,000 =` **15,600,000**; per close
-`15,600,000/3 =` **5,200,000**; close rate `3/60 =` **5.0 %**; portfolio value **33,000,000**, net
-**+17,400,000**, multiple **2.1154×**; breakeven closes `15,600,000/11,000,000 = 1.4182`, breakeven close
-rate `1.4182/60 =` **2.36 %**.
-*Common error:* dividing only the closing-stage spend by the closes (`5,400,000/3 = 1,800,000`), which
-prices the winners and ignores the portfolio that produced them — a **65 %** understatement.
+**Exercise 5.1** A programme screens 60 opportunities at 30,000 each; 15 advance to concept at
+200,000 each; 6 enter feasibility and bid at 900,000 each; 3 are carried to close at 1,800,000
+each. Each close delivers sponsor value of 11,000,000. Compute programme spend, cost per close,
+the close rate, the value multiple and the breakeven close rate. *Solution.* Stage spend
+`1,800,000 + 3,000,000 + 5,400,000 + 5,400,000 =` **15,600,000**; per close `15,600,000/3 =`
+**5,200,000**; close rate `3/60 =` **5.0 %**; portfolio value **33,000,000**, net
+**+17,400,000**, multiple **2.1154×**; breakeven closes `15,600,000/11,000,000 = 1.4182`,
+breakeven close rate `1.4182/60 =` **2.36 %**. *Common error:* dividing only the closing-stage
+spend by the closes (`5,400,000/3 = 1,800,000`), which prices the winners and ignores the
+portfolio that produced them, a **65 %** understatement.
 
-**Exercise 5.2** Five bankability conditions have probabilities 0.95, 0.90, 0.80, 0.96 and 0.92. Compute
-the joint probability of close, identify the weakest, and compare the gain from lifting it to 0.92 with
-the gain from lifting the 0.90 condition to 0.96.
-*Solution.* Joint `= 0.95 × 0.90 × 0.80 × 0.96 × 0.92 =` **0.6041 (60.41 %)**, against an arithmetic mean
-of **90.6 %**. The weakest is 0.80; lifting it to 0.92 multiplies the product by 1.15 for **69.47 %**, a
-gain of **9.0616 points**. Lifting 0.90 to 0.96 multiplies by 1.0667 for **64.44 %**, a gain of **4.0274
-points** — so the weakest link is worth **2.250×** more.
-*Common error:* reporting the arithmetic mean (90.6 %) as the probability of close, a 30-point
-overstatement; the next commonest is ranking by absolute lift (0.12 against 0.06) rather than by
-proportional lift applied to the whole product.
+**Exercise 5.2** Five bankability conditions have probabilities 0.95, 0.90, 0.80, 0.96 and 0.92.
+Compute the joint probability of close, identify the weakest, and compare the gain from lifting
+it to 0.92 with the gain from lifting the 0.90 condition to 0.96. *Solution.* Joint `= 0.95 ×
+0.90 × 0.80 × 0.96 × 0.92 =` **0.6041 (60.41 %)**, against an arithmetic mean of **90.6 %**. The
+weakest is 0.80; lifting it to 0.92 multiplies the product by 1.15 for **69.47 %**, a gain of
+**9.0616 points**. Lifting 0.90 to 0.96 multiplies by 1.0667 for **64.44 %**, a gain of **4.0274
+points**, so the weakest link is worth **2.250×** more. *Common error:* reporting the arithmetic
+mean (90.6 %) as the probability of close, a 30-point overstatement; the next commonest is
+ranking by absolute lift (0.12 against 0.06) rather than by proportional lift applied to the
+whole product.
 
 **Exercise 5.3** A 90,000,000 project is funded with 25,000,000 of equity held 40/30/20/10, and the
 facility requires a several cost-overrun support of 12 % of capital cost subscribed pro rata. State each
@@ -1403,30 +1566,47 @@ at `4,800,000/25,000 =` **192 days**.
 *Common error:* calibrating the damages rate on the forgone `CFADS` alone (22,222.22 per day) and omitting
 the interest, which is **30.43 %** of the daily cost and its most certain component.
 
-**Exercise 5.5** A credit committee will size debt at a target `DSCR` of 1.30× on proven technology or
-1.50× on a first-of-a-kind configuration. `CFADS` is 8,000,000; the loan runs 14 years at 6.5 %
-(`AF(0.065, 14) = 9.013842`). Compute debt capacity under each and the equity consequence.
-*Solution.* At 1.30×: service `8,000,000/1.30 = 6,153,846.15`, capacity `× 9.013842 =` **55,469,799**. At
-1.50×: service **5,333,333.33**, capacity **48,073,826**. The capacity loss is **7,395,973**, to be found
-as equity — exactly **13.33 %** of the 1.30× capacity, because at constant `CFADS`, tenor and rate the
-ratio is `1 − 1.30/1.50`.
-*Common error:* treating the 0.20 increase in the target ratio as a 20 % reduction in debt, which
-overstates the loss by roughly 3.7 million; the reduction is 13.33 %.
+**Exercise 5.5** A credit committee will size debt at a target `DSCR` of 1.30× on proven
+technology or 1.50× on a first-of-a-kind configuration. `CFADS` is 8,000,000; the loan runs 14
+years at 6.5 % (`AF(0.065, 14) = 9.013842`). Compute debt capacity under each and the equity
+consequence. *Solution.* At 1.30×: service `8,000,000/1.30 = 6,153,846.15`, capacity `× 9.013842
+=` **55,469,799**. At 1.50×: service **5,333,333.33**, capacity **48,073,826**. The capacity
+loss is **7,395,973**, to be found as equity: exactly **13.33 %** of the 1.30× capacity, because
+at constant `CFADS`, tenor and rate the ratio is `1 − 1.30/1.50`. *Common error:* treating the
+0.20 increase in the target ratio as a 20 % reduction in debt, which overstates the loss by
+roughly 3.7 million; the reduction is 13.33 %.
 
 ## Practitioner's toolkit — Domain 5
 
-*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable.*
+*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable, and set a
+retention period against each. These registers are the evidence that a decision was taken
+properly, so each is retained at least as long as the obligation it supports, in a form that
+opens without the tool that created it, with a named custodian who holds it once the engagement
+ends. The applicable minimum periods are set by the organisation's own policy and by
+jurisdiction-specific statutory, tax and limitation requirements, which this book does not
+state. Where a register holds information about identified individuals, the retention period and
+any minimisation or deletion obligation that cuts across it are settled with the organisation's
+data-protection adviser before the register is adopted.*
 
 ### Toolkit 5.T.1 — The bankability condition register
 
-One row per condition, decomposed to the level at which something must independently be true (Case study
-A's lesson: "land" is at least two rows — site tenure and corridor tenure). Columns: condition · what must
-be true, in evidential terms · the document that will prove it · owner · target date · dependency ·
-**assessed probability of satisfaction on the timetable**, with assessor and date · the corresponding
-condition precedent once drafted · status and verifier. Footer, recomputed at every update: **the product
-of the probabilities** (never the mean), the joint probability of close, and the conditions ranked by
-**marginal gain** — the next period's work plan. Rule: a condition with no evidential test is not a
-condition but a hope, and is recorded as such.
+One row per condition, decomposed to the level at which something must independently be true
+(Case study A's lesson: "land" is at least two rows — site tenure and corridor tenure). Columns:
+condition · what must be true, in evidential terms · the document that will prove it · owner ·
+target date · dependency · **assessed probability of satisfaction on the timetable**, with
+assessor and date · the corresponding condition precedent once drafted · status and verifier.
+Footer, recomputed at every update: **the product of the probabilities** (never the mean), the
+joint probability of close, and the conditions ranked by **marginal gain**, the next period's
+work plan. Rule: a condition with no evidential test is not a condition but a hope, and is
+recorded as such.
+
+*Retention.* The register is the contemporaneous record of what was known, and assessed, at each
+point in development, which is the question asked years later when a condition turns out to have
+been satisfied on a thinner basis than anyone remembers. It is retained with the closing set, on
+the standing basis in the toolkit preamble: period, form and named custodian recorded on the
+register itself. Where rows name individual landowners, objectors or officials, the
+personal-information position is settled with the organisation's data-protection adviser before
+the register is circulated.
 
 ### Toolkit 5.T.2 — Sponsor commitment and support schedule
 
@@ -1439,20 +1619,33 @@ representative call size (Case study B's 180,995 against 1,600,000). Footer: gro
 percentage of capital cost, and the identity of the weakest credit in the group. Rule: no board approves
 an equity share without seeing the committed-capital column.
 
+*Second sheet — the decision-rights map (KA 5.2.3).* One row per **decision class** rather than per
+sponsor: the decision (budget, additional debt, business-plan change, related-party contract,
+variation above the threshold, disposal, change of operator, distribution, insolvency step) · who
+**proposes** it · the board or shareholder majority that **approves** it, with the threshold stated
+as a percentage and the holders who can block at that threshold named · whether **lender or agent
+consent is also required** and under which document · the consent timetable and who chases it · the
+**deadlock mechanism** that applies if approval is refused · the transfer and change-of-control
+consents that bear on the same decision. Footer: the veto map — for each holder, the matters it can
+block alone. Rule: a decision class showing one approval where the finance documents require a
+second is the register's most expensive omission, and the map is re-read at every amendment to
+either document set, not only when the shareholders' agreement changes.
+
 ### Toolkit 5.T.3 — COD-slip and readiness pack
 
-Two parts, maintained from twelve months before COD. **The slip calculator:** drawn debt × rate ÷
-day-count (state the convention) = daily interest; annual `CFADS` ÷ day-count = daily forgone cash; the
-sum = **daily economic cost**; the damages rate and its **coverage percentage**; the **cap and the day it
-binds**; the coverage consequence of capitalising the extra interest (new instalment, `DSCR`, covenant
-trigger, **headroom before and after**); and the structural decision — capitalise or fund with equity —
-recorded in advance. **The readiness gate checklist**, held before COD is declared: O&M contract executed
-and operator mobilised · permits **to operate** issued, listed separately from construction permits ·
-initial spares and supply contracts with matching tenor · revenue metering calibrated and accepted by the
-payer · operating insurance in force with lender endorsements · reserve accounts funded · model updated
-to actuals, first covenant test date and compliance certificate scheduled · as-built documentation,
-warranties and punch list with owners and dates. Rule: **COD is declared against this checklist, by a
-named person, or it is not declared.**
+Two parts, maintained from twelve months before COD. **The slip calculator:** drawn debt × rate
+÷ day-count (state the convention) = daily interest; annual `CFADS` ÷ day-count = daily forgone
+cash; the sum = **daily economic cost**; the damages rate and its **coverage percentage**; the
+**cap and the day it binds**; the coverage consequence of capitalising the extra interest (new
+instalment, `DSCR`, covenant trigger, **headroom before and after**); and the structural
+decision, capitalise or fund with equity, recorded in advance. **The readiness gate checklist**,
+held before COD is declared: O&M contract executed and operator mobilised · permits **to
+operate** issued, listed separately from construction permits · initial spares and supply
+contracts with matching tenor · revenue metering calibrated and accepted by the payer ·
+operating insurance in force with lender endorsements · reserve accounts funded · model updated
+to actuals, first covenant test date and compliance certificate scheduled · as-built
+documentation, warranties and punch list with owners and dates. Rule: **COD is declared against
+this checklist, by a named person, or it is not declared.**
 
 ## Exam preparation — Domain 5
 
@@ -1486,54 +1679,58 @@ output shortfall with a fixed/variable split, and the buy-down that restores siz
   MCQ 5.3-D).
 - Applying a change in target `DSCR` to the principal as though ratio points were percentages (5.3.4,
   MCQ 5.3-C).
-- Calibrating delay damages on the forgone `CFADS` alone and omitting interest during construction —
-  28.3 % of the daily cost on Kestrel, 30.43 % in Exercise 5.4 (5.4.2, MCQ 5.4-A).
+- Calibrating delay damages on the forgone `CFADS` alone and omitting interest during
+  construction: 28.3 % of the daily cost on Kestrel, 30.43 % in Exercise 5.4 (5.4.2, MCQ 5.4-A).
 - Ignoring the damages cap, which is where the exposure actually sits (5.4.2, MCQ 5.4-B).
 - Forgetting that capitalised construction interest is a permanent coverage cost (5.4.2, MCQ 5.4-C).
 - Sizing a buy-down on the annual cash shortfall rather than on debt × the proportional `CFADS` shortfall
   (5.4.3, MCQ 5.4-D).
 
-**How the domain connects.** Domain 4 supplied the value this domain tests for financeability, and
-Domain 1 the recourse spectrum and SPV that make limited-recourse structures possible. Forward: Domain 6
-models the structure assembled here; Domain 7 builds the revenue models 5.3.2 only classifies; Domain 8
-supplies the estimate classes, contingency and delay arithmetic behind the development budget and the
-overrun support; Domain 9 supplies the capital sources, including the concessional money that can buy down
-a first-of-a-kind premium; Domain 10 sizes and covenants the debt these conditions permit; Domain 11
-allocates the risks the conditions represent and Domain 12 documents them; Domain 13 converts the
-condition register into conditions precedent and closes; Domain 14 monitors the construction whose slip
-5.4.2 prices. PML-AI Domain 3 (KA 3.3.1) is the delivery twin of this domain's gate economics, and the
-difference between them — elapsed time against forgone option — is the most useful single idea a finance
-leader can carry between the two disciplines.
+**How the domain connects.** Domain 4 supplied the value this domain tests for financeability,
+and Domain 1 the recourse spectrum and SPV that make limited-recourse structures possible.
+Forward: Domain 6 models the structure assembled here; Domain 7 builds the revenue models 5.3.2
+only classifies; Domain 8 supplies the estimate classes, contingency and delay arithmetic behind
+the development budget and the overrun support; Domain 9 supplies the capital sources, including
+the concessional money that can buy down a first-of-a-kind premium; Domain 10 sizes and
+covenants the debt these conditions permit; Domain 11 allocates the risks the conditions
+represent and Domain 12 documents them; Domain 13 converts the condition register into
+conditions precedent and closes; Domain 14 monitors the construction whose slip 5.4.2 prices.
+PML-AI Domain 3 (KA 3.3.1) is the delivery twin of this domain's gate economics, and the
+difference between them, elapsed time against forgone option, is the most useful single idea a
+finance leader can carry between the two disciplines.
 
 ## Domain 5 summary
-Bankability is a **conjunction**, and that is the domain's whole argument. Kestrel's six conditions —
-offtake 0.92, permits 0.90, land 0.95, technology 0.88, EPC wrap 0.93, financing 0.85 — average **90.5 %**
-and multiply to a **54.72 %** probability of close; lifting the weakest to 0.95 adds **6.4375 points**
-while lifting the strongest to 0.98 adds **1.7280**, a **3.7255×** difference that reorders the whole work
-plan; and a 90 % joint probability would require every condition at **98.26 %**, which is why bankable
-projects are projects with no open condition rather than projects with good ones. The spend that buys
-those conditions is an **option premium** measured across a portfolio: 40 screened opportunities,
-USD 14,800,000 of programme spend and two closes make Kestrel's honest origination cost **7,400,000**, not
-the 2,400,000 on its own charge code, against a **breakeven close rate of 2.29 %** on an achieved 5.0 %.
-A feasibility gate costing 180,000 against a 40 % fatal-flaw rate and a 3,300,000 late-discovery waste is
-worth **810,000 per project** and pays down to a **13.64 %** detection rate — but an 8-week delay carrying
-a 10 % chance of missing a bid window costs **1,617,936**, turning the same gate **negative by 807,936**
-and setting a **5.01 %** breakeven window-miss probability: in development, elapsed time is priced as a
-lost option, not a carrying cost. The group behind Kestrel's 18,000,000 has committed **24,000,000 —
-40.0 % of capital cost** — as 13,200,000 / 8,400,000 / 2,400,000 on a several basis, every sponsor exposed
-**33.3 %** beyond its equity share and each exposed to the whole 6,000,000 pool if the basis becomes joint
-and several; its equity bridge at 5.5 % is **exactly value-neutral at the bridge rate** (17,530,806 either
-way), worth **1,480,688** only because the sponsors discount at 12 %. Unproven technology has a price:
-**1.45× instead of 1.30× costs 4,259,082** of debt capacity, payable in equity. A slip in the commercial
-operations date costs **24,733.33 per day** — 7,000 of interest on drawn debt and 17,733.33 of forgone
-`CFADS` — so a 180-day slip costs **4,452,000** against damages of 3,600,000, leaves **852,000** with
-equity, and if its interest is capitalised cuts covenant headroom from **372,438 to 192,090.85** for the
-whole loan life, with the cap binding at **day 240** beyond which every day is the SPV's; in value terms
-the same slip destroys **3,918,897**, 24.2 % of the project `NPV`, and 948,988 after damages. A 3 % output
-shortfall cuts `CFADS` to **6,112,200** through **1.510×** operating leverage, consuming **73.0 %** of
-covenant headroom, and is repaired by a buy-down of **1,788,158** — debt times the proportional `CFADS`
-shortfall. Case study A paid **5,669,834**, 35.0 % of the project's `NPV`, for an unregistered 1.8 km
-easement a 180,000 review would have found; Case study B proved a 1.25× dilution clause prices a 1,600,000
-funding default at **180,995** and would need a **13.50×** multiplier to price it properly — so credit
-support belongs at close, not at default. Domain 6 now models the structure this domain assembled;
-Domain 10 sizes the debt its conditions permit.
+Bankability is a **conjunction**, and that is the domain's whole argument. Kestrel's six
+conditions (offtake 0.92, permits 0.90, land 0.95, technology 0.88, EPC wrap 0.93, financing
+0.85) average **90.5 %** and multiply to a **54.72 %** probability of close; lifting the weakest
+to 0.95 adds **6.4375 points** while lifting the strongest to 0.98 adds **1.7280**, a
+**3.7255×** difference that reorders the whole work plan; and a 90 % joint probability would
+require every condition at **98.26 %**, which is why bankable projects are projects with no open
+condition rather than projects with good ones. The spend that buys those conditions is an
+**option premium** measured across a portfolio: 40 screened opportunities, USD 14,800,000 of
+programme spend and two closes make Kestrel's honest origination cost **7,400,000**, not the
+2,400,000 on its own charge code, against a **breakeven close rate of 2.29 %** on an achieved
+5.0 %. A feasibility gate costing 180,000 against a 40 % fatal-flaw rate and a 3,300,000
+late-discovery waste is worth **810,000 per project** and pays down to a **13.64 %** detection
+rate, but an 8-week delay carrying a 10 % chance of missing a bid window costs **1,617,936**,
+turning the same gate **negative by 807,936** and setting a **5.01 %** breakeven window-miss
+probability: in development, elapsed time is priced as a lost option, not a carrying cost. The
+group behind Kestrel's 18,000,000 has committed **24,000,000 (40.0 % of capital cost**) as
+13,200,000 / 8,400,000 / 2,400,000 on a several basis, every sponsor exposed **33.3 %** beyond
+its equity share and each exposed to the whole 6,000,000 pool if the basis becomes joint and
+several; its equity bridge at 5.5 % is **exactly value-neutral at the bridge rate** (17,530,806
+either way), worth **1,480,688** only because the sponsors discount at 12 %. Unproven technology
+has a price: **1.45× instead of 1.30× costs 4,259,082** of debt capacity, payable in equity. A
+slip in the commercial operations date costs **24,733.33 per day** (7,000 of interest on drawn
+debt and 17,733.33 of forgone `CFADS`), so a 180-day slip costs **4,452,000** against damages of
+3,600,000, leaves **852,000** with equity, and if its interest is capitalised cuts covenant
+headroom from **372,438 to 192,090.85** for the whole loan life, with the cap binding at **day
+240** beyond which every day is the SPV's; in value terms the same slip destroys **3,918,897**,
+24.2 % of the project `NPV`, and 948,988 after damages. A 3 % output shortfall cuts `CFADS` to
+**6,112,200** through **1.510×** operating leverage, consuming **73.0 %** of covenant headroom,
+and is repaired by a buy-down of **1,788,158** (debt times the proportional `CFADS` shortfall).
+Case study A paid **5,669,834**, 35.0 % of the project's `NPV`, for an unregistered 1.8 km
+easement a 180,000 review would have found; Case study B proved a 1.25× dilution clause prices a
+1,600,000 funding default at **180,995** and would need a **13.50×** multiplier to price it
+properly, so credit support belongs at close, not at default. Domain 6 now models the structure
+this domain assembled; Domain 10 sizes the debt its conditions permit.

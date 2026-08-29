@@ -1,54 +1,52 @@
 # Domain 1 — Foundations of Project Finance Leadership
 
-> **Group:** Foundations (Domain 1 of 4 in Part One). **Target:** ~66 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain fixes the book's core vocabulary — recourse, SPV,
-> sponsor, bankability, CFADS (introduced by name, built fully in Domain 10) — and the
-> stakeholder map every later domain assumes. British English; USD (+SAR where useful,
-> indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Project finance is a distinctive answer to a distinctive problem: how to fund a large,
-long-lived, single-purpose asset whose only security is *itself* — its contracts and the cash
+long-lived, single-purpose asset whose only security is *itself*, its contracts and the cash
 they will produce. This domain establishes what makes that answer work, and what the leader at
-the centre of it actually does. It maps the role across the project lifecycle (KA 1.1), builds
-the discipline's three-cornered logic — value, cash and risk (KA 1.2) — and grounds the
-profession's obligations: fiduciary awareness, independence, and the governed use of AI
-(KA 1.3). Everything later in the book is a specialisation of this domain: the mathematics
-(Domains 3–4), the structures (Domains 5, 9, 12), the lender's machinery (Domains 10, 13–15)
-and the AI curriculum (Domain 16) all stand on the concepts fixed here. A reader who finishes
-only this domain should already reason like the profession: *follow the cash, price the risk,
-know who bears it, and stay accountable.*
+the centre of it actually does. It maps the role across the project lifecycle (KA 1.1). It
+builds the discipline's three-cornered logic of value, cash and risk (KA 1.2). And it grounds
+the profession's obligations: fiduciary awareness, the financial-crime duties the profession
+treats as absolute, independence, and the governed use of AI (KA 1.3). Everything later in the
+book is a specialisation of what is fixed here. The mathematics (Domains 3–4), the structures
+(Domains 5, 9, 12), the lender's machinery (Domains 10, 13–15) and the AI curriculum (Domain 16)
+all stand on these concepts. A reader who finishes only this domain should already reason like
+the profession: *follow the cash, price the risk, know who bears it, and stay accountable.*
 
 **Learning objectives.** After this domain a candidate can: describe the project finance
 leader's role at each lifecycle stage; place a financing on the recourse spectrum and explain
-what limited recourse buys and costs; **price** the recourse decision — computing the
-incremental cost of the limited-recourse route and the breakeven probability of a
-parent-impairing failure at which it repays that cost — and explain why the breakeven falls
-with facility size and why it is nonetheless the wrong sole test; explain the SPV's purpose,
-the interests of each party around it, and the five ways a ring-fence leaks; describe the
-infrastructure-finance market's asset classes and investors, and compute the Macaulay duration
-of a project's cash stream to distinguish matching an asset's *life* from matching its
-*duration*; explain why cash, not profit, is the binding constraint, demonstrate the
-difference, and translate covenant headroom into days of receivables; derive the levered-return
-identity, locate the crossover at which leverage stops helping, and show how far the equity
-cliff moves when the same debt amortises rather than paying interest only; price a retained
-risk through the capital structure the lenders will impose; price sponsor support as a
-contingent claim; state the risk-return-bankability logic; and apply the profession's ethical
-and responsible-AI obligations to realistic situations — including in explicit expected-value
-terms, while explaining why the duty does not depend on the arithmetic.
+what limited recourse buys and costs; **price** the recourse decision (computing the incremental
+cost of the limited-recourse route and the breakeven probability of a parent-impairing failure
+at which it repays that cost), and explain why the breakeven falls with facility size and why it
+is nonetheless the wrong sole test; explain the SPV's purpose, the interests of each party
+around it, and the five ways a ring-fence leaks; describe the infrastructure-finance market's
+asset classes and investors, and compute the Macaulay duration of a project's cash stream to
+distinguish matching an asset's *life* from matching its *duration*; explain why cash, not
+profit, is the binding constraint, demonstrate the difference, and translate covenant headroom
+into days of receivables; derive the levered-return identity, locate the crossover at which
+leverage stops helping, and show how far the equity cliff moves when the same debt amortises
+rather than paying interest only; price a retained risk through the capital structure the
+lenders will impose; price sponsor support as a contingent claim; state the
+risk-return-bankability logic; recognise the prohibited acts in bribery, sanctions and money
+laundering, triage the red flags that stop the work, name the escalation route and the evidence
+that must exist, and characterise the principal external instruments for what they are rather
+than as law; state the duty to correct a number already relied on (its trigger, who owns the
+correction, who decides on external notification, the route it travels and the record it
+leaves), and explain why superseding a figure internally does not discharge it; and apply the
+profession's ethical and responsible-AI obligations to realistic situations — including in
+explicit expected-value terms, while explaining why the duty does not depend on the arithmetic.
 
-**The master thread.** Kestrel Water SPC — whose loan, availability stream and investment case
-Domains 3 and 4 priced — began here: a sponsor group weighing *how* to finance a desalination
+**The master thread.** Kestrel Water SPC (whose loan, availability stream and investment case
+Domains 3 and 4 priced) began here: a sponsor group weighing *how* to finance a desalination
 plant at all. The figures this domain works with are the ones the rest of the book inherits:
-capital cost **USD 60,000,000**, funded **70/30** as **USD 42,000,000** of senior debt at
-**6.0 % over 12 years** — annual instalment **USD 5,009,635.23**, of which year-one interest is
+capital cost **USD 60,000,000**, funded **70/30** as **USD 42,000,000** of senior debt at **6.0
+% over 12 years** — annual instalment **USD 5,009,635.23**, of which year-one interest is
 **2,520,000** and principal **2,489,635** (Domain 3) — plus **USD 18,000,000** of sponsor
 equity; a 25-year asset life; first-year documented `CFADS` of **USD 6,384,000** on revenue of
 **12,000,000** (Domain 2), giving `DSCR` **1.2743** (Domain 10); and an appraisal at 8.0 % of
 **NPV +16,179,360** on a 15-year operating stream of 8,900,000 (Domain 4). This domain tells the
-part of the story that precedes all of it — the choice of financing route — and Domain 5 takes
+part of the story that precedes all of it (the choice of financing route), and Domain 5 takes
 the project through development to bankability.
 
 ---
@@ -61,9 +59,9 @@ market.*
 
 ### 1.1.1 The role across the lifecycle
 
-The project finance leader is the person accountable for a project's **financial integrity
-end to end** — not the deal-closer alone, and not the accountant alone. The role changes
-costume by stage while keeping one spine:
+The project finance leader is the person accountable for a project's **financial integrity end
+to end**, not the deal-closer alone, and not the accountant alone. The role changes costume by
+stage while keeping one spine:
 
 | Stage | What the finance leader owns |
 |---|---|
@@ -83,13 +81,13 @@ answer it with evidence.
 **Definitions.** In **corporate (balance-sheet) finance**, lenders lend to a company and are
 repaid from its whole cash flow; every asset stands behind every debt. In **project finance**,
 lenders lend to a ring-fenced project and are repaid **only from that project's cash flows**,
-with security over its assets and contracts — **non-recourse** to the sponsors, or **limited
+with security over its assets and contracts: **non-recourse** to the sponsors, or **limited
 recourse** where sponsors give bounded support (a completion guarantee, a cost-overrun
 facility). Real deals sit on a spectrum between the poles.
 
 What limited recourse *buys* sponsors: risk containment (a failed project cannot sink the
 parent), balance-sheet capacity, the ability to share a mega-project among partners, and
-discipline — lenders' due diligence becomes a second pair of eyes on every assumption. What it
+discipline. Lenders' due diligence becomes a second pair of eyes on every assumption. What it
 *costs*: higher margins and fees (lenders carry risk they cannot chase a parent for), heavy
 transaction and diligence costs, long documentation timelines, and covenant control over the
 project's cash (Domain 10). The break-even is scale and risk-shape: single-asset,
@@ -105,10 +103,10 @@ contract-backed, capital-intensive projects with long lives are where the machin
 > falling and financing cost rising toward the non-recourse pole.
 
 **Pricing the choice.** "Scale and risk-shape" is the right answer and an unusable one until it
-is arithmetic. The limited-recourse route costs more in two distinguishable ways — a **margin
-and fee differential** that scales with the facility, and a **close-cost premium** that is
-largely *fixed* — and it buys one thing that can be valued: the parent's exposure to a failure
-it did not cause and cannot survive. Setting the cost against the exposure gives a breakeven
+is arithmetic. The limited-recourse route costs more in two distinguishable ways (a **margin and
+fee differential** that scales with the facility, and a **close-cost premium** that is largely
+*fixed*), and it buys one thing that can be valued: the parent's exposure to a failure it did
+not cause and cannot survive. Setting the cost against the exposure gives a breakeven
 probability, and the shape of that breakeven against deal size is the whole of the scale
 argument.
 
@@ -125,14 +123,14 @@ Breakeven failure probability  p* = incremental cost ÷ exposure the ring-fence 
    routes. *Project route:* the SPV borrows at **6.0 % over 12 years** (the master facility) and
    the close-cost budget is Domain 13's itemised **USD 2,709,000** (KA 13.3.4). *Corporate
    route:* the international water operator borrows the same amount on its own balance sheet at
-   **4.60 %** over the same 12 years — 140 basis points tighter, because the lender is looking at
-   an established credit rather than at a plant that does not yet exist — with close costs of
-   **350,000** (arrangement and legal only — none of the seven diligence streams, no model audit,
-   no security perfection across a contract set). The downside being insured against is a
+   **4.60 %** over the same 12 years (140 basis points tighter, because the lender is looking at
+   an established credit rather than at a plant that does not yet exist) with close costs of
+   **350,000** (arrangement and legal only — none of the seven diligence streams, no model
+   audit, no security perfection across a contract set). The downside being insured against is a
    post-completion performance failure in operating year three, at which point the sponsors'
-   completion support has already fallen away: the offtake terminates and enforcement realises the
-   single-purpose asset at **40 % of capital cost — USD 24,000,000**. Cash costs are compared at
-   the appraisal rate of **8.0 %** (Domain 4).
+   completion support has already fallen away: the offtake terminates and enforcement realises
+   the single-purpose asset at **40 % of capital cost (USD 24,000,000)**. Cash costs are
+   compared at the appraisal rate of **8.0 %** (Domain 4).
 2. **Formula.** As above. `AF(0.046, 12)` and `AF(0.06, 12)` size the two instalments;
    `AF(0.08, 12)` prices the annual differential; the exposure is the loan's year-three closing
    balance less the enforcement recovery.
@@ -154,48 +152,48 @@ Breakeven failure probability  p* = incremental cost ÷ exposure the ring-fence 
 
    The incremental cost is **12.3860 %** of the debt raised, of which the fixed close-cost
    premium is **45.3468 %**.
-5. **Interpretation.** Read the headline first and then refuse to stop there. **On expected value
-   alone, the limited-recourse route does not pay:** it requires the sponsors to believe there is
-   better than a **one-in-two** chance of a failure severe enough to leave 10,073,997 of debt
-   unrecovered, and no board that has just approved a 60,000,000 plant believes anything of the
-   kind. That is not an argument against project finance; it is the discovery that **project
-   finance is not bought with expected-value arithmetic**. Three reasons the 51.64 % is the wrong
-   sole test.
-   *First, it prices a mean and the sponsor is insuring a tail.* The loss that matters is not the
-   10,073,997 itself but its correlation with everything else — a failed project consolidates
-   onto the parent's balance sheet in the same quarter that its own lenders are re-testing
-   covenants and its own rating is under review, so the realised cost of the corporate route in
-   the bad state is far above the enforcement shortfall. Expected value averages exactly that
-   asymmetry away; Domain 13 (KA 13.1.3) makes the same caution about the right tail of a
-   diligence loss. *Second, it prices only one of the three things the structure buys.* The
-   regional infrastructure fund cannot guarantee anything beyond its equity, so without the
-   ring-fence there is no partnership at all and the operator funds 18,000,000 of equity it does
-   not have; that option has a value the table does not contain. *Third, the corporate route's
-   4.60 % is not a fact but a facility* — it consumes the operator's own borrowing capacity, and
-   the next project priced at the margin is the one that pays for it. Now the **scale** result,
-   which the breakeven does capture cleanly and which Fig 1.1.3 plots in full. Because the
-   close-cost premium is essentially fixed while the exposure scales with the facility, `p*` falls hyperbolically with size: **93.7893 %
-   at 15,000,000** of debt, **51.6392 %** at Kestrel's 42,000,000, **34.7791 % at 150,000,000**,
-   approaching **28.2224 %** — the margin differential alone — as the fixed premium becomes
-   immaterial. Below about **USD 13,702,087** of debt, `p*` exceeds 100 %: the route cannot pay at
-   *any* failure probability, because the close-cost premium alone exceeds the whole exposure it
-   removes. That is the same reading Domain 13 gives an impossible breakeven detection rate
-   (KA 13.1.3) — an impossible configuration, not a worthless idea — and it is the arithmetic
-   reason the machinery is not reached for on small facilities, whatever their risk shape. Two cautions for the
-   reviewer. The 140 basis points and the 40 % recovery are the two parameters that move the
+5. **Interpretation.** Read the headline first and then refuse to stop there. **On expected
+   value alone, the limited-recourse route does not pay:** it requires the sponsors to believe
+   there is better than a **one-in-two** chance of a failure severe enough to leave 10,073,997
+   of debt unrecovered, and no board that has just approved a 60,000,000 plant believes anything
+   of the kind. That is not an argument against project finance; it is the discovery that
+   **project finance is not bought with expected-value arithmetic**. Three reasons the 51.64 %
+   is the wrong sole test. *First, it prices a mean and the sponsor is insuring a tail.* The
+   loss that matters is not the 10,073,997 itself but its correlation with everything else: a
+   failed project consolidates onto the parent's balance sheet in the same quarter that its own
+   lenders are re-testing covenants and its own rating is under review, so the realised cost of
+   the corporate route in the bad state is far above the enforcement shortfall. Expected value
+   averages exactly that asymmetry away; Domain 13 (KA 13.1.3) makes the same caution about the
+   right tail of a diligence loss. *Second, it prices only one of the three things the structure
+   buys.* The regional infrastructure fund cannot guarantee anything beyond its equity, so
+   without the ring-fence there is no partnership at all and the operator funds 18,000,000 of
+   equity it does not have; that option has a value the table does not contain. *Third, the
+   corporate route's 4.60 % is not a fact but a facility*: it consumes the operator's own
+   borrowing capacity, and the next project priced at the margin is the one that pays for it.
+   Now the **scale** result, which the breakeven does capture cleanly and which Fig 1.1.3 plots
+   in full. Because the close-cost premium is essentially fixed while the exposure scales with
+   the facility, `p*` falls hyperbolically with size: **93.7893 % at 15,000,000** of debt,
+   **51.6392 %** at Kestrel's 42,000,000, **34.7791 % at 150,000,000**, approaching **28.2224
+   %**, the margin differential alone, as the fixed premium becomes immaterial. Below about
+   **USD 13,702,087** of debt, `p*` exceeds 100 %: the route cannot pay at *any* failure
+   probability, because the close-cost premium alone exceeds the whole exposure it removes. That
+   is the same reading Domain 13 gives an impossible breakeven detection rate (KA 13.1.3) (an
+   impossible configuration, not a worthless idea), and it is the arithmetic reason the
+   machinery is not reached for on small facilities, whatever their risk shape. Two cautions for
+   the reviewer. The 140 basis points and the 40 % recovery are the two parameters that move the
    answer most and both are estimates: raise the enforcement recovery from 40 % to **50 %** of
-   capital cost and the exposure collapses to **4,073,997.27** while `p*` rises to
-   **127.6910 %** — impossible — so a route decision resting on this number alone is resting on
-   the recovery assumption. And the fixed premium is only *approximately* fixed — diligence scope
-   does grow with project complexity — which flattens the curve without changing its direction.
+   capital cost and the exposure collapses to **4,073,997.27** while `p*` rises to **127.6910
+   %** (impossible), so a route decision resting on this number alone is resting on the recovery
+   assumption. And the fixed premium is only *approximately* fixed (diligence scope does grow
+   with project complexity), which flattens the curve without changing its direction.
 
 ### 1.1.3 The SPV and its stakeholders
 
 **Definition.** The **special-purpose vehicle (SPV)** is a company created to do exactly one
-thing — own, build, finance and operate the project — and legally *incapable* of doing
-anything else. Ring-fencing is what makes non-recourse lending possible: the SPV's contracts
-are its assets, and every major relationship is written down (Domain 12 builds the contract
-matrix in full).
+thing (own, build, finance and operate the project), and legally *incapable* of doing anything
+else. Ring-fencing is what makes non-recourse lending possible: the SPV's contracts are its
+assets, and every major relationship is written down (Domain 12 builds the contract matrix in
+full).
 
 The parties and what each optimises:
 
@@ -209,7 +207,7 @@ The parties and what each optimises:
 | **Government / regulator** | Delivery of policy outcomes; compliance | Permits, obligations, public interest |
 | **Community & environment** | Benefit without harm | E&S performance (Domain 11) |
 
-The finance leader's daily craft is reconciling these optimisations *inside one cash flow* —
+The finance leader's daily craft is reconciling these optimisations *inside one cash flow*,
 which is why the cash waterfall (Domain 15) reads like a peace treaty.
 
 > **Fig 1.1.2 — The SPV at the centre of its contracts.** Hub-and-spoke diagram. Centre node:
@@ -224,21 +222,21 @@ which is why the cash waterfall (Domain 15) reads like a peace treaty.
 
 The asset classes and their financing habits, in one professional sweep: **transport** (toll
 roads, rail, airports — patronage or availability models); **power and renewables** (PPAs,
-capacity markets; the energy transition's build-out is the market's largest engine);
-**water** (desalination and treatment concessions — Kestrel's world); **digital
-infrastructure** (data centres, towers, fibre — shorter refresh cycles, credit-tenant
-leases); **social infrastructure** (hospitals, schools, housing under availability PPPs); and
-**natural resources** (commodity-linked, price-hedged). The capital comes from commercial
-banks (construction-phase specialists), institutional investors and infrastructure funds
-(long-dated operations-phase capital), export credit agencies and development banks
-(Domain 9), and bond markets (refinancing bankable operating assets). The leader's market
-literacy is matching **asset shape to capital shape**: construction risk to banks and ECAs,
-stabilised cash flows to institutions — mismatches are expensive at best and fatal at close.
+capacity markets; the energy transition's build-out is the market's largest engine); **water**
+(desalination and treatment concessions — Kestrel's world); **digital infrastructure** (data
+centres, towers, fibre, shorter refresh cycles, credit-tenant leases); **social infrastructure**
+(hospitals, schools, housing under availability PPPs); and **natural resources**
+(commodity-linked, price-hedged). The capital comes from commercial banks (construction-phase
+specialists), institutional investors and infrastructure funds (long-dated operations-phase
+capital), export credit agencies and development banks (Domain 9), and bond markets (refinancing
+bankable operating assets). The leader's market literacy is matching **asset shape to capital
+shape**: construction risk to banks and ECAs, stabilised cash flows to institutions. Mismatches
+are expensive at best and fatal at close.
 
 **Two axes, routinely conflated.** "Asset shape" is doing two jobs in that sentence, and
 separating them is what makes the principle operational. The first axis is **risk-holding
-capability** — which investor can price, absorb and be paid for construction risk, demand risk
-or technology risk. That axis dominates, and it is the axis MCQ 1.1-C tests. The second is
+capability**, which investor can price, absorb and be paid for construction risk, demand risk or
+technology risk. That axis dominates, and it is the axis MCQ 1.1-C tests. The second is
 **timing**, and here the profession's own shorthand misleads: capital described as "long-dated"
 is being matched to the *horizon over which cash arrives*, not to the stream's **Macaulay
 duration** — the present-value-weighted average time to receipt, which is the measure of how far
@@ -277,32 +275,32 @@ Limit as n → ∞:                    D → (1 + r)/r
 
 5. **Interpretation.** The first result is the one that reorders a reader's intuitions: **a
    15-year asset has a duration of 6.59 years — 44 % of its life.** Level streams front-load
-   present value: **54.01 %** of the operating stream's present value arrives in the first six of
-   its fifteen years, and an investor who bought it to match a 14-year liability has bought something
-   less than half as rate-sensitive as the liability it is hedging. The second result is stronger
-   and it is an *identity*, not an estimate: because `D → (1 + r)/r`, **no level stream discounted
-   at 8 % can ever have a duration above 13.5 years, at any tenor.** Extending the concession from
-   15 years to 25 buys 2.63 years of duration; extending it to 63 years would be needed to reach
-   13.0. A 14-year duration is therefore unreachable by tenor alone, and the reviewer's cue is
-   immediate: any liability-matching claim that rests on lengthening a level stream is
-   arithmetically confused. What *does* add duration is deferral (+3.00 years, exactly the
-   deferral, because deferring every weight shifts the weighted mean) and **escalation**
-   (+0.44 years at 2.5 %, because escalation moves weight to the later periods). That is the
-   investor-side reason indexed availability payments and inflation-linked tariffs are prized by
-   liability-driven capital — a fact usually explained on the revenue side (Domain 7) and rarely
-   on the buyer's. Now the honest complication, and it is the professional point of the example.
-   By duration alone, the **greenfield** position at 9.59 years is the *closest* match to the
-   14-year liability — and that is emphatically not advice to a pension fund to buy construction
-   risk. The two axes disagree, and the risk axis wins: a construction-phase position carries
-   completion, cost-overrun and technology exposures the fund cannot price, cannot manage and is
-   not paid for, and duration is a first-order sensitivity measure that says nothing whatever
-   about the probability that the cash arrives at all. The correct professional conclusion is the
-   layered one: **match risk first, then close the residual timing gap with instruments rather
-   than with asset selection** — indexation in the revenue contract, and interest-rate or
-   inflation hedging at the fund level. One caution on the arithmetic
-   itself: duration is computed at a stated rate and moves with it, so a duration quoted without
-   its discount rate is not a number — at 6 % the same 15-year level stream has a duration of
-   **6.9260 years** and the ceiling rises to **17.6667**.
+   present value: **54.01 %** of the operating stream's present value arrives in the first six
+   of its fifteen years, and an investor who bought it to match a 14-year liability has bought
+   something less than half as rate-sensitive as the liability it is hedging. The second result
+   is stronger and it is an *identity*, not an estimate: because `D → (1 + r)/r`, **no level
+   stream discounted at 8 % can ever have a duration above 13.5 years, at any tenor.** Extending
+   the concession from 15 years to 25 buys 2.63 years of duration; extending it to 63 years
+   would be needed to reach 13.0. A 14-year duration is therefore unreachable by tenor alone,
+   and the reviewer's cue is immediate: any liability-matching claim that rests on lengthening a
+   level stream is arithmetically confused. What *does* add duration is deferral (+3.00 years,
+   exactly the deferral, because deferring every weight shifts the weighted mean) and
+   **escalation** (+0.44 years at 2.5 %, because escalation moves weight to the later periods).
+   That is the investor-side reason indexed availability payments and inflation-linked tariffs
+   are prized by liability-driven capital, a fact usually explained on the revenue side (Domain
+   7) and rarely on the buyer's. Now the honest complication, and it is the professional point
+   of the example. By duration alone, the **greenfield** position at 9.59 years is the *closest*
+   match to the 14-year liability, and that is emphatically not advice to a pension fund to buy
+   construction risk. The two axes disagree, and the risk axis wins: a construction-phase
+   position carries completion, cost-overrun and technology exposures the fund cannot price,
+   cannot manage and is not paid for, and duration is a first-order sensitivity measure that
+   says nothing whatever about the probability that the cash arrives at all. The correct
+   professional conclusion is the layered one: **match risk first, then close the residual
+   timing gap with instruments rather than with asset selection** (indexation in the revenue
+   contract, and interest-rate or inflation hedging at the fund level). One caution on the
+   arithmetic itself: duration is computed at a stated rate and moves with it, so a duration
+   quoted without its discount rate is not a number — at 6 % the same 15-year level stream has a
+   duration of **6.9260 years** and the ceiling rises to **17.6667**.
 
 > **Fig 1.1.3 — The recourse decision against facility size.** Line chart. X-axis senior debt
 > raised, 10,000,000 to 310,000,000; y-axis the breakeven probability of a parent-impairing
@@ -320,24 +318,24 @@ Limit as n → ∞:                    D → (1 + r)/r
 
 ### AI in this KA
 
-Market screening and precedent research are natural AI accelerants — summarising comparable
-transactions, extracting terms from public disclosures, drafting stakeholder maps. The
-governed habits start in Domain 1 because the failure modes do: a fluent but invented
-"precedent transaction" is this profession's textbook hallucination case. Sources are
-verified against the registry discipline (every claimed deal traced to a public record), and
-the stakeholder analysis an AI drafts is walked, party by party, by someone who has sat
-across from those parties. **AI proposes; the professional verifies, decides and remains
-accountable.** Worked example 1.3.3 prices exactly this failure on Kestrel's own facility, and
-the number is larger than most readers expect.
+Market screening and precedent research are natural AI accelerants (summarising comparable
+transactions, extracting terms from public disclosures, drafting stakeholder maps). The governed
+habits start in Domain 1 because the failure modes do: a fluent but invented "precedent
+transaction" is this profession's textbook hallucination case. Sources are verified against the
+registry discipline (every claimed deal traced to a public record), and the stakeholder analysis
+an AI drafts is walked, party by party, by someone who has sat across from those parties. **AI
+proposes; the professional verifies, decides and remains accountable.** Worked example 1.3.4
+prices exactly this failure on Kestrel's own facility, and the number is larger than most
+readers expect.
 
-**One verification habit specific to this KA.** The two computations above are the ones a machine
-gets *plausibly* wrong rather than obviously wrong. A recourse comparison assembled by a tool
-will usually discount both routes correctly and still be worthless, because the exposure term —
-the one number that is not in any term sheet — has to be constructed from an enforcement
+**One verification habit specific to this KA.** The two computations above are the ones a
+machine gets *plausibly* wrong rather than obviously wrong. A recourse comparison assembled by a
+tool will usually discount both routes correctly and still be worthless, because the exposure
+term, the one number that is not in any term sheet, has to be constructed from an enforcement
 assumption a human must own and state. And a duration figure is the classic silently-wrong
 output: the formula is standard, so the answer arrives with no warning that it was computed at a
-different rate, on a different stream, or on the asset's life rather than its cash flows. In both
-cases the discipline is the same and it is cheap: **make the tool state the parameter, then
+different rate, on a different stream, or on the asset's life rather than its cash flows. In
+both cases the discipline is the same and it is cheap: **make the tool state the parameter, then
 recompute one line by hand.**
 
 ### Key terms — KA 1.1
@@ -389,10 +387,10 @@ infrastructure exposure. The asset-capital matching principle points it toward:
 - D. short-term bridge lending
 
 *Rationale:* Long-dated stable liabilities match long-dated stable cash flows on the axis that
-dominates — risk-holding capability. A and C sit where construction and development specialists
+dominates, risk-holding capability. A and C sit where construction and development specialists
 (banks, ECAs, developers) hold the risk; D matches a treasury desk, not a pension profile. Note
-that on the *timing* axis alone a deferred greenfield stream is the closer duration match
-(WE 1.1.4) — which is why the risk axis must be settled first.
+that on the *timing* axis alone a deferred greenfield stream is the closer duration match (WE
+1.1.4), which is why the risk axis must be settled first.
 
 **MCQ 1.1-D `[1.1.2 · Application]`** The limited-recourse route costs 5,202,128 more in present
 value than the corporate route and removes an enforcement exposure of 10,073,997. The breakeven
@@ -403,7 +401,7 @@ probability of a parent-impairing failure is:
 - D. 28.22 %
 
 *Rationale:* `5,202,128/10,073,997 = 51.64 %` (WE 1.1.2). A divides the incremental cost by the
-42,000,000 of debt instead of by the exposure — a cost intensity, not a breakeven; B uses only
+42,000,000 of debt instead of by the exposure: a cost intensity, not a breakeven; B uses only
 the 2,359,000 close-cost premium and drops the 2,843,128 margin differential; D is the
 large-facility asymptote, which omits the fixed close-cost premium altogether and therefore
 applies to no actual facility.
@@ -415,15 +413,15 @@ applies to no actual facility.
 - C. 13.50 years
 - D. 15.00 years
 
-*Rationale:* `D = 1.08/0.08 − 15/(1.08¹⁵ − 1) = 6.5945` (WE 1.1.4). B is the *unweighted* mean of
-the payment dates 1 to 15 — the duration you get by forgetting to discount the weights; C is the
-`(1 + r)/r` ceiling, which a level stream approaches only as the tenor approaches infinity; D
-confuses the asset's life with its duration, the error the example exists to disarm.
+*Rationale:* `D = 1.08/0.08 − 15/(1.08¹⁵ − 1) = 6.5945` (WE 1.1.4). B is the *unweighted* mean
+of the payment dates 1 to 15: the duration you get by forgetting to discount the weights; C is
+the `(1 + r)/r` ceiling, which a level stream approaches only as the tenor approaches infinity;
+D confuses the asset's life with its duration, the error the example exists to disarm.
 
 **MCQ 1.1-F `[1.1.2 · Evaluation]`** A sponsor's board is shown a breakeven failure probability of
 51.64 % and concludes that limited recourse "fails its own test" and should be abandoned. The
 best professional response is:
-- A. agree — the arithmetic is decisive
+- A. agree; the arithmetic is decisive
 - B. the expected-value test prices a mean while the sponsor is insuring a correlated tail, and it values none of the partnership or balance-sheet capacity the structure delivers; the breakeven is one input, not the decision ✅
 - C. recompute at a higher discount rate until the answer changes
 - D. the calculation is invalid because probabilities of project failure cannot be estimated
@@ -431,7 +429,7 @@ best professional response is:
 *Rationale:* WE 1.1.2's own interpretation: the exposure term is an expected shortfall, not the
 correlated loss that would arise in the bad state, and the structure additionally buys an option
 (the fund's participation) the table does not contain. A treats one input as the decision; C is
-assumption-shopping, which is the misconduct 1.3.1 names; D overstates the objection — the
+assumption-shopping, which is the misconduct 1.3.1 names; D overstates the objection. The
 parameter is uncertain, which is an argument for stating it and testing it, not for discarding
 the frame.
 
@@ -439,9 +437,12 @@ the frame.
 concession to an insurer whose liabilities have an average duration of 14 years, on the ground that
 "extending the tenor from 15 years to 25 brings the asset's duration into line with the liability".
 The stream is level and the discount rate is 8.0 %. The reviewer should:
-- A. accept the recommendation — a 25-year asset is the closest available match to a 14-year liability
+- A. accept the recommendation; a 25-year asset is the closest available match to a 14-year
+  liability
 - B. reject the reasoning as arithmetically impossible: at 8 % a level stream's duration is capped at `(1 + r)/r` = 13.5000 years, and 25 years reaches only 9.2254, so no tenor closes the gap ✅
-- C. correct the reasoning but keep the recommendation — 9.2254 years is the longest duration the concession can offer, so tenor is still the right lever and the residual gap belongs to the liability side
+- C. correct the reasoning but keep the recommendation; 9.2254 years is the longest duration the
+  concession can offer, so tenor is still the right lever and the residual gap belongs to the
+  liability side
 - D. reject the recommendation because duration is not a meaningful measure for infrastructure assets
 
 *Rationale:* extending 15 years to 25 buys **2.6309** years of duration (6.5945 → 9.2254) and the
@@ -463,29 +464,29 @@ ones. Which statement restates the reason correctly?
 - C. larger projects fail more often, so the probability required to justify the structure is lower
 - D. enforcement recoveries improve with project size, which enlarges the exposure the structure removes
 
-*Rationale:* the cost has a fixed element (the **2,359,000** close-cost premium) and a proportional
-one (140 basis points, worth **6.7694 %** of the debt in present value), while the exposure removed
-is proportional (**23.9857 %** of debt on these assumptions) — which is exactly why the curve is a
-hyperbola with 28.2224 % as its asymptote (1.1.2). A asserts a pricing pattern the example does not
-contain and the arithmetic does not need. C confuses the probability *required* with the probability
-*expected*. D reverses the direction: a better recovery reduces the exposure removed and therefore
-*raises* `p*` — at a 50 % recovery it reaches 127.6910 %.
+*Rationale:* the cost has a fixed element (the **2,359,000** close-cost premium) and a
+proportional one (140 basis points, worth **6.7694 %** of the debt in present value), while the
+exposure removed is proportional (**23.9857 %** of debt on these assumptions), which is exactly
+why the curve is a hyperbola with 28.2224 % as its asymptote (1.1.2). A asserts a pricing
+pattern the example does not contain and the arithmetic does not need. C confuses the
+probability *required* with the probability *expected*. D reverses the direction: a better
+recovery reduces the exposure removed and therefore *raises* `p*` (at a 50 % recovery it reaches
+127.6910 %).
 
 ### Self-check — KA 1.1
 
-1. *State the finance leader's one recurring question.* — Will the cash arrive, and who is
-   exposed if it does not?
-2. *Name two things limited recourse buys a sponsor and two things it costs.* — Buys: risk
-   containment, balance-sheet capacity (also partnering, lender discipline). Costs: pricing
-   and fees, transaction complexity (also covenant control, time).
-3. *Why does every party around the SPV get a contract?* — Non-recourse credit is built from
-   contracts: each relationship must be enforceable because the cash flow is the only
-   security.
-4. *Why does the recourse breakeven fall as the facility grows?* — The close-cost premium is
+1. *State the finance leader's one recurring question.* Will the cash arrive, and who is exposed
+   if it does not?
+2. *Name two things limited recourse buys a sponsor and two things it costs.* Buys: risk
+   containment, balance-sheet capacity (also partnering, lender discipline). Costs: pricing and
+   fees, transaction complexity (also covenant control, time).
+3. *Why does every party around the SPV get a contract?* Non-recourse credit is built from
+   contracts: each relationship must be enforceable because the cash flow is the only security.
+4. *Why does the recourse breakeven fall as the facility grows?* The close-cost premium is
    largely fixed while the exposure removed scales with the facility, so `p*` falls
    hyperbolically toward the margin differential alone (28.2224 %).
 5. *State the duration ceiling and what it rules out.* — A level stream's duration cannot exceed
-   `(1 + r)/r` — 13.5 years at 8 % — so no amount of tenor can match a longer-duration liability;
+   `(1 + r)/r` — 13.5 years at 8 %, so no amount of tenor can match a longer-duration liability;
    only deferral, escalation or a lower rate moves it.
 
 ---
@@ -497,19 +498,19 @@ leverage, risk and the bankability triangle.*
 
 ### 1.2.1 Value creation in projects
 
-A project creates value when the present value of what it will produce exceeds what it costs
-to build and run — Domain 4's NPV, stated in words. The foundation point is *where* value can
-be created or destroyed by *financing*: structure does not conjure value from a bad project,
-but it can (1) allocate each risk to the party who bears it cheapest — lowering the priced-in
-premiums; (2) match capital to risk phase — lowering the blended cost of funds; and (3)
-impose diligence and covenant discipline that keeps forecast value from leaking in execution.
-The corollary the profession lives by: **financing engineering amplifies project quality; it
-never substitutes for it.**
+A project creates value when the present value of what it will produce exceeds what it costs to
+build and run (Domain 4's NPV, stated in words). The foundation point is *where* value can be
+created or destroyed by *financing*: structure does not conjure value from a bad project, but it
+can (1) allocate each risk to the party who bears it cheapest — lowering the priced-in premiums;
+(2) match capital to risk phase — lowering the blended cost of funds; and (3) impose diligence
+and covenant discipline that keeps forecast value from leaking in execution. The corollary the
+profession lives by: **financing engineering amplifies project quality; it never substitutes for
+it.**
 
 **Channel one, made computable.** "Allocate each risk to the party who bears it cheapest" is
 usually taught as a comparison of two parties' expected costs, and Domain 11 (KA 11.2.2) builds
-that register properly, item by item. What that comparison omits — and what makes the allocation
-question a *financing* question rather than a risk-register question — is that a risk the SPV
+that register properly, item by item. What that comparison omits (and what makes the allocation
+question a *financing* question rather than a risk-register question) is that a risk the SPV
 retains is not paid for out of a contingency line. **It is paid for in the capital structure**,
 because lenders respond to retained construction risk by de-gearing rather than by pricing, and
 equity is the most expensive money in the structure. The consequence is that the sponsor's true
@@ -518,49 +519,49 @@ and is invisible on any risk register.
 
 **Worked example 1.2.1 — what retaining a risk actually costs.**
 
-1. **Setup.** Kestrel's EPC contractor will accept a defined construction risk — say a scope
-   interface the sponsors would otherwise carry — for a fixed **1,350,000** addition to the
+1. **Setup.** Kestrel's EPC contractor will accept a defined construction risk, say a scope
+   interface the sponsors would otherwise carry, for a fixed **1,350,000** addition to the
    contract price. The sponsors' own estimate of the risk's expected cost is **900,000**, so the
    quote carries a **50 %** loading and the risk register says refuse. The lenders' credit
-   committee, told the risk is retained, does not reprice: it reduces senior gearing from
-   **70 %** to **62 %** of the 60,000,000 envelope. Cost of equity is Domain 9's derived
-   **15.42 %** (KA 9.1.3); the senior rate is **6.0 %**; the horizon is the 12-year debt term and
-   the comparison rate is the appraisal's **8.0 %**.
+   committee, told the risk is retained, does not reprice: it reduces senior gearing from **70
+   %** to **62 %** of the 60,000,000 envelope. Cost of equity is Domain 9's derived **15.42 %**
+   (KA 9.1.3); the senior rate is **6.0 %**; the horizon is the 12-year debt term and the
+   comparison rate is the appraisal's **8.0 %**.
 2. **Formula.** Extra equity = capex × (new equity share − old equity share). Annual cost of the
    substitution = extra equity × (`k_e` − `k_d`). Cost of retention = that annuity discounted;
    the **breakeven transfer price** is that present value.
 3. **Substitution.** Equity `60,000,000 × 0.30 = 18,000,000` becomes `60,000,000 × 0.38 =
-   22,800,000`, so **4,800,000** of debt is replaced by equity — 8.0000 % of the envelope. Annual
+   22,800,000`, so **4,800,000** of debt is replaced by equity, 8.0000 % of the envelope. Annual
    `4,800,000 × (0.1542 − 0.0600) = 4,800,000 × 0.0942 = 452,160`. PV `452,160 × AF(0.08, 12) =
    452,160 × 7.536078`.
-4. **Result.** Cost of retention **USD 3,407,513.04** in present value — **3.7861 times** the
+4. **Result.** Cost of retention **USD 3,407,513.04** in present value, **3.7861 times** the
    risk's own expected cost of 900,000. Against a transfer price of 1,350,000, transferring
    creates **USD 2,057,513.04** of value, and the sponsor should be willing to pay up to
-   **3,407,513.04** — the breakeven — before retention becomes the cheaper answer.
+   **3,407,513.04**, the breakeven, before retention becomes the cheaper answer.
 5. **Interpretation.** The register said refuse and the register was wrong by **2,057,513**,
    because it compared the quote with the wrong number. This is the first channel of 1.2.1 in
    arithmetic: value was created not by reducing anyone's risk but by **moving it to where it is
-   financed more cheaply**, and the gain is the spread between equity and debt — 942 basis points
-   on 4,800,000 — not any difference in the parties' views of the hazard. Four things a reviewer
-   should take from it. **The form of the lender's response matters more than the risk.** Had the
-   committee priced the retention at, say, 35 basis points of margin on the full 42,000,000
-   instead of de-gearing, the cost would have been `147,000` a year and **1,107,803.47** in present
-   value — under a third as much — and the same 1,350,000 quote would then have been *rejected*
-   correctly. The professional discipline is therefore to ask the credit committee *how* it will
-   respond before negotiating the contract price, which is a conversation most sponsors have in
-   the wrong order. **The answer is robust to the discount convention.** At 10 % the retention
-   cost is 3,080,878.89 and at 6 % it is 3,790,838.88, so the transfer pays across the plausible
-   range; when a conclusion survives its own sensitivity band, say so, because that is what makes
-   it usable in a negotiation. **Two costs, not one, and they add.** Domain 11's method prices the
-   transferee's premium against the retainer's expected cost; this prices the financing
-   consequence. Both are real, they are additive, and an allocation decision taken on either alone
-   is taken on half the arithmetic. And **the transfer is only worth its price if the transferee
-   can pay** — a fixed-price wrap from a contractor whose balance sheet cannot absorb the loss is a
-   priced illusion, which is precisely why Domain 11 tests capability and Domain 12 writes the
-   security for it. One caution belongs on the record: the 8-point de-gearing is a *lender
-   judgment*, not a formula — Domain 10's sizing shows what governs it — so the honest presentation
-   of this result quotes the gearing response as the assumption it is, and re-runs it if the credit
-   committee lands somewhere else.
+   financed more cheaply**, and the gain is the spread between equity and debt (942 basis points
+   on 4,800,000), not any difference in the parties' views of the hazard. Four things a reviewer
+   should take from it. **The form of the lender's response matters more than the risk.** Had
+   the committee priced the retention at, say, 35 basis points of margin on the full 42,000,000
+   instead of de-gearing, the cost would have been `147,000` a year and **1,107,803.47** in
+   present value (under a third as much), and the same 1,350,000 quote would then have been
+   *rejected* correctly. The professional discipline is therefore to ask the credit committee
+   *how* it will respond before negotiating the contract price, which is a conversation most
+   sponsors have in the wrong order. **The answer is robust to the discount convention.** At 10
+   % the retention cost is 3,080,878.89 and at 6 % it is 3,790,838.88, so the transfer pays
+   across the plausible range; when a conclusion survives its own sensitivity band, say so,
+   because that is what makes it usable in a negotiation. **Two costs, not one, and they add.**
+   Domain 11's method prices the transferee's premium against the retainer's expected cost; this
+   prices the financing consequence. Both are real, they are additive, and an allocation
+   decision taken on either alone is taken on half the arithmetic. And **the transfer is only
+   worth its price if the transferee can pay**: a fixed-price wrap from a contractor whose
+   balance sheet cannot absorb the loss is a priced illusion, which is precisely why Domain 11
+   tests capability and Domain 12 writes the security for it. One caution belongs on the record:
+   the 8-point de-gearing is a *lender judgment*, not a formula (Domain 10's sizing shows what
+   governs it), so the honest presentation of this result quotes the gearing response as the
+   assumption it is, and re-runs it if the credit committee lands somewhere else.
 
 ### 1.2.2 Cash, not profit, is the binding constraint
 
@@ -576,30 +577,31 @@ debt service**. Projects die of cash exhaustion, usually while reporting profits
 2. **Formula.** Operating cash flow = profit − Δreceivables − Δinventory + Δpayables.
 3. **Substitution.** `2,000,000 − 3,000,000 − 1,000,000 + 500,000`.
 4. **Result.** Profit **+USD 2,000,000**; operating cash flow **−USD 1,500,000**.
-5. **Interpretation.** The same quarter is a success in the income statement and a crisis in
-   the bank account: a 2.0m "profitable" company is 1.5m short of the cash its debt service
-   assumed. This is why lenders size and test debt against **CFADS** — cash flow available
-   for debt service (defined fully in Domain 10) — and why every model in Domain 6 is a *cash*
-   model first. Domain 2 builds the full accrual-to-cash bridge. Three things worth extracting
-   before moving on. **The breakeven is 1,500,000 of receivables.** Holding the inventory build
-   and the supplier credit where they are, operating cash flow crosses zero when receivables rise
-   by `2,000,000 − 1,000,000 + 500,000 = 1,500,000` — which on quarterly revenue of 10,000,000 is
-   **13.6875 days** of sales, on a 91.25-day quarter. The company did not miss that threshold by a
-   little: at 3,000,000 its receivables are **27.3750 days**, twice the level at which the quarter
-   turns cash-negative. **The drain compounds if the pattern is structural rather than
-   seasonal.** A first quarter's working-capital build is a genuine one-off — the balance sheet is
-   being filled — but the same absorption repeated through the year is **6,000,000** of cash gone
-   against 8,000,000 of annual profit, and telling those two cases apart is the whole of the
-   analysis. **The shortfall has to be funded before it is explained.** A 1,500,000 hole is met
-   from a working-capital facility, a funded reserve or an equity call, and the working-capital
-   line is among the most commonly omitted items in a sources-and-uses statement — the same class
-   of defect as the unfunded reserve Domain 13 (KA 13.2.3) found in Kestrel's own funding plan,
-   discovered late because such statements are reviewed for arithmetic, which always balances,
-   rather than for completeness, which does not.
+5. **Interpretation.** The same quarter is a success in the income statement and a crisis in the
+   bank account: a 2.0m "profitable" company is 1.5m short of the cash its debt service assumed.
+   This is why lenders size and test debt against **CFADS**, cash flow available for debt
+   service (defined fully in Domain 10), and why every model in Domain 6 is a *cash* model
+   first. Domain 2 builds the full accrual-to-cash bridge. Three things worth extracting before
+   moving on. **The breakeven is 1,500,000 of receivables.** Holding the inventory build and the
+   supplier credit where they are, operating cash flow crosses zero when receivables rise by
+   `2,000,000 − 1,000,000 + 500,000 = 1,500,000`, which on quarterly revenue of 10,000,000 is
+   **13.6875 days** of sales, on a 91.25-day quarter. The company did not miss that threshold by
+   a little: at 3,000,000 its receivables are **27.3750 days**, twice the level at which the
+   quarter turns cash-negative. **The drain compounds if the pattern is structural rather than
+   seasonal.** A first quarter's working-capital build is a genuine one-off (the balance sheet
+   is being filled), but the same absorption repeated through the year is **6,000,000** of cash
+   gone against 8,000,000 of annual profit, and telling those two cases apart is the whole of
+   the analysis. **The shortfall has to be funded before it is explained.** A 1,500,000 hole is
+   met from a working-capital facility, a funded reserve or an equity call, and the
+   working-capital line is among the most commonly omitted items in a sources-and-uses
+   statement: the same class of defect as the unfunded reserve Domain 13 (KA 13.2.3) found in
+   Kestrel's own funding plan, discovered late because such statements are reviewed for
+   arithmetic, which always balances, rather than for completeness, which does not.
 
-On a financed project the same divergence does not merely embarrass a management report — it walks
-a covenant, and the distance to that covenant is best stated in the one unit an operating team
-controls, because collection days are something a team can be held to and a currency amount is not.
+On a financed project the same divergence does not merely embarrass a management report: it
+walks a covenant, and the distance to that covenant is best stated in the one unit an operating
+team controls, because collection days are something a team can be held to and a currency amount
+is not.
 
 **Worked example 1.2.2b — Kestrel's cash gap, in days of receivables.**
 
@@ -623,29 +625,30 @@ controls, because collection days are something a team can be held to and a curr
    | **Remaining headroom** | **372,437.72** | **0.0743** | **11.3283** |
    | Total working-capital tolerance from 6,984,000 | 972,437.72 | 0.1941 | **29.5783** |
 
-   Sensitivity: **50,096.35** of `CFADS` — **1.5238 days** of revenue — moves `DSCR` by 0.01×.
+   Sensitivity: **50,096.35** of `CFADS` (**1.5238 days** of revenue) moves `DSCR` by 0.01×.
 5. **Interpretation.** The project has **29.58 days** of revenue-equivalent working-capital
-   tolerance before a 1.20× covenant fails, and it has already spent **18.25** of them — **61.70 %
-   of the tolerance, consumed in the first operating year and reported as normal.** What remains is
-   **11.33 days**, which is the sentence to put in front of an operations director, because "the
-   covenant is eleven days of collections away" is actionable in a way that "headroom is 372,438"
-   is not. Four professional readings follow. **The two `DSCR` figures are the same project.**
-   1.3941 and 1.2743 differ by nothing but a definition of `CFADS`, and Domain 10's case study
-   records a sponsor arguing for the higher one; the facility's documented definition decides, and
-   a ratio quoted without its definition is not a ratio. **The sensitivity is the number to
-   memorise.** At this debt-service level roughly a day and a half of receivables is worth 0.01× of
-   `DSCR` — which is also, not coincidentally, the materiality threshold Domain 13 set for its model
-   audit (KA 13.2.2), so the two disciplines are calibrated to the same unit. **Working capital is
-   recoverable and that is exactly what makes it dangerous.** The 600,000 is not a loss; it comes
-   back if collections normalise, which is why it attracts less scrutiny than a cost overrun of the
-   same size — and a covenant test is measured on the date it falls, not on the date the cash
-   eventually arrives. **The direction of the next movement is not symmetric.** Growth, indexation
-   and a rising tariff all *increase* the receivables balance, so a project whose revenue is
-   escalating is consuming headroom at an increasing rate unless collection days improve, which is
-   the honest reason a first-year covenant test is the one lenders watch hardest. The caution: the
-   day translation assumes the whole absorption behaves like receivables on this revenue base; a
-   spares build is not collectable and does not respond to a collections campaign, so the
-   instruction to an operations team must name *which* days it is asking for.
+   tolerance before a 1.20× covenant fails, and it has already spent **18.25** of them: **61.70
+   % of the tolerance, consumed in the first operating year and reported as normal.** What
+   remains is **11.33 days**, which is the sentence to put in front of an operations director,
+   because "the covenant is eleven days of collections away" is actionable in a way that
+   "headroom is 372,438" is not. Four professional readings follow. **The two `DSCR` figures are
+   the same project.** 1.3941 and 1.2743 differ by nothing but a definition of `CFADS`, and
+   Domain 10's case study records a sponsor arguing for the higher one; the facility's
+   documented definition decides, and a ratio quoted without its definition is not a ratio.
+   **The sensitivity is the number to memorise.** At this debt-service level roughly a day and a
+   half of receivables is worth 0.01× of `DSCR`, which is also, not coincidentally, the
+   materiality threshold Domain 13 set for its model audit (KA 13.2.2), so the two disciplines
+   are calibrated to the same unit. **Working capital is recoverable and that is exactly what
+   makes it dangerous.** The 600,000 is not a loss; it comes back if collections normalise,
+   which is why it attracts less scrutiny than a cost overrun of the same size, and a covenant
+   test is measured on the date it falls, not on the date the cash eventually arrives. **The
+   direction of the next movement is not symmetric.** Growth, indexation and a rising tariff all
+   *increase* the receivables balance, so a project whose revenue is escalating is consuming
+   headroom at an increasing rate unless collection days improve, which is the honest reason a
+   first-year covenant test is the one lenders watch hardest. The caution: the day translation
+   assumes the whole absorption behaves like receivables on this revenue base; a spares build is
+   not collectable and does not respond to a collections campaign, so the instruction to an
+   operations team must name *which* days it is asking for.
 
 ### 1.2.3 Leverage, risk and the bankability triangle
 
@@ -671,37 +674,37 @@ debt service is owed. That fixity cuts both ways.
    | −50 % | 6,000,000 | 6.0 % | 1,800,000 | **6.0 %** |
    | −65 % | 4,200,000 | 4.2 % | 0 | **0.0 %** |
 
-5. **Interpretation.** Leverage more than doubles the base-case equity return (26 % vs 12 %)
-   — and makes the downside three times steeper (26 → 6 % as cash halves, versus 12 → 6 %
-   unlevered). At a 65 % cash decline the equity earns nothing and the lender is next in
-   line. Gearing is chosen, not maximised: Domain 9 structures it, Domain 10 shows how
-   lenders cap it with coverage ratios sized precisely against scenarios like this table.
-   Three structural facts sit inside that table and are worth extracting, because each one is a
-   check a reviewer can run in a single line. **The 26 % is an identity, not a coincidence.**
-   `r_equity = r_unlevered + (D/E) × (r_unlevered − r_debt)`, so
-   `12.0 % + (70/30) × (12.0 % − 6.0 %) = 12.0 % + 2.333333 × 6.0 % = 26.0000 %` — exactly the
-   table's base-case row. Read it as the sentence it is: **the levered return is the unlevered
-   return plus the gearing ratio times the spread the project earns over its debt.** That is where
-   the amplification comes from, it is why the amplification is *linear* in `D/E`, and it gives an
-   instant audit of any levered-return figure presented without its workings. **The crossover is
-   where the spread vanishes.** When the project's unlevered return equals the cost of debt —
-   here at project cash of exactly `100,000,000 × 6.0 % = 6,000,000` — the spread term is zero and
-   the levered and unlevered returns coincide at 6.0 %, which is the `−50 %` row's apparent
-   coincidence. Above that cash level leverage helps; below it, leverage *hurts*, and the identity
-   says so with a sign. A structure is therefore not "geared for return" in any general sense: it
-   is geared for return only in the states of the world where the project out-earns its debt, and
-   the whole downside case is the region where the arrangement runs in reverse. **The cliff is a
-   property of the debt's shape, not of the gearing.** The 65 % decline in the last row is the
-   distance to zero equity cash *for interest-only debt*, and interest-only debt is the exception
-   in project finance rather than the rule; the next example moves the cliff by more than half its
+5. **Interpretation.** Leverage more than doubles the base-case equity return (26 % vs 12 %),
+   and makes the downside three times steeper (26 → 6 % as cash halves, versus 12 → 6 %
+   unlevered). At a 65 % cash decline the equity earns nothing and the lender is next in line.
+   Gearing is chosen, not maximised: Domain 9 structures it, Domain 10 shows how lenders cap it
+   with coverage ratios sized precisely against scenarios like this table. Three structural
+   facts sit inside that table and are worth extracting, because each one is a check a reviewer
+   can run in a single line. **The 26 % is an identity, not a coincidence.** `r_equity =
+   r_unlevered + (D/E) × (r_unlevered − r_debt)`, so `12.0 % + (70/30) × (12.0 % − 6.0 %) = 12.0
+   % + 2.333333 × 6.0 % = 26.0000 %` (exactly the table's base-case row). Read it as the
+   sentence it is: **the levered return is the unlevered return plus the gearing ratio times the
+   spread the project earns over its debt.** That is where the amplification comes from, it is
+   why the amplification is *linear* in `D/E`, and it gives an instant audit of any
+   levered-return figure presented without its workings. **The crossover is where the spread
+   vanishes.** When the project's unlevered return equals the cost of debt (here at project cash
+   of exactly `100,000,000 × 6.0 % = 6,000,000`) the spread term is zero and the levered and
+   unlevered returns coincide at 6.0 %, which is the `−50 %` row's apparent coincidence. Above
+   that cash level leverage helps; below it, leverage *hurts*, and the identity says so with a
+   sign. A structure is therefore not "geared for return" in any general sense: it is geared for
+   return only in the states of the world where the project out-earns its debt, and the whole
+   downside case is the region where the arrangement runs in reverse. **The cliff is a property
+   of the debt's shape, not of the gearing.** The 65 % decline in the last row is the distance
+   to zero equity cash *for interest-only debt*, and interest-only debt is the exception in
+   project finance rather than the rule; the next example moves the cliff by more than half its
    distance without changing the gearing, the rate or the project by one dollar.
 
 **Worked example 1.2.3b — the same 70 % gearing, amortising: where the cliff really is.**
 
-1. **Setup.** The identical project and structure — 100,000,000 of capital cost, 70,000,000 of
-   senior debt at 6.0 %, 30,000,000 of equity, steady operating cash of 12,000,000 — but the debt
-   amortises over **12 years** on the master facility's terms rather than paying interest only.
-   The lender's financial covenant is a `DSCR` of **1.20×**.
+1. **Setup.** The identical project and structure (100,000,000 of capital cost, 70,000,000 of
+   senior debt at 6.0 %, 30,000,000 of equity, steady operating cash of 12,000,000), but the
+   debt amortises over **12 years** on the master facility's terms rather than paying interest
+   only. The lender's financial covenant is a `DSCR` of **1.20×**.
 2. **Formula.** Level instalment = `debt ÷ AF(r, n)`. Equity cash = project cash − instalment;
    cash-on-cash return = equity cash ÷ equity. `DSCR` = project cash ÷ instalment. The cliff is
    the cash level at which equity cash reaches zero; the covenant bites where `DSCR` = 1.20.
@@ -723,32 +726,32 @@ debt service is owed. That fixity cuts both ways.
 
 5. **Interpretation.** Two conclusions, and they point in opposite directions, which is why this
    example matters more than its arithmetic. **The first is a warning about the metric.** The
-   headline equity return collapsed from 26.00 % to **12.1687 %** — barely above the 12.0 %
-   unlevered return — and the project did not get worse by one cent. Year-one interest is
+   headline equity return collapsed from 26.00 % to **12.1687 %** (barely above the 12.0 %
+   unlevered return), and the project did not get worse by one cent. Year-one interest is
    **identical at 4,200,000** in both columns; the entire difference is the **4,149,392.06** of
-   principal repaid, and principal repayment is a *return of capital*, not a cost. The amortising
-   equity is better off than the cash-on-cash figure implies, because it also owns a claim that is
-   de-levering by 4,149,392 in the first year and by more in every year after it. Single-period
-   cash-on-cash return is therefore the wrong
-   instrument for judging a levered structure whenever debt amortises, and the right one is the
-   equity `IRR` over the whole life (Domain 4's measure, applied to the structure in Domain 9,
-   KA 9.1.4) — which is exactly why an interest-only illustration of leverage, WE 1.2.3 included,
-   flatters every structure it is applied to. **The second is a warning about the cliff, and it is
-   the one that reaches a credit committee.** The distance to zero equity cash more than halved,
-   from a 65.00 % decline to **30.42 %** — and the *covenant* bites far earlier still, at a
-   **16.51 %** decline in project cash. Rank them: the lender's protection engages at −16.51 %, the
-   equity's own cash runs out at −30.42 %, and the interest-only reading suggested −65.00 %. An
-   analyst who models leverage interest-only and reports the resilience of the structure has
-   overstated the equity's cushion by a factor of roughly four, and the error is invisible in the
-   base case, where every number looks fine. The caution to carry: the
-   amortising column is not "worse". It is a **different bargain** — a structure that repays
-   principal converts operating cash into ownership and buys future distribution capacity, which is
-   why sculpted and back-ended profiles exist and why Domain 10's sizing levers include the
-   repayment shape and not only the amount. What is unarguable is that the three thresholds in the
-   table are the ones a leader must be able to state from memory about their own project.
-   Fig 1.2.2 draws all three lines together, and the geometry is worth more than the table: two
-   straight lines of identical slope, offset by the principal repayment, crossing the unlevered
-   line at two very different places.
+   principal repaid, and principal repayment is a *return of capital*, not a cost. The
+   amortising equity is better off than the cash-on-cash figure implies, because it also owns a
+   claim that is de-levering by 4,149,392 in the first year and by more in every year after it.
+   Single-period cash-on-cash return is therefore the wrong instrument for judging a levered
+   structure whenever debt amortises, and the right one is the equity `IRR` over the whole life
+   (Domain 4's measure, applied to the structure in Domain 9, KA 9.1.4), which is exactly why an
+   interest-only illustration of leverage, WE 1.2.3 included, flatters every structure it is
+   applied to. **The second is a warning about the cliff, and it is the one that reaches a
+   credit committee.** The distance to zero equity cash more than halved, from a 65.00 % decline
+   to **30.42 %**, and the *covenant* bites far earlier still, at a **16.51 %** decline in
+   project cash. Rank them: the lender's protection engages at −16.51 %, the equity's own cash
+   runs out at −30.42 %, and the interest-only reading suggested −65.00 %. An analyst who models
+   leverage interest-only and reports the resilience of the structure has overstated the
+   equity's cushion by a factor of roughly four, and the error is invisible in the base case,
+   where every number looks fine. The caution to carry: the amortising column is not "worse". It
+   is a **different bargain**: a structure that repays principal converts operating cash into
+   ownership and buys future distribution capacity, which is why sculpted and back-ended
+   profiles exist and why Domain 10's sizing levers include the repayment shape and not only the
+   amount. What is unarguable is that the three thresholds in the table are the ones a leader
+   must be able to state from memory about their own project. Fig 1.2.2 draws all three lines
+   together, and the geometry is worth more than the table: two straight lines of identical
+   slope, offset by the principal repayment, crossing the unlevered line at two very different
+   places.
 
 **The bankability triangle.** Three tests every financing must pass simultaneously:
 **value** (the project is worth doing — Domain 4), **cash** (the flows arrive in the periods
@@ -784,11 +787,11 @@ capital being asked to commit.
 
 ### AI in this KA
 
-Scenario tables like 1.2.3's are ideal machine work — and the place where a subtly wrong
-fixed-charge assumption (interest-only vs amortising; Domain 3's shapes) silently reshapes
-every row. WE 1.2.3b measures the damage: the same gearing, rate and project, and a cliff that
-moves from a 65.00 % cash decline to 30.42 %, with the covenant at 16.51 %. The governed pattern:
-the machine drafts the grid; the analyst re-derives one row by hand and checks the boundary case
+Scenario tables like 1.2.3's are ideal machine work, and the place where a subtly wrong
+fixed-charge assumption (interest-only vs amortising; Domain 3's shapes) silently reshapes every
+row. WE 1.2.3b measures the damage: the same gearing, rate and project, and a cliff that moves
+from a 65.00 % cash decline to 30.42 %, with the covenant at 16.51 %. The governed pattern: the
+machine drafts the grid; the analyst re-derives one row by hand and checks the boundary case
 (where equity cash crosses zero) analytically; the leader reads the *downside* rows first,
 because that is what the structure is actually being designed against.
 
@@ -825,8 +828,8 @@ cash flow is:
 - D. −2,500,000
 
 *Rationale:* `2.0 − 3.0 − 1.0 + 0.5 = −1.5m`. A stops at profit; C nets only the payables
-against profit and forgets the asset build; D subtracts the payables increase instead of
-adding it — supplier credit is a cash *source*.
+against profit and forgets the asset build; D subtracts the payables increase instead of adding
+it. Supplier credit is a cash *source*.
 
 **MCQ 1.2-B `[1.2.3 · Application]`** In the leverage example (70m debt, interest-only 6 %;
 equity 30m), project cash of 9,000,000 produces a levered equity return of:
@@ -841,14 +844,14 @@ return; D divides project cash by equity without paying the lender first.
 **MCQ 1.2-C `[1.2.3 · Analysis]`** A project shows strong NPV and well-allocated risks, but
 its revenue arrives seasonally while debt service is quarterly and level. The bankability
 verdict is:
-- A. bankable — two of three corners suffice
+- A. bankable (two of three corners suffice)
 - B. unbankable as structured: the cash corner fails; reshape the debt profile or add liquidity support ✅
-- C. unbankable permanently — reject the project
+- C. unbankable permanently, reject the project
 - D. bankable if the sponsors accept a higher equity IRR
 
-*Rationale:* The triangle is conjunctive: mistimed cash defeats value and allocation. The
-cure is structural (sculpted or seasonal debt service, reserve accounts — Domains 9–10), not
-rejection (C) and not a return adjustment that changes nothing about timing (D).
+*Rationale:* The triangle is conjunctive: mistimed cash defeats value and allocation. The cure
+is structural (sculpted or seasonal debt service, reserve accounts: Domains 9–10), not rejection
+(C) and not a return adjustment that changes nothing about timing (D).
 
 **MCQ 1.2-D `[1.2.3 · Application]`** The same project (100,000,000 cost, 12,000,000 of annual
 operating cash, 70,000,000 of senior debt at 6.0 %, 30,000,000 of equity) is financed with debt
@@ -861,8 +864,8 @@ cash-on-cash equity return is:
 
 *Rationale:* Instalment `70,000,000/8.383844 = 8,349,392.06`; `(12,000,000 − 8,349,392.06)/
 30,000,000 = 12.1687 %` (WE 1.2.3b). B is the interest-only reading, which charges only the
-4,200,000 of interest; C divides project cash by equity and never pays the lender at all;
-D concludes that amortisation makes leverage exactly neutral — close, and wrong by the 17 basis
+4,200,000 of interest; C divides project cash by equity and never pays the lender at all; D
+concludes that amortisation makes leverage exactly neutral: close, and wrong by the 17 basis
 points that are the whole of the remaining spread benefit.
 
 **MCQ 1.2-E `[1.2.2 · Application]`** Kestrel's documented `CFADS` is 6,384,000, debt service is
@@ -876,7 +879,7 @@ the remaining covenant headroom is:
 *Rationale:* Headroom `6,384,000 − 6,011,562 = 372,438`; `372,438/12,000,000 × 365 = 11.33 days`
 (WE 1.2.2b). B is the working capital *already* absorbed, which is history rather than headroom;
 C is the total tolerance measured from the pre-working-capital `CFADS` of 6,984,000, so it
-double-counts the 600,000 already spent; D is the sensitivity — the days worth 0.01× of `DSCR` —
+double-counts the 600,000 already spent; D is the sensitivity (the days worth 0.01× of `DSCR`)
 mistaken for the headroom itself.
 
 **MCQ 1.2-F `[1.2.1 · Evaluation]`** A contractor offers to take a construction risk for
@@ -894,24 +897,25 @@ demands a price at which no contractor would accept the risk, since the transfer
 uncertainty as well as expectation; D denies the gain from trade that the equity-debt spread
 creates.
 
-**MCQ 1.2-G `[1.2.3 · Evaluation]`** An analyst's paper on the WE 1.2.3 project — 100,000,000 of
-capital cost, 12,000,000 of steady operating cash, 70,000,000 of senior debt at 6.0 % and 30,000,000
-of equity — reports that the structure "absorbs a 65 % fall in project cash before the equity's own
-cash runs out", having modelled the debt as interest-only when the facility amortises over 12 years
-and carries a 1.20× `DSCR` covenant. Each objection below is a fair one. Which is the more decisive
-for the credit committee?
+**MCQ 1.2-G `[1.2.3 · Evaluation]`** An analyst's paper on the WE 1.2.3 project (100,000,000 of
+capital cost, 12,000,000 of steady operating cash, 70,000,000 of senior debt at 6.0 % and
+30,000,000 of equity) reports that the structure "absorbs a 65 % fall in project cash before the
+equity's own cash runs out", having modelled the debt as interest-only when the facility
+amortises over 12 years and carries a 1.20× `DSCR` covenant. Each objection below is a fair one.
+Which is the more decisive for the credit committee?
 - A. the paper overstates the cushion that matters: on the amortising facility the equity's cash exhausts at a 30.42 % decline and the 1.20× covenant engages at 16.51 %, so the reported resilience is roughly four times the distance to the first consequence ✅
 - B. the paper's 26.0000 % cash-on-cash return is overstated, since the amortising structure returns 12.1687 %
 - C. the paper should have measured the equity with an `IRR` over the whole life rather than a single-period return
 - D. the paper omits the tax shield on the interest charge
 
 *Rationale:* A and B follow from the same substitution, but the committee is buying downside
-protection, and only A quantifies it — the covenant bites at −16.51 %, the equity's cash runs out at
-−30.42 %, and the paper reported −65.00 % (WE 1.2.3b). B is true and second-order, and on its own it
-is a *misleading* correction: the **4,149,392.06** of principal repaid is a return of capital rather
-than a cost, so the amortising equity is better off than 12.1687 % implies. C is a sound
-methodological point that quantifies nothing by itself. D is true of both columns equally —
-year-one interest is identical at 4,200,000 — so it cannot be an objection to this paper.
+protection, and only A quantifies it — the covenant bites at −16.51 %, the equity's cash runs
+out at −30.42 %, and the paper reported −65.00 % (WE 1.2.3b). B is true and second-order, and on
+its own it is a *misleading* correction: the **4,149,392.06** of principal repaid is a return of
+capital rather than a cost, so the amortising equity is better off than 12.1687 % implies. C is
+a sound methodological point that quantifies nothing by itself. D is true of both columns
+equally (year-one interest is identical at 4,200,000), so it cannot be an objection to this
+paper.
 
 **MCQ 1.2-H `[1.2.3 · Comprehension]`** The levered-return identity is
 `r_e = r_u + (D/E) × (r_u − r_d)`. Which statement restates what it says about a structure geared
@@ -921,62 +925,341 @@ year-one interest is identical at 4,200,000 — so it cannot be an objection to 
 - C. gearing raises the equity return by the difference between the cost of equity and the cost of debt
 - D. gearing raises the equity return wherever the project's unlevered return exceeds the equity holders' required return
 
-*Rationale:* the identity multiplies the **spread over the debt rate** by the debt-to-equity ratio, so
-its sign follows the spread: at an unlevered 12.0 % it adds **14.0000** points to reach 26.0000 %, and
-at an unlevered 4.0 % it subtracts **4.6667** points to −0.6667 % (WE 1.2.3). A ignores the sign; below
-the crossover — project cash of 6,000,000 on this structure — leverage subtracts. C names the wrong
-spread: the identity uses `r_u − r_d`, not `k_e − k_d`. D substitutes the equity's required return for
-the debt rate and so puts the crossover in the wrong place.
+*Rationale:* the identity multiplies the **spread over the debt rate** by the debt-to-equity
+ratio, so its sign follows the spread: at an unlevered 12.0 % it adds **14.0000** points to
+reach 26.0000 %, and at an unlevered 4.0 % it subtracts **4.6667** points to −0.6667 % (WE
+1.2.3). A ignores the sign; below the crossover (project cash of 6,000,000 on this structure)
+leverage subtracts. C names the wrong spread: the identity uses `r_u − r_d`, not `k_e − k_d`. D
+substitutes the equity's required return for the debt rate and so puts the crossover in the
+wrong place.
 
 ### Self-check — KA 1.2
 
-1. *Why do lenders test CFADS rather than profit?* — Debt service is paid in cash; accrual
-   profit can coexist with cash exhaustion (WE 1.2.2).
-2. *State leverage's two faces in one sentence each.* — It multiplies the equity return on
-   the same project cash; it makes every downside steeper because debt service is fixed.
-3. *Why is the triangle conjunctive?* — Each corner defeats the financing alone: no value →
-   no equity; no cash timing → default risk regardless of value; no allocation → risk premia
-   or collapse at close.
-4. *State the levered-return identity and what it implies below the crossover.* —
-   `r_e = r_u + (D/E) × (r_u − r_d)`; where `r_u < r_d` the spread term is negative and gearing
-   *reduces* the equity return.
-5. *Why does amortisation move the equity cliff so far?* — Debt service rises from interest alone
+1. *Why do lenders test CFADS rather than profit?* Debt service is paid in cash; accrual profit
+   can coexist with cash exhaustion (WE 1.2.2).
+2. *State leverage's two faces in one sentence each.* It multiplies the equity return on the
+   same project cash; it makes every downside steeper because debt service is fixed.
+3. *Why is the triangle conjunctive?* Each corner defeats the financing alone: no value → no
+   equity; no cash timing → default risk regardless of value; no allocation → risk premia or
+   collapse at close.
+4. *State the levered-return identity and what it implies below the crossover.* `r_e = r_u +
+   (D/E) × (r_u − r_d)`; where `r_u < r_d` the spread term is negative and gearing *reduces* the
+   equity return.
+5. *Why does amortisation move the equity cliff so far?* Debt service rises from interest alone
    to interest plus principal (4,200,000 → 8,349,392), halving the cash decline the equity can
    absorb, from 65.00 % to 30.42 %, with the covenant engaging at 16.51 %.
-6. *Where is a retained risk paid for?* — In the capital structure: lenders de-gear, equity
+6. *Where is a retained risk paid for?* In the capital structure: lenders de-gear, equity
    replaces debt, and the cost is the equity-debt spread on the substituted amount.
 
 ---
 
 ## Knowledge Area 1.3 — Ethics, fiduciary awareness and responsible AI
 
-*Topics: 1.3.1 obligations and duties · 1.3.2 conflicts and independence · 1.3.3 the
-responsible-AI principle in finance.*
+*Topics: 1.3.1 obligations and duties · 1.3.2 financial crime: bribery, sanctions and the
+money-laundering perimeter · 1.3.3 conflicts and independence · 1.3.4 the responsible-AI principle
+in finance.*
 
 ### 1.3.1 Obligations and duties
 
 The project finance leader acts inside a lattice of duties: **fiduciary-type duties** to the
-employer or client (loyalty, care, confidentiality); **contractual duties** under mandates
-and finance documents; **statutory duties** (companies law, anti-bribery and corruption,
-sanctions, market conduct); and **professional duties** — competence, candour, and records
-that let others check the work. Two standing disciplines follow. *Candour about numbers*:
-forecasts are presented with their assumptions and sensitivities, never as certainties
-(Domain 4, KA 4.3.3); an optimistic case knowingly presented as a base case is a
-misrepresentation, whatever the spreadsheet says. *Candour about limits*: this book's own
-rule — educational reference, not individualized advice; jurisdiction-specific matters go to
-qualified counsel and advisers — is the same professional humility applied to oneself.
+employer or client (loyalty, care, confidentiality); **contractual duties** under mandates and
+finance documents; **duties arising under law**. The usual headings are companies law,
+anti-bribery and corruption, sanctions and market conduct, though which of them reach a given
+person, entity or transaction varies by jurisdiction and is a question for qualified counsel;
+and **professional duties** — competence, candour, and records that let others check the work.
+Two standing disciplines follow. *Candour about numbers*: forecasts are presented with their
+assumptions and sensitivities, never as certainties (Domain 4, KA 4.3.3); an optimistic case
+knowingly presented as a base case is a misrepresentation, whatever the spreadsheet says.
+*Candour about limits*: this book's own rule (educational reference, not individualized advice;
+jurisdiction-specific matters go to qualified counsel and advisers) is the same professional
+humility applied to oneself.
 
-### 1.3.2 Conflicts and independence
+**The duty to correct.** Candour about numbers has a forward limb (how a forecast is presented
+when it is first presented), and a backward limb, which is the one that arrives without warning.
+A professional who learns that a number already relied on is **materially wrong, or was wrong
+when it was issued, is obliged to correct it**. The obligation is not discharged by the number
+having been superseded internally: a figure withdrawn from the working model but still sitting
+in a lender's credit paper, a board pack, a grantor's evaluation or a submitted bid has not been
+corrected, it has been abandoned, and abandonment leaves the recipient exactly where the error
+put them. Four elements make the obligation operable, and they are the four this book's
+governance uses everywhere.
 
-Project finance concentrates conflicts because the same institutions recur in many roles:
-the adviser who would earn a success fee on close; the sponsor-affiliated contractor pricing
-the EPC; the bank advising the government while lending to bidders. The professional
-machinery is disclosure and separation: conflicts are declared before engagement, managed
-with information barriers or declined; advice and self-interest are never silently blended.
-The leader's test for any arrangement is the *daylight test* — would every party, seeing the
-full fee and relationship map, still regard the advice as independent? Where the answer
-wavers, independence has already failed. (Case study B applies this to a live tender;
-Domain 13's diligence streams exist partly to give lenders advice that passes the test.)
+- **The trigger.** Materiality is judged against the decision the recipient took or is about to
+  take, not against the size of the arithmetic. An error of a few thousand that moves a coverage
+  ratio across a covenant threshold is material; a larger one that changes nothing anyone relied
+  on is not. Where the answer is genuinely unclear the error is treated as material until
+  someone senior decides otherwise in writing, because the alternative rule, treat it as
+  immaterial until proved otherwise, is the one that produces Case study B in Domain 6.
+- **The decision rights.** The correction is owned by **the person who signed the original
+  output**, not by whoever happened to find it and not by the team that would prefer it stayed
+  internal. The decision to notify externally sits with the accountable principal (the sponsor's
+  CFO, or the engagement partner on a mandated adviser's side). **No commercial party may veto a
+  correction that is owed.** A request to hold one back until a milestone passes is not a
+  commercial negotiation; it is itself an escalation event, and it is recorded as one.
+- **The timing and the route.** The correction reaches the recipient **before the next decision
+  that would rely on the wrong figure**. Where the recipient is a lender or an agent, it travels
+  through the channel the finance documents provide for notices and information, not through a
+  call to the relationship banker: an informal warning that leaves no record has protected the
+  individual rather than the recipient, and the two are not the same thing.
+- **The record.** What was wrong; when it was known and by whom; what the corrected figure is and
+  how it was derived; who was told, through what route, on what date; and which decisions taken on
+  the old figure are being revisited. This is the entry the conflicts and AI-use register of
+  Toolkit 1.T.3 is built to hold, and it is retained on the same basis (see the toolkit preamble).
+
+*Counsel pointer:* whether a particular failure to correct engages a representation, an information
+undertaking, a warranty or an event of default under a specific set of finance documents is a
+question for qualified counsel on those documents, and the answer turns on the drafting and the
+governing law. Nothing here states the position under any of them, and nothing here characterises
+any act or omission as lawful or unlawful. The professional obligation above does not wait for that
+answer: it is discharged first, and the legal analysis runs alongside it. Domain 6 Case study B
+follows a superseded forecast that survived into a financing model and was found by the *lenders'*
+auditor rather than by the team that owned it; Domain 6, KA 6.4.3 carries the same duty into the
+model after close, and Domain 13 places it on the closing-set and condition-precedent trail.
+
+### 1.3.2 Financial crime: bribery, sanctions and the money-laundering perimeter
+
+**Why this belongs in the foundations.** Of the duties listed in 1.3.1, this is the one the
+profession treats as absolute: no commercial justification reopens it, and the professional
+standard applies to the organisation and to the individual who authorised the payment, tolerated
+the arrangement or declined to ask. It belongs here rather than in a compliance annexe because
+of where this book's projects are actually developed: in jurisdictions the sponsor does not live
+in, reached through local agents, development consultants and joint-venture partners, and
+financed by institutions whose conditions precedent and continuing covenants routinely include
+anti-corruption and sanctions representations. A conflict of interest (1.3.3) is a professional
+failure priced in fees and franchise. This one is priced in consequences of a different order
+(the loss of standing to bid public work, an event of default under the finance documents, and a
+financing that cannot close because no lender will take the representation) and, in many
+jurisdictions, in the attention of authorities whose powers a leader should assume are severe
+and should never try to gauge unaided. It is also the duty most often met for the first time at
+the worst moment (on a critical path, in an unfamiliar jurisdiction, on the counterparty's
+recommendation).
+
+**The conduct a leader must recognise, in plain terms.** Four families, described as the professional
+standard in this book treats them and as a leader needs to recognise them in the field. This is a
+professional taxonomy, not a statement of the law of any jurisdiction: what conduct is caught, by whom
+and where, is for qualified counsel in the jurisdictions concerned.
+
+- **Bribery**, as this book uses the term, is offering, promising or giving (or requesting,
+  agreeing to receive or accepting) a financial or other advantage to secure the improper
+  performance of a function. The professional standard treats both sides of the transaction
+  alike. The advantage need not be money (a job for a relative, a scholarship, a subcontract,
+  hospitality out of all proportion to the occasion), it need not actually be paid, and the
+  project need not win: for professional purposes the offer completes the act.
+- **Bribery of a foreign public official** is treated as a distinct and usually stricter
+  category, and it is the one this discipline meets most. "Public official" should be read
+  broadly enough to reach the counterparties a project deals with every day (state-owned
+  utilities and offtakers, permitting and customs authorities, sovereign funds, port and grid
+  operators), and a leader should not assume that an absence of improper performance puts an
+  advantage intended to obtain or retain business outside the category.
+- **Treat a facilitation payment as a bribe.** A small payment to secure a routine act to which
+  the project is already entitled (releasing a permit that has been granted, clearing goods
+  already cleared, connecting a service already paid for) falls inside the professional
+  prohibition in this book whatever it is called locally and however normal it is said to be.
+  Anti-bribery regimes differ, and where one is said to carve out an exception the exception is
+  typically narrow. Treat the category as prohibited, and treat any claimed exception as
+  something to be advised in writing by counsel for that jurisdiction before the payment, not
+  after. A payment made under a genuine threat to personal safety is a different question
+  entirely: it is reported the same day to compliance and counsel, and it is never filed as an
+  ordinary expense.
+- **Failure to prevent.** Several jurisdictions are understood to operate regimes under which an
+  organisation answers for bribery committed by an **associated person**, an agent, consultant,
+  joint-venture partner, distributor or subcontractor performing services for or on its behalf.
+  The professional lesson, which holds whatever the local position turns out to be, is that **a
+  leader should not assume that not knowing what the intermediary did will protect the
+  organisation**; plan on being answerable for conduct nobody in the sponsor ever saw. Where
+  such regimes admit a defence it is generally described as a procedures defence, and it is said
+  to turn on what the organisation actually did and can evidence (diligence performed, approval
+  given by someone outside the deal, terms imposed, payments monitored), not on what its policy
+  says. Whether any such regime applies to a given organisation, and what it would take to
+  satisfy it, is a question for qualified counsel in the jurisdictions concerned.
+
+**Sanctions, and the money-laundering perimeter.** These are separate regimes with separate
+logic and neither is a subset of anti-bribery. **Sanctions** are not one list but many
+overlapping measures (asset freezes, prohibitions on dealing, sectoral and export restrictions)
+imposed by different authorities, engaged by different connecting factors (nationality of a
+person or entity, place of incorporation, the currency a payment settles in, the use of a
+jurisdiction's financial system or its goods), and changed without notice. Two properties matter
+operationally: a party need not be named to be caught, because ownership and control tests can
+pull an unlisted company into a designation through its shareholders; and a screen is a
+**repeated** control, because a clean party at signing can be designated the following quarter.
+**Money laundering** concerns dealing with the proceeds of crime, and its practical bite on a
+project leader is usually indirect: the project's banks, advisers and insurers are themselves
+regulated, so their obligations arrive as the project's conditions (beneficial-ownership
+disclosure, source-of-funds evidence on equity, customer diligence on every payee). A sponsor
+that cannot evidence where its equity came from does not reach financial close. Note also that
+alerting the subject of a suspicion or of a report, **tipping off**, is treated by this book as
+a serious professional failure in its own right, and restrictions on it are understood to exist
+in many jurisdictions, though their scope and their consequences vary and are a matter for
+qualified counsel. That is why the escalation route below runs where it does.
+
+**Red flags that oblige a leader to stop.** None of these is proof of anything, and treating them as
+accusations is its own failure. Each is a condition under which the professional may not simply
+continue: the flag is resolved and cleared, in writing, or the step does not happen.
+
+| Red flag | Why it is a flag | What it obliges |
+|---|---|---|
+| An agent or adviser whose fee is **success-based and disproportionate** to any service that can be described | The fee is priced against an outcome rather than against work, so what is being bought cannot be read off the invoice; the excess over demonstrable service is unexplained by construction | No engagement until the service is specified, the fee benchmarked against comparable work, and both approved in writing outside the deal team |
+| An **intermediary introduced by the counterparty** | The party on the other side of the negotiation is choosing who sits inside the sponsor's payment chain — the one relationship a leader cannot diligence by asking the introducer | Disclose the introduction, diligence the party independently of anything the counterparty supplies, and refer the engagement to compliance or counsel before any mandate is signed |
+| An **unexplained offshore payment route** | Distance between where a service is performed and where it is paid is the common signature of both bribery and laundering, and an unexplained route is unexplained however ordinary the bank is | Payment goes to the contracting entity, in the contracting jurisdiction, into an account in its own name — any departure needs a documented commercial reason approved before payment |
+| A request to **route payment to a third jurisdiction**, or to a party other than the contracting one | The same signature, made explicit, and usually made late — after the commercial terms are agreed and the leverage has moved | Stop the payment. Not a treasury exception: the request itself is escalated, and the underlying arrangement is re-examined |
+| A **politically exposed person** in the ownership or control chain | A commercial payment may be a channel to someone who decides the project's permits, tariff or award. This is a status, not a finding of wrongdoing — what it changes is the standard of enquiry and who must approve | Enhanced diligence to natural persons, the connection recorded, and approval at a level above the deal team; where the person can influence a decision affecting the project, expect the answer to be no |
+| **Beneficial ownership that cannot be traced to natural persons** | A chain stopping at a corporate name in a jurisdiction that does not publish is not a diligence result; it is the absence of one | No engagement and no payment on an untraced chain — the leader records what was asked, what was refused, and by whom |
+| **Urgency asserted by the party being diligenced** ("the minister travels on Friday") | Time pressure sourced from the counterparty is the standard method for compressing the one control that would have caught the problem | Programme relief, not diligence relief. The date moves; the check does not |
+
+**Decision rights and escalation.** Who decides is as much of the control as what is decided.
+
+- **Engaging an intermediary is not the deal team's decision.** An agent, adviser or introducer
+  is engaged only on a written justification approved by compliance or counsel together with a
+  named officer **outside the commercial line**: the people whose objectives the engagement does
+  not serve. A team that can appoint its own agent has no control at all.
+- **On discovery, the escalation route is compliance or counsel, never the commercial line.**
+  Not the deal principal, not the sponsor's commercial director, not the counterparty. The
+  commercial line has the strongest incentive to resolve the matter quietly and may itself be
+  the party being reported; and where legal privilege is available at all, the route through
+  counsel is the only one that may preserve it.
+- **Do not investigate, confront or warn.** No questioning of the agent, no call to the
+  counterparty, no note to the intermediary's sponsor. Beyond destroying the evidential
+  position, alerting the subject may expose the individual and the organisation to consequences
+  of a kind this book does not attempt to describe (tipping off, above), which is precisely why
+  the judgement is not the leader's to make.
+- **Preserve the record before anything else.** Correspondence, the diligence file, approval trails
+  and payment instructions are left exactly as they are and protected from routine deletion. This is
+  the one step that cannot be done later.
+- **The leader may not proceed pending clearance.** No payment is made, no mandate or amendment
+  is signed, no condition precedent is certified and no drawdown is requested on the affected
+  item until the flag is cleared in writing by the function that owns it. The milestone slips,
+  and the slippage is reported as what it is. Schedule pressure is not clearance, and a
+  commitment already given to a counterparty is not clearance either. Continuing while the
+  question is open is a decision to proceed, taken by whoever kept working, and not a neutral
+  act of waiting.
+
+**The evidence that must exist.** The test is not whether the leader believed the transaction clean;
+it is what a lender's reviewer, an auditor or an investigator can be shown two years later.
+
+*Before reading the list: much of what follows is information about identified living people —
+beneficial owners, politically exposed persons, named intermediaries, and the individuals a concern
+is raised about. Records of that kind are typically personal data, and in most jurisdictions they
+attract obligations of accuracy, proportionality, retention and subject access whose detail varies
+considerably and which sit alongside any confidentiality the enquiry needs. Keeping the record is the
+professional control and it is not optional; how it is held, how long for, who may see it and how a
+suspicion is characterised in it are questions to settle with the organisation's data-protection
+function and qualified counsel before the file is built, not after.*
+
+- **Counterparty and beneficial-ownership due diligence** on sponsors, partners, contractors and
+  intermediaries, traced to natural persons, dated, with the source of each fact recorded and
+  the gaps named as gaps rather than smoothed over.
+- **Sanctions screening of sponsors, contractors and their supply chain**, run at financial
+  close and re-run **on change of control**, on the admission of any new party, and on a stated
+  refresh cycle through construction and operation, with the hits, the clearance reasoning and
+  the clearer's name kept, not merely the clean result.
+- **The written intermediary justification**: what service is being bought, why this party, how the
+  fee was set and against what comparison, who approved it and on what date — together with the
+  engagement terms that make the file mean something (anti-bribery warranties, audit and inspection
+  rights, no subcontracting or assignment without consent, termination on breach).
+- **The payment-route record**: which entity was paid, in which jurisdiction, into an account in
+  whose name, against an invoice describing what, and, for any departure from the contracting
+  party or jurisdiction, the reason and the approval that preceded the payment.
+- **The escalation record**: what was raised, by whom, to whom, on what date, what was decided
+  and what was done while the question was open, which is the entry that answers the only
+  question anyone asks afterwards.
+
+**The external instruments, and what each of them is not.** Three are worth naming, because they
+are named constantly and misdescribed almost as often. The **OECD Convention on Combating
+Bribery of Foreign Public Officials in International Business Transactions** is a **treaty**,
+addressed to the states that are Party to it rather than to a project company; a leader should
+not read it as something that applies directly to a transaction, and should ask counsel what
+does. The **FATF Recommendations** are an **intergovernmental standard** on combating money
+laundering and the financing of terrorism and proliferation, addressed to countries; they reach
+a project in practice through the supervised institutions that finance and advise it, and should
+not be read as applying to the project of their own force. **ISO 37001** is a **voluntary
+management-system standard** for anti-bribery management systems; an organisation may be
+certified against it, and **certification should never be offered or accepted as a defence**; it
+is a third party's opinion about a management system at a point in time, and it says nothing
+about the transaction under diligence. All three are named here for identification only, none is
+reproduced or summarised as a source of requirements, no description of any of them here is
+authoritative, and none of the issuing bodies is associated with, endorses or has reviewed this
+book.
+
+**Standing caution, and it is not a formality.** Which regimes apply, whether they reach conduct
+by non-nationals or conduct wholly abroad (**extraterritorial reach**), who counts as an
+associated person, which sanctions regimes are engaged by a given payment route, and whether an
+adequate-procedures defence exists at all, are **jurisdiction-specific and time-variable
+questions for qualified counsel**. Nothing in this topic states the law of any jurisdiction,
+nothing in it is authoritative about any regime it mentions, and nothing in it is a compliance
+programme. What it fixes is the professional standard: the acts a leader must recognise, the
+flags that stop the work, the route the concern travels, and the file that must exist.
+
+**Where the machine helps, and where it must not decide.** Screening and diligence tools are
+genuine accelerants here (name and ownership matching across designation lists, adverse-media
+sweeps, corporate-registry traversal), and they fail in the two directions that matter: false
+positives that tempt a busy team into bulk clearance, and false negatives from transliteration,
+aliases and ownership held one layer beyond what the tool traverses. A screening result is
+therefore a candidate list, never a clearance. **AI proposes; the professional verifies, decides
+and remains accountable** (1.3.4), which here means a named human clears each hit, states the
+reason, and signs it, and that the reason is recorded in terms someone else can test. A cleared
+hit with no reasoning on the file is indistinguishable, two years later, from a hit nobody
+looked at.
+
+**Decision walkthrough 1.3.2: the agent introduced by the counterparty.** *This book's worked
+examples run in five steps; so does this one, with a decision rule in place of a formula,
+because the output here is a decision and not a number. Fictitious throughout.*
+
+1. **Setup.** A sponsor is developing a water concession in a market it has not worked in. Three
+   weeks before bids are due, the grantor's project director recommends a local "development
+   consultant" who "knows how these are evaluated". The consultant proposes a fee payable only on
+   award, set as a percentage of capital cost, with the mandate signed by an entity incorporated in a
+   third jurisdiction and payment to an account in a fourth. The consultant's ownership resolves to a
+   holding company whose shares are held by a nominee; one director shares a surname with a serving
+   regulator. The bid manager wants to sign today.
+2. **The rule.** A red flag that cannot be resolved does not permit the work to continue: the leader
+   stops the specific step, escalates outside the commercial line, preserves the file, and proceeds
+   only on written clearance. Applied to intermediaries, the engagement decision does not belong to
+   the deal team at all.
+3. **Applying it.** Five flags are present at once, not one: a success-only fee that is
+   disproportionate to any describable service; an intermediary introduced by the counterparty;
+   a contracting entity in a third jurisdiction and a payment route to a fourth; an ownership
+   chain that stops at a nominee; and a possible connection to a person who may influence the
+   award. The introduction from the grantor's own project director is the gravest of them,
+   because it means the evaluating side is choosing who is paid on the bidding side. The bid
+   deadline is not a sixth consideration to be weighed against the other five: it is programme
+   pressure, and it is relieved by moving the date or by not bidding.
+4. **Result.** The mandate is not signed and no fee, retainer or expense is paid. The matter
+   goes to compliance and counsel the same day, not to the sponsor's commercial director, and
+   not back to the grantor's project director, who is the subject of the concern.
+   Correspondence, the proposed mandate and the diligence file are preserved. Nobody questions
+   the consultant, and nobody explains to the consultant why the signature has not come. The bid
+   team is told only that the engagement is on hold pending clearance, and is instructed to plan
+   the bid without an intermediary. If the answer does not arrive before the deadline, the
+   sponsor bids without the consultant or does not bid.
+5. **Interpretation.** Three readings, and the third is the one to carry. **The stop is the
+   decision.** There is no state in which the leader is "still considering" while the mandate is
+   signed and the fee is paid; work that continues has decided to continue, and the person who
+   kept working is the person who decided. **The escalation route is a control, not etiquette.**
+   Sending this to the commercial director would deliver it to the one person whose objectives
+   the engagement serves, and telling the grantor's project director would tip off the source of
+   the introduction: both destroy the enquiry, and the second is the failure this topic warns
+   about most sharply. **And the exposure is not conditional on knowing.** Where a
+   failure-to-prevent regime applies, the sponsor answers for what an associated person does
+   with a fee it approved, whether or not anyone in the deal team ever learns what the fee
+   bought. That is why the control sits at engagement, before the money moves, and it is why "we
+   had no idea" is a description of the problem rather than an answer to it. *Counsel pointer:*
+   whether any such regime is engaged on these facts, whose law applies to a bid made by one
+   group company in another company's market, and what the organisation must do having formed a
+   suspicion (including whether any report is expected of it, and to whom) are
+   jurisdiction-specific questions for qualified counsel, and the escalation exists precisely so
+   that they are asked by the people qualified to ask them.
+
+### 1.3.3 Conflicts and independence
+
+Project finance concentrates conflicts because the same institutions recur in many roles: the
+adviser who would earn a success fee on close; the sponsor-affiliated contractor pricing the
+EPC; the bank advising the government while lending to bidders. The professional machinery is
+disclosure and separation: conflicts are declared before engagement, managed with information
+barriers or declined; advice and self-interest are never silently blended. The leader's test for
+any arrangement is the *daylight test*: would every party, seeing the full fee and relationship
+map, still regard the advice as independent? Where the answer wavers, independence has already
+failed. (Case study B applies this to a live tender; Domain 13's diligence streams exist partly
+to give lenders advice that passes the test.)
 
 **Why the commercial argument runs the same way as the duty.** The duty to disclose does not
 depend on what disclosure costs, and a professional who needs the arithmetic before deciding has
@@ -985,18 +1268,19 @@ reason: partners and committees do sometimes ask to "weigh it commercially", and
 can show that the commercial case points the same way removes the last excuse for not disclosing.
 The structure of the calculation is what carries the lesson.
 
-**Worked example 1.3.2 — the conflict priced at discovery.**
+**Worked example 1.3.3 — the conflict priced at discovery.**
 
 1. **Setup.** Fictitious throughout. An advisory firm holds a mandate advising a grantor on a
-   toll-road tender. It is offered a second, unrelated mandate from the lead sponsor of one of the
-   bidding consortia. Declining that second mandate — or accepting it, disclosing it and living
-   with the barriers — would cost the firm the **250,000** fee at risk on the second engagement.
-   If instead the relationship is not disclosed and is later discovered, the firm's own estimates
-   are: the unpaid balance of the tender mandate, **900,000**, forfeited; the loss of its
-   public-sector practice in that jurisdiction — **three mandates a year at 850,000 for five
-   years**; and **400,000** of legal and professional-indemnity cost. On the grantor's side the
-   discovered conflict forces a re-run: **1,100,000** to re-appoint an adviser, **2,100,000** of
-   fresh evaluation and legal cost, and **three bidders' abortive bid costs at 1,800,000 each**.
+   toll-road tender. It is offered a second, unrelated mandate from the lead sponsor of one of
+   the bidding consortia. Declining that second mandate (or accepting it, disclosing it and
+   living with the barriers) would cost the firm the **250,000** fee at risk on the second
+   engagement. If instead the relationship is not disclosed and is later discovered, the firm's
+   own estimates are: the unpaid balance of the tender mandate, **900,000**, forfeited; the loss
+   of its public-sector practice in that jurisdiction — **three mandates a year at 850,000 for
+   five years**; and **400,000** of legal and professional-indemnity cost. On the grantor's side
+   the discovered conflict forces a re-run: **1,100,000** to re-appoint an adviser,
+   **2,100,000** of fresh evaluation and legal cost, and **three bidders' abortive bid costs at
+   1,800,000 each**.
 2. **Formula.** Expected value of concealment = cost avoided by not disclosing −
    (probability of discovery × loss on discovery). The **breakeven discovery probability**
    `p* = cost avoided ÷ loss on discovery`.
@@ -1004,62 +1288,64 @@ The structure of the calculation is what carries the lesson.
    `900,000 + 12,750,000 + 400,000`. `p* = 250,000 ÷ 14,050,000`. Grantor's re-run
    `1,100,000 + 2,100,000 + 3 × 1,800,000`.
 4. **Result.** Loss on discovery to the firm **USD 14,050,000**; breakeven discovery probability
-   **1.7794 %**. Cost imposed on others **USD 8,600,000**. Total value destroyed **USD 22,650,000**
-   against a **250,000** saving — a ratio of **90.6000 to 1**. Expected value of concealment at a
-   10 % discovery probability: **−1,155,000**; at 25 %: **−3,262,500**; at 50 %: **−6,775,000**.
-5. **Interpretation.** Concealment pays only if the chance of discovery is below **1.78 %**, and in
-   a competitive tender that number is not remotely available: the losing bidders have every
-   incentive to look, professional relationships in a single jurisdiction's infrastructure market
-   are small and traceable, and the discovery event does not require anyone to prove that the advice
-   was actually biased — Case study B turns on exactly that point. So **the expected value of
-   concealment is negative at every plausible probability**, which is the first useful result.
-   The second is structural, and it is the one to carry: **the calculation has no upside term.**
-   What concealment "buys" is bounded above by the fee at risk on the engagement being hidden —
-   250,000 here — while what it risks is the franchise, which is a multiple of any single fee
-   because it is the discounted value of every future fee. Any framing in which non-disclosure
-   appears to have a large benefit has mis-specified the benefit, and the reviewer's cue is to ask
-   what, precisely, is on the left-hand side. Third, note **who bears the loss**: 14,050,000 falls
-   on the firm and 8,600,000 on parties who had no part in the decision — the grantor's programme
-   and three bidders' abortive costs — which is why this is an ethical question and not a
-   risk-appetite question. A firm entitled to gamble its own franchise is not entitled to gamble
-   other people's. And the boundary of the arithmetic: this is expected-value reasoning applied to
-   a **duty**, and duties are not tradeable. The correct use of the table is to close a commercial
-   argument that should never have been opened; the wrong use is to invite the calculation wherever
-   the duty is inconvenient, and a leader who reaches for it more than once has a culture problem
-   rather than a disclosure problem. *Counsel pointer:* whether an undisclosed relationship gives
-   losing bidders a right of challenge, what remedies attach and what disclosure a procurement
-   regime positively requires are jurisdiction-specific and time-variable questions for qualified
-   counsel; nothing here states the law of any jurisdiction.
+   **1.7794 %**. Cost imposed on others **USD 8,600,000**. Total value destroyed **USD
+   22,650,000** against a **250,000** saving (a ratio of **90.6000 to 1**). Expected value of
+   concealment at a 10 % discovery probability: **−1,155,000**; at 25 %: **−3,262,500**; at 50
+   %: **−6,775,000**.
+5. **Interpretation.** Concealment pays only if the chance of discovery is below **1.78 %**, and
+   in a competitive tender that number is not remotely available: the losing bidders have every
+   incentive to look, professional relationships in a single jurisdiction's infrastructure
+   market are small and traceable, and the discovery event does not require anyone to prove that
+   the advice was actually biased — Case study B turns on exactly that point. So **the expected
+   value of concealment is negative at every plausible probability**, which is the first useful
+   result. The second is structural, and it is the one to carry: **the calculation has no upside
+   term.** What concealment "buys" is bounded above by the fee at risk on the engagement being
+   hidden (250,000 here), while what it risks is the franchise, which is a multiple of any
+   single fee because it is the discounted value of every future fee. Any framing in which
+   non-disclosure appears to have a large benefit has mis-specified the benefit, and the
+   reviewer's cue is to ask what, precisely, is on the left-hand side. Third, note **who bears
+   the loss**: 14,050,000 falls on the firm and 8,600,000 on parties who had no part in the
+   decision, the grantor's programme and three bidders' abortive costs, which is why this is an
+   ethical question and not a risk-appetite question. A firm entitled to gamble its own
+   franchise is not entitled to gamble other people's. And the boundary of the arithmetic: this
+   is expected-value reasoning applied to a **duty**, and duties are not tradeable. The correct
+   use of the table is to close a commercial argument that should never have been opened; the
+   wrong use is to invite the calculation wherever the duty is inconvenient, and a leader who
+   reaches for it more than once has a culture problem rather than a disclosure problem.
+   *Counsel pointer:* whether an undisclosed relationship gives losing bidders a right of
+   challenge, what remedies attach and what disclosure a procurement regime positively requires
+   are jurisdiction-specific and time-variable questions for qualified counsel; nothing here
+   states the law of any jurisdiction.
 
-### 1.3.3 The responsible-AI principle in finance
+### 1.3.4 The responsible-AI principle in finance
 
-The suite principle — **AI proposes; the professional verifies, decides and remains
-accountable** — lands hardest in finance, where machine output *looks* like the work product
-itself (a model, a memo, a covenant summary). Domain 16 builds the full governance
-architecture; the foundations fixed here:
+The suite principle (**AI proposes; the professional verifies, decides and remains
+accountable**) lands hardest in finance, where machine output *looks* like the work product
+itself (a model, a memo, a covenant summary). Domain 16 builds the full governance architecture;
+the foundations fixed here:
 
 - **Verification is not optional and not delegable to the tool.** Golden-answer checks for
   calculations (the discipline this book applies to itself); source-tracing for claims;
   document-against-summary checks for AI-read contracts.
-- **Accountability cannot be transferred.** "The model said so" is never a defence — the
-  signing professional owns the output as if hand-made.
+- **Accountability cannot be transferred.** "The model said so" is never a defence: the signing
+  professional owns the output as if hand-made.
 - **Confidentiality travels with the data.** Deal information entering an AI tool is a
   disclosure; it happens only within approved, contracted environments.
-- **Material AI use is disclosed** within the team and, where it touches deliverables,
-  to the client — the daylight test again, applied to method.
+- **Material AI use is disclosed** within the team and, where it touches deliverables, to the
+  client (the daylight test again, applied to method).
 
 **What the verification duty actually asks for.** "Check the output" is not an instruction until
 it distinguishes two different objects. Verifying a **number** means recomputing it from stated
-inputs by an independent route and reconciling to the digit — the discipline this book applies to
-itself, and the reason every figure in this domain carries a derivation. Verifying a **claim** —
-that a transaction happened, that a clause says what a summary says it says, that a market
-convention is current — cannot be done by recomputation at all; it requires tracing the assertion
+inputs by an independent route and reconciling to the digit: the discipline this book applies to
+itself, and the reason every figure in this domain carries a derivation. Verifying a **claim**
+(that a transaction happened, that a clause says what a summary says it says, that a market
+convention is current) cannot be done by recomputation at all; it requires tracing the assertion
 to a source that exists and is the right version. The two failure modes are different, they are
 caught by different habits, and the second is the one that costs a negotiation. A verification
 record that satisfies both is short: what was checked, by whom, against what, on what date, and
 what was found. Anything shorter is an assertion that checking happened.
 
-**Worked example 1.3.3 — the precedent that did not exist, priced.**
+**Worked example 1.3.4 — the precedent that did not exist, priced.**
 
 1. **Setup.** Fictitious throughout. Preparing for Kestrel's term-sheet negotiation, an analyst
    asks a general-purpose AI tool for comparable senior margins on recent water-concession
@@ -1079,38 +1365,50 @@ what was found. Anything shorter is an assertion that checking happened.
    had it been real: **USD 2,112,729**. Breakeven success probability **52.8795 %**. Realised
    benefit: **nil**.
 5. **Interpretation.** The unverified figure cost **1,117,200** and delivered none of the
-   **2,112,729** it appeared to promise — and the cost was incurred not by using AI but by allowing
-   an unsourced number to become a *negotiating position*. Four readings. **The breakeven is the
-   discipline, not the loss.** Even if the 175 had been genuine, spending nine weeks to win it
-   required better than a **52.88 %** chance of the lender conceding — which is the question a
-   negotiating team should have asked on day one and did not, because the benchmark's apparent
-   authority made the position feel free. Any negotiating position held on a critical path has a
-   breakeven success probability, and computing it converts stubbornness into a decision. **The
-   cost of verification was trivial and the loss was not.** Tracing five cited transactions to
-   public records is an hour's work; it would have found the two that do not exist and would have
-   changed the position before it was taken. That asymmetry — hours against a million — is the whole
-   economic case for the verification duty, and it is why "we did not have time to check" inverts
-   the arithmetic. **The failure is not machine-specific, which is why the control is not
-   machine-specific.** A stale internal benchmark spreadsheet produces the identical loss, and so
-   does a scenario grid built before the debt's shape is settled (WE 1.2.3b); what the
-   machine changes is the *fluency*, and therefore the probability that an unsourced figure survives
-   into a decision unchallenged. The control is accordingly a rule about numbers, not about tools:
-   **no benchmark enters a negotiating position without a source line naming the transaction, the
-   document and the date.** And **the accountability sits with a person.** No part of the 1,117,200
-   is recoverable from a tool vendor, and none of it would have been mitigated by the tool being an
-   approved one (MCQ 1.3-C). Domain 16 builds the governance architecture that makes this systematic, including
-   how to measure a tool's error rate on your own material rather than trusting a general claim; the
-   foundational point is smaller and prior: **a number without a source is not evidence, and a
-   professional who presents one has made an assertion in their own name.**
+   **2,112,729** it appeared to promise, and the cost was incurred not by using AI but by
+   allowing an unsourced number to become a *negotiating position*. Four readings. **The
+   breakeven is the discipline, not the loss.** Even if the 175 had been genuine, spending nine
+   weeks to win it required better than a **52.88 %** chance of the lender conceding, which is
+   the question a negotiating team should have asked on day one and did not, because the
+   benchmark's apparent authority made the position feel free. Any negotiating position held on
+   a critical path has a breakeven success probability, and computing it converts stubbornness
+   into a decision. **The cost of verification was trivial and the loss was not.** Tracing five
+   cited transactions to public records is an hour's work; it would have found the two that do
+   not exist and would have changed the position before it was taken. That asymmetry, hours
+   against a million, is the whole economic case for the verification duty, and it is why "we
+   did not have time to check" inverts the arithmetic. **The failure is not machine-specific,
+   which is why the control is not machine-specific.** A stale internal benchmark spreadsheet
+   produces the identical loss, and so does a scenario grid built before the debt's shape is
+   settled (WE 1.2.3b); what the machine changes is the *fluency*, and therefore the probability
+   that an unsourced figure survives into a decision unchallenged. The control is accordingly a
+   rule about numbers, not about tools: **no benchmark enters a negotiating position without a
+   source line naming the transaction, the document and the date.** And **the accountability
+   sits with a person.** No part of the 1,117,200 is recoverable from a tool vendor, and none of
+   it would have been mitigated by the tool being an approved one (MCQ 1.3-C). Domain 16 builds
+   the governance architecture that makes this systematic, including how to measure a tool's
+   error rate on your own material rather than trusting a general claim; the foundational point
+   is smaller and prior: **a number without a source is not evidence, and a professional who
+   presents one has made an assertion in their own name.**
 
 ### Key terms — KA 1.3
 
 | Term | Meaning |
 |---|---|
 | **Fiduciary awareness** | Acting in the principal's interest with loyalty, care and confidentiality. |
+| **Duty to correct** | The obligation to correct a number already relied on that is materially wrong, or was wrong when issued; not discharged by the figure having been superseded internally. |
+| **Materiality (for correction)** | Judged against the decision the recipient took or is about to take, not against the size of the arithmetic; treated as material until someone senior decides otherwise in writing. |
+| **Facilitation payment** | A small payment to secure a routine act the project is already entitled to; treated as a bribe by this book's professional standard, whatever it is called locally. |
+| **Failure to prevent** | The pattern, understood to exist in several jurisdictions, under which an organisation answers for bribery by an associated person; a leader should not assume that not knowing what the intermediary did will protect the organisation. Local application is a question for counsel. |
+| **Associated person** | Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its exposure runs. |
+| **Beneficial ownership** | The natural persons who ultimately own or control a counterparty, traced through the chain rather than to the first corporate name. |
+| **Politically exposed person** | Someone entrusted with a prominent public function, with their close associates and family; a status that raises the standard of enquiry, never a finding of wrongdoing. |
+| **Sanctions screening** | Checking parties and their ownership against applicable designations — at close and on change of control, as a repeated control rather than a one-off. |
+| **Tipping off** | Alerting the subject of a suspicion or a report; a serious professional failure, restricted in many jurisdictions, and fatal to the enquiry in all of them. |
+| **Stop rule** | Where a red flag is unresolved the leader does not proceed pending written clearance: no payment, no signature, no certification. |
+| **Payment-route record** | Which entity was paid, in which jurisdiction, into an account in whose name, against what invoice — with the approved reason for any departure. |
 | **Conflict of interest** | An interest that could bias judgment; declared, managed or declined. |
 | **Daylight test** | Would full disclosure of interests leave the advice trusted? |
-| **Responsible-AI principle** | AI proposes; the professional verifies, decides, remains accountable. |
+| **Responsible-AI principle** | AI proposes; the professional verifies, decides and remains accountable. |
 | **Verification duty** | The named human's obligation to check machine output before reliance. |
 | **Breakeven discovery probability** | Cost avoided by concealment ÷ loss on discovery; the arithmetic that has no upside term. |
 | **Source line** | The transaction, document and date behind a benchmark; without it a figure is an assertion, not evidence. |
@@ -1120,19 +1418,19 @@ what was found. Anything shorter is an assertion that checking happened.
 
 **MCQ 1.3-A `[1.3.1 · Analysis]`** An analyst is asked to present the upside case as the
 base case "because the committee needs confidence". The professional response is:
-- A. comply — labels are a presentation choice
+- A. comply; labels are a presentation choice
 - B. decline: presenting a knowingly optimistic case as the base misrepresents the forecast; offer the honest base with sensitivities instead ✅
 - C. comply, but keep a private note of the true base
 - D. resign immediately without discussion
 
 *Rationale:* Candour about numbers is a duty, not a style (A); a private note documents the
-misrepresentation without preventing it (C); B both refuses the breach and offers the
-legitimate route to confidence — evidence. D skips the professional obligation to fix the
-problem before escalating personal exits.
+misrepresentation without preventing it (C); B both refuses the breach and offers the legitimate
+route to confidence, evidence. D skips the professional obligation to fix the problem before
+escalating personal exits.
 
-**MCQ 1.3-B `[1.3.2 · Application]`** A bank advising a grantor on a tender also wishes to
+**MCQ 1.3-B `[1.3.3 · Application]`** A bank advising a grantor on a tender also wishes to
 lend to one of the bidders. The minimum acceptable handling is:
-- A. proceed — different departments are involved
+- A. proceed; different departments are involved
 - B. disclose the dual role to the grantor, and either obtain informed consent with effective information barriers or decline one role ✅
 - C. keep the lending discussion confidential until after award
 - D. advise the grantor to select that bidder
@@ -1141,7 +1439,7 @@ lend to one of the bidders. The minimum acceptable handling is:
 department labels alone are not barriers (A); concealment converts a conflict into
 misconduct (C); D is the conflict operating in the open.
 
-**MCQ 1.3-C `[1.3.3 · Recall]`** Under the PCI responsible-AI principle, responsibility for
+**MCQ 1.3-C `[1.3.4 · Recall]`** Under the PCI responsible-AI principle, responsibility for
 an AI-drafted covenant summary used in a credit paper rests with:
 - A. the AI vendor
 - B. the model itself
@@ -1151,22 +1449,22 @@ an AI-drafted covenant summary used in a credit paper rests with:
 *Rationale:* Accountability cannot be delegated to software or its supplier; tool approval
 governs *which* tools may be used, never *who* answers for the output.
 
-**MCQ 1.3-D `[1.3.2 · Application]`** Disclosing a second mandate would cost a firm the 250,000
+**MCQ 1.3-D `[1.3.3 · Application]`** Disclosing a second mandate would cost a firm the 250,000
 fee at risk on it. If concealed and later discovered, the firm loses 900,000 of unpaid fees,
 12,750,000 of jurisdictional franchise and 400,000 of legal cost. The breakeven probability of
 discovery is:
 - A. 1.7794 % ✅
 - B. 27.7778 %
 - C. 1.9608 %
-- D. there is no breakeven — concealment can never pay at any probability
+- D. there is no breakeven; concealment can never pay at any probability
 
-*Rationale:* `250,000/14,050,000 = 1.7794 %` (WE 1.3.2). B divides by the 900,000 of forfeited fees
-alone and ignores the franchise, which is the largest term; C counts the franchise and drops the
-forfeited fees and legal cost. D is the answer a reader gives from the duty rather than from the
-arithmetic — the duty is indeed unconditional, but the calculation does have a finite breakeven,
-and being able to state it is what closes a commercial argument.
+*Rationale:* `250,000/14,050,000 = 1.7794 %` (WE 1.3.3). B divides by the 900,000 of forfeited
+fees alone and ignores the franchise, which is the largest term; C counts the franchise and
+drops the forfeited fees and legal cost. D is the answer a reader gives from the duty rather
+than from the arithmetic. The duty is indeed unconditional, but the calculation does have a
+finite breakeven, and being able to state it is what closes a commercial argument.
 
-**MCQ 1.3-E `[1.3.3 · Application]`** A negotiating position taken on an unverified AI-reported
+**MCQ 1.3-E `[1.3.4 · Application]`** A negotiating position taken on an unverified AI-reported
 benchmark held Kestrel's close nine weeks at a cost of delay of 124,133.33 per week. The cost of
 the episode was:
 - A. USD 1,117,200 ✅
@@ -1174,70 +1472,163 @@ the episode was:
 - C. USD 252,000
 - D. USD 124,133
 
-*Rationale:* `9 × 124,133.33 = 1,117,200` (WE 1.3.3). B is the present value of the 60-basis-point
-prize the false benchmark appeared to offer — the amount at stake, not the amount spent; C is one
-year of that margin difference undiscounted; D prices a single week.
+*Rationale:* `9 × 124,133.33 = 1,117,200` (WE 1.3.4). B is the present value of the
+60-basis-point prize the false benchmark appeared to offer: the amount at stake, not the amount
+spent; C is one year of that margin difference undiscounted; D prices a single week.
 
-**MCQ 1.3-F `[1.3.3 · Comprehension]`** Under the responsible-AI principle as fixed in this domain,
+**MCQ 1.3-F `[1.3.4 · Comprehension]`** Under the responsible-AI principle as fixed in this domain,
 which statement is correct?
 - A. an approved tool's output may be relied on without further checking, since approval is the control
 - B. verifying a number and verifying a claim are different acts: the first is independent recomputation, the second is tracing the assertion to a source that exists and is the right version ✅
 - C. AI output must be disclosed to the client in every case, however immaterial
 - D. confidentiality obligations do not attach to data entered into an AI tool, because no third party reads it
 
-*Rationale:* 1.3.3 separates the two verification acts precisely because they fail differently and
+*Rationale:* 1.3.4 separates the two verification acts precisely because they fail differently and
 are caught by different habits. A confuses tool governance with output accountability (MCQ 1.3-C);
 C overstates the rule, which attaches to *material* use touching deliverables; D is wrong on the
 foundational point that entering deal data into a tool is itself a disclosure.
 
-**MCQ 1.3-G `[1.3.3 · Evaluation]`** After an unverified benchmark cost Kestrel **1,117,200** of
-delay (WE 1.3.3), four controls are proposed. Which should the leader adopt first?
+**MCQ 1.3-G `[1.3.4 · Evaluation]`** After an unverified benchmark cost Kestrel **1,117,200** of
+delay (WE 1.3.4), four controls are proposed. Which should the leader adopt first?
 - A. prohibit general-purpose AI tools for market and precedent research
 - B. require that no benchmark enter a negotiating position without a source line naming the transaction, the document and the date ✅
 - C. procure an enterprise AI tool whose licence carries a vendor indemnity
 - D. require a second analyst to review every AI-generated summary before it is circulated
 
-*Rationale:* the loss arose because an unsourced number became a negotiating position, and a stale
-internal spreadsheet produces the identical loss — so the control that matches the failure is a rule
-about numbers rather than about tools (1.3.3). A is defensible and narrower than the risk: it forgoes
-a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the
-profession cannot rely on — on Kestrel's facts none of the 1,117,200 was a loss the licence reached,
-and what a particular indemnity in fact covers is a question for the contract and for counsel rather
-than a planning assumption — and tool approval governs *which* tools may be used, never *who* answers
-for the output (MCQ 1.3-C). D would
-probably have caught this instance and is the right *second* control, applied to material items; as a
-blanket rule it charges a second analyst against every summary, most of which never reach a
-negotiation.
+*Rationale:* the loss arose because an unsourced number became a negotiating position, and a
+stale internal spreadsheet produces the identical loss, so the control that matches the failure
+is a rule about numbers rather than about tools (1.3.4). A is defensible and narrower than the
+risk: it forgoes a genuine accelerant while leaving the human failure mode untouched. C buys a
+commercial remedy the profession cannot rely on: on Kestrel's facts none of the 1,117,200 was a
+loss the licence reached, and what a particular indemnity in fact covers is a question for the
+contract and for counsel rather than a planning assumption, and tool approval governs *which*
+tools may be used, never *who* answers for the output (MCQ 1.3-C). D would probably have caught
+this instance and is the right *second* control, applied to material items; as a blanket rule it
+charges a second analyst against every summary, most of which never reach a negotiation.
 
 **MCQ 1.3-H `[1.3.1 · Evaluation]`** A board asks for "one number" for the incremental cost of the
 limited-recourse route, having been shown **5,202,128** built on a 140-basis-point margin
 differential and a 40 % enforcement recovery. The most professional response is:
 - A. give the 5,202,128 without qualification, since the board asked for a single figure
-- B. give 5,202,128 as the base case, name the two parameters that move it most, and state the consequence — at a 50 % recovery the breakeven rises to 127.6910 % and the route cannot pay at any probability ✅
+- B. give 5,202,128 as the base case, name the two parameters that move it most, and state the
+  consequence: at a 50 % recovery the breakeven rises to 127.6910 % and the route cannot pay at
+  any probability ✅
 - C. decline to give a single figure, because the enforcement recovery is unknowable
 - D. give the figure computed on the 50 % recovery, as the more prudent of the two
 
 *Rationale:* candour about numbers means presenting a forecast with its assumptions and
-sensitivities, never as a certainty (1.3.1), and B does what the board asked while disclosing what
-would change the answer. A presents an estimate as a fact. C is a defensible instinct that fails the
-duty from the other side — declining to quantify leaves the judgment to whoever will. D substitutes
-one point estimate for another, and an unlabelled prudence misrepresents a forecast exactly as an
-unlabelled optimism does (MCQ 1.3-A).
+sensitivities, never as a certainty (1.3.1), and B does what the board asked while disclosing
+what would change the answer. A presents an estimate as a fact. C is a defensible instinct that
+fails the duty from the other side: declining to quantify leaves the judgment to whoever will. D
+substitutes one point estimate for another, and an unlabelled prudence misrepresents a forecast
+exactly as an unlabelled optimism does (MCQ 1.3-A).
+
+**MCQ 1.3-I `[1.3.2 · Application]`** Three weeks before bids are due, the grantor's project
+director recommends a local development consultant whose fee is payable only on award, as a
+percentage of capital cost, contracted through an entity in a third jurisdiction. The bid manager
+asks to sign today. The professional response is:
+- A. sign, but cap the fee and add an anti-bribery warranty to the mandate (the warranty
+  transfers the risk)
+- B. do not sign, pay nothing, and refer the introduction and the proposed mandate to compliance or counsel; plan the bid without an intermediary and let the deadline take the consequence ✅
+- C. ask the grantor's project director for assurance about the consultant's standing before signing
+- D. sign a short retainer to preserve the option, and complete diligence before any success fee falls due
+
+*Rationale:* several red flags are present at once (a success-only fee disproportionate to any
+describable service, an intermediary introduced by the counterparty, and a contracting route
+with no commercial explanation), and an unresolved flag stops the step (1.3.2). A misreads a
+warranty as a control: it allocates loss between the parties and does nothing about the
+underlying conduct. C asks the source of the introduction to vouch for it, and tips off the
+person who is the subject of the concern. D is the commonest professional error in this topic,
+because it feels prudent, but the retainer is a payment, the mandate is a signature, and both
+are exactly the acts the stop rule prohibits while the question is open.
+
+**MCQ 1.3-J `[1.3.2 · Evaluation]`** During construction, a project accountant notices that an
+approved agent's invoices are settled into an account in a jurisdiction unconnected with the
+contract. The most professional route is:
+- A. raise it with the sponsor's commercial director, who owns the agent relationship
+- B. raise it with the agent, who will have a straightforward explanation
+- C. raise it with compliance or counsel, preserve the payment and approval records, make no further payment on that route pending clearance, and tell no one else ✅
+- D. note the anomaly in the next monthly report to lenders and continue paying meanwhile
+
+*Rationale:* the escalation route runs to compliance or counsel and never to the commercial
+line, which has the strongest incentive to settle the matter quietly and may itself be
+implicated (1.3.2); A therefore delivers the concern to the wrong desk. B alerts the subject,
+which destroys the evidential position and may carry consequences for the individual and the
+organisation that are not the accountant's to weigh. D is the seductive error: it is
+transparent, it is documented, and it continues to pay on the flagged route while the question
+is open, which is a decision to proceed, taken by whoever kept paying.
+
+**MCQ 1.3-K `[1.3.2 · Comprehension]`** A contractor offers its ISO 37001 certification as
+assurance on a bribery question raised in diligence. The correct reading is:
+- A. certification satisfies the point: a certified anti-bribery management system answers the
+  concern
+- B. certification is evidence about a management system at a point in time; it should never be relied on as a defence and says nothing about the transaction being diligenced ✅
+- C. certification is irrelevant, because ISO standards have no standing in financial transactions
+- D. certification binds the contractor's subcontractors, since the standard applies down the supply chain
+
+*Rationale:* ISO 37001 is a voluntary management-system standard, and conformity to it is a
+third party's opinion about a system rather than an answer about this counterparty and this
+payment (1.3.2); whether any defence exists, and what it requires, is a question of the
+applicable law and for counsel. C overcorrects; the certification is relevant evidence about the
+counterparty's controls, just not the evidence being claimed. D asserts a reach the diligence
+must establish for itself, contract by contract.
+
+**MCQ 1.3-L `[1.3.1 · Analysis]`** Six weeks after a credit paper went to the lenders, an analyst
+finds that the demand forecast underneath it was superseded before the paper was issued. The working
+model was updated at the time; the lenders' copy was not, and the corrected figure moves the
+first-test coverage ratio below the covenant. The team lead says the point is moot because the model
+is already right. The correct professional response is:
+- A. no action is owed; the internal file is current, so the record has been corrected
+- B. raise it with the signing professional and the accountable principal, correct the figure to the lenders through the channel the finance documents provide before the next decision that would rely on it, and record what was wrong, when it was known, who was told and when ✅
+- C. wait for the lenders' model auditor to find it, since an independent finding is more credible than a self-report
+- D. correct it informally on the next relationship call, so that nothing goes on the file until counsel has advised whether a representation is engaged
+
+*Rationale:* the duty to correct is not discharged by a figure having been superseded internally
+(1.3.1) — the lenders still hold the wrong number, and materiality here is decided by the covenant
+the corrected figure crosses. A confuses abandoning a figure with correcting it. C is the Domain 6
+Case study B failure stated as a strategy, and it leaves the recipient relying on a known error in
+the interval. D inverts the sequence twice: the informal route leaves no record, and the professional
+obligation is discharged first while the question of what the finance documents engage runs alongside
+it as a matter for counsel.
 
 ### Self-check — KA 1.3
 
-1. *State the daylight test.* — Would every party, seeing the full relationship and fee map,
-   still trust the advice as independent?
-2. *What three checks make AI-assisted work professionally usable?* — Recomputed numbers
-   (golden checks), traced sources, document-against-summary verification — by a named human.
-3. *Why does confidentiality bind AI use?* — Data entering a tool is a disclosure; it must
-   stay within approved, contracted environments.
-4. *Why does the concealment calculation have no upside term?* — What concealment buys is bounded
-   by the fee at risk on the hidden engagement; what it risks is the franchise, the value of every
-   future fee.
-5. *What must accompany a benchmark before it enters a negotiating position?* — A source line: the
-   transaction, the document and the date — because a number without a source is an assertion made
-   in the presenter's own name.
+1. *State the daylight test.* Would every party, seeing the full relationship and fee map, still
+   trust the advice as independent?
+2. *What three checks make AI-assisted work professionally usable?*, Recomputed numbers (golden
+   checks), traced sources, document-against-summary verification, by a named human.
+3. *Why does confidentiality bind AI use?* Data entering a tool is a disclosure; it must stay
+   within approved, contracted environments.
+4. *A forecast in a lender's credit paper has been superseded internally. Is the duty
+   discharged?* No. Superseding a figure inside the team abandons it; correcting it means
+   telling the party who relied on it, through the route the finance documents provide for
+   notices, before the next decision that would use it, and recording what was wrong, when it
+   was known, who was told and when. Whether the omission also engages a representation or an
+   undertaking is a question for counsel on those documents, and the professional obligation
+   does not wait for the answer.
+5. *Who owns a correction, and who may stop one?* The person who signed the original output owns
+   it; the accountable principal decides on external notification; no commercial party may veto
+   a correction that is owed, and a request to defer one is itself an escalation event.
+6. *Why does the concealment calculation have no upside term?* What concealment buys is bounded
+   by the fee at risk on the hidden engagement; what it risks is the franchise, the value of
+   every future fee.
+7. *What must accompany a benchmark before it enters a negotiating position?* (A source line:
+   the transaction, the document and the date), because a number without a source is an
+   assertion made in the presenter's own name.
+8. *Is a facilitation payment a bribe?* In most regimes, yes, whatever it is called locally; the
+   few narrow exceptions are a matter for written advice from counsel before the payment, not
+   after.
+9. *An unresolved red flag has appeared on an intermediary. Who is told, and what happens
+   meanwhile?* (Compliance or counsel, never the commercial line and never the intermediary; and
+   nothing proceeds), no payment, no signature, no certification, until the flag is cleared in
+   writing.
+10. *Why is "we did not know what the agent did" not an answer?* Where a failure-to-prevent
+   regime applies the organisation answers for an associated person's conduct regardless of
+   knowledge; the protection, where any exists, is the procedures actually performed and
+   evidenced at engagement.
+11. *What must the file contain on any intermediary?* Beneficial ownership to natural persons,
+   sanctions screening refreshed on change of control, the written justification of service and
+   fee with its approver, the payment-route record, and the escalation record.
 
 ---
 
@@ -1253,9 +1644,9 @@ discussed.
 separate undertaking. Where accounts are commingled, board minutes are not kept, affiliate
 contracts are not at arm's length, staff are indistinguishable from the parent's and the SPV has
 no independent decision-making, a court asked whether the entities should be treated as one may
-find that they should. The disciplines that preserve the fence are unglamorous and cheap — the
+find that they should. The disciplines that preserve the fence are unglamorous and cheap (the
 SPV's own bank accounts, its own books, its own minuted board, written affiliate agreements
-priced as third parties would price them — and they are cheapest to install at inception and
+priced as third parties would price them), and they are cheapest to install at inception and
 almost impossible to reconstruct in a dispute.
 
 **Cross-default in the *sponsor's* documents.** This is the leak that most often defeats the
@@ -1263,14 +1654,14 @@ purpose of the structure, and it is not in the project's documents at all. A par
 revolving facility defines an event of default to include a material subsidiary's insolvency, or
 whose covenants capture guarantees and contingent obligations, has converted a contained project
 failure into a corporate event. The finance leader's obligation is therefore to read the
-**parent's** debt documents before certifying that the project is ring-fenced — a step routinely
+**parent's** debt documents before certifying that the project is ring-fenced: a step routinely
 omitted because it belongs to a different team.
 
 **Economic recourse without the label.** A support that is not called a guarantee may still
 behave as one: an equity bridge drawn against the parent's lines, a debt-service-reserve letter
 of credit issued on the parent's credit, an availability undertaking with an uncapped indemnity
 buried in a schedule. The test is not what the instrument is called but **whose balance sheet
-answers if it is called** — the same discipline that makes the recourse sentence a three-limbed
+answers if it is called**: the same discipline that makes the recourse sentence a three-limbed
 one (who, until when, capped at what).
 
 **Behavioural recourse.** Lenders price the probability that a sponsor of standing will not walk
@@ -1287,23 +1678,23 @@ locked up, additional debt is prohibited, and voluntary equity injections are of
 on terms lenders control. Sponsors are regularly surprised by this at the first stress event,
 which is the wrong time to discover it.
 
-*Counsel pointer:* whether, when and on what basis a court will look through a corporate structure
-— and what disclosure or consolidation an applicable financial-reporting framework requires — is
-jurisdiction-specific, fact-specific and changes over time. These are questions for qualified
-counsel and the reporting adviser at structuring, not matters on which any book can state a
-universal position.
+*Counsel pointer:* whether, when and on what basis a court will look through a corporate
+structure, and what disclosure or consolidation an applicable financial-reporting framework
+requires, is jurisdiction-specific, fact-specific and changes over time. These are questions for
+qualified counsel and the reporting adviser at structuring, not matters on which any book can
+state a universal position.
 
 ### 1.A.2 Sponsor support as a contingent claim
 
 A recourse position on the spectrum of Fig 1.1.1 is a *contingent claim*, and treating it as one
 converts an argument about principle into a computation. Domain 5 (KA 5.2.3) records Kestrel's
-sponsor support: cost-overrun undertakings of **10 % of the 60,000,000 capital cost — 6,000,000 —
-subscribed pro rata**. Two numbers follow immediately. The **effective recourse fraction** —
-support ÷ senior debt — is `6,000,000/42,000,000 =` **14.2857 %**, which places the financing
+sponsor support: cost-overrun undertakings of **10 % of the 60,000,000 capital cost (6,000,000)
+subscribed pro rata**. Two numbers follow immediately. The **effective recourse fraction**,
+support ÷ senior debt, is `6,000,000/42,000,000 =` **14.2857 %**, which places the financing
 quantitatively on the spectrum rather than gesturally, and is the figure to put in a board paper
-in place of the words "limited recourse". And because lenders will price the facility differently
-without the support, the support has a *market value* the sponsors can compare against their own
-view of it.
+in place of the words "limited recourse". And because lenders will price the facility
+differently without the support, the support has a *market value* the sponsors can compare
+against their own view of it.
 
 **Worked example 1.A.2 — what is the cost-overrun undertaking worth?**
 
@@ -1316,33 +1707,35 @@ view of it.
 3. **Substitution.** `0.0040 × 42,000,000 = 168,000` a year; `168,000 × 8.383844`. Then
    `1,408,485.78 ÷ 6,000,000`, and again against an expected draw of `6,000,000 × 0.55`.
 4. **Result.** The support buys **USD 1,408,485.78** of present-value margin saving. Against the
-   full cap, the breakeven call probability is **23.4748 %**. Against an expected draw of 55 % of
-   the cap if a call occurs — **3,300,000** — it is **42.6814 %**.
+   full cap, the breakeven call probability is **23.4748 %**. Against an expected draw of 55 %
+   of the cap if a call occurs (**3,300,000**) it is **42.6814 %**.
 5. **Interpretation.** The sponsors should give the undertaking if they believe the chance of it
-   being called is below the breakeven, and the two breakevens — **23.47 %** and **42.68 %** — are
-   the whole lesson: **the same support, the same fee saving, and a threshold that nearly doubles
-   depending on how the contingent claim is shaped.** A cap is not an exposure. What matters is the
-   distribution of the draw *given* a call, and a sponsor negotiating the cap while ignoring the
-   likely draw is negotiating the less important parameter. Two further readings. The margin
-   differential is the lenders' price for the risk, and the sponsors' own probability estimate is
-   theirs; the transaction happens because the two differ, which is the risk-transfer logic of 1.2.1
-   appearing on the recourse spectrum rather than in an EPC contract. And the arithmetic makes the
-   *sunset* negotiable on evidence: a support that falls away at the completion test is a shorter
-   claim than one running to final maturity, so a sponsor asked to extend the sunset can price the
-   extension instead of arguing about it. The honest limits: 40 basis points is an indication and
-   lenders may respond to withdrawn support by reducing gearing instead — in which case the
-   WE 1.2.1 arithmetic applies rather than this one — and the estimate of a call probability on a
-   single project is a judgment with no sample behind it, which is why the output a board should be
-   given is the *breakeven*, against which its own judgment can be tested, and not a valuation.
-   *Counsel pointer:* whether such an undertaking is enforceable as drafted, how it is characterised
-   for accounting and disclosure, and whether it constitutes a guarantee for regulatory purposes are
-   jurisdiction- and framework-specific matters for counsel and the reporting adviser.
+   being called is below the breakeven, and the two breakevens (**23.47 %** and **42.68 %**) are
+   the whole lesson: **the same support, the same fee saving, and a threshold that nearly
+   doubles depending on how the contingent claim is shaped.** A cap is not an exposure. What
+   matters is the distribution of the draw *given* a call, and a sponsor negotiating the cap
+   while ignoring the likely draw is negotiating the less important parameter. Two further
+   readings. The margin differential is the lenders' price for the risk, and the sponsors' own
+   probability estimate is theirs; the transaction happens because the two differ, which is the
+   risk-transfer logic of 1.2.1 appearing on the recourse spectrum rather than in an EPC
+   contract. And the arithmetic makes the *sunset* negotiable on evidence: a support that falls
+   away at the completion test is a shorter claim than one running to final maturity, so a
+   sponsor asked to extend the sunset can price the extension instead of arguing about it. The
+   honest limits: 40 basis points is an indication and lenders may respond to withdrawn support
+   by reducing gearing instead (in which case the WE 1.2.1 arithmetic applies rather than this
+   one), and the estimate of a call probability on a single project is a judgment with no sample
+   behind it, which is why the output a board should be given is the *breakeven*, against which
+   its own judgment can be tested, and not a valuation. *Counsel pointer:* whether such an
+   undertaking is enforceable as drafted, how it is characterised for accounting and disclosure,
+   and whether it constitutes a guarantee for regulatory purposes are jurisdiction- and
+   framework-specific matters for counsel and the reporting adviser.
 
 ### 1.A.3 The reviewer's foundations eye
 
-The invariants below hold by construction. Each is one line to check, and any violated line means
-a defect somewhere upstream — the foundations-level analogue of Domain 3's factor-table checks and
-Domain 4's appraisal invariants (KA 4.A.5), and wired into this programme's golden-answer harness.
+The invariants below hold by construction. Each is one line to check, and any violated line
+means a defect somewhere upstream, the foundations-level analogue of Domain 3's factor-table
+checks and Domain 4's appraisal invariants (KA 4.A.5), and wired into this programme's
+golden-answer harness.
 
 - **The recourse sentence has three limbs.** Who stands behind what, until when, capped at what. A
   recourse description missing a limb is incomplete, not concise; the missing limb is usually the
@@ -1351,8 +1744,9 @@ Domain 4's appraisal invariants (KA 4.A.5), and wired into this programme's gold
   illustration gives `12.0 % + 2.333333 × 6.0 % = 26.0000 %`. Where `r_u = r_d` the two returns
   coincide; where `r_u < r_d` gearing subtracts.
 - **The equity cliff is debt service, not debt.** Equity cash reaches zero where project cash
-  equals debt service — `4,200,000` interest-only, `8,349,392.06` amortising on the same
-  70,000,000. Any "leverage resilience" claim quoted without the repayment shape is unverifiable.
+  equals debt service (`4,200,000` interest-only, `8,349,392.06` amortising on the same
+  70,000,000). Any "leverage resilience" claim quoted without the repayment shape is
+  unverifiable.
 - **Debt service reconciles to the annuity factor.** `debt ÷ AF(r, n)` must reproduce the
   instalment: `42,000,000/8.383844 = 5,009,635.23`. If it does not, the tenor, the rate or the
   convention in the table is not the one in the facility.
@@ -1366,14 +1760,14 @@ Domain 4's appraisal invariants (KA 4.A.5), and wired into this programme's gold
   + Δpayables. Supplier credit is a *source*, so an *increase* in payables is added while an
   increase in receivables is subtracted: if the two movements are in the same direction and appear
   in the bridge with the same sign, there is a sign error.
-- **Duration is capped.** A level stream's Macaulay duration cannot exceed `(1 + r)/r` — 13.5 years
-  at 8 % — however long the tenor. Deferral adds exactly the deferral; escalation adds a little; a
-  quoted duration without its discount rate is not a number.
+- **Duration is capped.** A level stream's Macaulay duration cannot exceed `(1 + r)/r` (13.5
+  years at 8 %) however long the tenor. Deferral adds exactly the deferral; escalation adds a
+  little; a quoted duration without its discount rate is not a number.
 - **Breakevens are ratios of a spend to what it avoids.** Recourse: incremental cost ÷ exposure
   removed. Risk transfer: the transfer price against the cost of retention. Disclosure: cost
   avoided ÷ loss on discovery. A breakeven above 100 % means the configuration cannot pay at any
-  probability — an impossible configuration, not a worthless idea (the reading Domain 13 applies to
-  detection rates).
+  probability: an impossible configuration, not a worthless idea (the reading Domain 13 applies
+  to detection rates).
 - **The triangle is conjunctive.** Value, cash and risk allocation, together. Two corners is zero,
   not two-thirds; and the cure for a failed corner is structural.
 - **Every number carries a source.** Computed figures carry their derivation; asserted figures carry
@@ -1384,35 +1778,36 @@ Domain 4's appraisal invariants (KA 4.A.5), and wired into this programme's gold
 
 ## Industry variations — Domain 1
 
-The foundations flex by sector mainly in *who* the counterparties are — and, because recourse is
+The foundations flex by sector mainly in *who* the counterparties are, and, because recourse is
 priced against the exposure a failure creates, each sector's counterparty shape changes the
 arithmetic of WE 1.1.2 as well as the vocabulary.
 
-- **Power and water.** The offtaker is often a state utility, so sovereign credit and political risk
-  enter the stakeholder map (Domain 11) and the effective credit ceiling on the financing is usually
-  the sovereign's rather than the project's. The practical consequence for this domain: the enforcement
-  recovery that drives the recourse breakeven is high in a contracted availability structure and
-  collapses if the offtake terminates, so the recovery assumption — not the margin — is where the
-  route decision is really decided.
+- **Power and water.** The offtaker is often a state utility, so sovereign credit and political
+  risk enter the stakeholder map (Domain 11) and the effective credit ceiling on the financing
+  is usually the sovereign's rather than the project's. The practical consequence for this
+  domain: the enforcement recovery that drives the recourse breakeven is high in a contracted
+  availability structure and collapses if the offtake terminates, so the recovery assumption,
+  not the margin, is where the route decision is really decided.
 - **Transport.** The "offtaker" may be the travelling public, so demand risk reshapes the whole
   triangle: the cash corner becomes probabilistic rather than contracted, lenders size against a
   stressed patronage case, and gearing falls. Lower gearing means less debt to contain, which
-  *raises* the recourse breakeven of WE 1.1.2 — one reason toll-road sponsors contribute more equity
-  and argue harder about the ramp-up forecast than availability-payment sponsors ever do.
+  *raises* the recourse breakeven of WE 1.1.2: one reason toll-road sponsors contribute more
+  equity and argue harder about the ramp-up forecast than availability-payment sponsors ever do.
 - **Social PPPs.** The grantor's availability payment makes government the cash engine, handback
-  condition a first-order obligation, and the concession term the binding constraint on tenor — which
-  matters directly for WE 1.1.4, because a fixed grantor payment with no indexation carries a shorter
-  duration than an indexed stream of the same tenor, and is correspondingly harder for
-  liability-driven capital to use without hedging.
+  condition a first-order obligation, and the concession term the binding constraint on tenor,
+  which matters directly for WE 1.1.4, because a fixed grantor payment with no indexation
+  carries a shorter duration than an indexed stream of the same tenor, and is correspondingly
+  harder for liability-driven capital to use without hedging.
 - **Digital infrastructure.** Corporate credit-tenants replace state offtakers, so the credit
   analysis becomes a corporate one and refresh cycles shorten every horizon: shorter contracted terms
   mean shorter debt, which mechanically steepens the amortisation and moves the equity cliff of
   WE 1.2.3b closer, whatever the gearing.
-- **Natural resources.** The market itself is the offtaker, so hedging policy joins the foundations
-  and the "cash" corner of the triangle is a price-distribution rather than a contract. Enforcement
-  recovery is unusually low on a single-purpose processing asset with no contracted revenue, which
-  makes the exposure term large and the recourse breakeven correspondingly easy to clear — one
-  sectoral reason ring-fenced structures are reached for here despite volatile cash.
+- **Natural resources.** The market itself is the offtaker, so hedging policy joins the
+  foundations and the "cash" corner of the triangle is a price-distribution rather than a
+  contract. Enforcement recovery is unusually low on a single-purpose processing asset with no
+  contracted revenue, which makes the exposure term large and the recourse breakeven
+  correspondingly easy to clear: one sectoral reason ring-fenced structures are reached for here
+  despite volatile cash.
 
 The leader's first map in any new sector: who pays, under what compulsion, and what can stop them.
 
@@ -1424,35 +1819,35 @@ KA 5.2.3 carries) — faced a **USD 60,000,000** plant with a 25-year availabili
 Corporate borrowing was available to the operator at attractive rates; neither of the other two
 could guarantee anything beyond its equity.
 
-**Analysis.** Corporate route: cheapest debt, fastest close — but the operator alone carries
-100 % of construction and performance risk on its balance sheet, the fund cannot participate
-on equal terms, and a project failure would impair the operator's whole credit. Project
-route: an SPV with limited-recourse debt (completion and cost-overrun support only), 70/30
-gearing — **42,000,000** of senior debt at 6.0 % over 12 years against **18,000,000** of equity —
-pricier debt and eighteen months of structuring, but risk contained at the ring-fence, the
-partners aligned through one shareholders' agreement, and lender diligence pressure-testing every
+**Analysis.** Corporate route: cheapest debt, fastest close, but the operator alone carries 100
+% of construction and performance risk on its balance sheet, the fund cannot participate on
+equal terms, and a project failure would impair the operator's whole credit. Project route: an
+SPV with limited-recourse debt (completion and cost-overrun support only), 70/30 gearing
+(**42,000,000** of senior debt at 6.0 % over 12 years against **18,000,000** of equity) pricier
+debt and eighteen months of structuring, but risk contained at the ring-fence, the partners
+aligned through one shareholders' agreement, and lender diligence pressure-testing every
 assumption (the discipline dividend of 1.2.1). The leverage logic of WE 1.2.3 gave the equity
-story; the triangle gave the test — value (Domain 4's **+16,179,360** NPV at 8 %), cash (the
-availability stream priced in Domain 3), risk (allocated through the contract matrix built
-later in Domain 12).
+story; the triangle gave the test, value (Domain 4's **+16,179,360** NPV at 8 %), cash (the
+availability stream priced in Domain 3), risk (allocated through the contract matrix built later
+in Domain 12).
 
 **The numbers on the table.** WE 1.1.2 is this meeting's paper. The limited-recourse route costs
-**USD 5,202,128** more in present value — **2,843,128** of margin differential over the 12 years
-and **2,359,000** of close-cost premium — which is **12.3860 %** of the debt raised. Set against
+**USD 5,202,128** more in present value (**2,843,128** of margin differential over the 12 years
+and **2,359,000** of close-cost premium), which is **12.3860 %** of the debt raised. Set against
 the **10,073,997** of enforcement exposure the ring-fence removes in the modelled downside, the
 route requires a **51.6392 %** probability of that downside to pay for itself, and nobody in the
 room believed anything close to it. The board approved it anyway, and the minute records why in
-three lines: without the ring-fence the fund cannot participate, so the operator would have had to
-fund all **18,000,000** of equity alone; the exposure being insured is correlated with the
-operator's own access to capital, so its cost in the bad state exceeds the expected shortfall used
-in the calculation; and the 4.60 % corporate rate consumes borrowing capacity the operator has
-already earmarked for two other projects.
+three lines: without the ring-fence the fund cannot participate, so the operator would have had
+to fund all **18,000,000** of equity alone; the exposure being insured is correlated with the
+operator's own access to capital, so its cost in the bad state exceeds the expected shortfall
+used in the calculation; and the 4.60 % corporate rate consumes borrowing capacity the operator
+has already earmarked for two other projects.
 
-**The decision.** Project finance — not because it was cheaper (it was not, by 5,202,128), but
-because it made the partnership possible, contained a correlated tail rather than an expected loss,
-and converted lender scrutiny into project quality. The recourse position was minuted in the
-three-limbed form: the sponsors stand behind cost overruns pro rata (55/35/10), to a cap of
-**6,000,000** — **14.2857 %** of senior debt — until the completion test, after which the
+**The decision.** Project finance, not because it was cheaper (it was not, by 5,202,128), but
+because it made the partnership possible, contained a correlated tail rather than an expected
+loss, and converted lender scrutiny into project quality. The recourse position was minuted in
+the three-limbed form: the sponsors stand behind cost overruns pro rata (55/35/10), to a cap of
+**6,000,000** (**14.2857 %** of senior debt) until the completion test, after which the
 obligation falls away. WE 1.A.2 prices that undertaking at **1,408,486** of margin saving, which
 the board accepted as good value against its own view of the call probability.
 
@@ -1465,57 +1860,61 @@ has not.
 
 ## Case study B — Domain 1: the adviser with two hats (transport tender)
 
-**Situation.** A grantor's financial adviser on a toll-road tender was discovered — after
-preferred-bidder selection — to hold an advisory mandate for the winning consortium's lead
+**Situation.** A grantor's financial adviser on a toll-road tender was discovered, after
+preferred-bidder selection, to hold an advisory mandate for the winning consortium's lead
 sponsor on an unrelated deal, undisclosed. The losing bidders challenged; the award was
 suspended pending review.
 
-**What happened.** The review found no evidence the evaluation was slanted — and it did not
-matter. The undisclosed relationship alone failed the daylight test: the tender was re-run
-with a new adviser at a cost of fourteen months and the grantor's credibility, and the
-adviser's firm lost its public-sector practice in the jurisdiction. A one-line disclosure at
-engagement, with barriers or a declined mandate, would have cost the firm the **250,000** fee at
-risk on the second mandate, and nothing else.
+**What happened.** The review found no evidence the evaluation was slanted, and it did not
+matter. The undisclosed relationship alone failed the daylight test: the tender was re-run with
+a new adviser at a cost of fourteen months and the grantor's credibility, and the adviser's firm
+lost its public-sector practice in the jurisdiction. A one-line disclosure at engagement, with
+barriers or a declined mandate, would have cost the firm the **250,000** fee at risk on the
+second mandate, and nothing else.
 
-**The bill.** WE 1.3.2 prices this case on the firm's own estimates. Private loss on discovery:
+**The bill.** WE 1.3.3 prices this case on the firm's own estimates. Private loss on discovery:
 **900,000** of forfeited fees, **12,750,000** of jurisdictional franchise over five years and
-**400,000** of legal and indemnity cost — **USD 14,050,000**. Cost imposed on parties who had no
-part in the decision: **1,100,000** to re-appoint an adviser, **2,100,000** of fresh evaluation and
-legal work, and **5,400,000** of abortive bid costs across three bidders — **USD 8,600,000**. Total
-**USD 22,650,000** against a 250,000 saving, **90.6 times over**, and a breakeven discovery
-probability of **1.7794 %** that was never remotely achievable in a tender with losing bidders
-holding a reason to look.
+**400,000** of legal and indemnity cost (**USD 14,050,000**). Cost imposed on parties who had no
+part in the decision: **1,100,000** to re-appoint an adviser, **2,100,000** of fresh evaluation
+and legal work, and **5,400,000** of abortive bid costs across three bidders (**USD
+8,600,000**). Total **USD 22,650,000** against a 250,000 saving, **90.6 times over**, and a
+breakeven discovery probability of **1.7794 %** that was never remotely achievable in a tender
+with losing bidders holding a reason to look.
 
-**What the domain teaches here.** Conflicts are priced at *discovery*, not at occurrence —
-and the price is paid in time, trust and franchise, not fees. Independence is an asset that
-only disclosure can insure. Note also **where the 8,600,000 landed**: on the grantor's programme
-and on three bidders, none of whom chose the risk. That is what distinguishes this from a
-commercial gamble a firm is entitled to take with its own franchise, and it is why the duty is
-unconditional rather than a matter of expected value — the arithmetic corroborates the answer, it
+**What the domain teaches here.** Conflicts are priced at *discovery*, not at occurrence, and
+the price is paid in time, trust and franchise, not fees. Independence is an asset that only
+disclosure can insure. Note also **where the 8,600,000 landed**: on the grantor's programme and
+on three bidders, none of whom chose the risk. That is what distinguishes this from a commercial
+gamble a firm is entitled to take with its own franchise, and it is why the duty is
+unconditional rather than a matter of expected value: the arithmetic corroborates the answer, it
 does not produce it.
 
 ## Executive perspective — Domain 1
 
 What a project finance director cannot delegate in this domain:
 
-- **The recourse position.** Exactly what the sponsor stands behind, until when, capped at
-  what — the director signs this sentence personally and re-reads it before every support
-  call.
-- **The price of that position, stated.** The incremental cost of the chosen route, the exposure it
-  removes, and the failure probability that would make the two equal (Toolkit 1.T.4) — with the
-  recovery assumption and the discount rate on the face of the paper. A director who cannot produce
-  those three numbers has approved a cost without seeing it; a director who treats them as the
-  decision has mistaken an input for a judgment.
+- **The recourse position.** Exactly what the sponsor stands behind, until when, capped at what
+  (the director signs this sentence personally and re-reads it before every support call).
+- **The price of that position, stated.** The incremental cost of the chosen route, the exposure
+  it removes, and the failure probability that would make the two equal (Toolkit 1.T.4) (with
+  the recovery assumption and the discount rate on the face of the paper). A director who cannot
+  produce those three numbers has approved a cost without seeing it; a director who treats them
+  as the decision has mistaken an input for a judgment.
 - **The three thresholds.** The project cash at which the covenant fails, at which equity cash
-  reaches zero, and at which distributions lock up — quoted from memory, and always with the debt's
-  repayment shape attached, because the interest-only version of any of them is roughly twice as
-  reassuring as the truth (WE 1.2.3b).
+  reaches zero, and at which distributions lock up: quoted from memory, and always with the
+  debt's repayment shape attached, because the interest-only version of any of them is roughly
+  twice as reassuring as the truth (WE 1.2.3b).
 - **The stakeholder map's honesty.** Every party's real incentive, including the
   uncomfortable ones, on one page the board has seen.
 - **The cash question.** Asked in every meeting until it embarrasses no one: *will the cash
   arrive, and who is exposed if it does not?*
-- **The conflicts register.** Kept current, disclosed early, tested against daylight —
-  because the director's own relationships are usually the largest entries.
+- **The conflicts register.** Kept current, disclosed early, tested against daylight, because
+  the director's own relationships are usually the largest entries.
+- **The intermediary list, and who approved each one.** Every agent, adviser and introducer the
+  project pays, with the service bought, the approver outside the commercial line, and the
+  account and jurisdiction the money reaches (Toolkit 1.T.5). The director also owns the
+  standing instruction that an unresolved red flag stops the work, and the fact that nobody in
+  the organisation has ever been penalised for stopping it.
 - **The AI accountability line.** Named humans own machine output; the director owns the
   culture that makes that real (Domain 16 gives the machinery; Domain 1 gives the law).
 
@@ -1526,54 +1925,53 @@ What a project finance director cannot delegate in this domain:
 *Solution.* `3.5 − 2.2 − 0.9 + 0.6 =` **+USD 1,000,000**. Common error: sign on payables
 (supplier credit is a source: +0.6, not −0.6; the wrong sign gives −0.2m and a false alarm).
 
-**Exercise 1.2** The WE 1.2.3 project refinances to 80 % debt (80,000,000 interest-only at
-6.5 %). Rebuild the base-case levered return and the cash decline at which equity income
-reaches zero.
-*Solution.* Debt service `80 × 0.065 = 5,200,000`; equity 20,000,000; base equity cash
-`12.0 − 5.2 = 6.8` → **34.0 %**. Zero at project cash = 5,200,000 — a **56.6667 % decline**
-(from 12.0). Versus the 70/30 case: eight points more base return (34 vs 26 %, on a third
-less equity) bought a materially nearer cliff (−56.6667 % vs −65.0000 %). Common error: comparing
-levered percentages without comparing the cliffs.
+**Exercise 1.2** The WE 1.2.3 project refinances to 80 % debt (80,000,000 interest-only at 6.5
+%). Rebuild the base-case levered return and the cash decline at which equity income reaches
+zero. *Solution.* Debt service `80 × 0.065 = 5,200,000`; equity 20,000,000; base equity cash
+`12.0 − 5.2 = 6.8` → **34.0 %**. Zero at project cash = 5,200,000, a **56.6667 % decline** (from
+12.0). Versus the 70/30 case: eight points more base return (34 vs 26 %, on a third less equity)
+bought a materially nearer cliff (−56.6667 % vs −65.0000 %). Common error: comparing levered
+percentages without comparing the cliffs.
 
-**Exercise 1.3** Classify: (a) parent guarantees debt until completion test, then released;
-(b) parent comfort letter, non-binding; (c) no support, reserves funded from cash flow.
-*Solution.* (a) limited recourse; (b) effectively non-recourse in law — comfort letters are
-generally not enforceable guarantees (jurisdiction-specific; counsel confirms); (c)
-non-recourse with structural mitigation. Common error: treating a comfort letter as
-recourse — lenders price it as goodwill, not security.
+**Exercise 1.3** Classify: (a) parent guarantees debt until completion test, then released; (b)
+parent comfort letter, non-binding; (c) no support, reserves funded from cash flow. *Solution.*
+(a) limited recourse; (b) effectively non-recourse in law. Comfort letters are generally not
+enforceable guarantees (jurisdiction-specific; counsel confirms); (c) non-recourse with
+structural mitigation. Common error: treating a comfort letter as recourse, lenders price it as
+goodwill, not security.
 
 **Exercise 1.4** A sponsor compares routes for a **30,000,000** facility over **10 years**:
 project finance at **5.8 %** with close costs of 2,000,000, or a corporate facility at **4.5 %**
 with close costs of 300,000. Cash costs are compared at 8.0 %. The modelled downside leaves
 **7,500,000** of debt unrecovered after enforcement. Compute the incremental cost of the
-limited-recourse route and the breakeven failure probability.
-*Solution.* `AF(0.058, 10) = 7.430333` → instalment `30,000,000/7.430333 =` **4,037,504.15**;
-`AF(0.045, 10) = 7.912718` → **3,791,364.65**; differential **246,139.50** a year.
-`AF(0.08, 10) = 6.710081` → PV **1,651,616.08**. Close-cost premium `2,000,000 − 300,000 =
-1,700,000`. Incremental cost **USD 3,351,616.08**; `p* = 3,351,616.08/7,500,000 =` **44.6882 %**.
-Common error: dividing the incremental cost by the 30,000,000 facility (11.1721 %) instead of by
-the exposure removed — that ratio is a cost intensity and answers a different question.
+limited-recourse route and the breakeven failure probability. *Solution.* `AF(0.058, 10) =
+7.430333` → instalment `30,000,000/7.430333 =` **4,037,504.15**; `AF(0.045, 10) = 7.912718` →
+**3,791,364.65**; differential **246,139.50** a year. `AF(0.08, 10) = 6.710081` → PV
+**1,651,616.08**. Close-cost premium `2,000,000 − 300,000 = 1,700,000`. Incremental cost **USD
+3,351,616.08**; `p* = 3,351,616.08/7,500,000 =` **44.6882 %**. Common error: dividing the
+incremental cost by the 30,000,000 facility (11.1721 %) instead of by the exposure removed. That
+ratio is a cost intensity and answers a different question.
 
 **Exercise 1.5** Take Exercise 1.2's 80/20 structure (80,000,000 of senior debt at 6.5 %,
-20,000,000 of equity, project cash 12,000,000) and amortise the debt over **10 years** instead of
-paying interest only. Recompute the base-case equity return, the `DSCR` and the cliff.
+20,000,000 of equity, project cash 12,000,000) and amortise the debt over **10 years** instead
+of paying interest only. Recompute the base-case equity return, the `DSCR` and the cliff.
 *Solution.* `AF(0.065, 10) = 7.188830` → instalment `80,000,000/7.188830 =` **11,128,375.20**.
-Equity cash `12,000,000 − 11,128,375.20 =` **871,624.80** → **4.3581 %** on 20,000,000.
-`DSCR = 12,000,000/11,128,375.20 =` **1.0783**. Equity cash reaches zero at project cash of
-11,128,375.20 — a decline of only **7.2635 %**, against **56.6667 %** on the interest-only
-reading. The structure is not financeable: a 1.0783 `DSCR` would not clear any commercial
+Equity cash `12,000,000 − 11,128,375.20 =` **871,624.80** → **4.3581 %** on 20,000,000. `DSCR =
+12,000,000/11,128,375.20 =` **1.0783**. Equity cash reaches zero at project cash of
+11,128,375.20 (a decline of only **7.2635 %**, against **56.6667 %** on the interest-only
+reading). The structure is not financeable: a 1.0783 `DSCR` would not clear any commercial
 coverage requirement, and a 7.26 % tolerance is inside the noise of an operating year. Common
 error: reporting Exercise 1.2's 34.0 % return as the structure's economics without stating the
-repayment shape — the same 80 % gearing is a strong story interest-only and an unbankable one
+repayment shape; the same 80 % gearing is a strong story interest-only and an unbankable one
 amortising over ten years.
 
-**Exercise 1.6** At a discount rate of **6.0 %**, compute the Macaulay duration of a level stream
-of (a) 20 payments and (b) 25 payments, and state the ceiling.
-*Solution.* `D = (1 + r)/r − n/[(1 + r)ⁿ − 1]`. Ceiling `1.06/0.06 =` **17.6667 years**.
-(a) `17.666667 − 20/(1.06²⁰ − 1) =` **8.6051 years**. (b) `17.666667 − 25/(1.06²⁵ − 1) =`
-**10.0722 years**. Five extra years of tenor bought **1.4671** years of duration — the marginal
-return on tenor falls away as the ceiling approaches. Common error: quoting a duration without its
-rate; at 8 % the same 25-payment stream has a duration of **9.2254 years** and a ceiling of 13.5.
+**Exercise 1.6** At a discount rate of **6.0 %**, compute the Macaulay duration of a level
+stream of (a) 20 payments and (b) 25 payments, and state the ceiling. *Solution.* `D = (1 + r)/r
+− n/[(1 + r)ⁿ − 1]`. Ceiling `1.06/0.06 =` **17.6667 years**. (a) `17.666667 − 20/(1.06²⁰ − 1)
+=` **8.6051 years**. (b) `17.666667 − 25/(1.06²⁵ − 1) =` **10.0722 years**. Five extra years of
+tenor bought **1.4671** years of duration: the marginal return on tenor falls away as the
+ceiling approaches. Common error: quoting a duration without its rate; at 8 % the same
+25-payment stream has a duration of **9.2254 years** and a ceiling of 13.5.
 
 **Exercise 1.7** A project reports `CFADS` of **4,800,000** against debt service of **4,000,000**,
 on annual revenue of **9,000,000**. The covenant is a `DSCR` of **1.15×**. State the `DSCR`, the
@@ -1586,7 +1984,15 @@ error: computing headroom against the *reported* ratio rather than the covenant 
 
 ## Practitioner's toolkit — Domain 1
 
-*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable.*
+*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable, and set a
+retention period against each. These registers are the evidence that a decision was taken
+properly, so each is retained at least as long as the obligation it supports, in a form that
+opens without the tool that created it, with a named custodian who holds it once the engagement
+ends. The applicable minimum periods are set by the organisation's own policy and by
+jurisdiction-specific statutory, tax and limitation requirements, which this book does not
+state. Where a register holds information about identified individuals, the retention period and
+any minimisation or deletion obligation that cuts across it are settled with the organisation's
+data-protection adviser before the register is adopted.*
 
 ### Toolkit 1.T.1 — Stakeholder map (one page per project)
 
@@ -1605,8 +2011,23 @@ option) · decision, rationale, decision-maker, date.
 
 Conflicts: relationship · parties affected · disclosure date · handling (barriers/consent/
 declined) · review date. AI use: tool and environment · data classification cleared ·
-verification steps and named verifier · disclosure status. One register, one owner, standing
+verification steps and named verifier · disclosure status. Corrections: figure corrected · what was
+wrong and when it was known · who signed the original · who decided on external notification ·
+recipient, route and date · decisions being revisited (KA 1.3.1). One register, one owner, standing
 agenda item.
+
+*Retention and custody.* This is the register most often needed after the people involved have
+moved on. It is the evidence that a conflict was disclosed at the time, that an AI-assisted
+figure was verified before it entered a negotiating position, and that a correction was made
+when it was owed. Record against each entry: the **retention period** and its basis
+(organisation policy, the life of the obligation the entry supports, or a statutory or
+limitation requirement the organisation has established); the **form** in which it is held,
+which must open without the tool that created it; and the **named custodian** who holds the
+register after the engagement closes, with the handover recorded on any change of personnel.
+Entries naming individuals (the conflicted parties, the verifier, the approver) are personal
+information: the period and any deletion obligation running against it are confirmed with the
+organisation's data-protection adviser, and the periods themselves are jurisdiction-specific and
+not stated here.
 
 ### Toolkit 1.T.4 — Recourse-cost worksheet (one per financing route considered)
 
@@ -1631,65 +2052,110 @@ gearing — WE 1.2.1) · the recourse sentence in three limbs · decision, decis
 *Rule.* The recovery assumption and the discount rate are named on the face of the paper. A
 breakeven presented without them is not reviewable.
 
+### Toolkit 1.T.5 — Intermediary engagement and financial-crime evidence file (one per intermediary)
+
+The file that must exist before an agent, adviser or introducer is engaged, and be kept current
+afterwards: built so that a lender's reviewer, an auditor or counsel can read it cold.
+
+*Before engagement.* Who introduced the party, and whether they sit on the other side of the
+negotiation · the service being bought, described in terms someone outside the deal can test · the
+fee, its basis, and the comparison it was benchmarked against · beneficial ownership traced to
+natural persons, with the source and date of each fact and any gap named as a gap · sanctions
+screening of the party and its owners, with hits, clearance reasoning and the clearer's name ·
+politically exposed persons identified in the ownership, control or management chain · the red-flag
+triage of 1.3.2, each flag marked resolved or open · the approver **outside the commercial line**,
+and the date.
+
+*In the terms.* Anti-bribery and sanctions warranties · audit and inspection rights over the
+intermediary's records · no subcontracting, assignment or sub-agency without consent · payment only
+to the contracting entity, in the contracting jurisdiction, into an account in its own name ·
+termination on breach, with fees repayable.
+
+*While the engagement runs.* The payment-route record per invoice · screening re-run on change
+of control, on the admission of any new party and on the stated refresh cycle · the escalation
+record. What was raised, by whom, to whom, when, what was decided, and what was done while the
+question was open.
+
+*Rule.* The file is opened before the mandate is signed, not assembled afterwards. An engagement with
+no approver outside the deal team is not approved, and an unresolved flag stops the work until
+clearance is given in writing.
+
 ## Exam preparation — Domain 1
 
-**The traps.** Recourse classifications (comfort letter ≠ guarantee — Exercise 1.3) ·
-payables sign in the cash bridge (Exercise 1.1) · levered-return arithmetic that skips debt
-service (MCQ 1.2-B distractor D) · reading the triangle as two-out-of-three ·
-"sponsor" meaning equity investor in this book's project-finance chapters (terminology
-registry) · assigning AI accountability anywhere but the signing professional · dividing a
-recourse route's incremental cost by the *facility* rather than by the exposure removed
-(Exercise 1.4) · quoting an equity return or a "cliff" without stating whether the debt amortises
-(WE 1.2.3b, Exercise 1.5) · treating an asset's *life* as its duration, or quoting a duration
-without its discount rate (WE 1.1.4, Exercise 1.6) · measuring covenant headroom from the reported
-ratio instead of from the covenant (Exercise 1.7) · comparing a risk-transfer quote with the risk's
-expected cost instead of with the cost of retention (WE 1.2.1) · reading a breakeven above 100 % as
-an arithmetic error rather than as an impossible configuration.
+**The traps.** Recourse classifications (comfort letter ≠ guarantee: Exercise 1.3) · payables
+sign in the cash bridge (Exercise 1.1) · levered-return arithmetic that skips debt service (MCQ
+1.2-B distractor D) · reading the triangle as two-out-of-three · "sponsor" meaning equity
+investor in this book's project-finance chapters (terminology registry) · assigning AI
+accountability anywhere but the signing professional · dividing a recourse route's incremental
+cost by the *facility* rather than by the exposure removed (Exercise 1.4) · quoting an equity
+return or a "cliff" without stating whether the debt amortises (WE 1.2.3b, Exercise 1.5) ·
+treating an asset's *life* as its duration, or quoting a duration without its discount rate (WE
+1.1.4, Exercise 1.6) · measuring covenant headroom from the reported ratio instead of from the
+covenant (Exercise 1.7) · comparing a risk-transfer quote with the risk's expected cost instead
+of with the cost of retention (WE 1.2.1) · reading a breakeven above 100 % as an arithmetic
+error rather than as an impossible configuration · treating a facilitation payment as something
+other than a bribe because it is small, routine or locally normal (1.3.2) · escalating a
+financial-crime concern up the commercial line rather than to compliance or counsel, or "just
+asking" the intermediary, which is tipping off · reading a contractual anti-bribery warranty, or
+a counterparty's ISO 37001 certification, as a defence · continuing to pay, sign or certify
+while a red flag is open, on the reasoning that nothing has been decided yet (MCQ 1.3-I, MCQ
+1.3-J).
 
 **Reflection questions.**
 1. Take a project you know: write its recourse sentence in under 25 words. Who stands behind
    what, until when, capped at what?
-2. Which corner of the bankability triangle does your current project stress most — and what
+2. Which corner of the bankability triangle does your current project stress most, and what
    structural (not cosmetic) fix would close it?
-3. What in your team's current AI usage would fail the daylight test if disclosed in full —
-   and what changes tomorrow because you asked?
-4. For your current financing: what is the incremental cost of its recourse position, what exposure
+3. What in your team's current AI usage would fail the daylight test if disclosed in full, and
+   what changes tomorrow because you asked?
+4. Name every intermediary your current project pays. For each: who introduced them, what service
+   is bought, who approved the fee from outside the deal team, and into which account in which
+   jurisdiction the money goes. If any of those four answers is missing, that is the finding.
+5. For your current financing: what is the incremental cost of its recourse position, what exposure
    does that position remove, and what failure probability would make the two equal? If nobody can
    answer, who approved the cost?
-5. State your project's three thresholds from memory — the cash level at which the covenant fails,
-   the level at which equity cash reaches zero, and the level at which the lender's coverage test
-   for distributions locks up. If the second is much further away than you expected, check whether
-   your mental model has the debt amortising.
+6. State your project's three thresholds from memory: the cash level at which the covenant
+   fails, the level at which equity cash reaches zero, and the level at which the lender's
+   coverage test for distributions locks up. If the second is much further away than you
+   expected, check whether your mental model has the debt amortising.
 
 ## Domain 1 summary
 
 Project finance funds single-purpose assets against their own cash, made possible by the
 ring-fenced SPV and priced along the recourse spectrum; the leader's role is the financial
-integrity of that machine across the whole lifecycle, under one recurring question — will
-the cash arrive, and who is exposed if it does not? The recourse position on that spectrum is
+integrity of that machine across the whole lifecycle, under one recurring question: will the
+cash arrive, and who is exposed if it does not? The recourse position on that spectrum is
 computable: Kestrel's limited-recourse route costs **5,202,128** more in present value than a
-corporate facility and removes **10,073,997** of enforcement exposure, so it repays itself only at a
-**51.6392 %** failure probability — a breakeven that falls toward **28.2224 %** with scale and is
-unachievable below about **13,702,087** of debt. That the number is high and the structure is still
-correct is the domain's most professional lesson: the arithmetic prices a mean, the sponsor is
-insuring a correlated tail, and the ring-fence also buys a partnership the arithmetic cannot see —
-which is why it is a decision input and never the decision. The discipline's logic triangulates
-value, cash and risk. Financing amplifies project quality but never substitutes for it, and its one
-genuine value channel is computable too: a risk the SPV retains is paid for in the capital
-structure, at **3,407,513** of present value for 4,800,000 of equity substituted for debt at a
-942-basis-point spread, which is nearly four times the risk's own expected cost and the sponsor's
-true reservation price for transferring it. Cash, not profit, binds — a profitable quarter can be a
-cash crisis, and Kestrel's own first year absorbed **18.25 days** of revenue into working capital
-leaving **11.33 days** before a 1.20× covenant fails. Leverage multiplies returns and steepens every
-downside, on an identity — `r_e = r_u + (D/E) × (r_u − r_d)` — that also locates the crossover below
-which gearing subtracts, and the equity cliff belongs to the debt's *shape*: the same 70 % gearing
-tolerates a 65.00 % cash decline interest-only and **30.42 %** amortising, with the covenant engaging
-at **16.51 %**. Timing has its own arithmetic and its own trap: a 15-year availability stream has a
-Macaulay duration of **6.5945 years**, and no level stream at 8 % can exceed **13.5** at any tenor,
-so matching an asset's life is not matching its duration. Around the technique stands the profession:
-fiduciary-grade candour about numbers and limits, conflicts managed in daylight — where the breakeven
-discovery probability is **1.7794 %** and the calculation has no upside term — and machine assistance
-governed by the suite principle, whose foundational demand is that a benchmark carry a source line
-before it becomes a negotiating position, the omission that cost Kestrel **1,117,200** for nothing.
-Domain 2 builds the accounting the cash bridge assumed; Domain 5 takes Kestrel from concept
-to bankability.
+corporate facility and removes **10,073,997** of enforcement exposure, so it repays itself only
+at a **51.6392 %** failure probability — a breakeven that falls toward **28.2224 %** with scale
+and is unachievable below about **13,702,087** of debt. That the number is high and the
+structure is still correct is the domain's most professional lesson: the arithmetic prices a
+mean, the sponsor is insuring a correlated tail, and the ring-fence also buys a partnership the
+arithmetic cannot see, which is why it is a decision input and never the decision. The
+discipline's logic triangulates value, cash and risk. Financing amplifies project quality but
+never substitutes for it, and its one genuine value channel is computable too: a risk the SPV
+retains is paid for in the capital structure, at **3,407,513** of present value for 4,800,000 of
+equity substituted for debt at a 942-basis-point spread, which is nearly four times the risk's
+own expected cost and the sponsor's true reservation price for transferring it. Cash, not
+profit, binds; a profitable quarter can be a cash crisis, and Kestrel's own first year absorbed
+**18.25 days** of revenue into working capital leaving **11.33 days** before a 1.20× covenant
+fails. Leverage multiplies returns and steepens every downside, on an identity, `r_e = r_u +
+(D/E) × (r_u − r_d)`, that also locates the crossover below which gearing subtracts, and the
+equity cliff belongs to the debt's *shape*: the same 70 % gearing tolerates a 65.00 % cash
+decline interest-only and **30.42 %** amortising, with the covenant engaging at **16.51 %**.
+Timing has its own arithmetic and its own trap: a 15-year availability stream has a Macaulay
+duration of **6.5945 years**, and no level stream at 8 % can exceed **13.5** at any tenor, so
+matching an asset's life is not matching its duration. Around the technique stands the
+profession: fiduciary-grade candour about numbers and limits — forward, in how a forecast is
+presented, and backward, in the duty to correct a number already relied on, which a figure's
+internal supersession does not discharge and which no commercial party may veto; the
+financial-crime duties, the only ones in the lattice the profession treats as admitting no
+commercial justification, where a facilitation payment is treated as a bribe, an intermediary's
+conduct is assumed to be the organisation's exposure whether or not it knew, and an unresolved
+red flag stops the work while the concern travels to compliance or counsel rather than up the
+commercial line; conflicts managed in daylight (where the breakeven discovery probability is
+**1.7794 %** and the calculation has no upside term), and machine assistance governed by the
+suite principle, whose foundational demand is that a benchmark carry a source line before it
+becomes a negotiating position, the omission that cost Kestrel **1,117,200** for nothing. Domain
+2 builds the accounting the cash bridge assumed; Domain 5 takes Kestrel from concept to
+bankability.

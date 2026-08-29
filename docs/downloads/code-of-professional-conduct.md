@@ -1,15 +1,15 @@
-# Code of Professional Conduct — PCP-AI
-> The principles every PCP-AI candidate and certificant undertakes to uphold — in the numbers, in the work and in the profession
+# Code of Professional Conduct — PCL-AI
+> The principles every PCL-AI candidate and certificant undertakes to uphold — in the numbers, in the work and in the profession
 
 **Status.** This Code applies to every candidate for, and every holder of, the Certified Project Controls
-Professional (PCP-AI) credential awarded by Project Controls Institute Global ("the Institute"). It is a
+Professional (PCL-AI) credential awarded by Project Controls Institute Global ("the Institute"). It is a
 founding-stage document, maintained under the Institute's governance alongside the related policies on ethics,
 AI, examination rules and discipline. Where those policies give fuller detail, they govern; this Code states
 the principles.
 
 **Why a code.** Project controls is a discipline of trusted numbers. A forecast, a variance analysis or a risk
 register is only useful if the people relying on it can assume it was prepared honestly, competently and
-without a hidden agenda. This Code exists so that the PCP-AI designation carries exactly that assumption — for
+without a hidden agenda. This Code exists so that the PCL-AI designation carries exactly that assumption — for
 every holder, everywhere.
 
 ## 1. Integrity of the numbers
@@ -96,7 +96,7 @@ In practice, the certificant is expected to:
 
 ## 7. Duties to the profession and the Institute
 
-**Principle.** The value of the PCP-AI depends on the integrity of the process that awards it and the honesty
+**Principle.** The value of the PCL-AI depends on the integrity of the process that awards it and the honesty
 of those who hold it. Every candidate and certificant shares in protecting both.
 
 In practice, the candidate or certificant is expected to:
@@ -110,13 +110,13 @@ In practice, the candidate or certificant is expected to:
   examination items, before or after a sitting;
 - cooperate openly and truthfully with any Institute investigation, and report credible evidence of
   certification fraud or examination misconduct by others;
-- use the PCP-AI designation accurately, only while entitled to it, and without implying recognitions the
+- use the PCL-AI designation accurately, only while entitled to it, and without implying recognitions the
   credential does not carry.
 
 ## 8. Governed use of AI
 
 **Principle.** Using AI well is now part of professional competence; governing it is part of professional
-conduct. AI proposes; the professional disposes. Accountability for any output that carries the certificant's
+conduct. AI proposes; the professional verifies, decides and remains accountable. Accountability for any output that carries the certificant's
 name cannot be delegated to software.
 
 In practice, the certificant is expected to:
@@ -151,8 +151,8 @@ and recorded so the process itself can be checked and improved.
   examination rules and certification policies. Where a specific policy gives fuller detail, that policy
   governs the detail; the principles here remain binding throughout.
 - The Code applies to conduct in professional life wherever it could reasonably bear on the trust placed in
-  the PCP-AI credential.
-- The Institute describes its own status honestly and expects the same of its certificants: the PCP-AI is
+  the PCL-AI credential.
+- The Institute describes its own status honestly and expects the same of its certificants: the PCL-AI is
   developed with reference to ISO/IEC 17024 personnel-certification principles, and no claim of accreditation
   or external recognition is made beyond what is true today.
 

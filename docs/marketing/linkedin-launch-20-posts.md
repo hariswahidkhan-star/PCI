@@ -154,7 +154,7 @@ One progress, three lenses, three different questions. Master the reconciliation
 
 ---
 
-## 8 — AI proposes, the professional disposes
+## 8 — AI proposes; the professional verifies, decides and remains accountable
 
 We built an AI domain into our credential. Then we built a fence around it.
 
@@ -162,7 +162,7 @@ AI is genuinely useful in project controls: extracting contract clauses, draftin
 anomalies, first-pass cost coding. Used well, it gives hours back.
 
 But it never decides. Every AI-assisted output passes through a gate: verify against source, and a named
-professional signs. "AI proposes, the professional disposes" isn't a slogan — it's an operating rule:
+professional signs. "AI proposes; the professional verifies, decides and remains accountable" isn't a slogan — it's an operating rule:
 a threshold, a review step, an audit sample.
 
 The failure mode isn't AI being wrong. It's a human trusting it without checking, then owning a number they

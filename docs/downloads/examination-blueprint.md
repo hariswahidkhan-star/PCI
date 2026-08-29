@@ -1,22 +1,22 @@
-# Examination Blueprint — PCP-AI
+# Examination Blueprint — PCL-AI
 > One framework from study to exam — what is assessed, in what proportion, and how
 
 **How to use this blueprint.** The blueprint is the public contract between the candidate and the
-examination: it states what the PCP-AI assesses, at what weight, in what format and to what standard. Study
+examination: it states what the PCL-AI assesses, at what weight, in what format and to what standard. Study
 against it, audit yourself against it, and plan your revision time in proportion to it. Where this document
 and the published PCI policies differ, the published policies prevail.
 
 ## 1. What a blueprint is for
 
 A defensible examination is built backwards from a published framework, not assembled from favourite
-questions. The blueprint commits the examination to sampling the **PCP-AI Body of Knowledge, First
+questions. The blueprint commits the examination to sampling the **PCL-AI Body of Knowledge, First
 Edition** — thirteen domains, **61 Knowledge Areas** — at published weightings, so that:
 
 - **candidates** know that the framework they study is the framework they will be assessed against — no
   surprise topics, no untaught content;
 - **every examination form** is assembled to the same specification, so a pass means the same thing
   whenever and wherever it is earned;
-- **employers** can read exactly what a PCP-AI holder was assessed on.
+- **employers** can read exactly what a PCL-AI holder was assessed on.
 
 The Body of Knowledge, the course outline, the sample questions and this blueprint all describe the same
 framework. There is one map, published once, used everywhere.
@@ -164,7 +164,7 @@ Honesty about a blueprint's limits is part of its value:
 - **It is not the policy of record.** Fees, booking windows, retakes, accommodations, conduct and appeals
   are governed by the published policies and the Candidate Handbook that summarises them.
 - **It does not claim recognition PCI does not hold.** The framework is developed with reference to
-  ISO/IEC 17024 personnel-certification principles; the PCP-AI is not accredited and carries no
+  ISO/IEC 17024 personnel-certification principles; the PCL-AI is not accredited and carries no
   governmental approval, and PCI states so plainly.
 
 The blueprint will be maintained under PCI governance alongside the Body of Knowledge. If the framework

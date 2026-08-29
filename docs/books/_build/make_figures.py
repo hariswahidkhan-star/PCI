@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Render the prototype domains' figures as SVG masters (PCI original artwork).
 
-Style per the pattern spec: brand blue #1D4ED8, crimson #C13329, ink #0F172A, slate greys,
+Style per the pattern spec: brand blue #14432E, crimson #8A5A00, ink #1A1A1A, slate greys,
 Inter labels, clean axes, no decoration. Deterministic output — safe to re-run.
 """
 import importlib.util
 import pathlib
 
-BLUE, CRIMSON, INK, SLATE, GRID = "#1D4ED8", "#C13329", "#0F172A", "#64748B", "#E2E8F0"
+BLUE, CRIMSON, INK, SLATE, GRID = "#14432E", "#8A5A00", "#1A1A1A", "#5A6560", "#DCE3DE"
 FONT = 'font-family="Inter, Helvetica, Arial, sans-serif"'
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PFL = ROOT / "pfl-ai" / "build" / "figures"

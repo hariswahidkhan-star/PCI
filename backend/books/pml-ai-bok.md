@@ -5,7 +5,7 @@
 
 Every organisation that matters delivers its strategy through projects, and every project stands or falls on the quality of its leadership. The Project Controls Institute (PCI) created the PCI Project Management Leader – AI (PCI PML-AI) credential, and this Body of Knowledge that underpins it, for one purpose: to define what a competent project delivery leader must know and be able to do in an era in which artificial intelligence has become part of the everyday machinery of professional work.
 
-The Institute's position on that machinery is deliberate and unambiguous: **AI proposes; the professional disposes.** AI can draft a schedule, surface a risk, forecast a cost outcome or summarise a contract — but every such output must be explainable, validated and owned by a competent human before it informs a decision. This volume therefore treats AI neither as a threat nor as a novelty, but as an instrument whose value depends entirely on the judgement, accountability and professionalism of the person wielding it.
+The Institute's position on that machinery is deliberate and unambiguous: **AI proposes; the professional verifies, decides and remains accountable.** AI can draft a schedule, surface a risk, forecast a cost outcome or summarise a contract — but every such output must be explainable, validated and owned by a competent human before it informs a decision. This volume therefore treats AI neither as a threat nor as a novelty, but as an instrument whose value depends entirely on the judgement, accountability and professionalism of the person wielding it.
 
 This Body of Knowledge is the authoritative reference for the PCI PML-AI examination and, we intend, a working companion for delivery professionals long after the examination is passed.
 
@@ -121,7 +121,7 @@ Three caveats temper enthusiasm. Historic project data is sparse, inconsistently
 
 None of this dilutes accountability. Boards hold the sponsor accountable for the business case and the delivery leader for the delivery approach — not the tooling either of them used. "The model recommended it" is never a defence, at a gate review or in this Institute's examinations. Candidates must be able to state, for any AI-assisted foundational decision, who owns it, how it was validated and how it would be explained to a governance authority.
 
-> **AI proposes; the professional disposes.** AI may draft the charter, rank the portfolio and recommend the life cycle; only a competent, accountable professional may decide what the endeavour is, how it will be governed and who answers for it. Every AI output used in founding a project must be explainable, validated against the real delivery context and owned by a named human — because governance can delegate work to a machine, but never accountability.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may draft the charter, rank the portfolio and recommend the life cycle; only a competent, accountable professional may decide what the endeavour is, how it will be governed and who answers for it. Every AI output used in founding a project must be explainable, validated against the real delivery context and owned by a named human — because governance can delegate work to a machine, but never accountability.
 
 ### Common pitfalls
 
@@ -140,7 +140,7 @@ None of this dilutes accountability. Boards hold the sponsor accountable for the
 - A weighted-criteria matrix disciplines the selection, but absolute constraints such as statutory dates sit outside the scoring and can veto the highest-scoring option.
 - The delivery leader's defining contribution is integration; the sponsor owns the business case and benefits; neither accountability can be delegated to a subordinate, a contractor or a tool.
 - The profession's standards, methods and frameworks — the ISO 21500 family, the PMBOK Guide, the APM Body of Knowledge, PRINCE2, the agile traditions — are sources to apply with judgement; the credential is framework-neutral and examination-based.
-- AI proposes; the professional disposes: AI may draft, classify, score and recommend, but every output used must be explainable, validated against the real context and owned by a named, competent human.
+- AI proposes; the professional verifies, decides and remains accountable: AI may draft, classify, score and recommend, but every output used must be explainable, validated against the real context and owned by a named, competent human.
 
 ### Practice questions
 
@@ -243,7 +243,7 @@ Leadership analytics carry model risk of a distinctive kind, because the data is
 
 Accountability for people decisions is not transferable to a tool, a vendor or an algorithm. Where an AI signal contributes to a decision affecting an individual — workload, role, development, dispute — the leader must be able to explain the signal, evidence its validation, and own the outcome as their own professional judgement. In the examination, candidates are assessed on exactly this discrimination: identifying which leadership tasks may be safely automated, which outputs demand validation, and where acting on an unvalidated inference about a person would constitute a failure of professional conduct.
 
-> **AI proposes; the professional disposes.** An algorithm may surface the signal — a sentiment dip, a workload spike, a drafted difficult message. Only a competent, accountable delivery leader may decide what that signal means, whether the data behind it is fair and lawfully held, and how to act on it with the people concerned. Leadership judgement, and the accountability that goes with it, is never delegated to a model.
+> **AI proposes; the professional verifies, decides and remains accountable.** An algorithm may surface the signal — a sentiment dip, a workload spike, a drafted difficult message. Only a competent, accountable delivery leader may decide what that signal means, whether the data behind it is fair and lawfully held, and how to act on it with the people concerned. Leadership judgement, and the accountability that goes with it, is never delegated to a model.
 
 ### 2.8 Common pitfalls
 
@@ -262,7 +262,7 @@ Accountability for people decisions is not transferable to a tool, a vendor or a
 - Team performance is diagnosed with recognised models — Tuckman for development stage, Belbin for role balance, content and process theories for motivation — and interventions must match the diagnosis.
 - Practice follows a verifiable cycle: gather triangulated evidence, diagnose against a model, intervene, and confirm the result against pre-set exit criteria.
 - Conflict modes are chosen deliberately: interests before positions, collaboration where stakes and relationships matter, escalation only after direct resolution has failed.
-- AI may automate the mechanical layer of leadership work, but every inference about a person must be validated by the accountable leader: AI proposes; the professional disposes.
+- AI may automate the mechanical layer of leadership work, but every inference about a person must be validated by the accountable leader: AI proposes; the professional verifies, decides and remains accountable.
 - People analytics are personal data: consent, lawful basis, aggregate-only reporting and freedom from covert surveillance are professional-conduct obligations, not options.
 
 ### Practice questions
@@ -292,7 +292,7 @@ B. Validate the inference against direct observation and conversation, confirm t
 C. Act immediately, since early intervention is the purpose of predictive tooling
 D. Ignore the output, since AI has no legitimate role in people leadership
 
-**Correct answer: B.** Under the doctrine "AI proposes; the professional disposes", an inference about an individual must be explainable, validated and owned by the accountable leader before any action is taken.
+**Correct answer: B.** Under the doctrine "AI proposes; the professional verifies, decides and remains accountable", an inference about an individual must be explainable, validated and owned by the accountable leader before any action is taken.
 
 ## 3. Project Initiation
 
@@ -375,7 +375,7 @@ Initiation-stage AI carries model risk that the leader must be able to name. His
 
 Accountability is not diluted by tooling. The sponsor remains accountable for the decision to initiate and the charter approved; the delivery leader for the completeness and honesty of the analysis placed before the sponsor, including every element a model contributed. Candidates are examined on their ability to state where AI assisted an initiation product, what was verified and by whom — a charter that cannot answer those questions is not ready for signature.
 
-> **AI proposes; the professional disposes.** At initiation, AI may draft the charter, mine the history, rank the stakeholders and seed the risk register — but the alignment of the project to strategy, the realism of its success criteria and the recommendation to proceed are judgements a competent professional must make, explain and own. The model informs the mandate; the sponsor's signature, and the accountability behind it, remain irreducibly human.
+> **AI proposes; the professional verifies, decides and remains accountable.** At initiation, AI may draft the charter, mine the history, rank the stakeholders and seed the risk register — but the alignment of the project to strategy, the realism of its success criteria and the recommendation to proceed are judgements a competent professional must make, explain and own. The model informs the mandate; the sponsor's signature, and the accountability behind it, remain irreducibly human.
 
 ### Key points
 
@@ -414,7 +414,7 @@ B. The model's confidence score must exceed an agreed threshold
 C. A competent, named professional must validate, be able to explain, and take ownership of its content
 D. The sponsor must sign the register in place of the project manager
 
-**Answer: C.** AI proposes; the professional disposes — nothing enters an authorising document until a competent, accountable human has explained, validated and owned it.
+**Answer: C.** AI proposes; the professional verifies, decides and remains accountable — nothing enters an authorising document until a competent, accountable human has explained, validated and owned it.
 
 ## Chapter 4: Business Cases
 
@@ -512,7 +512,7 @@ At each gate the sponsor, as owner of the case, re-tests it on a **forward-looki
 
 **Accountability at the gate.** Accountability for the business case is not transferable to a tool or its vendor. At each gate the accountable owner must be able to state which figures were machine-generated, how each was validated, and why they are believed — every AI output in the case must be explainable, reproducible and traceable to its inputs. A recommendation to continue, change or terminate is a professional judgement, made and signed by a competent human on evidence that human has tested. Where the decision proves wrong, no governance body will accept "the model said so" as a defence.
 
-> **AI proposes; the professional disposes.** Applied to the business case: AI may draft the five dimensions, compute the appraisal and flag the failing assumption — but the option selected, the viability judgement at each gate, and the recommendation to continue, change or terminate belong to an accountable professional who can explain, evidence and own every figure in the case.
+> **AI proposes; the professional verifies, decides and remains accountable.** Applied to the business case: AI may draft the five dimensions, compute the appraisal and flag the failing assumption — but the option selected, the viability judgement at each gate, and the recommendation to continue, change or terminate belong to an accountable professional who can explain, evidence and own every figure in the case.
 
 ### Key points
 
@@ -522,7 +522,7 @@ At each gate the sponsor, as owner of the case, re-tests it on a **forward-looki
 - NPV, IRR and payback are complements: NPV governs choices between mutually exclusive options, IRR communicates return, payback signals exposure — and affordability (financial case) is distinct from worth (economic case).
 - Stage-gate viability is tested forward-looking: sunk costs are excluded, and continuation is justified only if the remaining benefits exceed the remaining cost to complete.
 - The sponsor (senior responsible owner) owns the case and its benefits; the project manager manages its development; independent assurance tests whether it remains desirable, viable and achievable.
-- AI may automate the arithmetic — appraisal, sensitivity analysis, drafting, benefit tracking — but every AI output must be explainable, validated and owned by a competent human: AI proposes; the professional disposes.
+- AI may automate the arithmetic — appraisal, sensitivity analysis, drafting, benefit tracking — but every AI output must be explainable, validated and owned by a competent human: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -551,7 +551,7 @@ B. The forecast is explainable, validated against independent evidence, and owne
 C. The model's stated confidence level exceeds an agreed threshold
 D. The forecast is more conservative than the manual estimate it replaces
 
-**Answer: B.** AI proposes; the professional disposes — every AI output entering a case must be explainable, validated and owned by a competent human.
+**Answer: B.** AI proposes; the professional verifies, decides and remains accountable — every AI output entering a case must be explainable, validated and owned by a competent human.
 
 ## 5. Project Governance
 
@@ -629,7 +629,7 @@ Predictive models learn from past projects and inherit their pathologies: optimi
 
 Accountability does not transfer to a tool. The sponsor remains singly accountable for the investment, the board for decisions within its terms of reference, and the delivery leader for the integrity of information presented to both. Every AI-derived item in a governance pack must carry a named human owner able to explain and stand behind it, and AI use in preparing governance information must itself be disclosed and auditable. An escalation raised by an algorithm is a prompt to judgement, never a substitute for it — the classic failures of confused roles and orphaned decisions are amplified rather than cured when "the system flagged it" replaces a named owner.
 
-> **AI proposes; the professional disposes.** AI may draft the pack, flag the exception and forecast the outturn; only accountable people hold decision rights, exercise tolerances and approve gates. Every machine-generated signal placed before a board must be explainable, validated and owned by a competent professional — a score that no one can explain has no place in a decision that someone must own.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may draft the pack, flag the exception and forecast the outturn; only accountable people hold decision rights, exercise tolerances and approve gates. Every machine-generated signal placed before a board must be explainable, validated and owned by a competent professional — a score that no one can explain has no place in a decision that someone must own.
 
 ### Key points
 
@@ -639,7 +639,7 @@ Accountability does not transfer to a tool. The sponsor remains singly accountab
 - Track tolerance consumption cumulatively as well as per event: single-event tests decide who is escalated to, cumulative tests who may approve.
 - Stage gates force positive re-authorisation of continued investment at commitment points, supported by independent assurance proportionate to risk.
 - AI changes the tempo of governance, not its architecture: continuous forecasts and exception signals, but never a decision right allocated to a system.
-- Every AI-generated figure, forecast or flag before a governance body must be explainable, validated and owned by a named professional — AI proposes; the professional disposes.
+- Every AI-generated figure, forecast or flag before a governance body must be explainable, validated and owned by a named professional — AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -668,7 +668,7 @@ Accountability does not transfer to a tool. The sponsor remains singly accountab
 - C. The gate decision must be deferred until the score returns to amber or green
 - D. The score may be used as-is, since gate authority remains with the board in any case
 
-**Correct answer: B.** Under "AI proposes; the professional disposes", machine-generated signals inform decisions only once a named human has validated and can explain them; the Institute accredits no tools, and an unexplained score must neither delay nor silently anchor a decision.
+**Correct answer: B.** Under "AI proposes; the professional verifies, decides and remains accountable", machine-generated signals inform decisions only once a named human has validated and can explain them; the Institute accredits no tools, and an unexplained score must neither delay nor silently anchor a decision.
 
 ## Chapter 6: Scope and Requirements Management
 
@@ -734,7 +734,7 @@ Scope and requirements management is among the most text-intensive competencies 
 
 **Human accountability.** Accountability is not transferable to tooling. The scope baseline is approved by named governance authorities; change is disposed by the accountable board on a professional's recommendation; acceptance is confirmed by the designated acceptor against verifiable criteria. Where AI contributed to any of these, the delivery leader owns the result as if authored personally, records that AI assistance was used, and must be able to explain and defend the decision without reference to the tool. An unvalidated AI output in a scope baseline is not efficiency; it is unexamined scope.
 
-> **AI proposes; the professional disposes.** AI may draft the requirement, propose the decomposition, populate the traceability matrix and flag the creeping scope — but the requirement set is confirmed with stakeholders, the baseline is approved, change is authorised and delivery is accepted only by an accountable professional who can explain, evidence and own every disposition.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may draft the requirement, propose the decomposition, populate the traceability matrix and flag the creeping scope — but the requirement set is confirmed with stakeholders, the baseline is approved, change is authorised and delivery is accepted only by an accountable professional who can explain, evidence and own every disposition.
 
 ### 6.8 Common pitfalls
 
@@ -756,7 +756,7 @@ Scope and requirements management is among the most text-intensive competencies 
 - In MoSCoW practice, Must-have effort should not exceed roughly 60 per cent of demonstrated capacity, so the Should- and Could-have items form the contingency pool; items below the cut line are visibly deferred, not deleted.
 - The scope baseline (or the product-owner-ordered backlog) is the sole reference for change: every proposed change is logged, impact-assessed via the traceability matrix, decided at the delegated authority level and reflected in an updated baseline.
 - Acceptance criteria must be verifiable thresholds, enabling the distinction between verification (built to specification) and validation (satisfies the need); orphaned work signals scope creep, and untraced requirements signal delivery gaps.
-- AI may automate the mechanical layers of requirements work, but completeness, testability, prioritisation, change and acceptance judgements remain with a named, accountable professional: AI proposes; the professional disposes.
+- AI may automate the mechanical layers of requirements work, but completeness, testability, prioritisation, change and acceptance judgements remain with a named, accountable professional: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -785,7 +785,7 @@ B. No one, since hallucination is a known and accepted model limitation.
 C. The stakeholders who attended the workshop recorded in the transcript.
 D. The professional who admitted it to the baseline without validation and named ownership.
 
-**Answer: D.** Accountability is not transferable to tooling: every AI output must be explainable, validated and owned by a competent human before it enters a baseline — AI proposes; the professional disposes.
+**Answer: D.** Accountability is not transferable to tooling: every AI output must be explainable, validated and owned by a competent human before it enters a baseline — AI proposes; the professional verifies, decides and remains accountable.
 
 ## Chapter 7 — Planning and Execution
 
@@ -868,7 +868,7 @@ AI changes the economics of this competency; it does not change its logic. Machi
 
 **Human accountability.** Under the Institute's doctrine, accountability for the plan is non-transferable. The leader who baselines an integrated plan owns every number in it, however it was produced, and the leader who acts on a predictive warning — or declines to — owns that judgement equally. Good practice is to record which planning artefacts were AI-assisted, retain the validation evidence alongside the basis of estimate, and present forecasts with their provenance and confidence visible. The examination tests this directly: candidates are expected to determine when an AI-generated schedule, estimate or forecast should be accepted, adjusted or rejected, and to justify the decision.
 
-> **AI proposes; the professional disposes.** A model may draft the schedule, price the estimate and flag the variance first. The delivery leader interrogates the data and assumptions, sets the confidence, approves the baseline and selects the corrective action — and remains personally accountable for every commitment the plan makes.
+> **AI proposes; the professional verifies, decides and remains accountable.** A model may draft the schedule, price the estimate and flag the variance first. The delivery leader interrogates the data and assumptions, sets the confidence, approves the baseline and selects the corrective action — and remains personally accountable for every commitment the plan makes.
 
 ### 7.8 Common pitfalls
 
@@ -879,7 +879,7 @@ AI changes the economics of this competency; it does not change its logic. Machi
 - **Reading SV as time**: schedule variance in currency trends to zero at completion even on a late project; always check the critical path as well.
 - **The rubber baseline** — re-baselining to erase variance rather than to reflect approved change.
 - **Self-reported percent complete** without objective earning rules, which inflates EV.
-- **Accepting AI-generated estimates unvalidated** — an unexplained figure fails the doctrine that AI proposes and the professional disposes.
+- **Accepting AI-generated estimates unvalidated** — an unexplained figure fails the doctrine that AI proposes and the professional verifies, decides and remains accountable.
 
 ### Key points
 
@@ -889,7 +889,7 @@ AI changes the economics of this competency; it does not change its logic. Machi
 - Monitoring and control is a four-step feedback loop — measure, compare, analyse, respond — governed by management by exception and executed to a fixed cadence.
 - Corrective action follows a ladder of proportionality: diagnose, re-sequence, re-resource, and only then de-scope or re-baseline through formal change control.
 - AI tools can draft plans, price estimates and flag variances early, but model risk, automation bias and anchoring demand validation of every output before use.
-- Accountability is non-transferable: AI proposes; the professional disposes.
+- Accountability is non-transferable: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -918,7 +918,7 @@ B. The figure lies within the sponsor's approved budget tolerance.
 C. A competent professional can explain its derivation, has validated its inputs and calibration, and accepts ownership of it.
 D. The tool has been trained on at least one comparable historical project.
 
-**Answer: C.** AI proposes; the professional disposes — every AI output must be explainable, validated and owned by an accountable human before it becomes a commitment.
+**Answer: C.** AI proposes; the professional verifies, decides and remains accountable — every AI output must be explainable, validated and owned by an accountable human before it becomes a commitment.
 
 ## 8. Stakeholder Leadership and Engagement
 
@@ -1004,7 +1004,7 @@ Stakeholder analytics carries distinctive model risk. Sentiment models are train
 
 Accountability for stakeholder relationships cannot be transferred to a tool. The professional who relies on AI-derived stakeholder insight must be able to explain, in plain language, what the tool analysed, what it inferred, how confident that inference is and why the resulting engagement decision was justified. Where an AI-informed judgement affects an individual's standing — for example, labelling a stakeholder a "blocker" — the leader treats the label as a hypothesis to be tested respectfully, never a verdict to be filed. Governance forums should be told when material stakeholder assessments are AI-assisted, and the engagement strategy remains a document owned, signed and defended by the project leader. In the examination, candidates are expected to demonstrate this boundary: knowing what to delegate to the machine, and what may never be.
 
-> **AI proposes; the professional disposes.** AI may map the stakeholder landscape, score sentiment, and draft the message. The professional validates the inference, owns the relationship, signs the communication and answers for the trust the project builds or loses. Insight can be automated; leadership cannot.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may map the stakeholder landscape, score sentiment, and draft the message. The professional validates the inference, owns the relationship, signs the communication and answers for the trust the project builds or loses. Insight can be automated; leadership cannot.
 
 ### 8.12 Common pitfalls
 
@@ -1025,7 +1025,7 @@ Accountability for stakeholder relationships cannot be transferred to a tool. Th
 - The scoring method `P = I × S`, `G = max(0, T − A)`, `W = P × G` allocates finite effort in proportion to weight, re-scored on a fixed cadence; the arithmetic prompts judgement, never replaces it.
 - The communication plan fixes message, channel, frequency and sender for each group; sender credibility is as consequential as message content.
 - AI can collate data, score sentiment, predict disengagement and draft communications, but carries model risk, partial data and privacy obligations; interpretation, attitude classification, sensitive wording and engagement decisions remain human.
-- AI proposes; the professional disposes: every AI-derived stakeholder insight must be explainable, validated and owned by an accountable professional.
+- AI proposes; the professional verifies, decides and remains accountable: every AI-derived stakeholder insight must be explainable, validated and owned by an accountable professional.
 
 ### Practice questions
 
@@ -1047,7 +1047,7 @@ D. 48
 
 **Answer: C.** `P = 4 × 3 = 12`, `G = (+1) − (−1) = 2`, so `W = 12 × 2 = 24`.
 
-**3.** Under the doctrine "AI proposes; the professional disposes", which activity is appropriate to delegate to an AI-enabled tool?
+**3.** Under the doctrine "AI proposes; the professional verifies, decides and remains accountable", which activity is appropriate to delegate to an AI-enabled tool?
 
 A. Final classification of a sponsor's attitude in the stakeholder register
 B. Releasing a tailored communication to a resistant group without human review
@@ -1147,7 +1147,7 @@ Procurement data is a hostile environment for naive models. Supplier performance
 
 Fairness and transparency obligations do not relax because software performed the analysis. If an award is challenged, "the model scored it" is not a defence; the named evaluators and the accountable procurement authority own the outcome and must be able to explain it. Governance therefore requires disclosed use of AI where policy or regulation demands it; audit trails linking every automated output to a human reviewer; bias testing before screening tools touch live supplier data; and clear escalation routes when a professional disagrees with a machine recommendation. Candidates should expect examination scenarios that probe exactly this boundary — situations in which the AI output is convenient, confident and wrong, and the professionally defensible action is to overrule it and record why.
 
-> **AI proposes; the professional disposes.** In procurement, AI may scan markets, draft documents, screen submissions and score risk — but the strategy, the criteria, the award and the ethics of the deal belong to an accountable human being. Every machine-assisted judgement in the sourcing file must be explainable, validated and owned by a competent professional, because it is the professional, not the model, who answers to the supplier, the auditor and the tribunal.
+> **AI proposes; the professional verifies, decides and remains accountable.** In procurement, AI may scan markets, draft documents, screen submissions and score risk — but the strategy, the criteria, the award and the ethics of the deal belong to an accountable human being. Every machine-assisted judgement in the sourcing file must be explainable, validated and owned by a competent professional, because it is the professional, not the model, who answers to the supplier, the auditor and the tribunal.
 
 ### Key points
 
@@ -1186,7 +1186,7 @@ Fairness and transparency obligations do not relax because software performed th
 - C. The evaluation is indefensible because no accountable human validated, explained and owned the scores
 - D. The evaluation is defensible provided the use of AI was disclosed to bidders
 
-**Correct answer: C.** Under "AI proposes; the professional disposes", disclosure, consistency and third-party assurance cannot substitute for named evaluators who validate and own every score — "the model scored it" is not a defence.
+**Correct answer: C.** Under "AI proposes; the professional verifies, decides and remains accountable", disclosure, consistency and third-party assurance cannot substitute for named evaluators who validate and own every score — "the model scored it" is not a defence.
 
 ## 10. Contracts and Commercial Delivery
 
@@ -1254,7 +1254,7 @@ Three caveats govern use of these tools. First, language models can hallucinate 
 
 Contractual powers — instructing a variation, serving or responding to a notice, certifying payment, agreeing a final account — vest in named individuals, and no AI output transfers or dilutes them. An AI-drafted notice served out of time is still out of time; a certificate issued on unvalidated analytics is still the certifier's certificate. The examination expects candidates to demonstrate not only commercial competence but the governance of these tools: every AI output that informs a commercial position must be explainable, validated against the contract and the records, and owned by a competent, accountable professional.
 
-> **AI proposes; the professional disposes.** A model may draft the comparison, flag the slipping service level, assemble the claims file and predict the settlement range — but the contract knows nothing of models. Only a competent, named professional allocates risk, certifies payment, serves notice, agrees the variation and settles the account — and that professional answers for every AI-informed decision as fully as for their own analysis.
+> **AI proposes; the professional verifies, decides and remains accountable.** A model may draft the comparison, flag the slipping service level, assemble the claims file and predict the settlement range — but the contract knows nothing of models. Only a competent, named professional allocates risk, certifies payment, serves notice, agrees the variation and settles the account — and that professional answers for every AI-informed decision as fully as for their own analysis.
 
 ### Common pitfalls
 
@@ -1276,7 +1276,7 @@ Contractual powers — instructing a variation, serving or responding to a notic
 - Disciplined administration — an obligations register, evidenced certification and contemporaneous records — is what allows variations and claims to be resolved on evidence rather than assertion.
 - Route all change through the single contractual variation mechanism; on claims, observe notice periods strictly and establish entitlement before quantum; escalate disputes deliberately up the ladder from negotiation to litigation.
 - Target-cost pain/gain mechanisms share overrun and underrun to a formula, keeping both parties' incentives aligned where scope is partially mature.
-- AI proposes; the professional disposes: first-pass extraction, tracking and chronology assembly may be automated with sampling checks, but risk allocation, entitlement, dispute-route choice and every act of certification remain with a named, accountable human.
+- AI proposes; the professional verifies, decides and remains accountable: first-pass extraction, tracking and chronology assembly may be automated with sampling checks, but risk allocation, entitlement, dispute-route choice and every act of certification remain with a named, accountable human.
 
 ### Practice questions
 
@@ -1393,7 +1393,7 @@ AI forecasting also carries specific, examinable failure modes. Models trained o
 
 Institute doctrine is explicit. Every AI output that enters a performance measurement baseline, a forecast or a report to a sponsor must have a named, competent human owner who can explain and defend it. Setting contingency at a stated confidence level is a management decision informed by analysis, never a number transcribed from a model. Drawdown of contingency, and any change to the baseline, passes through formal change control regardless of what a predictive tool recommends. Assurance functions should expect an audit trail showing what the model proposed, what the professional accepted, amended or rejected, and why. Any output that cannot be explained — its inputs, assumptions and sensitivity — must not be used to set a baseline, a forecast or a contingency figure. Candidates are examined on precisely this posture: interpreting AI-assisted outputs, challenging their assumptions, and owning the resulting decision.
 
-> **AI proposes; the professional disposes.** A model may propose an estimate at completion, a risk mined from project records, or a P80 contingency drawn from ten thousand simulations. The delivery leader disposes: verifying the data behind the earned value, interrogating the distributions and correlations, deciding the confidence level at which contingency is set, and signing the forecast that goes to the sponsor. No algorithm holds the baseline; the accountable professional does.
+> **AI proposes; the professional verifies, decides and remains accountable.** A model may propose an estimate at completion, a risk mined from project records, or a P80 contingency drawn from ten thousand simulations. The delivery leader verifies and decides: checking the data behind the earned value, interrogating the distributions and correlations, deciding the confidence level at which contingency is set, and signing the forecast that goes to the sponsor. No algorithm holds the baseline; the accountable professional does.
 
 ### Key points
 
@@ -1403,7 +1403,7 @@ Institute doctrine is explicit. Every AI output that enters a performance measur
 - Quantitative risk analysis replaces deterministic estimates with distributions; contingency is set at a governance-mandated confidence level (for example P80) minus the base estimate.
 - SPI loses meaning late in a project and must be corroborated with critical path analysis; persistent CPI shortfalls rarely self-correct.
 - Correlation matters in simulation: assuming independence between risks narrows the spread and understates contingency.
-- AI proposes; the professional disposes: every machine-generated forecast, risk or contingency figure must be explainable, validated against project evidence and owned by a competent human before it informs a decision.
+- AI proposes; the professional verifies, decides and remains accountable: every machine-generated forecast, risk or contingency figure must be explainable, validated against project evidence and owned by a competent human before it informs a decision.
 
 ### Practice questions
 
@@ -1423,7 +1423,7 @@ A. an 80% probability of not being exceeded  B. an 80% probability of being exce
 
 A. adopt the AI forecast, since it draws on more historical data  B. average the two forecasts to balance the evidence  C. report the index-based EAC and exclude the AI figure until it can be explained and validated  D. report both figures and let the sponsor choose
 
-**Answer: C.** Under Institute doctrine an output that cannot be explained and validated must not inform a forecast — AI proposes; the professional disposes.
+**Answer: C.** Under Institute doctrine an output that cannot be explained and validated must not inform a forecast — AI proposes; the professional verifies, decides and remains accountable.
 
 ## 12. Predictive Delivery
 
@@ -1505,7 +1505,7 @@ Forecasting models are only as trustworthy as the progress data feeding them. Su
 
 Stage gates exist precisely to concentrate accountability, and AI must not be allowed to dilute it. AI-generated analysis may inform a gate, but the decision is made and owned by named, competent humans — the sponsor and project board, advised by the delivery leader. The leader who presents machine-assisted evidence signs for it as their own: they must be able to state what the tool produced, what they changed or rejected, and why. That audit trail is good practice everywhere and an obligation in regulated environments, where the choice of a predictive approach is often driven by exactly this need for demonstrable control. The examination tests this division of responsibility directly: knowing which steps of critical-path analysis, forecasting and gate preparation may be automated is inseparable from knowing which judgements may never be delegated.
 
-> **AI proposes; the professional disposes.** In predictive delivery, AI may draft the network, recompute the path and forecast the finish; the delivery leader validates the logic against reality, owns the baseline and answers for the gate decision. A forecast nobody can explain is not evidence, and a proceed, amend or stop recommendation is never delegated to a model.
+> **AI proposes; the professional verifies, decides and remains accountable.** In predictive delivery, AI may draft the network, recompute the path and forecast the finish; the delivery leader validates the logic against reality, owns the baseline and answers for the gate decision. A forecast nobody can explain is not evidence, and a proceed, amend or stop recommendation is never delegated to a model.
 
 ### Common pitfalls
 
@@ -1525,7 +1525,7 @@ Stage gates exist precisely to concentrate accountability, and AI must not be al
 - Crashing trades cost for time; fast-tracking trades risk for time. After every compression step, recompute both passes, because the critical path can shift.
 - Critical chain scheduling adds resource dependency to logical dependency and uses buffer consumption as the primary progress signal.
 - A gate is a genuine decision — proceed, amend or stop on evidence — and stop is a legitimate control outcome; a gate without a real stop option is ceremony.
-- AI proposes; the professional disposes: automate the deterministic mechanics, validate the meaning, and never delegate gate decisions, baseline ownership or the suitability judgement to a tool.
+- AI proposes; the professional verifies, decides and remains accountable: automate the deterministic mechanics, validate the meaning, and never delegate gate decisions, baseline ownership or the suitability judgement to a tool.
 
 ### Practice questions
 
@@ -1554,7 +1554,7 @@ B. Ownership of the schedule baseline after a rebaseline
 C. Computation of the forward and backward passes and float
 D. The judgement that the project remains suitable for a predictive approach
 
-**Answer: C.** Deterministic mechanics such as network calculation may be automated; gate decisions, baseline ownership and suitability judgements must remain with accountable humans — AI proposes, the professional disposes.
+**Answer: C.** Deterministic mechanics such as network calculation may be automated; gate decisions, baseline ownership and suitability judgements must remain with accountable humans — AI proposes; the professional verifies, decides and remains accountable.
 
 ## 13. Agile Delivery
 
@@ -1588,7 +1588,7 @@ The **product backlog** is the single, ordered list of everything currently know
 
 Prioritisation is value-driven. Examinable techniques range from categorical schemes — MoSCoW's must have, should have, could have and won't have — to economic ordering by cost of delay relative to duration. Effort is estimated in relative units (story points) calibrated by the team itself; the consequences of that team-local calibration for measurement are developed in section 13.6.
 
-AI tools can usefully draft acceptance criteria, cluster duplicate items and flag dependencies. Consistent with Institute doctrine — AI proposes; the professional disposes — the product owner validates and owns every ordering decision a tool suggests.
+AI tools can usefully draft acceptance criteria, cluster duplicate items and flag dependencies. Consistent with Institute doctrine — AI proposes; the professional verifies, decides and remains accountable — the product owner validates and owns every ordering decision a tool suggests.
 
 ### 13.5 Timeboxes, roles and cadence
 
@@ -1641,7 +1641,7 @@ Agile delivery generates precisely the kind of data on which predictive tooling 
 
 **Human accountability before governance.** When an AI-derived forecast reaches a governance body, accountability is undiminished: the delivery leader must be able to explain what data the forecast rests on, what assumptions it embeds, why its confidence range is credible, and what would invalidate it. "The tool predicted it" is not a defence available to a certified professional. Examination candidates should expect to be tested on interpreting and challenging AI-generated agile metrics and forecasts — including recognising when an output is unreliable — not merely on operating the tooling.
 
-> **AI proposes; the professional disposes.** An AI forecast of a release date is a proposal, not a commitment; a suggested backlog ranking is an input, not a decision. The delivery leader validates the data and assumptions, the product owner owns the priority order, the team owns its improvement actions — and the human professional owns every number presented to governance.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI forecast of a release date is a proposal, not a commitment; a suggested backlog ranking is an input, not a decision. The delivery leader validates the data and assumptions, the product owner owns the priority order, the team owns its improvement actions — and the human professional owns every number presented to governance.
 
 ### 13.9 Common pitfalls
 
@@ -1662,7 +1662,7 @@ Agile delivery generates precisely the kind of data on which predictive tooling 
 - Velocity, throughput and cycle time are team-local empirical signals for planning — never inter-team comparators, and never targets.
 - Forecasts are ranges with stated assumptions and confidence, revalidated each iteration; partial iterations always round up to whole timeboxes.
 - AI accelerates backlog hygiene, flow analytics and probabilistic forecasting, but the suitability decision, prioritisation, commitments to governance and the interpretation of metrics remain human accountabilities.
-- AI proposes; the professional disposes: every AI output must be explainable, validated and owned before it reaches a governance body.
+- AI proposes; the professional verifies, decides and remains accountable: every AI output must be explainable, validated and owned before it reaches a governance body.
 
 ### Practice questions
 
@@ -1691,7 +1691,7 @@ B. Adopt the suggested backlog order automatically, since the tool has analysed 
 C. Validate the forecast's data and assumptions before use, refer the suggested ordering to the product owner for decision, and own every number presented to governance
 D. Reject both outputs, because AI-generated analysis may not inform governance decisions
 
-**Answer: C.** AI proposes; the professional disposes — AI outputs are inputs to accountable human decisions, neither adopted unexamined nor rejected outright.
+**Answer: C.** AI proposes; the professional verifies, decides and remains accountable — AI outputs are inputs to accountable human decisions, neither adopted unexamined nor rejected outright.
 
 ## 14. Hybrid Delivery
 
@@ -1764,7 +1764,7 @@ Three model-risk caveats are examinable. First, adaptive telemetry is behavioura
 
 Every AI output entering the governance record — a forecast, a mapping, a drafted gate submission — must be explainable to the board that relies on it, validated against source data, and owned by a named, competent professional. Gate decisions remain human decisions taken by identified role-holders, and AI-assisted artefacts should be marked as such, with the reviewing owner recorded. Where accountability for a hybrid component is already contested, tooling amplifies the ambiguity rather than resolving it: assign the single accountable owner first, then instrument.
 
-> **AI proposes; the professional disposes.** In hybrid delivery, AI may translate adaptive telemetry into stage-gate language, forecast completion probabilistically and draft the governance record — but the professional decides which components are predictive and which adaptive, judges whether an increment truly discharges a baseline commitment, and answers to the gate. The seam between the two delivery worlds is held together by accountable human judgement, never by the tooling that reports across it.
+> **AI proposes; the professional verifies, decides and remains accountable.** In hybrid delivery, AI may translate adaptive telemetry into stage-gate language, forecast completion probabilistically and draft the governance record — but the professional decides which components are predictive and which adaptive, judges whether an increment truly discharges a baseline commitment, and answers to the gate. The seam between the two delivery worlds is held together by accountable human judgement, never by the tooling that reports across it.
 
 ### Key points
 
@@ -1773,7 +1773,7 @@ Every AI output entering the governance record — a forecast, a mapping, a draf
 - Baseline each stream in its own currency: detailed scope, schedule and cost for predictive components; capacity, cadence, release milestones and outcomes for adaptive ones — never the backlog item by item.
 - Synchronise cadences: set reporting periods to a whole number of sprints, place gates on sprint boundaries, and give every cross-stream dependency a single named owner and a need-by date.
 - When an adaptive forecast misses a fixed gate, the correct lever is scope — defer features not needed for the gate — not schedule; and report the streams' variances side by side, never netted.
-- AI may translate telemetry between the two regimes, forecast probabilistically and draft the governance record, but approach assignment is never delegated, and every AI output entering the record must be explainable, validated and owned by a named, competent human: AI proposes; the professional disposes.
+- AI may translate telemetry between the two regimes, forecast probabilistically and draft the governance record, but approach assignment is never delegated, and every AI output entering the record must be explainable, validated and owned by a named, competent human: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -1868,7 +1868,7 @@ Quality data carries a specific inheritance problem: defect predictors learn whe
 
 Accountability is untouched by the tooling. The change authority named in the governance framework — individual, board or sponsor — owns every disposition, and the record must show a named person approving, rejecting or deferring each change, whatever analysis supported them. The delivery leader owns the quality management plan and answers for the fitness of accepted outputs; sponsors and line managers own adoption. Where an AI-derived assessment informed a disposition or an acceptance, the record should disclose it, and someone competent must be able to explain it.
 
-> **AI proposes; the professional disposes.** AI may draft the impact assessment, flag the anomaly, predict the defect and chart the adoption curve; only an accountable person approves the change, accepts the deliverable and answers for the baseline. A change dispositioned on an explanation nobody can give is an uncontrolled change — however sophisticated the tool that scored it.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may draft the impact assessment, flag the anomaly, predict the defect and chart the adoption curve; only an accountable person approves the change, accepts the deliverable and answers for the baseline. A change dispositioned on an explanation nobody can give is an uncontrolled change — however sophisticated the tool that scored it.
 
 ### Common pitfalls
 
@@ -1888,7 +1888,7 @@ Accountability is untouched by the tooling. The change authority named in the go
 - Approved changes are re-baselined and carried into the risk register and benefits case; as CR-041 shows, a change affordable in cost terms can still destroy value through lost benefits.
 - Organisational change management (Lewin, Kotter, ADKAR) turns delivered outputs into adopted outputs; adoption is planned, sponsored and measured work, because unadopted outputs yield no benefits.
 - AI legitimately automates the clerical layer — drafting assessments, detecting anomalies, triaging the change log — but disposition and acceptance are never automated, and AI models, prompts and thresholds are governed, auditable artefacts.
-- AI proposes; the professional disposes: every AI-generated assessment must be explainable, validated against evidence and owned by a named, accountable person before it informs a decision.
+- AI proposes; the professional verifies, decides and remains accountable: every AI-generated assessment must be explainable, validated against evidence and owned by a named, accountable person before it informs a decision.
 
 ### Practice questions
 
@@ -1917,7 +1917,7 @@ B. Treat the score as a proposal, validate the assessment against the baselines 
 C. Reject the change, because AI-scored requests cannot be trusted
 D. Defer the change until the tool's confidence exceeds a set threshold
 
-**Correct answer: B.** AI proposes and the professional disposes — machine output is evidence to be validated and owned by a named, accountable person, and waving it through unexamined (A) is automation bias.
+**Correct answer: B.** AI proposes and the professional verifies, decides and remains accountable — machine output is evidence to be validated and owned by a named, accountable person, and waving it through unexamined (A) is automation bias.
 
 ## 16. Benefits Realisation
 
@@ -1996,7 +1996,7 @@ Benefits realisation has always suffered a structural weakness: measurement effo
 
 **Human accountability.** Ownership is the non-negotiable centre of this competency. Every benefit profile names a benefit owner — a human accountable for realisation against the business case — and no tool, dashboard or model can occupy that role. Where AI output feeds a realisation report, a competent individual validates it and stands behind it; where tracking continues beyond closure, the tooling, its data pipelines and its known limitations are handed over to operational ownership as deliberately as any other product. The examination expects candidates to state plainly who answers for a benefit at every point in its life — during delivery, at transition and in sustained operation.
 
-> **AI proposes; the professional disposes.** An analytics platform may surface the trend, forecast the shortfall and draft the realisation report — but only a named benefit owner can attest that a benefit is real, attribute it honestly to the investment, and account to the sponsor for the business case. Machine measurement informs the judgement of realisation; it never constitutes it.
+> **AI proposes; the professional verifies, decides and remains accountable.** An analytics platform may surface the trend, forecast the shortfall and draft the realisation report — but only a named benefit owner can attest that a benefit is real, attribute it honestly to the investment, and account to the sponsor for the business case. Machine measurement informs the judgement of realisation; it never constitutes it.
 
 ### Common pitfalls
 
@@ -2017,7 +2017,7 @@ Benefits realisation has always suffered a structural weakness: measurement effo
 - Every benefit carries a profile with a measure, a baseline captured before delivery, a target, a realisation trajectory and a named owner drawn from the business, never the delivery team.
 - Because most benefits accrue after handover, the benefits realisation plan schedules post-closure reviews, transfers live accountability to operations, and lodges the regime with a body that outlives the project board.
 - AI-enabled tooling makes measurement continuous and cheap — harvesting actuals, forecasting trajectories, flagging shortfalls — but causal logic, attribution, baseline integrity and every forward forecast remain the professional's to validate.
-- AI proposes; the professional disposes: only a named human benefit owner can attest that a benefit is real and account to the sponsor for the business case.
+- AI proposes; the professional verifies, decides and remains accountable: only a named human benefit owner can attest that a benefit is real and account to the sponsor for the business case.
 
 ### Practice questions
 
@@ -2140,7 +2140,7 @@ Sustainability data is among the weakest an AI system will encounter on a projec
 
 Sustainability disclosure is increasingly regulated, and overstated environmental claims — greenwashing — carry legal, commercial and reputational consequences. Accountability for them cannot be delegated to a tool or its vendor. Every AI-assisted sustainability figure used in governance must be explainable to the sponsor and to an auditor, validated by a competent person, and formally owned by a named individual — normally the project management leader. "The model calculated it" is not a defence the Institute recognises, in the examination or in practice.
 
-> **AI proposes; the professional disposes.** AI can estimate a footprint, rank the options and draft the disclosure — but it cannot weigh an environmental gain against a social cost, and it cannot answer for a claim. The delivery leader who signs the recommendation, the baseline and the sustainability report owns every number in them, and must be able to explain, evidence and defend each one without reference to the tool that produced it.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI can estimate a footprint, rank the options and draft the disclosure — but it cannot weigh an environmental gain against a social cost, and it cannot answer for a claim. The delivery leader who signs the recommendation, the baseline and the sustainability report owns every number in them, and must be able to explain, evidence and defend each one without reference to the tool that produced it.
 
 ### Key points
 
@@ -2150,7 +2150,7 @@ Sustainability disclosure is increasingly regulated, and overstated environmenta
 - Appraise options with sponsor-agreed criteria fixed in advance: cost the whole life, quantify carbon, monetise credibly at the shadow carbon price, score the rest, and state every assumption.
 - Approved measures must be baselined under change control, reported on the same cadence as cost and schedule, and flowed to suppliers with contractual rights to the underlying data.
 - AI accelerates estimation, monitoring and disclosure drafting, but sustainability data is weak and bias-prone: every AI figure needs provenance, an uncertainty range and reproducibility before it enters governance.
-- Accountability for sustainability claims rests with a named professional, never with a tool: AI proposes; the professional disposes.
+- Accountability for sustainability claims rests with a named professional, never with a tool: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -2179,7 +2179,7 @@ B. The named professional who validated and owns the figures
 C. No one, provided the tool's methodology was published
 D. The auditor, once the report has been accepted
 
-**Correct answer: B.** AI proposes; the professional disposes — every AI-assisted figure in governance must be explainable, validated and owned by a competent human, and "the model calculated it" is no defence.
+**Correct answer: B.** AI proposes; the professional verifies, decides and remains accountable — every AI-assisted figure in governance must be explainable, validated and owned by a competent human, and "the model calculated it" is no defence.
 
 ## Chapter 18: Project Closure
 
@@ -2264,7 +2264,7 @@ Closure-stage models also carry distinctive weaknesses that the examination expe
 
 Accountability does not close when the project does. A named, competent individual must own every accepted deliverable, every financial settlement, every retained record and — above all — any decision to terminate. Where AI analysis contributed to that decision, its inputs, assumptions and limitations are documented in the closure record so that an auditor or a successor can reconstruct the reasoning years later. The delivery leader who signs the closure certificate is attesting to the whole of it, including every machine-produced element within it.
 
-> **AI proposes; the professional disposes.** In closure, AI may forecast the cost-to-close, extract the obligations, draft the report and cluster the lessons — but acceptance is granted, termination is decided, accounts are settled and lessons are declared learned only by an accountable human who can explain and defend each judgement. The algorithm surfaces the evidence; the professional closes the project.
+> **AI proposes; the professional verifies, decides and remains accountable.** In closure, AI may forecast the cost-to-close, extract the obligations, draft the report and cluster the lessons — but acceptance is granted, termination is decided, accounts are settled and lessons are declared learned only by an accountable human who can explain and defend each judgement. The algorithm surfaces the evidence; the professional closes the project.
 
 ### Governing frameworks
 
@@ -2288,7 +2288,7 @@ ISO 21502 addresses closing or terminating a project or phase as an integrated m
 - Formal acceptance against pre-agreed criteria is the pivotal control — it triggers settlement, warranty commencement and transfer of ownership, and is never implied through use.
 - Termination decisions compare forward-looking cash flows only; sunk costs are excluded from every option.
 - A lesson is learned only when embedded in changed practice, with a named owner, a deadline and a target artefact.
-- AI may forecast, extract, reconcile and draft throughout closure, but acceptance, termination, settlement and lessons remain explainable, validated human decisions — AI proposes; the professional disposes.
+- AI may forecast, extract, reconcile and draft throughout closure, but acceptance, termination, settlement and lessons remain explainable, validated human decisions — AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -2331,11 +2331,11 @@ Two boundaries define the discipline. First, AI-enabled project management is *a
 
 Four concepts recur throughout this chapter and are defined here once. An **AI output** is any artefact or judgement produced wholly or partly by an AI system and considered for use in delivery — a draft plan, an estimate, a forecast, a risk score, a summarised report, a recommended action. **Explainability** is the ability of the accountable professional to state, in terms a sponsor, governance board or auditor can follow, what the output is, what data and assumptions it rests on, and why it is credible; an output the owner cannot explain is not usable, whatever its apparent quality. **Validation** is the act of checking an AI output against independent evidence before adoption — reference-class data, parametric benchmarks, expert judgement, first-principles calculation or back-testing against known outcomes — and it must precede, never follow, incorporation into a baseline. **Ownership** is the assignment of each adopted output to a competent human who answers for it in governance forums and who carries the authority to reject it: the owner signs for the output as if they had produced it themselves, because in governance terms they have.
 
-### The governing doctrine: AI proposes; the professional disposes
+### The governing doctrine: AI proposes; the professional verifies, decides and remains accountable
 
 The PCI doctrine that runs through this Body of Knowledge applies here in its strongest form.
 
-> **AI proposes; the professional disposes.** AI may draft the plan, sharpen the estimate and sense the risk — but only a competent, named professional may commit a baseline, sign a report or accept a risk response. Every AI output used in delivery must be explainable, validated against independent evidence, and owned by the human who answers for it.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may draft the plan, sharpen the estimate and sense the risk — but only a competent, named professional may commit a baseline, sign a report or accept a risk response. Every AI output used in delivery must be explainable, validated against independent evidence, and owned by the human who answers for it.
 
 The doctrine is not a restraint on the use of AI; it is the condition that makes its use professionally defensible. It converts a probabilistic tool into a governable one by inserting the same control that project management has always applied to expert input from any source: independent scrutiny before reliance. A forecast from a model is treated exactly as a forecast from a consultant would be — interrogated for its basis, tested against other evidence, and adopted only under a named owner. In practice the doctrine imposes three tests on every AI output, corresponding to the concepts defined above: explainable, validated proportionately to its consequence, and owned. An output failing any test is advisory material at most. Accountability for scope, schedule, cost, risk and benefits cannot be delegated to a model, a tool or a vendor; a governance body should be able to trace every AI-influenced decision to the professional who disposed of it.
 
@@ -2410,7 +2410,7 @@ In execution, AI shifts the leader's posture from lagging to leading indicators.
 ### Key points
 
 - AI-enabled project management is assistive and evidence-bound: descriptive, predictive and generative capabilities produce proposals; none of them decides.
-- The governing doctrine is "AI proposes; the professional disposes": every AI output used in delivery must be explainable, validated against independent evidence, and owned by a named, competent human.
+- The governing doctrine is "AI proposes; the professional verifies, decides and remains accountable": every AI output used in delivery must be explainable, validated against independent evidence, and owned by a named, competent human.
 - Appraise use cases one by one with the five-step method: inventory, value-versus-limitation appraisal, data-foundation check, up-front ownership and explainability, and a parallel pilot.
 - No AI-generated plan, estimate or forecast enters a baseline until an independent cross-check (parametric, three-point or earned-value based) has been built, reconciled and recorded with a named owner.
 - Divergence between the AI figure and the independent figure is diagnostic, not a nuisance: it exposes assumptions that must be tested against evidence before disposal.
@@ -2509,7 +2509,7 @@ Decision intelligence is the competency in which AI's influence on project leade
 
 The delivery leader may legitimately automate the mechanical layers of the decision cycle: gathering and normalising evidence, generating candidate options, running sensitivity analysis across weighted criteria, stress-testing estimates against reference classes, and drafting the decision record itself. What must be validated, never delegated, is the judgement layer: whether the decision has been framed correctly, whether the criteria and their weights reflect the organisation's genuine priorities, whether the option set is complete, and whether the model's evidence is fit for this decision. A leader presented with an AI-scored options matrix should be able to answer three questions before relying on it: what data the model drew upon, why it ranks the options as it does, and under what conditions its reasoning would break down. If no adequate explanation can be obtained, the output may inform exploration, but it must not determine the decision. Management-system thinking for AI, exemplified by ISO/IEC 42001, reinforces the same expectation of documented human oversight.
 
-> **AI proposes; the professional disposes.** AI may frame options, score criteria, forecast outcomes and draft the decision record — but it cannot own a decision. Every model-supported recommendation must be explainable, validated against independent evidence, and disposed of — accepted, adapted or rejected — by a named, competent decision-maker who remains accountable for the outcome.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may frame options, score criteria, forecast outcomes and draft the decision record — but it cannot own a decision. Every model-supported recommendation must be explainable, validated against independent evidence, and disposed of — accepted, adapted or rejected — by a named, competent decision-maker who remains accountable for the outcome.
 
 ### Model risk and data caveats
 
@@ -2570,7 +2570,7 @@ B. Use the output to inform exploration only, and not allow it to determine the 
 C. Adopt the recommendation provided the model exceeds a validated accuracy threshold
 D. Transfer accountability for the decision to the owner of the model
 
-**Answer: B.** An unexplained model output is an unverified claim, not evidence: AI proposes, but only a named, accountable professional disposes.
+**Answer: B.** An unexplained model output is an unverified claim, not evidence: AI proposes, but only a named, accountable professional verifies and decides.
 
 ## 21. Digital Delivery
 
@@ -2647,7 +2647,7 @@ Model risk in digital delivery arises predictably. Models trained on past projec
 
 Accountability is not transferable to a model. The leader who presents an AI-supported forecast owns it exactly as if it had been produced manually, and must be able to explain its basis, assumptions and limitations to a sponsor, an auditor or a client. Governance arrangements should record which AI tools are in use, for what purpose, on what data, and who owns each class of output. An output that no competent person can explain has no place in a delivery decision, whatever its apparent precision.
 
-> **AI proposes; the professional disposes.** In the digital delivery environment, AI may assemble, reconcile, flag and forecast from the single source of truth — but every prediction, anomaly and generated narrative is a proposal. The delivery leader validates it against the quality of the data beneath it, explains it in their own words, and remains personally accountable for every decision and report that rests upon it.
+> **AI proposes; the professional verifies, decides and remains accountable.** In the digital delivery environment, AI may assemble, reconcile, flag and forecast from the single source of truth — but every prediction, anomaly and generated narrative is a proposal. The delivery leader validates it against the quality of the data beneath it, explains it in their own words, and remains personally accountable for every decision and report that rests upon it.
 
 ### Common pitfalls
 
@@ -2667,7 +2667,7 @@ Accountability is not transferable to a model. The leader who presents an AI-sup
 - Below-threshold data is remediated or its outputs caveated; an AI forecast built on failed data is deferred, and the audit, correction and decision are minuted.
 - Distributed leadership works through explicit collaboration norms: a team charter, asynchronous-by-default working, protected overlap windows, deliberate inclusion and decisions recorded in the system of record.
 - Information security (ISO/IEC 27001), information management and digital capability bound the whole environment and apply equally to any AI tool admitted to the toolchain.
-- AI proposes; the professional disposes: automate the assembly of evidence, never the judgement, and keep a named, competent owner accountable for every AI-supported output.
+- AI proposes; the professional verifies, decides and remains accountable: automate the assembly of evidence, never the judgement, and keep a named, competent owner accountable for every AI-supported output.
 
 ### Practice questions
 
@@ -2706,7 +2706,7 @@ This chapter sets out the PML-AI competency of automation: what it is, when it i
 
 Automation in project delivery is the execution of a defined project management process, or a step within one, by a machine rather than a person, according to rules established and owned by a competent professional. The Institute distinguishes automation from mere digitisation. Digitisation moves a manual activity onto an electronic medium — a spreadsheet replacing a paper log — while the judgement and the labour remain human. Automation transfers the labour itself: the system detects a trigger, applies a rule and produces an outcome without a person performing the intermediate steps. A status report compiled and distributed on schedule, or a risk register entry escalated when its exposure score crosses a threshold, is an automation because the process runs to completion, or to a designated pause point, without human effort.
 
-The Institute recognises a continuum. At one end sits deterministic automation: rule-based workflows fully specified in advance, with predictable, repeatable output. At the other sits AI-enabled automation, in which a model classifies, summarises, drafts or predicts, and the output is probabilistic rather than guaranteed. The distinction matters for governance: deterministic automations fail in ways testing can largely anticipate; AI-enabled automations can fail plausibly, producing outputs that look correct while being wrong. The PML-AI doctrine — AI proposes; the professional disposes — therefore binds most tightly at the AI-enabled end, though the accountability principle beneath it applies across the whole range: every automated output must be explainable, validated and owned by a named, competent human.
+The Institute recognises a continuum. At one end sits deterministic automation: rule-based workflows fully specified in advance, with predictable, repeatable output. At the other sits AI-enabled automation, in which a model classifies, summarises, drafts or predicts, and the output is probabilistic rather than guaranteed. The distinction matters for governance: deterministic automations fail in ways testing can largely anticipate; AI-enabled automations can fail plausibly, producing outputs that look correct while being wrong. The PML-AI doctrine — AI proposes; the professional verifies, decides and remains accountable — therefore binds most tightly at the AI-enabled end, though the accountability principle beneath it applies across the whole range: every automated output must be explainable, validated and owned by a named, competent human.
 
 ### The Selection Triad: Volume, Repeatability and Rule Clarity
 
@@ -2716,7 +2716,7 @@ The triad is conjunctive. A high-volume process with unclear rules automates err
 
 ### Checkpoints, Fallback and the Architecture of Control
 
-A **human checkpoint** is a designed pause at which an automated workflow halts, presents its proposed action and reasoning, and proceeds only on the authorisation of an accountable person. The Institute's standard is categorical: a checkpoint is required at every consequential decision — one that commits resources, alters baselines, accepts risk or affects people — and at every external communication, because a message issued to a stakeholder cannot be recalled. Checkpoints are the workflow-level expression of the disposal doctrine; they convert "the professional disposes" from aspiration into architecture.
+A **human checkpoint** is a designed pause at which an automated workflow halts, presents its proposed action and reasoning, and proceeds only on the authorisation of an accountable person. The Institute's standard is categorical: a checkpoint is required at every consequential decision — one that commits resources, alters baselines, accepts risk or affects people — and at every external communication, because a message issued to a stakeholder cannot be recalled. Checkpoints are the workflow-level expression of the Institute's principle; they convert "the professional verifies, decides and remains accountable" from aspiration into architecture.
 
 A **fallback arrangement** is the pre-defined route by which a process returns safely to human control when the automation fails, degrades or encounters a case outside its rules. Fallback presupposes **monitoring**: instrumented evidence that the automation is running and producing outputs within expected tolerances, with alerts when it is not. An automation without monitoring is invisible in failure; an automation without fallback leaves the underlying process ownerless when it stops. Both must exist before an automation is entrusted with live project work.
 
@@ -2769,7 +2769,7 @@ AI-enabled automations inherit every weakness of the data and models beneath the
 
 No delegation of execution is a delegation of accountability. The leader who deploys an AI-enabled automation owns its outputs as personally as if they had produced them by hand. Every automated decision must be explainable to a sponsor, an auditor or a regulator; a named, competent individual must own each automation with authority to suspend it; and governance records must show who approved it, on what evidence, and when it was last validated. Where an output cannot be explained, it must not be relied upon. These expectations are examined behaviourally: the assessment tests whether the candidate places accountability, monitoring and fallback at the centre of automation practice, not at its periphery.
 
-> **AI proposes; the professional disposes.** An AI-enabled automation may gather, draft, classify and recommend — but every consequential action it initiates is released, and owned, by a competent human who can explain it. When the automation's behaviour can no longer be explained, validated and monitored, the professional's duty is to stop it and take the process back into human hands.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI-enabled automation may gather, draft, classify and recommend — but every consequential action it initiates is released, and owned, by a competent human who can explain it. When the automation's behaviour can no longer be explained, validated and monitored, the professional's duty is to stop it and take the process back into human hands.
 
 ### Common Pitfalls
 
@@ -2824,7 +2824,7 @@ D. The model refuses to generate output outside its validated boundary, so no fu
 
 ### Responsible AI as a delivery discipline
 
-Responsible AI is the discipline of using artificial intelligence in ways that realise its benefits without transferring unmanaged harm to individuals, to the organisation or to the project itself. For the Project Management Leader – AI it is not an abstract ethical debate but a delivery competence. Every AI use on a project — an estimating model, a schedule-risk predictor, a generative assistant drafting communications, a tool that shortlists suppliers or allocates people to work — creates obligations that must be identified, assessed and controlled with the same rigour the profession applies to cost, schedule and risk. The doctrine that governs this entire Body of Knowledge applies here in its strongest form: **AI proposes; the professional disposes.** An AI output remains a proposal until a competent, named human has understood it, validated it and taken ownership of the decision it informs. Responsible AI is the framework that makes that ownership real rather than rhetorical.
+Responsible AI is the discipline of using artificial intelligence in ways that realise its benefits without transferring unmanaged harm to individuals, to the organisation or to the project itself. For the Project Management Leader – AI it is not an abstract ethical debate but a delivery competence. Every AI use on a project — an estimating model, a schedule-risk predictor, a generative assistant drafting communications, a tool that shortlists suppliers or allocates people to work — creates obligations that must be identified, assessed and controlled with the same rigour the profession applies to cost, schedule and risk. The doctrine that governs this entire Body of Knowledge applies here in its strongest form: **AI proposes; the professional verifies, decides and remains accountable.** An AI output remains a proposal until a competent, named human has understood it, validated it and taken ownership of the decision it informs. Responsible AI is the framework that makes that ownership real rather than rhetorical.
 
 The chapter follows a single control loop: principles supply the criteria; regulation converts several of them into binding obligations; risk assessment determines what proportionate control looks like for a given use; and explainability, validation and assurance are how that control is exercised in practice.
 
@@ -2907,11 +2907,11 @@ Using AI to assure AI also creates second-order model risk that the examination 
 
 No configuration of tooling transfers accountability. Each AI use has a named, competent owner; escalation routes to data-protection, legal and technical specialists are defined before they are needed; and the delivery leader can explain, in their own words and without reference to the tool, why each AI-informed decision was justified. Where an output cannot be explained, validated and owned, it is not used — however efficient it promises to be. Governance records must show a human decision at every consequential point, because that is what a sponsor, an auditor or a regulator will ask to see.
 
-> **AI proposes; the professional disposes.** Applied to responsible AI, the doctrine becomes self-referential and stricter for it: AI may scan for bias, monitor for drift and draft the impact assessment, but only a competent, named human may declare an AI use fair, lawful, transparent and fit to inform a project decision. The tools of assurance are themselves models — so the final assurance is never a tool's output, but a professional's owned, explainable judgement.
+> **AI proposes; the professional verifies, decides and remains accountable.** Applied to responsible AI, the doctrine becomes self-referential and stricter for it: AI may scan for bias, monitor for drift and draft the impact assessment, but only a competent, named human may declare an AI use fair, lawful, transparent and fit to inform a project decision. The tools of assurance are themselves models — so the final assurance is never a tool's output, but a professional's owned, explainable judgement.
 
 ### Key points
 
-- Responsible AI is a delivery competence, not an ethical abstraction: every AI use creates obligations managed with the same rigour as cost, schedule and risk, under the doctrine *AI proposes; the professional disposes*.
+- Responsible AI is a delivery competence, not an ethical abstraction: every AI use creates obligations managed with the same rigour as cost, schedule and risk, under the doctrine *AI proposes; the professional verifies, decides and remains accountable*.
 - Four principles anchor the discipline — fairness, transparency, privacy and accountability — and transparency (openness about the system) is distinct from explainability (accounting for a particular output).
 - Binding law (data protection regimes, the EU AI Act's risk tiers) and voluntary frameworks (OECD, NIST AI RMF, ISO/IEC 42001 and 23894) give the principles force; the leader's duty is to recognise triggers and escalate to specialists.
 - The seven-step assessment is applied per use, not per tool, and calibrates controls proportionately to decision consequence.
@@ -2962,9 +2962,9 @@ From this distinction follows the doctrine that anchors the whole Body of Knowle
 
 When forecasts, risk scores, schedule diagnostics and drafted recommendations arrive machine-generated, the temptation is to let ownership blur — to treat "the model indicated" as though it were a decision-maker. The examination treats this as the central hazard of AI-assisted delivery. Predictive tooling changes the competency in two ways: it multiplies the decision inputs whose provenance the leader must be able to trace, and it creates a new failure mode — the **accountability gap** — in which an outcome has no named human owner because everyone deferred to the system. The competent leader closes that gap deliberately: every AI-assisted decision is owned, in advance and by name, by a human competent to challenge the recommendation they are adopting.
 
-### The governing doctrine: AI proposes; the professional disposes
+### The governing doctrine: AI proposes; the professional verifies, decides and remains accountable
 
-The Institute's doctrine — *AI proposes; the professional disposes* — operationalises the principle. An AI output, however sophisticated, is a **proposal**: an input to professional judgement, of the same governance status as a junior analyst's draft or a consultant's recommendation. The **disposal** — accepting, amending, overriding or rejecting the proposal — is a human act, performed by a professional with the competence and the authority to make it. Three tests attach to every AI contribution before it may inform a project decision:
+The Institute's doctrine — *AI proposes; the professional verifies, decides and remains accountable* — operationalises the principle. An AI output, however sophisticated, is a **proposal**: an input to professional judgement, of the same governance status as a junior analyst's draft or a consultant's recommendation. The **disposal** — accepting, amending, overriding or rejecting the proposal — is a human act, performed by a professional with the competence and the authority to make it. Three tests attach to every AI contribution before it may inform a project decision:
 
 - **Explainable** — the accountable professional can articulate, in their own words, what the output says, what data and assumptions it rests on, and its material limitations. "The system said so" is never an explanation.
 - **Validated** — the output has been checked against independent evidence, professional experience, or documented review appropriate to its consequence: proportionate scrutiny for routine outputs, rigorous challenge for decisions affecting baselines, contracts, safety or benefits.
@@ -3032,7 +3032,7 @@ The elements of this chapter form a single chain: the accountability/responsibil
 
 Candidates are therefore expected to demonstrate that accountability structures survive contact with AI: that decision logs name humans rather than systems; that competence requirements are defined for anyone disposing of AI recommendations; that overrides of model output are recorded and reasoned rather than silent; and that post-incident reviews ask first who owned the decision, not what the tool suggested. An organisation whose delivery decisions cannot each be traced to a named, competent, informed human has not adopted AI — it has surrendered to it.
 
-> **AI proposes; the professional disposes.** Applied to accountability, the doctrine is absolute: AI may draft, forecast, score and recommend, but it can be neither accountable nor responsible in the professional sense. Every AI contribution must be explainable, validated and owned; every decision must carry the name of a competent human who disposed of the recommendation and answers for the outcome. Where no such name exists, the decision is ungoverned — and the failure is human before it is technical.
+> **AI proposes; the professional verifies, decides and remains accountable.** Applied to accountability, the doctrine is absolute: AI may draft, forecast, score and recommend, but it can be neither accountable nor responsible in the professional sense. Every AI contribution must be explainable, validated and owned; every decision must carry the name of a competent human who disposed of the recommendation and answers for the outcome. Where no such name exists, the decision is ungoverned — and the failure is human before it is technical.
 
 ### Key points
 
@@ -3079,7 +3079,7 @@ D. Competence mismatch in the accountability assignment
 
 ### Purpose of this capstone
 
-This closing chapter draws the competencies of the PCI PML-AI Body of Knowledge together into a single, realistic delivery. It introduces no new syllabus content; its purpose is integrative — to show how initiation, business-case discipline, governance, scope and requirements, planning and execution, stakeholder leadership, procurement, contracting and commercial delivery interlock on one live project, and how artificial intelligence is applied at every stage under the Institute's governing doctrine: **AI proposes; the professional disposes.** Every AI output is explainable, validated and owned by a competent, accountable human. Candidates should pause at each decision point and form a view before reading on: the examination routinely tests this kind of cross-competency synthesis, and while the figures are illustrative, the reasoning is the examinable substance.
+This closing chapter draws the competencies of the PCI PML-AI Body of Knowledge together into a single, realistic delivery. It introduces no new syllabus content; its purpose is integrative — to show how initiation, business-case discipline, governance, scope and requirements, planning and execution, stakeholder leadership, procurement, contracting and commercial delivery interlock on one live project, and how artificial intelligence is applied at every stage under the Institute's governing doctrine: **AI proposes; the professional verifies, decides and remains accountable.** Every AI output is explainable, validated and owned by a competent, accountable human. Candidates should pause at each decision point and form a view before reading on: the examination routinely tests this kind of cross-competency synthesis, and while the figures are illustrative, the reasoning is the examinable substance.
 
 ### The scenario
 
@@ -3146,11 +3146,11 @@ This glossary consolidates the key terms of the PCI Project Management Leader �
 
 **Agile delivery** — An iterative, incremental approach in which requirements and solutions evolve through short, time-boxed cycles of planning, delivery and review. Value is released progressively and priorities are reordered as learning emerges.
 
-**AI-enabled project management** — The application of artificial intelligence techniques — such as forecasting, classification and natural-language analysis — to support project planning, monitoring, reporting and decision-making. The Institute's doctrine applies throughout: AI proposes; the professional disposes.
+**AI-enabled project management** — The application of artificial intelligence techniques — such as forecasting, classification and natural-language analysis — to support project planning, monitoring, reporting and decision-making. The Institute's doctrine applies throughout: AI proposes; the professional verifies, decides and remains accountable.
 
 **AI governance** — The policies, controls and oversight arrangements through which an organisation directs and constrains its use of artificial intelligence in delivery. Effective AI governance ensures every AI output is explainable, validated and owned by a competent human.
 
-**"AI proposes; the professional disposes"** — The Institute's governing doctrine for artificial intelligence in project delivery: AI may draft, forecast, flag and recommend, but a competent, accountable human examines, validates and decides. No AI output is acted upon unexplained, unvalidated or unowned.
+**"AI proposes; the professional verifies, decides and remains accountable"** — The Institute's governing doctrine for artificial intelligence in project delivery: AI may draft, forecast, flag and recommend, but a competent, accountable human examines, validates and decides. No AI output is acted upon unexplained, unvalidated or unowned.
 
 **Algorithmic bias** — Systematic distortion in an AI system's outputs, typically arising from unrepresentative training data or flawed design, that produces unfair or misleading results. Detecting and mitigating bias is a core obligation of responsible AI practice.
 
